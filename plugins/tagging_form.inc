@@ -1,6 +1,12 @@
 <?php
 // $Id$
 
+/**
+ * @package Islandora
+ * @subpackage plugins
+ */
+
+
 /* 
  * To change this template, choose Tools | Templates
  * and open the template in the editor.

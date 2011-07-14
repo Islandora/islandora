@@ -1,0 +1,1521 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos  -->
+			<title>Docs For Class Fedora_Item</title>
+			<link rel="stylesheet" href="../../media/stylesheet.css" />
+						<script src="../../media/lib/classTree.js"></script>
+												<script language="javascript" type="text/javascript">
+				var imgPlus = new Image();
+				var imgMinus = new Image();
+				imgPlus.src = "../../media/images/plus.png";
+				imgMinus.src = "../../media/images/minus.png";
+				
+				function showNode(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+							var oImg = document.layers["img" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+							var oImg = document.all["img" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+							var oImg = document.getElementById("img" + Node);
+									break;
+							}
+					oImg.src = imgMinus.src;
+					oTable.style.display = "block";
+				}
+				
+				function hideNode(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+							var oImg = document.layers["img" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+							var oImg = document.all["img" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+							var oImg = document.getElementById("img" + Node);
+									break;
+							}
+					oImg.src = imgPlus.src;
+					oTable.style.display = "none";
+				}
+				
+				function nodeIsVisible(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+									break;
+							}
+					return (oTable && oTable.style.display == "block");
+				}
+				
+				function toggleNodeVisibility(Node){
+					if (nodeIsVisible(Node)){
+						hideNode(Node);
+					}else{
+						showNode(Node);
+					}
+				}
+			</script>
+					</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name"><img src="../../media/images/Class_logo.png"
+														alt=" Class"
+														title=" Class"
+														style="vertical-align: middle"> Fedora_Item</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+		<p class="notes">
+			Located in <a class="field" href="_api---fedora_item.inc.html">/api/fedora_item.inc</a> (line <span class="field">13</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variable Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+																																								<div class="var-title">
+					<img src="../../media/images/Variable.png" alt=" " />
+					<span class="var-type">mixed</span>
+					<a href="#$datastreams" title="details" class="var-name">$datastreams</a>
+				</div>
+																<div class="var-title">
+					<img src="../../media/images/Variable.png" alt=" " />
+					<span class="var-type">mixed</span>
+					<a href="#$objectProfile" title="details" class="var-name">$objectProfile</a>
+				</div>
+																<div class="var-title">
+					<img src="../../media/images/Variable.png" alt=" " />
+					<span class="var-type">mixed</span>
+					<a href="#$pid" title="details" class="var-name">$pid</a>
+				</div>
+											</div>
+		</div>
+	</div>
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																			
+				<div class="method-definition">
+					<img src="../../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#create_object_FOXML" title="details" class="method-name">create_object_FOXML</a>
+											([<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span> = <span class="var-default">''</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$state</span> = <span class="var-default">'A'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$label</span> = <span class="var-default">'Untitled'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$owner</span> = <span class="var-default">''</span>])
+									</div>
+																															
+				<div class="method-definition">
+					<img src="../../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#fedora_item_exists" title="details" class="method-name">fedora_item_exists</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">Array</span>
+										<a href="#find_objects_by_pattern" title="details" class="method-name">find_objects_by_pattern</a>
+											([<span class="var-type">string</span>&nbsp;<span class="var-name">$pattern</span> = <span class="var-default">'*'</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$field</span> = <span class="var-default">'pid'</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$max_results</span> = <span class="var-default">100</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$resultFields</span> = <span class="var-default">array()</span>])
+									</div>
+																																																																															
+				<div class="method-definition">
+					<img src="../../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#get_next_PID_in_namespace" title="details" class="method-name">get_next_PID_in_namespace</a>
+											([<span class="var-type"></span>&nbsp;<span class="var-name">$pid_namespace</span> = <span class="var-default">''</span>])
+									</div>
+																							
+				<div class="method-definition">
+					<img src="../../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#ingest_from_FOXML" title="details" class="method-name">ingest_from_FOXML</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$foxml</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#ingest_from_FOXML_file" title="details" class="method-name">ingest_from_FOXML_file</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$foxml_file</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#ingest_from_FOXML_files_in_directory" title="details" class="method-name">ingest_from_FOXML_files_in_directory</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$path</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#ingest_new_item" title="details" class="method-name">ingest_new_item</a>
+											([<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$state</span> = <span class="var-default">'A'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$label</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$owner</span> = <span class="var-default">''</span>])
+									</div>
+																																																																							
+				<div class="method-definition">
+					<img src="../../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#soap_call" title="details" class="method-name">soap_call</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$function_name</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params_array</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$quiet</span> = <span class="var-default">FALSE</span>])
+									</div>
+																											
+				<div class="method-definition">
+					<img src="../../media/images/Constructor.png" alt=" "/>
+											<span class="method-result"><a href="../../Islandora/API/Fedora_Item.html">Fedora_Item</a></span>
+										<a href="#__construct" title="details" class="method-name">__construct</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#add_datastream_from_file" title="details" class="method-name">add_datastream_from_file</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$datastream_file</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$datastream_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$datastream_label</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$datastream_mimetype</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$controlGroup</span> = <span class="var-default">'M'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$logMessage</span> = <span class="var-default">null</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#add_datastream_from_string" title="details" class="method-name">add_datastream_from_string</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$str</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$datastream_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$datastream_label</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$datastream_mimetype</span> = <span class="var-default">'text/xml'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$controlGroup</span> = <span class="var-default">'M'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$logMessage</span> = <span class="var-default">null</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#add_datastream_from_url" title="details" class="method-name">add_datastream_from_url</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$datastream_url</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$datastream_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$datastream_label</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$datastream_mimetype</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$controlGroup</span> = <span class="var-default">'M'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$logMessage</span> = <span class="var-default">null</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#add_relationship" title="details" class="method-name">add_relationship</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$relationship</span>, <span class="var-type"><type></span>&nbsp;<span class="var-name">$object</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$namespaceURI</span> = <span class="var-default">RELS_EXT_URI</span>])
+									</div>
+																							
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#exists" title="details" class="method-name">exists</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#export_as_foxml" title="details" class="method-name">export_as_foxml</a>
+										()
+									</div>
+																															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#get_datastream" title="details" class="method-name">get_datastream</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$as_of_date_time</span> = <span class="var-default">&quot;&quot;</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">array</span>
+										<a href="#get_datastreams_list_as_array" title="details" class="method-name">get_datastreams_list_as_array</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">SimpleXMLElement</span>
+										<a href="#get_datastreams_list_as_SimpleXML" title="details" class="method-name">get_datastreams_list_as_SimpleXML</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#get_datastream_dissemination" title="details" class="method-name">get_datastream_dissemination</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$as_of_date_time</span> = <span class="var-default">&quot;&quot;</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#get_datastream_history" title="details" class="method-name">get_datastream_history</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">datastream</span>
+										<a href="#get_datastream_info" title="details" class="method-name">get_datastream_info</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$dsid</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$as_of_date_time</span> = <span class="var-default">&quot;&quot;</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#get_dissemination" title="details" class="method-name">get_dissemination</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$service_definition_pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$method_name</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$parameters</span> = <span class="var-default">array()</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$as_of_date_time</span> = <span class="var-default">null</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">string</span>
+										<a href="#get_mimetype_of_datastream" title="details" class="method-name">get_mimetype_of_datastream</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$dsid</span>)
+									</div>
+																							
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#get_relationships" title="details" class="method-name">get_relationships</a>
+											([<span class="var-type">String</span>&nbsp;<span class="var-name">$relationship</span> = <span class="var-default">NULL</span>])
+									</div>
+																																															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#modify_datastream_by_reference" title="details" class="method-name">modify_datastream_by_reference</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$external_url</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$label</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$mime_type</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$force</span> = <span class="var-default">FALSE</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$logMessage</span> = <span class="var-default">'Modified by Islandora API'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$quiet</span> = <span class="var-default">FALSE</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#modify_datastream_by_value" title="details" class="method-name">modify_datastream_by_value</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$content</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$label</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$mime_type</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$force</span> = <span class="var-default">FALSE</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$logMessage</span> = <span class="var-default">'Modified by Islandora API'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$quiet</span> = <span class="var-default">FALSE</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#modify_object" title="details" class="method-name">modify_object</a>
+											([<span class="var-type"></span>&nbsp;<span class="var-name">$label</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$state</span> = <span class="var-default">null</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$ownerId</span> = <span class="var-default">null</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$logMessage</span> = <span class="var-default">'Modified by Islandora API'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$quiet</span> = <span class="var-default">TRUE</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#purge" title="details" class="method-name">purge</a>
+											([<span class="var-type"></span>&nbsp;<span class="var-name">$log_message</span> = <span class="var-default">'Purged using Islandora API.'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$force</span> = <span class="var-default">FALSE</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#purge_datastream" title="details" class="method-name">purge_datastream</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$dsID</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$start_date</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$end_date</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$log_message</span> = <span class="var-default">'Purged datastream using Islandora API'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$force</span> = <span class="var-default">FALSE</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#purge_relationship" title="details" class="method-name">purge_relationship</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$relationship</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$object</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#save_relationships" title="details" class="method-name">save_relationships</a>
+											(<span class="var-type"><type></span>&nbsp;<span class="var-name">$relationships</span>)
+									</div>
+																							
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#url" title="details" class="method-name">url</a>
+										()
+									</div>
+											</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			
+<a name="var$datastreams" id="$datastreams"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<img src="../../media/images/Variable.png" />
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$datastreams</span>
+			 = <span class="var-default"> NULL</span>			(line <span class="line-number">18</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$objectProfile" id="$objectProfile"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<img src="../../media/images/Variable.png" />
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$objectProfile</span>
+			 = <span class="var-default"> NULL</span>			(line <span class="line-number">16</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$pid" id="$pid"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<img src="../../media/images/Variable.png" />
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$pid</span>
+			 = <span class="var-default"> NULL</span>			(line <span class="line-number">15</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+						
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methodcreate_object_FOXML" id="create_object_FOXML"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/StaticMethod.png" />
+		<span class="method-title">static create_object_FOXML</span> (line <span class="line-number">739</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Creates the minimal FOXML for a new Fedora object, which is then passed to  ingest_from_FOXML to be added to the repository.</p>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			create_object_FOXML
+		</span>
+					([<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span> = <span class="var-default">''</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$state</span> = <span class="var-default">'A'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$label</span> = <span class="var-default">'Untitled'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$owner</span> = <span class="var-default">''</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$pid</span><span class="var-description">: if none given, getnextpid will be called.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$state</span><span class="var-description">: The initial state, A - Active, I - Inactive, D - Deleted</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$label</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$owner</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodfedora_item_exists" id="fedora_item_exists"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/StaticMethod.png" />
+		<span class="method-title">static fedora_item_exists</span> (line <span class="line-number">790</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			fedora_item_exists
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pid</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodfind_objects_by_pattern" id="find_objects_by_pattern"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/StaticMethod.png" />
+		<span class="method-title">static find_objects_by_pattern</span> (line <span class="line-number">240</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Does a search using the &quot;query&quot; format followed by the Fedora REST APi.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> of pid =&gt; title pairs that match the results</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">Array</span>
+		<span class="method-name">
+			find_objects_by_pattern
+		</span>
+					([<span class="var-type">string</span>&nbsp;<span class="var-name">$pattern</span> = <span class="var-default">'*'</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$field</span> = <span class="var-default">'pid'</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$max_results</span> = <span class="var-default">100</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$resultFields</span> = <span class="var-default">array()</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$pattern</span><span class="var-description">: to search for, including wildcards.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$field</span><span class="var-description">: The field to search on, e.g. pid, title, cDate. See http://www.fedora-commons.org/confluence/display/FCR30/REST+API#RESTAPI-findObjects for details</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$max_results</span><span class="var-description">: not used at this time</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$resultFields</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodget_next_PID_in_namespace" id="get_next_PID_in_namespace"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/StaticMethod.png" />
+		<span class="method-title">static get_next_PID_in_namespace</span> (line <span class="line-number">566</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			get_next_PID_in_namespace
+		</span>
+					([<span class="var-type"></span>&nbsp;<span class="var-name">$pid_namespace</span> = <span class="var-default">''</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pid_namespace</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodingest_from_FOXML" id="ingest_from_FOXML"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/StaticMethod.png" />
+		<span class="method-title">static ingest_from_FOXML</span> (line <span class="line-number">589</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			ingest_from_FOXML
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$foxml</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$foxml</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodingest_from_FOXML_file" id="ingest_from_FOXML_file"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/StaticMethod.png" />
+		<span class="method-title">static ingest_from_FOXML_file</span> (line <span class="line-number">595</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			ingest_from_FOXML_file
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$foxml_file</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$foxml_file</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodingest_from_FOXML_files_in_directory" id="ingest_from_FOXML_files_in_directory"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/StaticMethod.png" />
+		<span class="method-title">static ingest_from_FOXML_files_in_directory</span> (line <span class="line-number">601</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			ingest_from_FOXML_files_in_directory
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$path</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$path</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodingest_new_item" id="ingest_new_item"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/StaticMethod.png" />
+		<span class="method-title">static ingest_new_item</span> (line <span class="line-number">786</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			ingest_new_item
+		</span>
+					([<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$state</span> = <span class="var-default">'A'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$label</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$owner</span> = <span class="var-default">''</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$state</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$label</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$owner</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsoap_call" id="soap_call"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/StaticMethod.png" />
+		<span class="method-title">static soap_call</span> (line <span class="line-number">667</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			soap_call
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$function_name</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params_array</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$quiet</span> = <span class="var-default">FALSE</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$function_name</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$params_array</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$quiet</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method__construct" id="__construct"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Constructor.png" />
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number">29</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Create an object to represent an item in the Fedora repository.</p>
+<p class="description"><p>Throws a SOAPException if the PID is not in the repository.</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../../Islandora/API/Fedora_Item.html">Fedora_Item</a></span>
+		<span class="method-name">
+			__construct
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$pid</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodadd_datastream_from_file" id="add_datastream_from_file"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">add_datastream_from_file</span> (line <span class="line-number">63</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			add_datastream_from_file
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$datastream_file</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$datastream_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$datastream_label</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$datastream_mimetype</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$controlGroup</span> = <span class="var-default">'M'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$logMessage</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$datastream_file</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$datastream_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$datastream_label</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$datastream_mimetype</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$controlGroup</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$logMessage</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodadd_datastream_from_string" id="add_datastream_from_string"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">add_datastream_from_string</span> (line <span class="line-number">110</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			add_datastream_from_string
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$str</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$datastream_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$datastream_label</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$datastream_mimetype</span> = <span class="var-default">'text/xml'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$controlGroup</span> = <span class="var-default">'M'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$logMessage</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$str</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$datastream_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$datastream_label</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$datastream_mimetype</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$controlGroup</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$logMessage</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodadd_datastream_from_url" id="add_datastream_from_url"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">add_datastream_from_url</span> (line <span class="line-number">84</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			add_datastream_from_url
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$datastream_url</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$datastream_id</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$datastream_label</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$datastream_mimetype</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$controlGroup</span> = <span class="var-default">'M'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$logMessage</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$datastream_url</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$datastream_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$datastream_label</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$datastream_mimetype</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$controlGroup</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$logMessage</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodadd_relationship" id="add_relationship"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">add_relationship</span> (line <span class="line-number">127</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Add a relationship string to this object's RELS-EXT.</p>
+<p class="description"><p>does not support rels-int yet.</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			add_relationship
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$relationship</span>, <span class="var-type"><type></span>&nbsp;<span class="var-name">$object</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$namespaceURI</span> = <span class="var-default">RELS_EXT_URI</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$relationship</span>			</li>
+					<li>
+				<span class="var-type"><type></span>
+				<span class="var-name">$object</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$namespaceURI</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodexists" id="exists"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">exists</span> (line <span class="line-number">59</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			exists
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodexport_as_foxml" id="export_as_foxml"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">export_as_foxml</span> (line <span class="line-number">222</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			export_as_foxml
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodget_datastream" id="get_datastream"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">get_datastream</span> (line <span class="line-number">315</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			get_datastream
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$as_of_date_time</span> = <span class="var-default">&quot;&quot;</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$as_of_date_time</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodget_datastreams_list_as_array" id="get_datastreams_list_as_array"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">get_datastreams_list_as_array</span> (line <span class="line-number">422</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an associative array of this object's datastreams. Results look like this:</p>
+<p class="description"><p>'DC' =&gt;     array       'label' =&gt; string 'Dublin Core Record for this object' (length=34)       'MIMEType' =&gt; string 'text/xml' (length=8)   'RELS-EXT' =&gt;     array       'label' =&gt; string 'RDF Statements about this object' (length=32)       'MIMEType' =&gt; string 'application/rdf+xml' (length=19)</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			get_datastreams_list_as_array
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodget_datastreams_list_as_SimpleXML" id="get_datastreams_list_as_SimpleXML"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">get_datastreams_list_as_SimpleXML</span> (line <span class="line-number">365</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Retrieves and returns a SimpleXML list of this item's datastreams, and stores them  as an instance variable for caching purposes.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">SimpleXMLElement</span>
+		<span class="method-name">
+			get_datastreams_list_as_SimpleXML
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodget_datastream_dissemination" id="get_datastream_dissemination"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">get_datastream_dissemination</span> (line <span class="line-number">298</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			get_datastream_dissemination
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$as_of_date_time</span> = <span class="var-default">&quot;&quot;</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$as_of_date_time</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodget_datastream_history" id="get_datastream_history"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">get_datastream_history</span> (line <span class="line-number">326</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			get_datastream_history
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsid</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodget_datastream_info" id="get_datastream_info"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">get_datastream_info</span> (line <span class="line-number">398</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">*  DatastreamControlGroup controlGroup - String restricted to the values of &quot;X&quot;, &quot;M&quot;, &quot;R&quot;, or &quot;E&quot; (InlineXML,Managed Content,Redirect, or External Referenced).</p>
+<p class="description"><p>String ID - The datastream ID (64 characters max).  String versionID - The ID of the most recent datastream version  String[] altIDs - Alternative IDs for the datastream, if any.  String label - The Label of the datastream.  boolean versionable - Whether the datastream is versionable.  String MIMEType - The mime-type for the datastream, if set.  String formatURI - The format uri for the datastream, if set.  String createDate - The date the first version of the datastream was created.  long size - The size of the datastream in Fedora. Only valid for inline XML metadata and managed content datastreams.  String state - The state of the datastream. Will be &quot;A&quot; (active), &quot;I&quot; (inactive) or &quot;D&quot; (deleted).  String location - If the datastream is an external reference or redirect, the url to the contents. TODO: Managed?  String checksumType - The algorithm used to compute the checksum. One of &quot;DEFAULT&quot;, &quot;DISABLED&quot;, &quot;MD5&quot;, &quot;SHA-1&quot;, &quot;SHA-256&quot;, &quot;SHA-385&quot;, &quot;SHA-512&quot;.  String checksum - The value of the checksum represented as a hexadecimal string.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> object  get the mimetype size etc. in one shot.  instead of iterating throught the datastream list for what we need</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">datastream</span>
+		<span class="method-name">
+			get_datastream_info
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$dsid</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$as_of_date_time</span> = <span class="var-default">&quot;&quot;</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$dsid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$as_of_date_time</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodget_dissemination" id="get_dissemination"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">get_dissemination</span> (line <span class="line-number">340</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			get_dissemination
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$service_definition_pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$method_name</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$parameters</span> = <span class="var-default">array()</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$as_of_date_time</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$service_definition_pid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$method_name</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$parameters</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$as_of_date_time</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodget_mimetype_of_datastream" id="get_mimetype_of_datastream"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">get_mimetype_of_datastream</span> (line <span class="line-number">458</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns a MIME type string for the given Datastream ID.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			get_mimetype_of_datastream
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$dsid</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$dsid</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodget_relationships" id="get_relationships"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">get_relationships</span> (line <span class="line-number">479</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Currently the Fedora API call getRelationships is reporting an uncaught  exception so we will parse the RELS-EXT ourselves and simulate the  documented behaviour.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			get_relationships
+		</span>
+					([<span class="var-type">String</span>&nbsp;<span class="var-name">$relationship</span> = <span class="var-default">NULL</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$relationship</span><span class="var-description">: - filter the results to match this string.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodmodify_datastream_by_reference" id="modify_datastream_by_reference"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">modify_datastream_by_reference</span> (line <span class="line-number">633</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			modify_datastream_by_reference
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$external_url</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$label</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$mime_type</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$force</span> = <span class="var-default">FALSE</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$logMessage</span> = <span class="var-default">'Modified by Islandora API'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$quiet</span> = <span class="var-default">FALSE</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$external_url</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$label</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$mime_type</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$force</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$logMessage</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$quiet</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodmodify_datastream_by_value" id="modify_datastream_by_value"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">modify_datastream_by_value</span> (line <span class="line-number">650</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			modify_datastream_by_value
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$content</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$label</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$mime_type</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$force</span> = <span class="var-default">FALSE</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$logMessage</span> = <span class="var-default">'Modified by Islandora API'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$quiet</span> = <span class="var-default">FALSE</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$content</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$label</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$mime_type</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$force</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$logMessage</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$quiet</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodmodify_object" id="modify_object"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">modify_object</span> (line <span class="line-number">620</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			modify_object
+		</span>
+					([<span class="var-type"></span>&nbsp;<span class="var-name">$label</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$state</span> = <span class="var-default">null</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$ownerId</span> = <span class="var-default">null</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$logMessage</span> = <span class="var-default">'Modified by Islandora API'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$quiet</span> = <span class="var-default">TRUE</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$label</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$state</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$ownerId</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$logMessage</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$quiet</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodpurge" id="purge"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">purge</span> (line <span class="line-number">539</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Removes this object form the repository.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			purge
+		</span>
+					([<span class="var-type"></span>&nbsp;<span class="var-name">$log_message</span> = <span class="var-default">'Purged using Islandora API.'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$force</span> = <span class="var-default">FALSE</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$log_message</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$force</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodpurge_datastream" id="purge_datastream"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">purge_datastream</span> (line <span class="line-number">549</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			purge_datastream
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$dsID</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$start_date</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$end_date</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$log_message</span> = <span class="var-default">'Purged datastream using Islandora API'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$force</span> = <span class="var-default">FALSE</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsID</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$start_date</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$end_date</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$log_message</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$force</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodpurge_relationship" id="purge_relationship"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">purge_relationship</span> (line <span class="line-number">177</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Removes the given relationship from the item's RELS-EXT and re-saves it.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			purge_relationship
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$relationship</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$object</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$relationship</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$object</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsave_relationships" id="save_relationships"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">save_relationships</span> (line <span class="line-number">516</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Creates a RELS-EXT XML stream from the supplied array and saves it to  the item on the server.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			save_relationships
+		</span>
+					(<span class="var-type"><type></span>&nbsp;<span class="var-name">$relationships</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"><type></span>
+				<span class="var-name">$relationships</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodurl" id="url"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">url</span> (line <span class="line-number">561</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			url
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+	
+	<p class="notes" id="credit">
+		Documentation generated on Thu, 14 Jul 2011 16:29:54 -0300 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</div></body>
+</html>

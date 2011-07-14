@@ -1,0 +1,710 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos  -->
+			<title>Docs For Class SearchClass</title>
+			<link rel="stylesheet" href="../../media/stylesheet.css" />
+						<script src="../../media/lib/classTree.js"></script>
+												<script language="javascript" type="text/javascript">
+				var imgPlus = new Image();
+				var imgMinus = new Image();
+				imgPlus.src = "../../media/images/plus.png";
+				imgMinus.src = "../../media/images/minus.png";
+				
+				function showNode(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+							var oImg = document.layers["img" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+							var oImg = document.all["img" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+							var oImg = document.getElementById("img" + Node);
+									break;
+							}
+					oImg.src = imgMinus.src;
+					oTable.style.display = "block";
+				}
+				
+				function hideNode(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+							var oImg = document.layers["img" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+							var oImg = document.all["img" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+							var oImg = document.getElementById("img" + Node);
+									break;
+							}
+					oImg.src = imgPlus.src;
+					oTable.style.display = "none";
+				}
+				
+				function nodeIsVisible(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+									break;
+							}
+					return (oTable && oTable.style.display == "block");
+				}
+				
+				function toggleNodeVisibility(Node){
+					if (nodeIsVisible(Node)){
+						hideNode(Node);
+					}else{
+						showNode(Node);
+					}
+				}
+			</script>
+					</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name"><img src="../../media/images/Class_logo.png"
+														alt=" Class"
+														title=" Class"
+														style="vertical-align: middle"> SearchClass</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+		<p class="notes">
+			Located in <a class="field" href="_SearchClass.inc.html">/SearchClass.inc</a> (line <span class="field">9</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variable Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+												<div class="var-title">
+					<img src="../../media/images/StaticVariable.png" alt=" " />
+					static <span class="var-type">mixed</span>
+					<a href="#$SEARCH_CLASS_ADVANCED_SEARCH_NUMBER_FIELDS" title="details" class="var-name">$SEARCH_CLASS_ADVANCED_SEARCH_NUMBER_FIELDS</a>
+				</div>
+																							</div>
+		</div>
+	</div>
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																																							
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#applyLuceneXSLT" title="details" class="method-name">applyLuceneXSLT</a>
+											(<span class="var-type"><type></span>&nbsp;<span class="var-name">$resultData</span>, [<span class="var-type"><type></span>&nbsp;<span class="var-name">$startPage</span> = <span class="var-default">1</span>], [<span class="var-type"><type></span>&nbsp;<span class="var-name">$xslt_file</span> = <span class="var-default">'/xsl/results.xsl'</span>], [<span class="var-type"><type></span>&nbsp;<span class="var-name">$query</span> = <span class="var-default">NULL</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#applySpecifiedXSLT" title="details" class="method-name">applySpecifiedXSLT</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$resultData</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$pathToXSLT</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$displayName</span> = <span class="var-default">NULL</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#applyXSLT" title="details" class="method-name">applyXSLT</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$resultData</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$orderBy</span> = <span class="var-default">0</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#build_advanced_search_form" title="details" class="method-name">build_advanced_search_form</a>
+											([<span class="var-type"></span>&nbsp;<span class="var-name">$repeat</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$pathToSearchTerms</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$query</span> = <span class="var-default">NULL</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#build_simple_solr_form" title="details" class="method-name">build_simple_solr_form</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#build_solr_search_form" title="details" class="method-name">build_solr_search_form</a>
+											([<span class="var-type"></span>&nbsp;<span class="var-name">$repeat</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$pathToSearchTerms</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$query</span> = <span class="var-default">NULL</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#custom_search" title="details" class="method-name">custom_search</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$query</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$startPage</span> = <span class="var-default">1</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$xslt</span> = <span class="var-default">'/xsl/advanced_search_results.xsl'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$numberOfHistPerPage</span> = <span class="var-default">50</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getTerms" title="details" class="method-name">getTerms</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$fieldName</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$startTerm</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$displayName</span> = <span class="var-default">NULL</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#get_search_terms_array" title="details" class="method-name">get_search_terms_array</a>
+											([<span class="var-type"></span>&nbsp;<span class="var-name">$path</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$file</span> = <span class="var-default">NULL</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#quickSearch" title="details" class="method-name">quickSearch</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$type</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$query</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$showForm</span> = <span class="var-default">1</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$orderBy</span> = <span class="var-default">0</span>], <span class="var-type"></span>&nbsp;<span class="var-name">&$userArray</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#solr_search" title="details" class="method-name">solr_search</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$query</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$startPage</span> = <span class="var-default">1</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$fq</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$dismax</span> = <span class="var-default">NULL</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#theme_advanced_search_form" title="details" class="method-name">theme_advanced_search_form</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$form</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$repeat</span> = <span class="var-default">NULL</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#theme_solr_search_form" title="details" class="method-name">theme_solr_search_form</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$form</span>)
+									</div>
+											</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="var$SEARCH_CLASS_ADVANCED_SEARCH_NUMBER_FIELDS" id="$SEARCH_CLASS_ADVANCED_SEARCH_NUMBER_FIELDS"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<img src="../../media/images/StaticVariable.png" />
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$SEARCH_CLASS_ADVANCED_SEARCH_NUMBER_FIELDS</span>
+			 = <span class="var-default"> 5</span>			(line <span class="line-number">10</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+
+						
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methodapplyLuceneXSLT" id="applyLuceneXSLT"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">applyLuceneXSLT</span> (line <span class="line-number">310</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">apply an xslt to lucene gsearch search results</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			applyLuceneXSLT
+		</span>
+					(<span class="var-type"><type></span>&nbsp;<span class="var-name">$resultData</span>, [<span class="var-type"><type></span>&nbsp;<span class="var-name">$startPage</span> = <span class="var-default">1</span>], [<span class="var-type"><type></span>&nbsp;<span class="var-name">$xslt_file</span> = <span class="var-default">'/xsl/results.xsl'</span>], [<span class="var-type"><type></span>&nbsp;<span class="var-name">$query</span> = <span class="var-default">NULL</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"><type></span>
+				<span class="var-name">$resultData</span>			</li>
+					<li>
+				<span class="var-type"><type></span>
+				<span class="var-name">$startPage</span>			</li>
+					<li>
+				<span class="var-type"><type></span>
+				<span class="var-name">$xslt_file</span>			</li>
+					<li>
+				<span class="var-type"><type></span>
+				<span class="var-name">$query</span><span class="var-description">: the query that was executed.  May want to pass this on.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodapplySpecifiedXSLT" id="applySpecifiedXSLT"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">applySpecifiedXSLT</span> (line <span class="line-number">251</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			applySpecifiedXSLT
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$resultData</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$pathToXSLT</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$displayName</span> = <span class="var-default">NULL</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$resultData</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pathToXSLT</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$displayName</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodapplyXSLT" id="applyXSLT"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">applyXSLT</span> (line <span class="line-number">363</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			applyXSLT
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$resultData</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$orderBy</span> = <span class="var-default">0</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$resultData</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$orderBy</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodbuild_advanced_search_form" id="build_advanced_search_form"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">build_advanced_search_form</span> (line <span class="line-number">428</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			build_advanced_search_form
+		</span>
+					([<span class="var-type"></span>&nbsp;<span class="var-name">$repeat</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$pathToSearchTerms</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$query</span> = <span class="var-default">NULL</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$repeat</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pathToSearchTerms</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$query</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodbuild_simple_solr_form" id="build_simple_solr_form"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">build_simple_solr_form</span> (line <span class="line-number">108</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			build_simple_solr_form
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodbuild_solr_search_form" id="build_solr_search_form"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">build_solr_search_form</span> (line <span class="line-number">27</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			build_solr_search_form
+		</span>
+					([<span class="var-type"></span>&nbsp;<span class="var-name">$repeat</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$pathToSearchTerms</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$query</span> = <span class="var-default">NULL</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$repeat</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pathToSearchTerms</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$query</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcustom_search" id="custom_search"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">custom_search</span> (line <span class="line-number">218</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			custom_search
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$query</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$startPage</span> = <span class="var-default">1</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$xslt</span> = <span class="var-default">'/xsl/advanced_search_results.xsl'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$numberOfHistPerPage</span> = <span class="var-default">50</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$query</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$startPage</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$xslt</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$numberOfHistPerPage</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetTerms" id="getTerms"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getTerms</span> (line <span class="line-number">191</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getTerms
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$fieldName</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$startTerm</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$displayName</span> = <span class="var-default">NULL</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$fieldName</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$startTerm</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$displayName</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodget_search_terms_array" id="get_search_terms_array"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">get_search_terms_array</span> (line <span class="line-number">510</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			get_search_terms_array
+		</span>
+					([<span class="var-type"></span>&nbsp;<span class="var-name">$path</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$file</span> = <span class="var-default">NULL</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$path</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$file</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodquickSearch" id="quickSearch"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">quickSearch</span> (line <span class="line-number">144</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			quickSearch
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$type</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$query</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$showForm</span> = <span class="var-default">1</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$orderBy</span> = <span class="var-default">0</span>], <span class="var-type"></span>&nbsp;<span class="var-name">&$userArray</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$type</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$query</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$showForm</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$orderBy</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$userArray</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsolr_search" id="solr_search"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">solr_search</span> (line <span class="line-number">11</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			solr_search
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$query</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$startPage</span> = <span class="var-default">1</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$fq</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$dismax</span> = <span class="var-default">NULL</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$query</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$startPage</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$fq</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dismax</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodtheme_advanced_search_form" id="theme_advanced_search_form"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">theme_advanced_search_form</span> (line <span class="line-number">406</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			theme_advanced_search_form
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$form</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$repeat</span> = <span class="var-default">NULL</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$form</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$repeat</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodtheme_solr_search_form" id="theme_solr_search_form"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">theme_solr_search_form</span> (line <span class="line-number">122</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			theme_solr_search_form
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$form</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$form</span>			</li>
+				</ul>
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+	
+	<p class="notes" id="credit">
+		Documentation generated on Thu, 14 Jul 2011 16:29:54 -0300 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</div></body>
+</html>

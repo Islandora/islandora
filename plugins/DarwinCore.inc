@@ -1,6 +1,10 @@
 <?php
-
 // $Id$
+
+/**
+ * @package Islandora
+ * @subpackage plugins
+ */
 
 class DarwinCore {
 

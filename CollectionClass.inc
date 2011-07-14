@@ -1,6 +1,10 @@
 <?php
-
 // $Id$
+
+/**
+ * @package Islandora
+ * @subpackage rootdirectory
+ */
 
 /*
  * Created on 18-Feb-08

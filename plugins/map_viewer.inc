@@ -1,6 +1,13 @@
 <?php
 // $Id$
 
+/**
+ * @package Islandora
+ * @subpackage plugins
+ */
+
+
+
 class ShowMapStreamsInFieldSets {
   private $pid =NULL;
 

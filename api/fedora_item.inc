@@ -1,6 +1,11 @@
 <?php
-
 // $Id$
+
+/**
+ * @package Islandora
+ * @subpackage API
+ */
+
 
 define('RELS_EXT_URI', 'info:fedora/fedora-system:def/relations-external#');
 define("FEDORA_MODEL_URI", 'info:fedora/fedora-system:def/model#');

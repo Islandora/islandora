@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @package Islandora
+ * @subpackage API
+ */
+
 /* 
  * Operations that affect a Fedora repository at a collection level.
  */

@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @package Islandora
+ * @subpackage rootdirectory
+ */
+
 class SearchClass {
   public static $SEARCH_CLASS_ADVANCED_SEARCH_NUMBER_FIELDS = 5;
   function solr_search($query,  $startPage=1, $fq = NULL, $dismax = NULL) {

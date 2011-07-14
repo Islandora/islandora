@@ -1,6 +1,11 @@
 <?php
-
 // $Id$
+
+/**
+ * @package Islandora
+ * @subpackage plugins
+ */
+
 
 /*
  *

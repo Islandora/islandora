@@ -1,6 +1,12 @@
 <?php
-
 // $Id$
+
+/**
+ * @package Islandora
+ * @subpackage plugins
+ */
+
+
 
 class Herbarium {
   function  __construct($pid = '') {

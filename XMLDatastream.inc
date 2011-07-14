@@ -1,6 +1,10 @@
 <?php
-
 // $Id$
+
+/**
+ * @package Islandora
+ * @subpackage rootdirectory
+ */
 
 abstract class XMLDatastream {
 

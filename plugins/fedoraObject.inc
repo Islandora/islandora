@@ -1,4 +1,11 @@
 <?php
+// $Id$
+
+/**
+ * @package Islandora
+ * @subpackage plugins
+ */
+
 
 class FedoraObject {
   function  __construct($pid = '') {
