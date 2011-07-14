@@ -1,6 +1,10 @@
 <?php
-
 // $Id$
+
+/**
+ * @package Islandora
+ * @subpackage newspaper
+ */
 
 class Newspaper {
 

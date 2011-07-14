@@ -109,90 +109,8 @@ if (document.getElementById) {
 
 		
 		
-					var tree_classe = new WebFXTreeItem('Class(es)', '');
-			tree_classe.openIcon = 'media/images/class_folder.png';
-			tree_classe.icon = 'media/images/class_folder.png';
-			
-						    				var classe = new WebFXTreeItem('IslandoraBook', 'Islandora/IslandoraBook.html');
-				classe.openIcon = 'media/images/Class.png';
-				classe.icon = 'media/images/Class.png';
-				tree_classe.add(classe);
-										    				var classe = new WebFXTreeItem('Newspaper', 'Islandora/Newspaper.html');
-				classe.openIcon = 'media/images/Class.png';
-				classe.icon = 'media/images/Class.png';
-				tree_classe.add(classe);
-										    				var classe = new WebFXTreeItem('ShowILivesStreamsInFieldSets', 'Islandora/ShowILivesStreamsInFieldSets.html');
-				classe.openIcon = 'media/images/Class.png';
-				classe.icon = 'media/images/Class.png';
-				tree_classe.add(classe);
-								
-			tree.add(tree_classe);
 		
-					var tree_function = new WebFXTreeItem('Function(s)', '');
-			tree_function.openIcon = 'media/images/function_folder.png';
-			tree_function.icon = 'media/images/function_folder.png';
 			
-							var fic = new WebFXTreeItem('book_add_pages_form', 'Islandora/_ilives---book.inc.html#functionbook_add_pages_form');
-				fic.openIcon = 'media/images/Function.png';
-				fic.icon = 'media/images/Function.png';
-				tree_function.add(fic);
-							var fic = new WebFXTreeItem('book_add_pages_form_submit', 'Islandora/_ilives---book.inc.html#functionbook_add_pages_form_submit');
-				fic.openIcon = 'media/images/Function.png';
-				fic.icon = 'media/images/Function.png';
-				tree_function.add(fic);
-							var fic = new WebFXTreeItem('book_add_pages_form_validate', 'Islandora/_ilives---book.inc.html#functionbook_add_pages_form_validate');
-				fic.openIcon = 'media/images/Function.png';
-				fic.icon = 'media/images/Function.png';
-				tree_function.add(fic);
-							var fic = new WebFXTreeItem('fedora_attach_admin', 'Islandora/_plugins---fedora_attach---fedora_attach.admin.inc.html#functionfedora_attach_admin');
-				fic.openIcon = 'media/images/Function.png';
-				fic.icon = 'media/images/Function.png';
-				tree_function.add(fic);
-							var fic = new WebFXTreeItem('get_random_image', 'Islandora/_ilives---image_rotator_tagger_block.inc.html#functionget_random_image');
-				fic.openIcon = 'media/images/Function.png';
-				fic.icon = 'media/images/Function.png';
-				tree_function.add(fic);
-							var fic = new WebFXTreeItem('ilives_add_single_page_object', 'Islandora/_ilives---book.inc.html#functionilives_add_single_page_object');
-				fic.openIcon = 'media/images/Function.png';
-				fic.icon = 'media/images/Function.png';
-				tree_function.add(fic);
-							var fic = new WebFXTreeItem('ilives_create_page_objects', 'Islandora/_ilives---book.inc.html#functionilives_create_page_objects');
-				fic.openIcon = 'media/images/Function.png';
-				fic.icon = 'media/images/Function.png';
-				tree_function.add(fic);
-							var fic = new WebFXTreeItem('transform_mods_to_dc', 'Islandora/_ilives---book.inc.html#functiontransform_mods_to_dc');
-				fic.openIcon = 'media/images/Function.png';
-				fic.icon = 'media/images/Function.png';
-				tree_function.add(fic);
-							var fic = new WebFXTreeItem('_fedora_image_rotator_tagger_block_content', 'Islandora/_ilives---image_rotator_tagger_block.inc.html#function_fedora_image_rotator_tagger_block_content');
-				fic.openIcon = 'media/images/Function.png';
-				fic.icon = 'media/images/Function.png';
-				tree_function.add(fic);
-					
-			tree.add(tree_function);
-			
-					var tree_file = new WebFXTreeItem('File(s)', '');
-			tree_file.openIcon = 'media/images/folder.png';
-			tree_file.icon = 'media/images/folder.png';
-	
-							var file = new WebFXTreeItem('book.inc', 'Islandora/_ilives---book.inc.html');
-				file.openIcon = 'media/images/Page.png';
-				file.icon = 'media/images/Page.png';
-				tree_file.add(file);
-							var file = new WebFXTreeItem('fedora_attach.admin.inc', 'Islandora/_plugins---fedora_attach---fedora_attach.admin.inc.html');
-				file.openIcon = 'media/images/Page.png';
-				file.icon = 'media/images/Page.png';
-				tree_file.add(file);
-							var file = new WebFXTreeItem('image_rotator_tagger_block.inc', 'Islandora/_ilives---image_rotator_tagger_block.inc.html');
-				file.openIcon = 'media/images/Page.png';
-				file.icon = 'media/images/Page.png';
-				tree_file.add(file);
-							var file = new WebFXTreeItem('Newspaper.inc', 'Islandora/_plugins---islandora_newspaper---Newspaper.inc.html');
-				file.openIcon = 'media/images/Page.png';
-				file.icon = 'media/images/Page.png';
-				tree_file.add(file);
-				
-			tree.add(tree_file);
 		
 							var subpackagetree = new WebFXTreeItem('<span class="sub-package">API</span>', '');
 		
@@ -319,6 +237,142 @@ if (document.getElementById) {
 				file.icon = 'media/images/Page.png';
 				subpackagetree_file.add(file);
 							var file = new WebFXTreeItem('tagging.inc', 'Islandora/API/_api---tagging.inc.html');
+				file.openIcon = 'media/images/Page.png';
+				file.icon = 'media/images/Page.png';
+				subpackagetree_file.add(file);
+					
+			subpackagetree.add(subpackagetree_file);
+			
+	  tree.add(subpackagetree);
+							var subpackagetree = new WebFXTreeItem('<span class="sub-package">fedora_attach</span>', '');
+		
+		subpackagetree.openIcon = 'media/images/package.png';
+		subpackagetree.icon = 'media/images/package.png';
+
+			
+		
+					var subpackagetree_function = new WebFXTreeItem('Function(s)', '');
+			subpackagetree_function.openIcon = 'media/images/function_folder.png';
+			subpackagetree_function.icon = 'media/images/function_folder.png';
+			
+							var fic = new WebFXTreeItem('fedora_attach_admin', 'Islandora/fedora_attach/_plugins---fedora_attach---fedora_attach.admin.inc.html#functionfedora_attach_admin');
+				fic.openIcon = 'media/images/Function.png';
+				fic.icon = 'media/images/Function.png';
+				subpackagetree_function.add(fic);
+						
+			subpackagetree.add(subpackagetree_function);
+				
+					var subpackagetree_file = new WebFXTreeItem('File(s)', '');
+			subpackagetree_file.openIcon = 'media/images/folder.png';
+			subpackagetree_file.icon = 'media/images/folder.png';
+			
+							var file = new WebFXTreeItem('fedora_attach.admin.inc', 'Islandora/fedora_attach/_plugins---fedora_attach---fedora_attach.admin.inc.html');
+				file.openIcon = 'media/images/Page.png';
+				file.icon = 'media/images/Page.png';
+				subpackagetree_file.add(file);
+					
+			subpackagetree.add(subpackagetree_file);
+			
+	  tree.add(subpackagetree);
+							var subpackagetree = new WebFXTreeItem('<span class="sub-package">ilives</span>', '');
+		
+		subpackagetree.openIcon = 'media/images/package.png';
+		subpackagetree.icon = 'media/images/package.png';
+
+			
+					var subpackagetree_classe = new WebFXTreeItem('Class(es)', '');
+			subpackagetree_classe.openIcon = 'media/images/class_folder.png';
+			subpackagetree_classe.icon = 'media/images/class_folder.png';
+			
+							var classe = new WebFXTreeItem('IslandoraBook', 'Islandora/ilives/IslandoraBook.html');
+				classe.openIcon = 'media/images/Class.png';
+				classe.icon = 'media/images/Class.png';
+				subpackagetree_classe.add(classe);
+							var classe = new WebFXTreeItem('ShowILivesStreamsInFieldSets', 'Islandora/ilives/ShowILivesStreamsInFieldSets.html');
+				classe.openIcon = 'media/images/Class.png';
+				classe.icon = 'media/images/Class.png';
+				subpackagetree_classe.add(classe);
+						
+			subpackagetree.add(subpackagetree_classe);
+		
+					var subpackagetree_function = new WebFXTreeItem('Function(s)', '');
+			subpackagetree_function.openIcon = 'media/images/function_folder.png';
+			subpackagetree_function.icon = 'media/images/function_folder.png';
+			
+							var fic = new WebFXTreeItem('book_add_pages_form', 'Islandora/ilives/_ilives---book.inc.html#functionbook_add_pages_form');
+				fic.openIcon = 'media/images/Function.png';
+				fic.icon = 'media/images/Function.png';
+				subpackagetree_function.add(fic);
+							var fic = new WebFXTreeItem('book_add_pages_form_submit', 'Islandora/ilives/_ilives---book.inc.html#functionbook_add_pages_form_submit');
+				fic.openIcon = 'media/images/Function.png';
+				fic.icon = 'media/images/Function.png';
+				subpackagetree_function.add(fic);
+							var fic = new WebFXTreeItem('book_add_pages_form_validate', 'Islandora/ilives/_ilives---book.inc.html#functionbook_add_pages_form_validate');
+				fic.openIcon = 'media/images/Function.png';
+				fic.icon = 'media/images/Function.png';
+				subpackagetree_function.add(fic);
+							var fic = new WebFXTreeItem('get_random_image', 'Islandora/ilives/_ilives---image_rotator_tagger_block.inc.html#functionget_random_image');
+				fic.openIcon = 'media/images/Function.png';
+				fic.icon = 'media/images/Function.png';
+				subpackagetree_function.add(fic);
+							var fic = new WebFXTreeItem('ilives_add_single_page_object', 'Islandora/ilives/_ilives---book.inc.html#functionilives_add_single_page_object');
+				fic.openIcon = 'media/images/Function.png';
+				fic.icon = 'media/images/Function.png';
+				subpackagetree_function.add(fic);
+							var fic = new WebFXTreeItem('ilives_create_page_objects', 'Islandora/ilives/_ilives---book.inc.html#functionilives_create_page_objects');
+				fic.openIcon = 'media/images/Function.png';
+				fic.icon = 'media/images/Function.png';
+				subpackagetree_function.add(fic);
+							var fic = new WebFXTreeItem('transform_mods_to_dc', 'Islandora/ilives/_ilives---book.inc.html#functiontransform_mods_to_dc');
+				fic.openIcon = 'media/images/Function.png';
+				fic.icon = 'media/images/Function.png';
+				subpackagetree_function.add(fic);
+							var fic = new WebFXTreeItem('_fedora_image_rotator_tagger_block_content', 'Islandora/ilives/_ilives---image_rotator_tagger_block.inc.html#function_fedora_image_rotator_tagger_block_content');
+				fic.openIcon = 'media/images/Function.png';
+				fic.icon = 'media/images/Function.png';
+				subpackagetree_function.add(fic);
+						
+			subpackagetree.add(subpackagetree_function);
+				
+					var subpackagetree_file = new WebFXTreeItem('File(s)', '');
+			subpackagetree_file.openIcon = 'media/images/folder.png';
+			subpackagetree_file.icon = 'media/images/folder.png';
+			
+							var file = new WebFXTreeItem('book.inc', 'Islandora/ilives/_ilives---book.inc.html');
+				file.openIcon = 'media/images/Page.png';
+				file.icon = 'media/images/Page.png';
+				subpackagetree_file.add(file);
+							var file = new WebFXTreeItem('image_rotator_tagger_block.inc', 'Islandora/ilives/_ilives---image_rotator_tagger_block.inc.html');
+				file.openIcon = 'media/images/Page.png';
+				file.icon = 'media/images/Page.png';
+				subpackagetree_file.add(file);
+					
+			subpackagetree.add(subpackagetree_file);
+			
+	  tree.add(subpackagetree);
+							var subpackagetree = new WebFXTreeItem('<span class="sub-package">newspaper</span>', '');
+		
+		subpackagetree.openIcon = 'media/images/package.png';
+		subpackagetree.icon = 'media/images/package.png';
+
+			
+					var subpackagetree_classe = new WebFXTreeItem('Class(es)', '');
+			subpackagetree_classe.openIcon = 'media/images/class_folder.png';
+			subpackagetree_classe.icon = 'media/images/class_folder.png';
+			
+							var classe = new WebFXTreeItem('Newspaper', 'Islandora/newspaper/Newspaper.html');
+				classe.openIcon = 'media/images/Class.png';
+				classe.icon = 'media/images/Class.png';
+				subpackagetree_classe.add(classe);
+						
+			subpackagetree.add(subpackagetree_classe);
+		
+				
+					var subpackagetree_file = new WebFXTreeItem('File(s)', '');
+			subpackagetree_file.openIcon = 'media/images/folder.png';
+			subpackagetree_file.icon = 'media/images/folder.png';
+			
+							var file = new WebFXTreeItem('Newspaper.inc', 'Islandora/newspaper/_plugins---islandora_newspaper---Newspaper.inc.html');
 				file.openIcon = 'media/images/Page.png';
 				file.icon = 'media/images/Page.png';
 				subpackagetree_file.add(file);

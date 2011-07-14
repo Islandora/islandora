@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @package Islandora
+ * @subpackage ilives
+ */
+
 /* 
  * @file image_rotator_tagger_block.inc
  */

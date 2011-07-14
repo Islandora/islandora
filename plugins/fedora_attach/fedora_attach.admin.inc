@@ -1,5 +1,10 @@
 <?php
-// $Id$                                                                                                                                                  
+// $Id$
+
+/**
+ * @package Islandora
+ * @subpackage fedora_attach
+ */
 
 /** 
  * @file 
