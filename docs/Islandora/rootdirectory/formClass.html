@@ -1,0 +1,679 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos  -->
+			<title>Docs For Class formClass</title>
+			<link rel="stylesheet" href="../../media/stylesheet.css" />
+						<script src="../../media/lib/classTree.js"></script>
+												<script language="javascript" type="text/javascript">
+				var imgPlus = new Image();
+				var imgMinus = new Image();
+				imgPlus.src = "../../media/images/plus.png";
+				imgMinus.src = "../../media/images/minus.png";
+				
+				function showNode(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+							var oImg = document.layers["img" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+							var oImg = document.all["img" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+							var oImg = document.getElementById("img" + Node);
+									break;
+							}
+					oImg.src = imgMinus.src;
+					oTable.style.display = "block";
+				}
+				
+				function hideNode(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+							var oImg = document.layers["img" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+							var oImg = document.all["img" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+							var oImg = document.getElementById("img" + Node);
+									break;
+							}
+					oImg.src = imgPlus.src;
+					oTable.style.display = "none";
+				}
+				
+				function nodeIsVisible(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+									break;
+							}
+					return (oTable && oTable.style.display == "block");
+				}
+				
+				function toggleNodeVisibility(Node){
+					if (nodeIsVisible(Node)){
+						hideNode(Node);
+					}else{
+						showNode(Node);
+					}
+				}
+			</script>
+					</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name"><img src="../../media/images/Class_logo.png"
+														alt=" Class"
+														title=" Class"
+														style="vertical-align: middle"> formClass</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+		<p class="notes">
+			Located in <a class="field" href="_formClass.inc.html">/formClass.inc</a> (line <span class="field">13</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+												<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																																															
+				<div class="method-definition">
+					<img src="../../media/images/Constructor.png" alt=" "/>
+											<span class="method-result">formClass</span>
+										<a href="#formClass" title="details" class="method-name">formClass</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">type</span>
+										<a href="#canShowIngestForm" title="details" class="method-name">canShowIngestForm</a>
+											(<span class="var-type">type</span>&nbsp;<span class="var-name">$collection_pid</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#can_ingest_here" title="details" class="method-name">can_ingest_here</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$collection_pid</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#createAddDataStreamForm" title="details" class="method-name">createAddDataStreamForm</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$form_state</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#createAdminForm" title="details" class="method-name">createAdminForm</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">array</span>
+										<a href="#createIngestForm" title="details" class="method-name">createIngestForm</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$collection_pid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$collection_label</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$form_state</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$form_state</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#createMenu" title="details" class="method-name">createMenu</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#createMetaDataForm" title="details" class="method-name">createMetaDataForm</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$client</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$form_state</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">string</span>
+										<a href="#createQDCEditForm" title="details" class="method-name">createQDCEditForm</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type">object</span>&nbsp;<span class="var-name">$client</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$form_state</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$form_state</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">array</span>
+										<a href="#createQDCIngestForm" title="details" class="method-name">createQDCIngestForm</a>
+											(<span class="var-type">type</span>&nbsp;<span class="var-name">$collection_pid</span>, <span class="var-type">type</span>&nbsp;<span class="var-name">$collection_label</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$form_state</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$form_state</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">array</span>
+										<a href="#createQDCIngestFormPageOne" title="details" class="method-name">createQDCIngestFormPageOne</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$collection_pid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$collection_label</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$form_state</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$form_state</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">array</span>
+										<a href="#createQDCIngestFormPageTwo" title="details" class="method-name">createQDCIngestFormPageTwo</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$collection_pid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$collection_label</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$form_state</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$form_state</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#createReplaceDataStreamForm" title="details" class="method-name">createReplaceDataStreamForm</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsId</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsLabel</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$form_state</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#updateMetaData" title="details" class="method-name">updateMetaData</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$form_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$form_values</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$client</span>)
+									</div>
+											</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methodformClass" id="formClass"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Constructor.png" />
+		<span class="method-title">Constructor formClass</span> (line <span class="line-number">15</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">formClass</span>
+		<span class="method-name">
+			formClass
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodcanShowIngestForm" id="canShowIngestForm"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">canShowIngestForm</span> (line <span class="line-number">464</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Drupal's permissions at this point no xacml yet. xacml decisions are made by fedora</p>
+	
+	<div class="method-signature">
+		<span class="method-result">type</span>
+		<span class="method-name">
+			canShowIngestForm
+		</span>
+					(<span class="var-type">type</span>&nbsp;<span class="var-name">$collection_pid</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">type</span>
+				<span class="var-name">$collection_pid</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcan_ingest_here" id="can_ingest_here"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">can_ingest_here</span> (line <span class="line-number">452</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			can_ingest_here
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$collection_pid</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$collection_pid</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcreateAddDataStreamForm" id="createAddDataStreamForm"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">createAddDataStreamForm</span> (line <span class="line-number">616</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			createAddDataStreamForm
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$form_state</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$form_state</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcreateAdminForm" id="createAdminForm"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">createAdminForm</span> (line <span class="line-number">201</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			createAdminForm
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodcreateIngestForm" id="createIngestForm"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">createIngestForm</span> (line <span class="line-number">599</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Create a multi step form (wizard) for ingesting objects into Fedora</p>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			createIngestForm
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$collection_pid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$collection_label</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$form_state</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$form_state</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$collection_pid</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$collection_label</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$form_state</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">&$form_state</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcreateMenu" id="createMenu"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">createMenu</span> (line <span class="line-number">24</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			createMenu
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodcreateMetaDataForm" id="createMetaDataForm"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">createMetaDataForm</span> (line <span class="line-number">815</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Creates a drupal form to edit either the QDC or DC datastream</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			createMetaDataForm
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$client</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$form_state</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$client</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$form_state</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcreateQDCEditForm" id="createQDCEditForm"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">createQDCEditForm</span> (line <span class="line-number">732</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Create edit form.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			createQDCEditForm
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type">object</span>&nbsp;<span class="var-name">$client</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$form_state</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$form_state</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$dsid</span>			</li>
+					<li>
+				<span class="var-type">object</span>
+				<span class="var-name">$client</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$form_state</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$form_state</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcreateQDCIngestForm" id="createQDCIngestForm"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">createQDCIngestForm</span> (line <span class="line-number">579</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Create the QDC Ingest Form.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			createQDCIngestForm
+		</span>
+					(<span class="var-type">type</span>&nbsp;<span class="var-name">$collection_pid</span>, <span class="var-type">type</span>&nbsp;<span class="var-name">$collection_label</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$form_state</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$form_state</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">type</span>
+				<span class="var-name">$collection_pid</span>			</li>
+					<li>
+				<span class="var-type">type</span>
+				<span class="var-name">$collection_label</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$form_state</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">&$form_state</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcreateQDCIngestFormPageOne" id="createQDCIngestFormPageOne"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">createQDCIngestFormPageOne</span> (line <span class="line-number">494</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Creates the first page of the ingest form for editing QDC.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			createQDCIngestFormPageOne
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$collection_pid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$collection_label</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$form_state</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$form_state</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$collection_pid</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$collection_label</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$form_state</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">&$form_state</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcreateQDCIngestFormPageTwo" id="createQDCIngestFormPageTwo"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">createQDCIngestFormPageTwo</span> (line <span class="line-number">544</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Create the second page of the ingest form for editing QDC</p>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			createQDCIngestFormPageTwo
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$collection_pid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$collection_label</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$form_state</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$form_state</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$collection_pid</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$collection_label</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$form_state</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">&$form_state</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcreateReplaceDataStreamForm" id="createReplaceDataStreamForm"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">createReplaceDataStreamForm</span> (line <span class="line-number">831</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Creates a form for replacing datastream</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			createReplaceDataStreamForm
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsId</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsLabel</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$form_state</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsId</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsLabel</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$form_state</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodupdateMetaData" id="updateMetaData"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">updateMetaData</span> (line <span class="line-number">390</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			updateMetaData
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$form_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$form_values</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$client</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$form_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$form_values</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$client</span>			</li>
+				</ul>
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+	
+	<p class="notes" id="credit">
+		Documentation generated on Thu, 14 Jul 2011 16:56:04 -0300 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</div></body>
+</html>

@@ -1,6 +1,12 @@
 <?php
 // $Id$
 
+/**
+ * @package Islandora
+ * @subpackage plugins
+ */
+
+
 class PersonalCollectionClass {
   function PersonalCollectionClass() {
     drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);

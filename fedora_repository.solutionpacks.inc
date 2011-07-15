@@ -1,5 +1,10 @@
 <?php
+// $Id$
 
+/**
+ * @package Islandora
+ * @subpackage rootdirectory
+ */
 
 /**
  * Invokes a hook to any dependent modules asking them if their installations require

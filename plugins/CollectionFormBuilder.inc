@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @package Islandora
+ * @subpackage plugins
+ */
+
 module_load_include('inc', 'fedora_repository', 'plugins/FormBuilder');
 /*
  * Created on 19-Feb-08

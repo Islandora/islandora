@@ -1,6 +1,10 @@
 <?php
-
 // $Id$
+
+/**
+ * @package Islandora
+ * @subpackage rootdirectory
+ */
 
 module_load_include('inc', 'fedora_repository', 'XMLDatastream');
 

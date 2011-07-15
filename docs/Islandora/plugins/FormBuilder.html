@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos  -->
+			<title>Docs For Class FormBuilder</title>
+			<link rel="stylesheet" href="../../media/stylesheet.css" />
+						<script src="../../media/lib/classTree.js"></script>
+												<script language="javascript" type="text/javascript">
+				var imgPlus = new Image();
+				var imgMinus = new Image();
+				imgPlus.src = "../../media/images/plus.png";
+				imgMinus.src = "../../media/images/minus.png";
+				
+				function showNode(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+							var oImg = document.layers["img" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+							var oImg = document.all["img" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+							var oImg = document.getElementById("img" + Node);
+									break;
+							}
+					oImg.src = imgMinus.src;
+					oTable.style.display = "block";
+				}
+				
+				function hideNode(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+							var oImg = document.layers["img" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+							var oImg = document.all["img" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+							var oImg = document.getElementById("img" + Node);
+									break;
+							}
+					oImg.src = imgPlus.src;
+					oTable.style.display = "none";
+				}
+				
+				function nodeIsVisible(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+									break;
+							}
+					return (oTable && oTable.style.display == "block");
+				}
+				
+				function toggleNodeVisibility(Node){
+					if (nodeIsVisible(Node)){
+						hideNode(Node);
+					}else{
+						showNode(Node);
+					}
+				}
+			</script>
+					</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name"><img src="../../media/images/Class_logo.png"
+														alt=" Class"
+														title=" Class"
+														style="vertical-align: middle"> FormBuilder</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+							<a href="#sec-descendents">Descendents</a>
+			|													<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+		<p class="notes">
+			Located in <a class="field" href="_plugins---Flv.inc.html">/plugins/Flv.inc</a> (line <span class="field">16</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+	<a name="sec-descendents"></a>
+	<div class="info-box">
+		<div class="info-box-title">Direct descendents</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+			<span class="disabled">Descendents</span>
+			|															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<table cellpadding="2" cellspacing="0" class="class-table">
+				<tr>
+					<th class="class-table-header">Class</th>
+					<th class="class-table-header">Description</th>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em; white-space: nowrap">
+						<img src="../../media/images/Class.png"
+								 alt=" class"
+								 title=" class"
+								 style="vertical-align: center"/>
+						<a href="../../Islandora/plugins/CollectionFormBuilder.html">CollectionFormBuilder</a>
+					</td>
+					<td>
+											
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em; white-space: nowrap">
+						<img src="../../media/images/Class.png"
+								 alt=" class"
+								 title=" class"
+								 style="vertical-align: center"/>
+						<a href="../../Islandora/plugins/DemoFormBuilder.html">DemoFormBuilder</a>
+					</td>
+					<td>
+											
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em; white-space: nowrap">
+						<img src="../../media/images/Class.png"
+								 alt=" class"
+								 title=" class"
+								 style="vertical-align: center"/>
+						<a href="../../Islandora/plugins/FlvFormBuilder.html">FlvFormBuilder</a>
+					</td>
+					<td>
+											
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em; white-space: nowrap">
+						<img src="../../media/images/Class.png"
+								 alt=" class"
+								 title=" class"
+								 style="vertical-align: center"/>
+						<a href="../../Islandora/plugins/ModsFormBuilder.html">ModsFormBuilder</a>
+					</td>
+					<td>
+											
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em; white-space: nowrap">
+						<img src="../../media/images/Class.png"
+								 alt=" class"
+								 title=" class"
+								 style="vertical-align: center"/>
+						<a href="../../Islandora/plugins/QtFormBuilder.html">QtFormBuilder</a>
+					</td>
+					<td>
+											
+										</td>
+				</tr>
+							</table>
+		</div>
+	</div>
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-descendents">Descendants</a> |
+												<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																							
+				<div class="method-definition">
+					<img src="../../media/images/Constructor.png" alt=" "/>
+											<span class="method-result">FormBuilder</span>
+										<a href="#FormBuilder" title="details" class="method-name">FormBuilder</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#buildQDCForm" title="details" class="method-name">buildQDCForm</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">&$form</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$ingest_form_definition</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$form_values</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#createFedoraDataStreams" title="details" class="method-name">createFedoraDataStreams</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$form_values</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$dom</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$rootElement</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#createQDCStream" title="details" class="method-name">createQDCStream</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$form_values</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$dom</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$rootElement</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#createRelationShips" title="details" class="method-name">createRelationShips</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$form_values</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$dom</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$rootElement</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#createStandardFedoraStuff" title="details" class="method-name">createStandardFedoraStuff</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$form_values</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$dom</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$rootElement</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#handleQDCForm" title="details" class="method-name">handleQDCForm</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$form_values</span>)
+									</div>
+											</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-descendents">Descendents</a> |
+																<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methodFormBuilder" id="FormBuilder"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Constructor.png" />
+		<span class="method-title">Constructor FormBuilder</span> (line <span class="line-number">17</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">FormBuilder</span>
+		<span class="method-name">
+			FormBuilder
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodbuildQDCForm" id="buildQDCForm"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">buildQDCForm</span> (line <span class="line-number">232</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			buildQDCForm
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">&$form</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$ingest_form_definition</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$form_values</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$form</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$ingest_form_definition</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$form_values</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcreateFedoraDataStreams" id="createFedoraDataStreams"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">createFedoraDataStreams</span> (line <span class="line-number">118</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			createFedoraDataStreams
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$form_values</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$dom</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$rootElement</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$form_values</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$dom</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$rootElement</span>			</li>
+				</ul>
+		
+			
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../../Islandora/plugins/CollectionFormBuilder.html#methodcreateFedoraDataStreams">CollectionFormBuilder::createFedoraDataStreams()</a>
+							</li>
+					<li>
+				<a href="../../Islandora/plugins/DemoFormBuilder.html#methodcreateFedoraDataStreams">DemoFormBuilder::createFedoraDataStreams()</a>
+							</li>
+					<li>
+				<a href="../../Islandora/plugins/FlvFormBuilder.html#methodcreateFedoraDataStreams">FlvFormBuilder::createFedoraDataStreams()</a>
+							</li>
+					<li>
+				<a href="../../Islandora/plugins/QtFormBuilder.html#methodcreateFedoraDataStreams">QtFormBuilder::createFedoraDataStreams()</a>
+							</li>
+				</ul>
+	</div>
+<a name="methodcreateQDCStream" id="createQDCStream"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">createQDCStream</span> (line <span class="line-number">22</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			createQDCStream
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$form_values</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$dom</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$rootElement</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$form_values</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$dom</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$rootElement</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcreateRelationShips" id="createRelationShips"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">createRelationShips</span> (line <span class="line-number">171</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">creates the RELS-EXT for the foxml</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			createRelationShips
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$form_values</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$dom</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$rootElement</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$form_values</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$dom</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$rootElement</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcreateStandardFedoraStuff" id="createStandardFedoraStuff"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">createStandardFedoraStuff</span> (line <span class="line-number">205</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">creates the standard foxml properties</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			createStandardFedoraStuff
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$form_values</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$dom</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$rootElement</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$form_values</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$dom</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$rootElement</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodhandleQDCForm" id="handleQDCForm"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">handleQDCForm</span> (line <span class="line-number">71</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			handleQDCForm
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$form_values</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$form_values</span>			</li>
+				</ul>
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+	
+	<p class="notes" id="credit">
+		Documentation generated on Thu, 14 Jul 2011 16:56:04 -0300 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</div></body>
+</html>

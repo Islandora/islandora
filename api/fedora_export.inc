@@ -1,6 +1,11 @@
 <?php
-
 // $Id$
+
+/**
+ * @package Islandora
+ * @subpackage API
+ */
+
 
 define('FOXML_10', 'info:fedora/fedora-system:FOXML-1.0');
 define('FOXML_11', 'info:fedora/fedora-system:FOXML-1.1');

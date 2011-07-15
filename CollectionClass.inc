@@ -1,16 +1,20 @@
 <?php
-
 // $Id$
 
-/*
- * Created on 18-Feb-08
- *
+/**
+ * Collection Class
+ * @package Islandora
+ * @subpackage rootdirectory
+ */
+
+/**
  * To change the template for this generated file go to
  * Window - Preferences - PHPeclipse - PHP - Code Templates
+ *
+ * module_load_include('nc', 'CollectionClass', '');
+ * This CLASS caches the streams so once you call a getstream once it will always return the same stream as long as you are using the
+ * instance of this class.  Cached to prevent mutiple hits to fedora.  maybe a bit confusing though if this class is used in a different context.
  */
-// module_load_include('nc', 'CollectionClass', '');
-// This CLASS caches the streams so once you call a getstream once it will always return the same stream as long as you are using the
-// instance of this class.  Cached to prevent mutiple hits to fedora.  maybe a bit confusing though if this class is used in a different context.
 class CollectionClass {
 
   public static $COLLECTION_CLASS_COLLECTION_POLICY_STREAM = 'COLLECTION_POLICY';

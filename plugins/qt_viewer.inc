@@ -1,6 +1,12 @@
 <?php
 // $Id$
 
+/**
+ * @package Islandora
+ * @subpackage plugins
+ */
+
+
 class ShowQtStreamsInFieldSets {
   private $pid =NULL;
 

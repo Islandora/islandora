@@ -1,0 +1,1308 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos  -->
+			<title>Docs For Class ObjectHelper</title>
+			<link rel="stylesheet" href="../../media/stylesheet.css" />
+						<script src="../../media/lib/classTree.js"></script>
+												<script language="javascript" type="text/javascript">
+				var imgPlus = new Image();
+				var imgMinus = new Image();
+				imgPlus.src = "../../media/images/plus.png";
+				imgMinus.src = "../../media/images/minus.png";
+				
+				function showNode(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+							var oImg = document.layers["img" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+							var oImg = document.all["img" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+							var oImg = document.getElementById("img" + Node);
+									break;
+							}
+					oImg.src = imgMinus.src;
+					oTable.style.display = "block";
+				}
+				
+				function hideNode(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+							var oImg = document.layers["img" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+							var oImg = document.all["img" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+							var oImg = document.getElementById("img" + Node);
+									break;
+							}
+					oImg.src = imgPlus.src;
+					oTable.style.display = "none";
+				}
+				
+				function nodeIsVisible(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+									break;
+							}
+					return (oTable && oTable.style.display == "block");
+				}
+				
+				function toggleNodeVisibility(Node){
+					if (nodeIsVisible(Node)){
+						hideNode(Node);
+					}else{
+						showNode(Node);
+					}
+				}
+			</script>
+					</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name"><img src="../../media/images/Class_logo.png"
+														alt=" Class"
+														title=" Class"
+														style="vertical-align: middle"> ObjectHelper</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+		<p class="notes">
+			Located in <a class="field" href="_ObjectHelper.inc.html">/ObjectHelper.inc</a> (line <span class="field">15</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variable Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+												<div class="var-title">
+					<img src="../../media/images/StaticVariable.png" alt=" " />
+					static <span class="var-type">mixed</span>
+					<a href="#$ADD_FEDORA_STREAMS" title="details" class="var-name">$ADD_FEDORA_STREAMS</a>
+				</div>
+																								<div class="var-title">
+					<img src="../../media/images/StaticVariable.png" alt=" " />
+					static <span class="var-type">mixed</span>
+					<a href="#$DISPLAY_ALWAYS" title="details" class="var-name">$DISPLAY_ALWAYS</a>
+				</div>
+																<div class="var-title">
+					<img src="../../media/images/StaticVariable.png" alt=" " />
+					static <span class="var-type">mixed</span>
+					<a href="#$DISPLAY_NEVER" title="details" class="var-name">$DISPLAY_NEVER</a>
+				</div>
+																<div class="var-title">
+					<img src="../../media/images/StaticVariable.png" alt=" " />
+					static <span class="var-type">mixed</span>
+					<a href="#$DISPLAY_NO_MODEL_OUTPUT" title="details" class="var-name">$DISPLAY_NO_MODEL_OUTPUT</a>
+				</div>
+																<div class="var-title">
+					<img src="../../media/images/StaticVariable.png" alt=" " />
+					static <span class="var-type">mixed</span>
+					<a href="#$EDIT_FEDORA_METADATA" title="details" class="var-name">$EDIT_FEDORA_METADATA</a>
+				</div>
+																<div class="var-title">
+					<img src="../../media/images/StaticVariable.png" alt=" " />
+					static <span class="var-type">mixed</span>
+					<a href="#$EDIT_TAGS_DATASTREAM" title="details" class="var-name">$EDIT_TAGS_DATASTREAM</a>
+				</div>
+																<div class="var-title">
+					<img src="../../media/images/StaticVariable.png" alt=" " />
+					static <span class="var-type">mixed</span>
+					<a href="#$INGEST_FEDORA_OBJECTS" title="details" class="var-name">$INGEST_FEDORA_OBJECTS</a>
+				</div>
+																<div class="var-title">
+					<img src="../../media/images/StaticVariable.png" alt=" " />
+					static <span class="var-type">mixed</span>
+					<a href="#$OBJECT_HELPER_VIEW_FEDORA" title="details" class="var-name">$OBJECT_HELPER_VIEW_FEDORA</a>
+				</div>
+																<div class="var-title">
+					<img src="../../media/images/StaticVariable.png" alt=" " />
+					static <span class="var-type">mixed</span>
+					<a href="#$PURGE_FEDORA_OBJECTSANDSTREAMS" title="details" class="var-name">$PURGE_FEDORA_OBJECTSANDSTREAMS</a>
+				</div>
+																<div class="var-title">
+					<img src="../../media/images/StaticVariable.png" alt=" " />
+					static <span class="var-type">mixed</span>
+					<a href="#$VIEW_DETAILED_CONTENT_LIST" title="details" class="var-name">$VIEW_DETAILED_CONTENT_LIST</a>
+				</div>
+																												<div class="var-title">
+					<img src="../../media/images/Variable.png" alt=" " />
+					<span class="var-type">mixed</span>
+					<a href="#$availableDataStreamsText" title="details" class="var-name">$availableDataStreamsText</a>
+				</div>
+																																																																																			</div>
+		</div>
+	</div>
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																																																																																																			
+				<div class="method-definition">
+					<img src="../../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">void</span>
+										<a href="#warnIfMisconfigured" title="details" class="method-name">warnIfMisconfigured</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$app</span>)
+									</div>
+																			
+				<div class="method-definition">
+					<img src="../../media/images/Constructor.png" alt=" "/>
+											<span class="method-result">ObjectHelper</span>
+										<a href="#ObjectHelper" title="details" class="method-name">ObjectHelper</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#createExtraFieldsets" title="details" class="method-name">createExtraFieldsets</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$contentModel</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$page_number</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#create_link_for_ds" title="details" class="method-name">create_link_for_ds</a>
+											(<span class="var-type">$pid</span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type">$dataStreamValue</span>&nbsp;<span class="var-name">$dataStreamValue</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#fedora_repository_access" title="details" class="method-name">fedora_repository_access</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$op</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getBreadcrumbs" title="details" class="method-name">getBreadcrumbs</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$breadcrumbs</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$level</span> = <span class="var-default">10</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getCollectionInfo" title="details" class="method-name">getCollectionInfo</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$query</span> = <span class="var-default">NULL</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getDatastreamInfo" title="details" class="method-name">getDatastreamInfo</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsID</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getFormattedDC" title="details" class="method-name">getFormattedDC</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$item</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getMimeType" title="details" class="method-name">getMimeType</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsID</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getObject" title="details" class="method-name">getObject</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$context</span> = <span class="var-default">'archive'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$format</span> = <span class="var-default">FOXML_11</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">String</span>
+										<a href="#getQDC" title="details" class="method-name">getQDC</a>
+											(<span class="var-type">$pid</span>&nbsp;<span class="var-name">$pid</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getStream" title="details" class="method-name">getStream</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$showError</span> = <span class="var-default">FALSE</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#get_all_related_pids" title="details" class="method-name">get_all_related_pids</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">boolean</span>
+										<a href="#get_and_do_datastream_rules" title="details" class="method-name">get_and_do_datastream_rules</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$dsid</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$file</span> = <span class="var-default">''</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#get_child_pids" title="details" class="method-name">get_child_pids</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$pids</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#get_content_models_list" title="details" class="method-name">get_content_models_list</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$include_fedora_system_content_models</span> = <span class="var-default">FALSE</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">String</span>
+										<a href="#get_formatted_datastream_list" title="details" class="method-name">get_formatted_datastream_list</a>
+											(<span class="var-type">$object_pid</span>&nbsp;<span class="var-name">$object_pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$contentModels</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$fedoraItem</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">unknown</span>
+										<a href="#get_parent_objects" title="details" class="method-name">get_parent_objects</a>
+											(<span class="var-type">unknown_type</span>&nbsp;<span class="var-name">$pid</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#get_parent_objects_asHTML" title="details" class="method-name">get_parent_objects_asHTML</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#makeObject" title="details" class="method-name">makeObject</a>
+											(<span class="var-type">$pid</span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type">$dsID</span>&nbsp;<span class="var-name">$dsID</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$asAttachment</span> = <span class="var-default">FALSE</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$label</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$filePath</span> = <span class="var-default">FALSE</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$version</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$forceSoap</span> = <span class="var-default">TRUE</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#parseContent" title="details" class="method-name">parseContent</a>
+											(<span class="var-type">$content</span>&nbsp;<span class="var-name">$content</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsId</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$collection</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$pageNumber</span> = <span class="var-default">NULL</span>])
+									</div>
+																			</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="var$ADD_FEDORA_STREAMS" id="$ADD_FEDORA_STREAMS"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<img src="../../media/images/StaticVariable.png" />
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$ADD_FEDORA_STREAMS</span>
+			 = <span class="var-default"> 'add fedora datastreams'</span>			(line <span class="line-number">21</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$DISPLAY_ALWAYS" id="$DISPLAY_ALWAYS"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<img src="../../media/images/StaticVariable.png" />
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$DISPLAY_ALWAYS</span>
+			 = <span class="var-default"> 0</span>			(line <span class="line-number">25</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$DISPLAY_NEVER" id="$DISPLAY_NEVER"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<img src="../../media/images/StaticVariable.png" />
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$DISPLAY_NEVER</span>
+			 = <span class="var-default"> 1</span>			(line <span class="line-number">26</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$DISPLAY_NO_MODEL_OUTPUT" id="$DISPLAY_NO_MODEL_OUTPUT"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<img src="../../media/images/StaticVariable.png" />
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$DISPLAY_NO_MODEL_OUTPUT</span>
+			 = <span class="var-default"> 2</span>			(line <span class="line-number">27</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$EDIT_FEDORA_METADATA" id="$EDIT_FEDORA_METADATA"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<img src="../../media/images/StaticVariable.png" />
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$EDIT_FEDORA_METADATA</span>
+			 = <span class="var-default"> 'edit fedora meta data'</span>			(line <span class="line-number">19</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$EDIT_TAGS_DATASTREAM" id="$EDIT_TAGS_DATASTREAM"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<img src="../../media/images/StaticVariable.png" />
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$EDIT_TAGS_DATASTREAM</span>
+			 = <span class="var-default"> 'edit tags datastream'</span>			(line <span class="line-number">23</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$INGEST_FEDORA_OBJECTS" id="$INGEST_FEDORA_OBJECTS"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<img src="../../media/images/StaticVariable.png" />
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$INGEST_FEDORA_OBJECTS</span>
+			 = <span class="var-default"> 'ingest new fedora objects'</span>			(line <span class="line-number">22</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$OBJECT_HELPER_VIEW_FEDORA" id="$OBJECT_HELPER_VIEW_FEDORA"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<img src="../../media/images/StaticVariable.png" />
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$OBJECT_HELPER_VIEW_FEDORA</span>
+			 = <span class="var-default"> 'view fedora collection'</span>			(line <span class="line-number">18</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$PURGE_FEDORA_OBJECTSANDSTREAMS" id="$PURGE_FEDORA_OBJECTSANDSTREAMS"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<img src="../../media/images/StaticVariable.png" />
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$PURGE_FEDORA_OBJECTSANDSTREAMS</span>
+			 = <span class="var-default"> 'purge objects and datastreams'</span>			(line <span class="line-number">20</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$VIEW_DETAILED_CONTENT_LIST" id="$VIEW_DETAILED_CONTENT_LIST"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<img src="../../media/images/StaticVariable.png" />
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$VIEW_DETAILED_CONTENT_LIST</span>
+			 = <span class="var-default"> 'view detailed list of content'</span>			(line <span class="line-number">24</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+
+<a name="var$availableDataStreamsText" id="$availableDataStreamsText"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<img src="../../media/images/Variable.png" />
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$availableDataStreamsText</span>
+			 = <span class="var-default"> 'Detailed list of content'</span>			(line <span class="line-number">29</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+						
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methodwarnIfMisconfigured" id="warnIfMisconfigured"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/StaticMethod.png" />
+		<span class="method-title">static warnIfMisconfigured</span> (line <span class="line-number">892</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">void</span>
+		<span class="method-name">
+			warnIfMisconfigured
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$app</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$app</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodObjectHelper" id="ObjectHelper"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Constructor.png" />
+		<span class="method-title">Constructor ObjectHelper</span> (line <span class="line-number">31</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">ObjectHelper</span>
+		<span class="method-name">
+			ObjectHelper
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodcreateExtraFieldsets" id="createExtraFieldsets"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">createExtraFieldsets</span> (line <span class="line-number">730</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">gets a list of datastreams and related function that we should use to show datastreams in their own fieldsets</p>
+<p class="description"><p>from the content model associated with the object</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			createExtraFieldsets
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$contentModel</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$page_number</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$contentModel</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$page_number</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcreate_link_for_ds" id="create_link_for_ds"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">create_link_for_ds</span> (line <span class="line-number">257</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">internal function</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			create_link_for_ds
+		</span>
+					(<span class="var-type">$pid</span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type">$dataStreamValue</span>&nbsp;<span class="var-name">$dataStreamValue</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">$pid</span>
+				<span class="var-name">$pid</span><span class="var-description">: String</span>			</li>
+					<li>
+				<span class="var-type">$dataStreamValue</span>
+				<span class="var-name">$dataStreamValue</span><span class="var-description">: Object</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodfedora_repository_access" id="fedora_repository_access"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">fedora_repository_access</span> (line <span class="line-number">554</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			fedora_repository_access
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$op</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$op</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pid</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetBreadcrumbs" id="getBreadcrumbs"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getBreadcrumbs</span> (line <span class="line-number">853</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Builds an array of drupal links for use in breadcrumbs.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getBreadcrumbs
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$breadcrumbs</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$level</span> = <span class="var-default">10</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$breadcrumbs</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$level</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetCollectionInfo" id="getCollectionInfo"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getCollectionInfo</span> (line <span class="line-number">186</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getCollectionInfo
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$query</span> = <span class="var-default">NULL</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$query</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetDatastreamInfo" id="getDatastreamInfo"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getDatastreamInfo</span> (line <span class="line-number">224</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getDatastreamInfo
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsID</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsID</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetFormattedDC" id="getFormattedDC"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getFormattedDC</span> (line <span class="line-number">318</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getFormattedDC
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$item</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$item</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetMimeType" id="getMimeType"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getMimeType</span> (line <span class="line-number">196</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns the mime type</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getMimeType
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsID</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsID</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetObject" id="getObject"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getObject</span> (line <span class="line-number">842</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns XML description of the object (export).</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getObject
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$context</span> = <span class="var-default">'archive'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$format</span> = <span class="var-default">FOXML_11</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$context</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$format</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetQDC" id="getQDC"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getQDC</span> (line <span class="line-number">364</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Queries fedora for what we call the qualified dublin core.  Currently only dc.coverage has</p>
+<p class="description"><p>any qualified fields  Transforms the returned xml to html  This is the default metadata view.  With icons for searching a dublin core field</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">String</span>
+		<span class="method-name">
+			getQDC
+		</span>
+					(<span class="var-type">$pid</span>&nbsp;<span class="var-name">$pid</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">$pid</span>
+				<span class="var-name">$pid</span><span class="var-description">: String</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetStream" id="getStream"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getStream</span> (line <span class="line-number">479</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns a stream from a fedora object given a pid and dsid</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getStream
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$showError</span> = <span class="var-default">FALSE</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$showError</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodget_all_related_pids" id="get_all_related_pids"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">get_all_related_pids</span> (line <span class="line-number">768</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Get a tree of related pids - for the basket functionality</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			get_all_related_pids
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pid</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodget_and_do_datastream_rules" id="get_and_do_datastream_rules"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">get_and_do_datastream_rules</span> (line <span class="line-number">753</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Look in the content model for rules to run on the specified datastream.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			get_and_do_datastream_rules
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$dsid</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$file</span> = <span class="var-default">''</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$dsid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$file</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodget_child_pids" id="get_child_pids"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">get_child_pids</span> (line <span class="line-number">797</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Get children of PID - but only 2 levels deep</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			get_child_pids
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$pids</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pids</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodget_content_models_list" id="get_content_models_list"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">get_content_models_list</span> (line <span class="line-number">511</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			get_content_models_list
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$include_fedora_system_content_models</span> = <span class="var-default">FALSE</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$include_fedora_system_content_models</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodget_formatted_datastream_list" id="get_formatted_datastream_list"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">get_formatted_datastream_list</span> (line <span class="line-number">402</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Gets a list of datastreams from an object using its pid</p>
+<p class="description"><p>We make some assumptions here.  We have implemented a policy that  we ingest in our repository will have TN (thumbnail) datastream.  Even audio  will have a picture of a speaker or something.  This is not critical  but makes searches etc. look better if there is a TN stream.  This diplays all the streams in a collapsed fieldset at the bottom of the object page.  you can implement a content model if you would like certain streams displayed in certain ways.</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">String</span>
+		<span class="method-name">
+			get_formatted_datastream_list
+		</span>
+					(<span class="var-type">$object_pid</span>&nbsp;<span class="var-name">$object_pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$contentModels</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$fedoraItem</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">$object_pid</span>
+				<span class="var-name">$object_pid</span><span class="var-description">: String</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$contentModels</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$fedoraItem</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodget_parent_objects" id="get_parent_objects"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">get_parent_objects</span> (line <span class="line-number">688</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Gets the parent objects that this object is related to</p>
+	
+	<div class="method-signature">
+		<span class="method-result">unknown</span>
+		<span class="method-name">
+			get_parent_objects
+		</span>
+					(<span class="var-type">unknown_type</span>&nbsp;<span class="var-name">$pid</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">unknown_type</span>
+				<span class="var-name">$pid</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodget_parent_objects_asHTML" id="get_parent_objects_asHTML"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">get_parent_objects_asHTML</span> (line <span class="line-number">698</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			get_parent_objects_asHTML
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pid</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodmakeObject" id="makeObject"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">makeObject</span> (line <span class="line-number">46</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Grabs a stream from fedora sets the mimetype and returns it. $dsID is the  datastream id.   If $forceSoap is set, the function will always buffer the datastream from fedora.  Otherwise, it will  try and use a redirect if possible.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			makeObject
+		</span>
+					(<span class="var-type">$pid</span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type">$dsID</span>&nbsp;<span class="var-name">$dsID</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$asAttachment</span> = <span class="var-default">FALSE</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$label</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$filePath</span> = <span class="var-default">FALSE</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$version</span> = <span class="var-default">NULL</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$forceSoap</span> = <span class="var-default">TRUE</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">$pid</span>
+				<span class="var-name">$pid</span><span class="var-description">: String</span>			</li>
+					<li>
+				<span class="var-type">$dsID</span>
+				<span class="var-name">$dsID</span><span class="var-description">: String</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$asAttachment</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$label</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$filePath</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$version</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$forceSoap</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodparseContent" id="parseContent"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">parseContent</span> (line <span class="line-number">591</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">internal function  uses an xsl to parse the sparql xml returned from the ITQL query</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			parseContent
+		</span>
+					(<span class="var-type">$content</span>&nbsp;<span class="var-name">$content</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsId</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$collection</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$pageNumber</span> = <span class="var-default">NULL</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">$content</span>
+				<span class="var-name">$content</span><span class="var-description">: String</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsId</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$collection</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pageNumber</span>			</li>
+				</ul>
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+	
+	<p class="notes" id="credit">
+		Documentation generated on Thu, 14 Jul 2011 16:56:05 -0300 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</div></body>
+</html>

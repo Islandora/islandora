@@ -1,0 +1,3227 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos  -->
+			<title>Docs For Class ContentModel</title>
+			<link rel="stylesheet" href="../../media/stylesheet.css" />
+						<script src="../../media/lib/classTree.js"></script>
+												<script language="javascript" type="text/javascript">
+				var imgPlus = new Image();
+				var imgMinus = new Image();
+				imgPlus.src = "../../media/images/plus.png";
+				imgMinus.src = "../../media/images/minus.png";
+				
+				function showNode(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+							var oImg = document.layers["img" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+							var oImg = document.all["img" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+							var oImg = document.getElementById("img" + Node);
+									break;
+							}
+					oImg.src = imgMinus.src;
+					oTable.style.display = "block";
+				}
+				
+				function hideNode(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+							var oImg = document.layers["img" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+							var oImg = document.all["img" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+							var oImg = document.getElementById("img" + Node);
+									break;
+							}
+					oImg.src = imgPlus.src;
+					oTable.style.display = "none";
+				}
+				
+				function nodeIsVisible(Node){
+							switch(navigator.family){
+								case 'nn4':
+									// Nav 4.x code fork...
+							var oTable = document.layers["span" + Node];
+									break;
+								case 'ie4':
+									// IE 4/5 code fork...
+							var oTable = document.all["span" + Node];
+									break;
+								case 'gecko':
+									// Standards Compliant code fork...
+							var oTable = document.getElementById("span" + Node);
+									break;
+							}
+					return (oTable && oTable.style.display == "block");
+				}
+				
+				function toggleNodeVisibility(Node){
+					if (nodeIsVisible(Node)){
+						hideNode(Node);
+					}else{
+						showNode(Node);
+					}
+				}
+			</script>
+					</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name"><img src="../../media/images/Class_logo.png"
+														alt=" Class"
+														title=" Class"
+														style="vertical-align: middle"> ContentModel</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+		<p class="notes">
+			Located in <a class="field" href="_ContentModel.inc.html">/ContentModel.inc</a> (line <span class="field">11</span>)
+		</p>
+		
+				
+		<pre><a href="../../Islandora/rootdirectory/XMLDatastream.html">XMLDatastream</a>
+   |
+   --ContentModel</pre>
+	
+			</div>
+</div>
+
+
+
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variable Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+												<div class="var-title">
+					<img src="../../media/images/StaticVariable.png" alt=" " />
+					static <span class="var-type">mixed</span>
+					<a href="#$DEFAULT_DSID" title="details" class="var-name">$DEFAULT_DSID</a>
+				</div>
+																																<div class="var-title">
+					<img src="../../media/images/StaticVariable.png" alt=" " />
+					static <span class="var-type">mixed</span>
+					<a href="#$SCHEMA_URI" title="details" class="var-name">$SCHEMA_URI</a>
+				</div>
+																												<div class="var-title">
+					<img src="../../media/images/Variable.png" alt=" " />
+					<span class="var-type">mixed</span>
+					<a href="#$name" title="details" class="var-name">$name</a>
+				</div>
+																<div class="var-title">
+					<img src="../../media/images/Variable.png" alt=" " />
+					<span class="var-type">mixed</span>
+					<a href="#$pid_namespace" title="details" class="var-name">$pid_namespace</a>
+				</div>
+																			</div>
+		</div>
+	</div>
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																																																																																																																																																																			
+				<div class="method-definition">
+					<img src="../../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result">string</span>
+										<a href="#getDefaultDSID" title="details" class="method-name">getDefaultDSID</a>
+										()
+									</div>
+																																																																																																																																																																							
+				<div class="method-definition">
+					<img src="../../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result"><a href="../../Islandora/rootdirectory/ContentModel.html">ContentModel</a></span>
+										<a href="#ingestBlankModel" title="details" class="method-name">ingestBlankModel</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$modelDsid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$defaultMimetype</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$ingestFormDsid</span>, <span class="var-type">integer</span>&nbsp;<span class="var-name">$ingestFormPage</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$ingestFormHideChooser</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$ingestFormModule</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$ingestFormFile</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$ingestFormClass</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$ingestFormMethod</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$ingestFormHandler</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$ingestFromDsid</span>, <span class="var-type">boolean</span>&nbsp;<span class="var-name">$ingestFormHideFileChooser</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result"><a href="../../Islandora/rootdirectory/ContentModel.html">ContentModel</a></span>
+										<a href="#ingestFromFile" title="details" class="method-name">ingestFromFile</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$modelDsid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$file</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result"><a href="../../Islandora/rootdirectory/ContentModel.html">ContentModel</a></span>
+										<a href="#ingestFromModel" title="details" class="method-name">ingestFromModel</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$modelDsid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$copy_model_pid</span>)
+									</div>
+																							
+				<div class="method-definition">
+					<img src="../../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result"><a href="../../Islandora/rootdirectory/ContentModel.html">ContentModel</a></span>
+										<a href="#loadFromModel" title="details" class="method-name">loadFromModel</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$dsid</span> = <span class="var-default">NULL</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$pid_namespace</span> = <span class="var-default">NULL</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span> = <span class="var-default">NULL</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/StaticMethod.png" alt=" "/>
+					static 						<span class="method-result"><a href="../../Islandora/rootdirectory/ContentModel.html">ContentModel</a></span>
+										<a href="#loadFromObject" title="details" class="method-name">loadFromObject</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span>)
+									</div>
+																																																																																																																																											
+				<div class="method-definition">
+					<img src="../../media/images/Constructor.png" alt=" "/>
+											<span class="method-result"><a href="../../Islandora/rootdirectory/XMLDatastream.html">XMLDatastream</a></span>
+										<a href="#__construct" title="details" class="method-name">__construct</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$xmlStr</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span> = <span class="var-default">NULL</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$dsid</span> = <span class="var-default">NULL</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$pid_namespace</span> = <span class="var-default">NULL</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span> = <span class="var-default">NULL</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#addAppliesTo" title="details" class="method-name">addAppliesTo</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$rule_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$type</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#addAuthListItem" title="details" class="method-name">addAuthListItem</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$elementName</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$value</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$label</span> = <span class="var-default">''</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#addDispMeth" title="details" class="method-name">addDispMeth</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$module</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$file</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$class</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$method</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$default</span> = <span class="var-default">FALSE</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#addDs" title="details" class="method-name">addDs</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$display_in_fieldset</span> = <span class="var-default">FALSE</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result"><type></span>
+										<a href="#addElementToForm" title="details" class="method-name">addElementToForm</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$element</span>, <span class="var-type"><type></span>&nbsp;<span class="var-name">$parent_element</span>, <span class="var-type"><type></span>&nbsp;<span class="var-name">$element_definition</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">boolean</span>
+										<a href="#addForm" title="details" class="method-name">addForm</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$element</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">boolean</span>
+										<a href="#addIngestFormElement" title="details" class="method-name">addIngestFormElement</a>
+											(<span class="var-type">String</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$label</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type">boolean</span>&nbsp;<span class="var-name">$required</span>, [<span class="var-type">String</span>&nbsp;<span class="var-name">$description</span> = <span class="var-default">''</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#addIngestMethod" title="details" class="method-name">addIngestMethod</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$rule_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$module</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$file</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$class</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$method</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$modified_files_ext</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#addIngestMethodParam" title="details" class="method-name">addIngestMethodParam</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$rule_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$module</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$file</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$class</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$method</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$name</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$value</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#addIngestRule" title="details" class="method-name">addIngestRule</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$applies_to</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$module</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$file</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$class</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$method</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$modified_files_ext</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">boolean</span>
+										<a href="#addMimetype" title="details" class="method-name">addMimetype</a>
+											(<span class="var-type">String</span>&nbsp;<span class="var-name">$type</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">$form</span>
+										<a href="#buildEditMetadataForm" title="details" class="method-name">buildEditMetadataForm</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$dsid</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">string</span>
+										<a href="#buildIngestForm" title="details" class="method-name">buildIngestForm</a>
+											(<span class="var-type">&$form</span>&nbsp;<span class="var-name">&$form</span>, <span class="var-type">&$form_state</span>&nbsp;<span class="var-name">&$form_state</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#convertFromOldSchema" title="details" class="method-name">convertFromOldSchema</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">boolean</span>
+										<a href="#decAuthListItem" title="details" class="method-name">decAuthListItem</a>
+											(<span class="var-type">String</span>&nbsp;<span class="var-name">$elementName</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$value</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result"><type></span>
+										<a href="#decFormElement" title="details" class="method-name">decFormElement</a>
+											(<span class="var-type"><type></span>&nbsp;<span class="var-name">$form_element</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">boolean</span>
+										<a href="#decIngestFormElement" title="details" class="method-name">decIngestFormElement</a>
+											(<span class="var-type">String</span>&nbsp;<span class="var-name">$name</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">string</span>
+										<a href="#displayExtraFieldset" title="details" class="method-name">displayExtraFieldset</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$page_number</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#displayInFieldset" title="details" class="method-name">displayInFieldset</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#editForm" title="details" class="method-name">editForm</a>
+											(<span class="var-type">String</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$element</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#editFormElement" title="details" class="method-name">editFormElement</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$new_element</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$edit_element</span>, <span class="var-type"><type></span>&nbsp;<span class="var-name">$element_definition</span>, <span class="var-type"><type></span>&nbsp;<span class="var-name">$parent_element</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#editIngestFormAttributes" title="details" class="method-name">editIngestFormAttributes</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$page</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$hide_file_chooser</span> = <span class="var-default">FALSE</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$redirect</span> = <span class="var-default">TRUE</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#editIngestFormBuilderMethod" title="details" class="method-name">editIngestFormBuilderMethod</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$module</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$file</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$class</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$method</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$handler</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">boolean</span>
+										<a href="#editIngestFormElement" title="details" class="method-name">editIngestFormElement</a>
+											(<span class="var-type">String</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$label</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type">boolean</span>&nbsp;<span class="var-name">$required</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$description</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">$result</span>
+										<a href="#execAddDatastreamMethods" title="details" class="method-name">execAddDatastreamMethods</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$file</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$filen</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">boolean</span>
+										<a href="#execFormHandler" title="details" class="method-name">execFormHandler</a>
+											(<span class="var-type">&$formData</span>&nbsp;<span class="var-name">&$data</span>, <span class="var-type">&$form_state</span>&nbsp;<span class="var-name">&$form_state</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">$result</span>
+										<a href="#execIngestRules" title="details" class="method-name">execIngestRules</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$file</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$mimetype</span>, [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$preview</span> = <span class="var-default">FALSE</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getAddDsMethod" title="details" class="method-name">getAddDsMethod</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$ds</span>)
+									</div>
+																							
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getDisplayMethods" title="details" class="method-name">getDisplayMethods</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$ds</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">array</span>
+										<a href="#getEditFormNames" title="details" class="method-name">getEditFormNames</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">String[]</span>
+										<a href="#getEditMetadataMethod" title="details" class="method-name">getEditMetadataMethod</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">DOMElement</span>
+										<a href="#getForm" title="details" class="method-name">getForm</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">array</span>
+										<a href="#getFormNames" title="details" class="method-name">getFormNames</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getIngestFormAttributes" title="details" class="method-name">getIngestFormAttributes</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getIngestFormBuilderMethod" title="details" class="method-name">getIngestFormBuilderMethod</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">boolean</span>
+										<a href="#getIngestFormElementParams" title="details" class="method-name">getIngestFormElementParams</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$elementName</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">string[]</span>
+										<a href="#getIngestFormElements" title="details" class="method-name">getIngestFormElements</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">array</span>
+										<a href="#getIngestFormNames" title="details" class="method-name">getIngestFormNames</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getIngestRule" title="details" class="method-name">getIngestRule</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$rule_id</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#getIngestRules" title="details" class="method-name">getIngestRules</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">string[]</span>
+										<a href="#getMimetypes" title="details" class="method-name">getMimetypes</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">String</span>
+										<a href="#getName" title="details" class="method-name">getName</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">String[]</span>
+										<a href="#getServices" title="details" class="method-name">getServices</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">$result</span>
+										<a href="#handleEditMetadataForm" title="details" class="method-name">handleEditMetadataForm</a>
+											(<span class="var-type">&$form_id</span>&nbsp;<span class="var-name">&$form_id</span>, <span class="var-type">&$form_values</span>&nbsp;<span class="var-name">&$form_state</span>, <span class="var-type">&$soap_client</span>&nbsp;<span class="var-name">&$soap_client</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">boolean</span>
+										<a href="#incAuthListItem" title="details" class="method-name">incAuthListItem</a>
+											(<span class="var-type">String</span>&nbsp;<span class="var-name">$elementName</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$value</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$reorder</span> = <span class="var-default">'inc'</span>], <span class="var-type">String</span>&nbsp;<span class="var-name">$direction</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result"><type></span>
+										<a href="#incFormElement" title="details" class="method-name">incFormElement</a>
+											(<span class="var-type"><type></span>&nbsp;<span class="var-name">$form_element</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">boolean</span>
+										<a href="#incIngestFormElement" title="details" class="method-name">incIngestFormElement</a>
+											(<span class="var-type">String</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">String</span>&nbsp;<span class="var-name">$reorder</span> = <span class="var-default">'inc'</span>])
+									</div>
+																																							
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">string[]</span>
+										<a href="#listDatastreams" title="details" class="method-name">listDatastreams</a>
+										()
+									</div>
+																															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#removeAppliesTo" title="details" class="method-name">removeAppliesTo</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$rule_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$type</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#removeAuthListItem" title="details" class="method-name">removeAuthListItem</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$elementName</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$value</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#removeDispMeth" title="details" class="method-name">removeDispMeth</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$module</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$file</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$class</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$method</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#removeDs" title="details" class="method-name">removeDs</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">boolean</span>
+										<a href="#removeEditMetadataMethod" title="details" class="method-name">removeEditMetadataMethod</a>
+										()
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">boolean</span>
+										<a href="#removeForm" title="details" class="method-name">removeForm</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">boolean</span>
+										<a href="#removeIngestFormElement" title="details" class="method-name">removeIngestFormElement</a>
+											(<span class="var-type">String</span>&nbsp;<span class="var-name">$name</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#removeIngestMethod" title="details" class="method-name">removeIngestMethod</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$rule_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$module</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$file</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$class</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$method</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#removeIngestMethodParam" title="details" class="method-name">removeIngestMethodParam</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$rule_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$module</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$file</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$class</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$method</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$name</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#removeIngestRule" title="details" class="method-name">removeIngestRule</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$rule_id</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">boolean</span>
+										<a href="#removeMimetype" title="details" class="method-name">removeMimetype</a>
+											(<span class="var-type">String</span>&nbsp;<span class="var-name">$type</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#setDefaultDispMeth" title="details" class="method-name">setDefaultDispMeth</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$module</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$file</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$class</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$method</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#setDisplayInFieldset" title="details" class="method-name">setDisplayInFieldset</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$value</span> = <span class="var-default">TRUE</span>])
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">boolean</span>
+										<a href="#setIngestFormElementParam" title="details" class="method-name">setIngestFormElementParam</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$paramName</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$paramValue</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$elementName</span>)
+									</div>
+															
+				<div class="method-definition">
+					<img src="../../media/images/Method.png" alt=" "/>
+											<span class="method-result">boolean</span>
+										<a href="#updateEditMetadataMethod" title="details" class="method-name">updateEditMetadataMethod</a>
+											(<span class="var-type">String</span>&nbsp;<span class="var-name">$module</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$file</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$class</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$method</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$handler</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$dsid</span>)
+									</div>
+											</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="var$DEFAULT_DSID" id="$DEFAULT_DSID"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<img src="../../media/images/StaticVariable.png" />
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$DEFAULT_DSID</span>
+			 = <span class="var-default"> 'ISLANDORACM'</span>			(line <span class="line-number">13</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+		
+		
+
+</div>
+<a name="var$SCHEMA_URI" id="$SCHEMA_URI"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<img src="../../media/images/StaticVariable.png" />
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$SCHEMA_URI</span>
+			 = <span class="var-default"> 'http://localhost/islandoracm.xsd'</span>			(line <span class="line-number">12</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+		
+		
+
+</div>
+
+<a name="var$name" id="$name"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<img src="../../media/images/Variable.png" />
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$name</span>
+						(line <span class="line-number">17</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$pid_namespace" id="$pid_namespace"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<img src="../../media/images/Variable.png" />
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$pid_namespace</span>
+						(line <span class="line-number">16</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+							<h4>Inherited Variables</h4>
+				<A NAME='inherited_vars'><!-- --></A>
+									<p>Inherited from <span class="classname"><a href="../../Islandora/rootdirectory/XMLDatastream.html">XMLDatastream</a></span></p>
+					<blockquote>
+													<img src="../../media/images/Variable.png" />
+							<span class="var-title">
+								<span class="var-name"><a href="../../Islandora/rootdirectory/XMLDatastream.html#var$dsid">XMLDatastream::$dsid</a></span><br>
+							</span>
+													<img src="../../media/images/Variable.png" />
+							<span class="var-title">
+								<span class="var-name"><a href="../../Islandora/rootdirectory/XMLDatastream.html#var$errors">XMLDatastream::$errors</a></span><br>
+							</span>
+													<img src="../../media/images/Variable.png" />
+							<span class="var-title">
+								<span class="var-name"><a href="../../Islandora/rootdirectory/XMLDatastream.html#var$forceSchema">XMLDatastream::$forceSchema</a></span><br>
+							</span>
+													<img src="../../media/images/Variable.png" />
+							<span class="var-title">
+								<span class="var-name"><a href="../../Islandora/rootdirectory/XMLDatastream.html#var$pid">XMLDatastream::$pid</a></span><br>
+							</span>
+													<img src="../../media/images/Variable.png" />
+							<span class="var-title">
+								<span class="var-name"><a href="../../Islandora/rootdirectory/XMLDatastream.html#var$xml">XMLDatastream::$xml</a></span><br>
+							</span>
+													<img src="../../media/images/Variable.png" />
+							<span class="var-title">
+								<span class="var-name"><a href="../../Islandora/rootdirectory/XMLDatastream.html#var$XMLNS">XMLDatastream::$XMLNS</a></span><br>
+							</span>
+											</blockquote> 
+										
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methodgetDefaultDSID" id="getDefaultDSID"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/StaticMethod.png" />
+		<span class="method-title">static getDefaultDSID</span> (line <span class="line-number">25</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Gets the default DSID to use for ContentModel datastreams.</p>
+	
+	<div class="method-signature">
+		static <span class="method-result">string</span>
+		<span class="method-name">
+			getDefaultDSID
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodingestBlankModel" id="ingestBlankModel"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/StaticMethod.png" />
+		<span class="method-title">static ingestBlankModel</span> (line <span class="line-number">131</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Ingests a minimum Content Model to the specified pid/dsid.</p>
+<p class="description"><p>Returns false on failure.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result"><a href="../../Islandora/rootdirectory/ContentModel.html">ContentModel</a></span>
+		<span class="method-name">
+			ingestBlankModel
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$modelDsid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$defaultMimetype</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$ingestFormDsid</span>, <span class="var-type">integer</span>&nbsp;<span class="var-name">$ingestFormPage</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$ingestFormHideChooser</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$ingestFormModule</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$ingestFormFile</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$ingestFormClass</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$ingestFormMethod</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$ingestFormHandler</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$ingestFromDsid</span>, <span class="var-type">boolean</span>&nbsp;<span class="var-name">$ingestFormHideFileChooser</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$modelDsid</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$defaultMimetype</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$ingestFromDsid</span>			</li>
+					<li>
+				<span class="var-type">integer</span>
+				<span class="var-name">$ingestFormPage</span>			</li>
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$ingestFormHideFileChooser</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$ingestFormModule</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$ingestFormFile</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$ingestFormClass</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$ingestFormMethod</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$ingestFormHandler</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$ingestFormDsid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$ingestFormHideChooser</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodingestFromFile" id="ingestFromFile"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/StaticMethod.png" />
+		<span class="method-title">static ingestFromFile</span> (line <span class="line-number">63</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Ingests a Content Model from a file to the specified pid/dsid .</p>
+<p class="description"><p>Returns false on failure.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result"><a href="../../Islandora/rootdirectory/ContentModel.html">ContentModel</a></span>
+		<span class="method-name">
+			ingestFromFile
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$modelDsid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$file</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$modelDsid</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$file</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodingestFromModel" id="ingestFromModel"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/StaticMethod.png" />
+		<span class="method-title">static ingestFromModel</span> (line <span class="line-number">91</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Ingests a Content Model from an existing model to the specified pid/dsid .</p>
+<p class="description"><p>Returns false on failure.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result"><a href="../../Islandora/rootdirectory/ContentModel.html">ContentModel</a></span>
+		<span class="method-name">
+			ingestFromModel
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$modelDsid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$copy_model_pid</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$modelDsid</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$copy_model_pid</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodloadFromModel" id="loadFromModel"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/StaticMethod.png" />
+		<span class="method-title">static loadFromModel</span> (line <span class="line-number">198</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Constructs a ContentModel object from the PID of the model in Fedora.</p>
+<p class="description"><p>If DSID is specified it will use that datastream as the model, otherwise it will  use the default (usually ISLANDORACM).  PID_NAMESPACE and name can also be initialized  from the collection policy.  Returns false on failure.</p><p>NOTE: $name will be overwritten with the content model name found in the datastream  when the model is first validated.\</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result"><a href="../../Islandora/rootdirectory/ContentModel.html">ContentModel</a></span>
+		<span class="method-name">
+			loadFromModel
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$dsid</span> = <span class="var-default">NULL</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$pid_namespace</span> = <span class="var-default">NULL</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span> = <span class="var-default">NULL</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$dsid</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$pid_namespace</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodloadFromObject" id="loadFromObject"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/StaticMethod.png" />
+		<span class="method-title">static loadFromObject</span> (line <span class="line-number">36</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Constructs a ContentModel object from a Fedora item  by getting the first content model from the hasModel relationship.</p>
+<p class="description"><p>Returns false on failure.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result"><a href="../../Islandora/rootdirectory/ContentModel.html">ContentModel</a></span>
+		<span class="method-name">
+			loadFromObject
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$pid</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method__construct" id="__construct"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Constructor.png" />
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number">228</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Constructor  NOTE: Use the static constructor methods whenever possible.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../../Islandora/rootdirectory/XMLDatastream.html">XMLDatastream</a></span>
+		<span class="method-name">
+			__construct
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$xmlStr</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span> = <span class="var-default">NULL</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$dsid</span> = <span class="var-default">NULL</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$pid_namespace</span> = <span class="var-default">NULL</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span> = <span class="var-default">NULL</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$xmlStr</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$dsid</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$pid_namespace</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../../Islandora/rootdirectory/XMLDatastream.html#method__construct">XMLDatastream::__construct()</a></dt>
+						<dd>Constructor  NOTE: Use the static constructor methods whenever possible.</dd>
+					</dl>
+			
+	</div>
+<a name="methodaddAppliesTo" id="addAppliesTo"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">addAppliesTo</span> (line <span class="line-number">1761</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addAppliesTo
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$rule_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$type</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$rule_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$type</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddAuthListItem" id="addAuthListItem"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">addAuthListItem</span> (line <span class="line-number">960</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Adds an authority list item to a form element.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addAuthListItem
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$elementName</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$value</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$label</span> = <span class="var-default">''</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$elementName</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$value</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$label</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddDispMeth" id="addDispMeth"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">addDispMeth</span> (line <span class="line-number">1698</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addDispMeth
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$module</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$file</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$class</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$method</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$default</span> = <span class="var-default">FALSE</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$module</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$file</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$class</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$method</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$default</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddDs" id="addDs"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">addDs</span> (line <span class="line-number">1586</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addDs
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$display_in_fieldset</span> = <span class="var-default">FALSE</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$display_in_fieldset</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddElementToForm" id="addElementToForm"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">addElementToForm</span> (line <span class="line-number">2169</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><type></span>
+		<span class="method-name">
+			addElementToForm
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$element</span>, <span class="var-type"><type></span>&nbsp;<span class="var-name">$parent_element</span>, <span class="var-type"><type></span>&nbsp;<span class="var-name">$element_definition</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"><type></span>
+				<span class="var-name">$element_definition</span>			</li>
+					<li>
+				<span class="var-type"><type></span>
+				<span class="var-name">$parent_element</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$element</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddForm" id="addForm"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">addForm</span> (line <span class="line-number">2120</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Adds the named form.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> TRUE on success, FALSE otherwise.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			addForm
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$element</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$element</span><span class="var-description">: Name of the form to add.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddIngestFormElement" id="addIngestFormElement"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">addIngestFormElement</span> (line <span class="line-number">819</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Add an ingest form element to the model.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			addIngestFormElement
+		</span>
+					(<span class="var-type">String</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$label</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type">boolean</span>&nbsp;<span class="var-name">$required</span>, [<span class="var-type">String</span>&nbsp;<span class="var-name">$description</span> = <span class="var-default">''</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$name</span>			</li>
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$label</span>			</li>
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$type</span>			</li>
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$required</span>			</li>
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$description</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddIngestMethod" id="addIngestMethod"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">addIngestMethod</span> (line <span class="line-number">1779</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addIngestMethod
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$rule_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$module</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$file</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$class</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$method</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$modified_files_ext</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$rule_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$module</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$file</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$class</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$method</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$modified_files_ext</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddIngestMethodParam" id="addIngestMethodParam"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">addIngestMethodParam</span> (line <span class="line-number">1817</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addIngestMethodParam
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$rule_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$module</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$file</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$class</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$method</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$name</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$value</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$rule_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$module</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$file</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$class</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$method</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$name</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$value</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddIngestRule" id="addIngestRule"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">addIngestRule</span> (line <span class="line-number">1906</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addIngestRule
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$applies_to</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$module</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$file</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$class</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$method</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$modified_files_ext</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$applies_to</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$module</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$file</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$class</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$method</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$modified_files_ext</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddMimetype" id="addMimetype"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">addMimetype</span> (line <span class="line-number">1522</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Adds an allowed mimetype to the model.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			addMimetype
+		</span>
+					(<span class="var-type">String</span>&nbsp;<span class="var-name">$type</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$type</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodbuildEditMetadataForm" id="buildEditMetadataForm"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">buildEditMetadataForm</span> (line <span class="line-number">1092</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Builds an edit metadata form using the method specified in the &lt;edit_metadata_method&gt; element</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">$form</span>
+		<span class="method-name">
+			buildEditMetadataForm
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$dsid</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$dsid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pid</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodbuildIngestForm" id="buildIngestForm"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">buildIngestForm</span> (line <span class="line-number">1011</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Builds an ingest form using the method specified in  &lt;form_builder_method&gt; element of &lt;ingest_form&gt;  Returns FALSE on failure.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> identifier</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			buildIngestForm
+		</span>
+					(<span class="var-type">&$form</span>&nbsp;<span class="var-name">&$form</span>, <span class="var-type">&$form_state</span>&nbsp;<span class="var-name">&$form_state</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">&$form</span>
+				<span class="var-name">&$form</span>			</li>
+					<li>
+				<span class="var-type">&$form_state</span>
+				<span class="var-name">&$form_state</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodconvertFromOldSchema" id="convertFromOldSchema"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">convertFromOldSchema</span> (line <span class="line-number">243</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Attempts to convert from the old XML schema to the new by  traversing the XML DOM and building a new DOM.  When done  $this-&gt;xml is replaced by the newly created DOM..</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			convertFromOldSchema
+		</span>
+				()
+			</div>
+	
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../../Islandora/rootdirectory/XMLDatastream.html#methodconvertFromOldSchema">XMLDatastream::convertFromOldSchema()</a></dt>
+						<dd>Attempts to convert from the old XML schema to the new by  traversing the XML DOM and building a new DOM.  When done  $this-&gt;xml is replaced by the newly created DOM..</dd>
+					</dl>
+			
+	</div>
+<a name="methoddecAuthListItem" id="decAuthListItem"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">decAuthListItem</span> (line <span class="line-number">851</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Decrements an authority list item from a form element in the list of elements.</p>
+<p class="description"><p>Updates the &quot;order&quot;.  This method is simply an overload to the incAuthListItem  which has a direction parameter.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			decAuthListItem
+		</span>
+					(<span class="var-type">String</span>&nbsp;<span class="var-name">$elementName</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$value</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$elementName</span>			</li>
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$value</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methoddecFormElement" id="decFormElement"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">decFormElement</span> (line <span class="line-number">2233</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><type></span>
+		<span class="method-name">
+			decFormElement
+		</span>
+					(<span class="var-type"><type></span>&nbsp;<span class="var-name">$form_element</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"><type></span>
+				<span class="var-name">$form_element</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methoddecIngestFormElement" id="decIngestFormElement"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">decIngestFormElement</span> (line <span class="line-number">571</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Decrements an ingest form element in the list of elements.</p>
+<p class="description"><p>Updates the &quot;order&quot;.  This method is simply an overload to the incIngestFormElement  which has a direction parameter.</p><p>TODO: Might be useful to move multiple places at once, or define  a method to move to an absolute position.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			decIngestFormElement
+		</span>
+					(<span class="var-type">String</span>&nbsp;<span class="var-name">$name</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$name</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methoddisplayExtraFieldset" id="displayExtraFieldset"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">displayExtraFieldset</span> (line <span class="line-number">1447</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Calls all defined display methods for the ContentModel.</p>
+<p class="description"><p>The PID specified is passed to the constructor of the display  class(es) specified in the Content Model.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			displayExtraFieldset
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$pid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$page_number</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$pid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$page_number</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methoddisplayInFieldset" id="displayInFieldset"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">displayInFieldset</span> (line <span class="line-number">1621</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			displayInFieldset
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsid</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodeditForm" id="editForm"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">editForm</span> (line <span class="line-number">2144</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Edits a form element with attribute name='$name' from the 'forms' element.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			editForm
+		</span>
+					(<span class="var-type">String</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$element</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$name</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$element</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodeditFormElement" id="editFormElement"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">editFormElement</span> (line <span class="line-number">2180</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			editFormElement
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$new_element</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$edit_element</span>, <span class="var-type"><type></span>&nbsp;<span class="var-name">$element_definition</span>, <span class="var-type"><type></span>&nbsp;<span class="var-name">$parent_element</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"><type></span>
+				<span class="var-name">$element_definition</span>			</li>
+					<li>
+				<span class="var-type"><type></span>
+				<span class="var-name">$parent_element</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$new_element</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$edit_element</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodeditIngestFormAttributes" id="editIngestFormAttributes"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">editIngestFormAttributes</span> (line <span class="line-number">1974</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			editIngestFormAttributes
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$page</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$hide_file_chooser</span> = <span class="var-default">FALSE</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$redirect</span> = <span class="var-default">TRUE</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$page</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$hide_file_chooser</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$redirect</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodeditIngestFormBuilderMethod" id="editIngestFormBuilderMethod"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">editIngestFormBuilderMethod</span> (line <span class="line-number">2010</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			editIngestFormBuilderMethod
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$module</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$file</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$class</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$method</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$handler</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$module</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$file</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$class</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$method</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$handler</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodeditIngestFormElement" id="editIngestFormElement"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">editIngestFormElement</span> (line <span class="line-number">760</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Edits the ingest form element specified.</p>
+<p class="description"><p>NOTE: The element name can not be changed.  To update an elements name  it must be deleted and added with the new name.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> success</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			editIngestFormElement
+		</span>
+					(<span class="var-type">String</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$label</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type">boolean</span>&nbsp;<span class="var-name">$required</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$description</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$name</span>			</li>
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$label</span>			</li>
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$type</span>			</li>
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$required</span>			</li>
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$description</span><span class="var-description">: description</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodexecAddDatastreamMethods" id="execAddDatastreamMethods"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">execAddDatastreamMethods</span> (line <span class="line-number">1258</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Executes the add datastream method for the specified datastream on the specified file.</p>
+<p class="description"><p>Returns FALSE on failure.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">$result</span>
+		<span class="method-name">
+			execAddDatastreamMethods
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$file</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$filen</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$dsid</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$filen</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$file</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodexecFormHandler" id="execFormHandler"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">execFormHandler</span> (line <span class="line-number">1385</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Executes the form handler from the &lt;form_builder_method&gt; element of &lt;ingest_form&gt;.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			execFormHandler
+		</span>
+					(<span class="var-type">&$formData</span>&nbsp;<span class="var-name">&$data</span>, <span class="var-type">&$form_state</span>&nbsp;<span class="var-name">&$form_state</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">&$formData</span>
+				<span class="var-name">&$data</span>			</li>
+					<li>
+				<span class="var-type">&$form_state</span>
+				<span class="var-name">&$form_state</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodexecIngestRules" id="execIngestRules"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">execIngestRules</span> (line <span class="line-number">1311</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Executes the ingest rules that apply to the specified file/mimetype.</p>
+<p class="description"><p>Returns FALSE on failure.</p><p>If $preview is TRUE, then only execute rules with  a parameter 'preview'.  Used to generate previews for the file chooser.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">$result</span>
+		<span class="method-name">
+			execIngestRules
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$file</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$mimetype</span>, [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$preview</span> = <span class="var-default">FALSE</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$file</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$mimetype</span>			</li>
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$preview</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetAddDsMethod" id="getAddDsMethod"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getAddDsMethod</span> (line <span class="line-number">1715</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getAddDsMethod
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$ds</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$ds</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetDisplayMethods" id="getDisplayMethods"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getDisplayMethods</span> (line <span class="line-number">1570</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getDisplayMethods
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$ds</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$ds</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetEditFormNames" id="getEditFormNames"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getEditFormNames</span> (line <span class="line-number">2079</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">return:</span> An array of form names that exist in this content model.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getEditFormNames
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetEditMetadataMethod" id="getEditMetadataMethod"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getEditMetadataMethod</span> (line <span class="line-number">1183</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Gets an associative array describing the edit metadata method.</p>
+<p class="description"><p>Array has the following keys: 'file', 'class', 'method', 'handler', 'dsid'</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">String[]</span>
+		<span class="method-name">
+			getEditMetadataMethod
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetForm" id="getForm"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getForm</span> (line <span class="line-number">2032</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Find the form element with name $name.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> The form element $name, if found FALSE otherwise.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">DOMElement</span>
+		<span class="method-name">
+			getForm
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span><span class="var-description">: The name of the form element to find.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetFormNames" id="getFormNames"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getFormNames</span> (line <span class="line-number">2042</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">return:</span> An array of form names that exist in this content model.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getFormNames
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetIngestFormAttributes" id="getIngestFormAttributes"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getIngestFormAttributes</span> (line <span class="line-number">1961</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getIngestFormAttributes
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetIngestFormBuilderMethod" id="getIngestFormBuilderMethod"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getIngestFormBuilderMethod</span> (line <span class="line-number">1997</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getIngestFormBuilderMethod
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetIngestFormElementParams" id="getIngestFormElementParams"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getIngestFormElementParams</span> (line <span class="line-number">720</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Gets a list of all parameters that belong to the specified ingest form element.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> success</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			getIngestFormElementParams
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$elementName</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$elementName</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$name</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetIngestFormElements" id="getIngestFormElements"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getIngestFormElements</span> (line <span class="line-number">503</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Gets an array of form elements to use in the ingest form.  The results of this array are passed  to the specified ingest form builder.  The form builder can optionally not use the elements as defined  in the form builder if more complex forms or behaviour is required.</p>
+<p class="description"><p>Each element has the following keys: 'label', 'type', 'required', 'description', and if defined, 'authoritative_list' and/or 'parameters'</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string[]</span>
+		<span class="method-name">
+			getIngestFormElements
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetIngestFormNames" id="getIngestFormNames"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getIngestFormNames</span> (line <span class="line-number">2061</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">return:</span> An array of form names that exist in this content model.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getIngestFormNames
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetIngestRule" id="getIngestRule"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getIngestRule</span> (line <span class="line-number">1732</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getIngestRule
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$rule_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$rule_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetIngestRules" id="getIngestRules"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getIngestRules</span> (line <span class="line-number">1920</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getIngestRules
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetMimetypes" id="getMimetypes"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getMimetypes</span> (line <span class="line-number">1423</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Gets a list of valid mimetypes that can apply to this model.</p>
+<p class="description"><p>Returns FALSE on failure.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string[]</span>
+		<span class="method-name">
+			getMimetypes
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetName" id="getName"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getName</span> (line <span class="line-number">458</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Gets the name of the ContentModel  Returns false on failure.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">String</span>
+		<span class="method-name">
+			getName
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetServices" id="getServices"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">getServices</span> (line <span class="line-number">428</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Gets a list of service deployments that this model has.</p>
+<p class="description"><p>NOTE: Not currently being used.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">String[]</span>
+		<span class="method-name">
+			getServices
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodhandleEditMetadataForm" id="handleEditMetadataForm"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">handleEditMetadataForm</span> (line <span class="line-number">1134</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Handles the edit metadata form using the handler specified in the &lt;edit_metadata_method&gt; element  Returns FALSE on failure.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">$result</span>
+		<span class="method-name">
+			handleEditMetadataForm
+		</span>
+					(<span class="var-type">&$form_id</span>&nbsp;<span class="var-name">&$form_id</span>, <span class="var-type">&$form_values</span>&nbsp;<span class="var-name">&$form_state</span>, <span class="var-type">&$soap_client</span>&nbsp;<span class="var-name">&$soap_client</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">&$form_id</span>
+				<span class="var-name">&$form_id</span>			</li>
+					<li>
+				<span class="var-type">&$form_values</span>
+				<span class="var-name">&$form_state</span>			</li>
+					<li>
+				<span class="var-type">&$soap_client</span>
+				<span class="var-name">&$soap_client</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodincAuthListItem" id="incAuthListItem"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">incAuthListItem</span> (line <span class="line-number">864</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Increments (or decrements) an authority list item from a form element in the list of elements.</p>
+<p class="description"><p>Updates the &quot;order&quot;.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			incAuthListItem
+		</span>
+					(<span class="var-type">String</span>&nbsp;<span class="var-name">$elementName</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$value</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$reorder</span> = <span class="var-default">'inc'</span>], <span class="var-type">String</span>&nbsp;<span class="var-name">$direction</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$elementName</span>			</li>
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$value</span>			</li>
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$direction</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$reorder</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodincFormElement" id="incFormElement"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">incFormElement</span> (line <span class="line-number">2216</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><type></span>
+		<span class="method-name">
+			incFormElement
+		</span>
+					(<span class="var-type"><type></span>&nbsp;<span class="var-name">$form_element</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"><type></span>
+				<span class="var-name">$form_element</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodincIngestFormElement" id="incIngestFormElement"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">incIngestFormElement</span> (line <span class="line-number">587</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Increments (or decrements) ingest form element in the list of elements.</p>
+<p class="description"><p>Updates the &quot;order&quot;.  The $reorder parameter accepts 'inc' or 'dec' to  specify the direction to move (defaults to increment.)</p><p>TODO: Might be useful to move multiple places at once, or define  a method to move to an absolute position.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			incIngestFormElement
+		</span>
+					(<span class="var-type">String</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">String</span>&nbsp;<span class="var-name">$reorder</span> = <span class="var-default">'inc'</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$name</span>			</li>
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$reorder</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodlistDatastreams" id="listDatastreams"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">listDatastreams</span> (line <span class="line-number">1497</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Gets a list of datastreams from the ContentModel  (not including the QDC ds if it is listed).</p>
+<p class="description"><p>Returns FALSE on failure.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string[]</span>
+		<span class="method-name">
+			listDatastreams
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodremoveAppliesTo" id="removeAppliesTo"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">removeAppliesTo</span> (line <span class="line-number">1742</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			removeAppliesTo
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$rule_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$type</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$rule_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$type</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodremoveAuthListItem" id="removeAuthListItem"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">removeAuthListItem</span> (line <span class="line-number">914</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Removes an authority list item from a form element.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			removeAuthListItem
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$elementName</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$value</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$elementName</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$value</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodremoveDispMeth" id="removeDispMeth"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">removeDispMeth</span> (line <span class="line-number">1675</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			removeDispMeth
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$module</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$file</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$class</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$method</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$module</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$file</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$class</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$method</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodremoveDs" id="removeDs"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">removeDs</span> (line <span class="line-number">1610</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			removeDs
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsid</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodremoveEditMetadataMethod" id="removeEditMetadataMethod"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">removeEditMetadataMethod</span> (line <span class="line-number">1205</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Removes the edit data method from the Content Model.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			removeEditMetadataMethod
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodremoveForm" id="removeForm"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">removeForm</span> (line <span class="line-number">2101</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Removes the named form.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> TRUE on success, FALSE otherwise.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			removeForm
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span><span class="var-description">: Name of the form to remove.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodremoveIngestFormElement" id="removeIngestFormElement"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">removeIngestFormElement</span> (line <span class="line-number">621</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Removes an ingest form element from the list of ingest form elements.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			removeIngestFormElement
+		</span>
+					(<span class="var-type">String</span>&nbsp;<span class="var-name">$name</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$name</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodremoveIngestMethod" id="removeIngestMethod"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">removeIngestMethod</span> (line <span class="line-number">1797</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			removeIngestMethod
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$rule_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$module</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$file</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$class</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$method</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$rule_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$module</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$file</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$class</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$method</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodremoveIngestMethodParam" id="removeIngestMethodParam"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">removeIngestMethodParam</span> (line <span class="line-number">1859</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			removeIngestMethodParam
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$rule_id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$module</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$file</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$class</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$method</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$name</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$rule_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$module</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$file</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$class</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$method</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$name</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodremoveIngestRule" id="removeIngestRule"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">removeIngestRule</span> (line <span class="line-number">1898</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			removeIngestRule
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$rule_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$rule_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodremoveMimetype" id="removeMimetype"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">removeMimetype</span> (line <span class="line-number">1550</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Removes an allowed mimetype from the model.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			removeMimetype
+		</span>
+					(<span class="var-type">String</span>&nbsp;<span class="var-name">$type</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$type</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetDefaultDispMeth" id="setDefaultDispMeth"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">setDefaultDispMeth</span> (line <span class="line-number">1644</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setDefaultDispMeth
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$module</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$file</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$class</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$method</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$module</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$file</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$class</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$method</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetDisplayInFieldset" id="setDisplayInFieldset"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">setDisplayInFieldset</span> (line <span class="line-number">1629</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setDisplayInFieldset
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$dsid</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$value</span> = <span class="var-default">TRUE</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$dsid</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$value</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetIngestFormElementParam" id="setIngestFormElementParam"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">setIngestFormElementParam</span> (line <span class="line-number">650</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Sets a parameter of an ingest form element.  If the value of the element is FALSE the parameter  will be removed entirely (if you want to store false as a value, then send the String &quot;false&quot;).</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> success</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			setIngestFormElementParam
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$paramName</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$paramValue</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$elementName</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$elementName</span>			</li>
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$paramName</span>			</li>
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$paramValue</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$name</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodupdateEditMetadataMethod" id="updateEditMetadataMethod"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../../media/images/Method.png" />
+		<span class="method-title">updateEditMetadataMethod</span> (line <span class="line-number">1228</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Update the Edit Metadata Method defined in the Content Model</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			updateEditMetadataMethod
+		</span>
+					(<span class="var-type">String</span>&nbsp;<span class="var-name">$module</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$file</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$class</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$method</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$handler</span>, <span class="var-type">String</span>&nbsp;<span class="var-name">$dsid</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$module</span>			</li>
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$file</span>			</li>
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$class</span>			</li>
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$method</span>			</li>
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$handler</span>			</li>
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$dsid</span>			</li>
+				</ul>
+		
+			
+	</div>
+							<h4>Inherited Methods</h4>
+				<a name='inherited_methods'><!-- --></a>	
+									<!-- =========== Summary =========== -->
+					<p>Inherited From <span class="classname"><a href="../../Islandora/rootdirectory/XMLDatastream.html">XMLDatastream</a></span></p>
+					<blockquote>
+													<img src="../../media/images/Constructor.png" alt=" "/>
+							<span class="method-name"><a href="../../Islandora/rootdirectory/XMLDatastream.html#method__construct">XMLDatastream::__construct()</a></span><br>
+													<img src="../../media/images/AbstractMethod.png" alt=" "/>
+							<span class="method-name"><a href="../../Islandora/rootdirectory/XMLDatastream.html#methodconvertFromOldSchema">XMLDatastream::convertFromOldSchema()</a></span><br>
+													<img src="../../media/images/Method.png" alt=" "/>
+							<span class="method-name"><a href="../../Islandora/rootdirectory/XMLDatastream.html#methoddumpXml">XMLDatastream::dumpXml()</a></span><br>
+													<img src="../../media/images/Method.png" alt=" "/>
+							<span class="method-name"><a href="../../Islandora/rootdirectory/XMLDatastream.html#methodgetDSIDFromIdentifier">XMLDatastream::getDSIDFromIdentifier()</a></span><br>
+													<img src="../../media/images/Method.png" alt=" "/>
+							<span class="method-name"><a href="../../Islandora/rootdirectory/XMLDatastream.html#methodgetHistory">XMLDatastream::getHistory()</a></span><br>
+													<img src="../../media/images/Method.png" alt=" "/>
+							<span class="method-name"><a href="../../Islandora/rootdirectory/XMLDatastream.html#methodgetIdentifier">XMLDatastream::getIdentifier()</a></span><br>
+													<img src="../../media/images/Method.png" alt=" "/>
+							<span class="method-name"><a href="../../Islandora/rootdirectory/XMLDatastream.html#methodgetPidFromIdentifier">XMLDatastream::getPidFromIdentifier()</a></span><br>
+													<img src="../../media/images/Method.png" alt=" "/>
+							<span class="method-name"><a href="../../Islandora/rootdirectory/XMLDatastream.html#methodloadFromFile">XMLDatastream::loadFromFile()</a></span><br>
+													<img src="../../media/images/Method.png" alt=" "/>
+							<span class="method-name"><a href="../../Islandora/rootdirectory/XMLDatastream.html#methodpurgeVersions">XMLDatastream::purgeVersions()</a></span><br>
+													<img src="../../media/images/Method.png" alt=" "/>
+							<span class="method-name"><a href="../../Islandora/rootdirectory/XMLDatastream.html#methodsaveToFedora">XMLDatastream::saveToFedora()</a></span><br>
+													<img src="../../media/images/Method.png" alt=" "/>
+							<span class="method-name"><a href="../../Islandora/rootdirectory/XMLDatastream.html#methodvalidate">XMLDatastream::validate()</a></span><br>
+													<img src="../../media/images/Method.png" alt=" "/>
+							<span class="method-name"><a href="../../Islandora/rootdirectory/XMLDatastream.html#methodvalidDsid">XMLDatastream::validDsid()</a></span><br>
+													<img src="../../media/images/Method.png" alt=" "/>
+							<span class="method-name"><a href="../../Islandora/rootdirectory/XMLDatastream.html#methodvalidPid">XMLDatastream::validPid()</a></span><br>
+											</blockquote>
+										
+		</div>
+	</div>
+
+	
+	<p class="notes" id="credit">
+		Documentation generated on Thu, 14 Jul 2011 16:56:04 -0300 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</div></body>
+</html>

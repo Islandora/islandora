@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @package Islandora
+ * @subpackage API
+ */
+
 /* 
  * Implements a simple class for working with Dublin Core data and exporting it
  * back to XML. Inspiration and design shamelessly stolen from the pyfedora
