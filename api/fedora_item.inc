@@ -2,9 +2,16 @@
 
 // $Id$
 
+/**
+ * @file
+ * Fedora Item
+ */
 define('RELS_EXT_URI', 'info:fedora/fedora-system:def/relations-external#');
 define("FEDORA_MODEL_URI", 'info:fedora/fedora-system:def/model#');
 
+/**
+ * Fedora Item Class
+ */
 class Fedora_Item {
 
   public $pid = NULL; // The $pid of the fedora object represented by an instance of this class.
@@ -51,10 +58,24 @@ class Fedora_Item {
     }
   }
 
+  /**
+   * Exists 
+   * @return type 
+   */
   function exists() {
     return (!empty($this->objectProfile));
   }
 
+  /**
+   * Add datastream from file
+   * @param type $datastream_file
+   * @param type $datastream_id
+   * @param type $datastream_label
+   * @param type $datastream_mimetype
+   * @param type $controlGroup
+   * @param type $logMessage
+   * @return type 
+   */
   function add_datastream_from_file($datastream_file, $datastream_id, $datastream_label = NULL, $datastream_mimetype = '', $controlGroup = 'M', $logMessage = null) {
     module_load_include('inc', 'fedora_repository', 'MimeClass');
     if (empty($datastream_mimetype)) {
@@ -76,6 +97,16 @@ class Fedora_Item {
     return $return_value;
   }
 
+  /**
+   * Add datastream from url
+   * @param type $datastream_url
+   * @param type $datastream_id
+   * @param type $datastream_label
+   * @param type $datastream_mimetype
+   * @param type $controlGroup
+   * @param type $logMessage
+   * @return type 
+   */
   function add_datastream_from_url($datastream_url, $datastream_id, $datastream_label = NULL, $datastream_mimetype = '', $controlGroup = 'M', $logMessage = null) {
     if (empty($datastream_label)) {
       $datastream_label = $datastream_id;
@@ -98,10 +129,19 @@ class Fedora_Item {
     );
 
 
-    return $this->soap_call( 'addDataStream', $params );
-
+    return $this->soap_call('addDataStream', $params);
   }
 
+  /**
+   * Add datastream from string
+   * @param type $str
+   * @param type $datastream_id
+   * @param type $datastream_label
+   * @param type $datastream_mimetype
+   * @param type $controlGroup
+   * @param type $logMessage
+   * @return type 
+   */
   function add_datastream_from_string($str, $datastream_id, $datastream_label = NULL, $datastream_mimetype = 'text/xml', $controlGroup = 'M', $logMessage = null) {
     $dir = sys_get_temp_dir();
     $tmpfilename = tempnam($dir, 'fedoratmp');
@@ -116,8 +156,9 @@ class Fedora_Item {
   /**
    * Add a relationship string to this object's RELS-EXT.
    * does not support rels-int yet.
-   * @param string $relationship
-   * @param <type> $object
+   * @param type $relationship
+   * @param type $object
+   * @param type $namespaceURI 
    */
   function add_relationship($relationship, $object, $namespaceURI = RELS_EXT_URI) {
     $ds_list = $this->get_datastreams_list_as_array();
@@ -214,6 +255,10 @@ class Fedora_Item {
     //print ($description->dump_node());
   }
 
+  /**
+   * Export as foxml
+   * @return type 
+   */
   function export_as_foxml() {
     $params = array(
       'pid' => $this->pid,
@@ -290,6 +335,12 @@ class Fedora_Item {
     return $results;
   }
 
+  /**
+   * Get datastream dissemination
+   * @param type $dsid
+   * @param type $as_of_date_time
+   * @return string 
+   */
   function get_datastream_dissemination($dsid, $as_of_date_time = "") {
     $params = array(
       'pid' => $this->pid,
@@ -307,6 +358,12 @@ class Fedora_Item {
     return $content;
   }
 
+  /**
+   * Get datastream
+   * @param type $dsid
+   * @param type $as_of_date_time
+   * @return type 
+   */
   function get_datastream($dsid, $as_of_date_time = "") {
     $params = array(
       'pid' => $this->pid,
@@ -318,6 +375,11 @@ class Fedora_Item {
     return $object->datastream;
   }
 
+  /**
+   * Get datastream history
+   * @param type $dsid
+   * @return type 
+   */
   function get_datastream_history($dsid) {
     $params = array(
       'pid' => $this->pid,
@@ -332,6 +394,14 @@ class Fedora_Item {
     return $ret;
   }
 
+  /**
+   * Get dissemination
+   * @param type $service_definition_pid
+   * @param type $method_name
+   * @param type $parameters
+   * @param type $as_of_date_time
+   * @return string 
+   */
   function get_dissemination($service_definition_pid, $method_name, $parameters = array(), $as_of_date_time = null) {
     $params = array(
       'pid' => $this->pid,
@@ -530,6 +600,9 @@ class Fedora_Item {
 
   /**
    * Removes this object form the repository.
+   * @param type $log_message
+   * @param type $force
+   * @return type 
    */
   function purge($log_message = 'Purged using Islandora API.', $force = FALSE) {
     $params = array(
@@ -541,6 +614,15 @@ class Fedora_Item {
     return $this->soap_call('purgeObject', $params);
   }
 
+  /**
+   * Purge datastream
+   * @param type $dsID
+   * @param type $start_date
+   * @param type $end_date
+   * @param type $log_message
+   * @param type $force
+   * @return type 
+   */
   function purge_datastream($dsID, $start_date = NULL, $end_date = NULL, $log_message = 'Purged datastream using Islandora API', $force = FALSE) {
     $params = array(
       'pid' => $this->pid,
@@ -553,11 +635,21 @@ class Fedora_Item {
     return $this->soap_call('purgeDatastream', $params);
   }
 
+  /**
+   * URL
+   * @global type $base_url
+   * @return type 
+   */
   function url() {
     global $base_url;
     return $base_url . '/fedora/repository/' . $this->pid . (!empty($this->objectProfile) ? '/-/' . drupal_urlencode($this->objectProfile->objLabel) : '');
   }
 
+  /**
+   * Get Next PID in Namespace
+   * @param type $pid_namespace
+   * @return type 
+   */
   static function get_next_PID_in_namespace($pid_namespace = '') {
 
     if (empty($pid_namespace)) {
@@ -581,18 +673,32 @@ class Fedora_Item {
     return $result->pid;
   }
 
+  /**
+   * ingest from FOXML
+   * @param type $foxml
+   * @return Fedora_Item 
+   */
   static function ingest_from_FOXML($foxml) {
     $params = array('objectXML' => $foxml->saveXML(), 'format' => "info:fedora/fedora-system:FOXML-1.1", 'logMessage' => "Fedora Object Ingested");
     $object = self::soap_call('ingest', $params);
     return new Fedora_Item($object->objectPID);
   }
 
+  /**
+   * ingest from FOXML file
+   * @param type $foxml_file
+   * @return type 
+   */
   static function ingest_from_FOXML_file($foxml_file) {
     $foxml = new DOMDocument();
     $foxml->load($foxml_file);
     return self::ingest_from_FOXML($foxml);
   }
 
+  /**
+   * ingest from FOXML files in directory
+   * @param type $path 
+   */
   static function ingest_from_FOXML_files_in_directory($path) {
     // Open the directory
     $dir_handle = @opendir($path);
@@ -605,13 +711,22 @@ class Fedora_Item {
       try {
         self::ingest_from_FOXML_file($path . '/' . $file);
       } catch (exception $e) {
-
+        
       }
     }
     // Close
     closedir($dir_handle);
   }
 
+  /**
+   * Modify Object
+   * @param type $label
+   * @param type $state
+   * @param type $ownerId
+   * @param type $logMessage
+   * @param type $quiet
+   * @return type 
+   */
   function modify_object($label = '', $state = null, $ownerId = null, $logMessage = 'Modified by Islandora API', $quiet=TRUE) {
 
     $params = array(
@@ -625,6 +740,17 @@ class Fedora_Item {
     return self::soap_call('modifyObject', $params, $quiet);
   }
 
+  /**
+   * Modify datastream by reference
+   * @param type $external_url
+   * @param type $dsid
+   * @param type $label
+   * @param type $mime_type
+   * @param type $force
+   * @param type $logMessage
+   * @param type $quiet
+   * @return type 
+   */
   function modify_datastream_by_reference($external_url, $dsid, $label, $mime_type, $force = FALSE, $logMessage = 'Modified by Islandora API', $quiet=FALSE) {
     $params = array(
       'pid' => $this->pid,
@@ -642,6 +768,17 @@ class Fedora_Item {
     return self::soap_call('modifyDatastreamByReference', $params, $quiet);
   }
 
+  /**
+   * Modify datastream by value
+   * @param type $content
+   * @param type $dsid
+   * @param type $label
+   * @param type $mime_type
+   * @param type $force
+   * @param type $logMessage
+   * @param type $quiet
+   * @return type 
+   */
   function modify_datastream_by_value($content, $dsid, $label, $mime_type, $force = FALSE, $logMessage = 'Modified by Islandora API', $quiet=FALSE) {
     $params = array(
       'pid' => $this->pid,
@@ -659,6 +796,13 @@ class Fedora_Item {
     return self::soap_call('modifyDatastreamByValue', $params, $quiet);
   }
 
+  /**
+   * Soap call
+   * @param type $function_name
+   * @param type $params_array
+   * @param type $quiet
+   * @return type 
+   */
   static function soap_call($function_name, $params_array, $quiet = FALSE) {
     if (!self::$connection_helper) {
       module_load_include('inc', 'fedora_repository', 'ConnectionHelper');
@@ -730,6 +874,9 @@ class Fedora_Item {
    *
    * @param string $pid if none given, getnextpid will be called.
    * @param string $state The initial state, A - Active, I - Inactive, D - Deleted
+   * @param type $label
+   * @param type $owner
+   * @return DOMDocument 
    */
   static function create_object_FOXML($pid = '', $state = 'A', $label = 'Untitled', $owner = '') {
     $foxml = new DOMDocument("1.0", "UTF-8");
@@ -778,10 +925,23 @@ class Fedora_Item {
     return $foxml;
   }
 
+  /**
+   * ingest new item
+   * @param type $pid
+   * @param type $state
+   * @param type $label
+   * @param type $owner
+   * @return type 
+   */
   static function ingest_new_item($pid = '', $state = 'A', $label = '', $owner = '') {
     return self::ingest_from_FOXML(self::create_object_FOXML($pid, $state, $label, $owner));
   }
 
+  /**
+   * fedora item exists 
+   * @param type $pid
+   * @return type 
+   */
   static function fedora_item_exists($pid) {
     $item = new Fedora_Item($pid);
     return $item->exists();

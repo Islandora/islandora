@@ -1,29 +1,43 @@
 <?php
+
 // $Id$
 
-/*
- * Created on 26-Feb-08
- *
- * To change the template for this generated file go to
- * Window - Preferences - PHPeclipse - PHP - Code Templates
+/**
+ * @file
+ * Refworks class
  */
+
 module_load_include('inc', 'fedora_repository', 'SecurityClass');
 
+/**
+ * Refworks class ???
+ */
 class Refworks {
+
   private $romeoUrlString = "";
   private $referenceList;
   private $securityHelper;
   private $collectionPolicyStream;
   private $issn = '';
 
+  /**
+   * Constructor
+   */
   function Refworks() {
     $this->romeoUrlString = "http://www.sherpa.ac.uk/romeo/api24.php?issn=";
   }
 
-  function buildForm( &$form, $ingest_form_definition, &$form_values) {
+  /**
+   * Build Form ??
+   * @param type $form
+   * @param type $ingest_form_definition
+   * @param type $form_values
+   * @return type 
+   */
+  function buildForm(&$form, $ingest_form_definition, &$form_values) {
     $form['indicator2'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Ingest digital object step #2'),
+      '#type' => 'fieldset',
+      '#title' => t('Ingest digital object step #2'),
     );
     foreach ($ingest_form_definition->form_elements->element as $element) {
       $name = strip_tags($element->name->asXML());
@@ -39,11 +53,11 @@ class Refworks {
       $type = strip_tags($element->type->asXML());
 
       $form['indicator2']["$name"] = array(
-          '#title' => $title,
-          '#required' => $required,
-          '#description' => $description,
-          '#prefix' => $prefix,
-          '#type' => $type
+        '#title' => $title,
+        '#required' => $required,
+        '#description' => $description,
+        '#prefix' => $prefix,
+        '#type' => $type
       );
     }
 
@@ -68,21 +82,26 @@ class Refworks {
       //$xml=simplexml_load_string(trim(file_get_contents($file),NULL,TRUE));
       //$dom = dom_import_simplexml($xml);//test to see if it behaves better
       //$xml = new SimpleXMLElement(trim(file_get_contents($file)));
-    }
-    catch (Exception $e) {
+    } catch (Exception $e) {
       drupal_set_message(t('Error processing Refworks file: ') . $e->getMessage());
       return FALSE;
     }
     $this->referenceList = array();
     foreach ($xml->reference as $reference) {
-      array_push( $this->referenceList, $reference );
+      array_push($this->referenceList, $reference);
     }
 
     return $this->referenceList;
   }
-  
-  //create A DC stream with ID of DC
-  function createQDCStream( &$dom, &$rootElement, $reference ) {
+
+  /**
+   * Create a DC stream with ID of DC ???
+   * @param type $dom
+   * @param type $rootElement
+   * @param type $reference
+   * @return type 
+   */
+  function createQDCStream(&$dom, &$rootElement, $reference) {
     $datastream = $dom->createElement("foxml:datastream");
     $datastream->setAttribute("ID", "DC");
     $datastream->setAttribute("STATE", "A");
@@ -126,19 +145,19 @@ class Refworks {
       $oai->appendChild($element);
     }
     foreach ($reference->vo as $value) {
-      $source .= ' Volume: '. $value;
+      $source .= ' Volume: ' . $value;
     }
     foreach ($reference->is as $value) {
-      $source .= ' Issue: '. $value;
+      $source .= ' Issue: ' . $value;
     }
     foreach ($reference->sp as $value) {
-      $source .= ' Start Page: '. $value;
+      $source .= ' Start Page: ' . $value;
     }
     foreach ($reference->op as $value) {
-      $source .= ' Other Pages: '. $value;
+      $source .= ' Other Pages: ' . $value;
     }
     foreach ($reference->ul as $value) {
-      $source .= ' URL: '. $value;
+      $source .= ' URL: ' . $value;
     }
     foreach ($reference->k1 as $value) {
       $element = $dom->createElement('dc:subject', htmlspecialchars($value, ENT_NOQUOTES, 'UTF-8'));
@@ -174,17 +193,17 @@ class Refworks {
       $identifier .= ' ISSN/ISBN: ' . $value;
       //$this->romeoUrlString = $this->romeoUrlString . $value;
       if (!$this->issn == '') {
-        $this->issn=$value;
+        $this->issn = $value;
       }
       else {
-        $this->issn .= ','. $value;
+        $this->issn .= ',' . $value;
       }
     }
     foreach ($reference->ab as $value) {
-      $description = ' abstract: '. $value;
+      $description = ' abstract: ' . $value;
     }
     foreach ($reference->cr as $value) {
-      $description .= ' Cited reference: '. $value;
+      $description .= ' Cited reference: ' . $value;
     }
     $element = $dom->createElement('dc:description', htmlspecialchars($description, ENT_NOQUOTES, 'UTF-8'));
     $oai->appendChild($element);
@@ -196,7 +215,12 @@ class Refworks {
     return $datastream;
   }
 
-  function handleForm( &$form_values ) {
+  /**
+   * Handle Form ??
+   * @param type $form_values
+   * @return type 
+   */
+  function handleForm(&$form_values) {
     $errorMessage = NULL;
     module_load_include('inc', 'fedora_repository', 'CollectionClass');
     module_load_include('inc', 'fedora_repository', 'ContentModel');
@@ -204,10 +228,10 @@ class Refworks {
     $contentModelPid = ContentModel::getPidFromIdentifier($form_values['models']);
     $contentModelDsid = ContentModel::getDSIDFromIdentifier($form_values['models']);
     $collectionHelper = new CollectionClass();
-    $startTime=time();
+    $startTime = time();
     $collection_pid = $form_values['collection_pid'];
 
-    $this->parse_refworks_item( $form_values );
+    $this->parse_refworks_item($form_values);
 
     $this->securityHelper = new SecurityClass();
 
@@ -231,18 +255,18 @@ class Refworks {
       $rootElement->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
       $rootElement->setAttribute('xsi:schemaLocation', "info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd");
       $dom->appendChild($rootElement);
-      
+
       //create standard fedora stuff
       $qdc_element = $this->createQDCStream($dom, $rootElement, $reference);
       if (!$qdc_element) {
         drupal_set_message(t('Error creating DC for Refworks'), 'error');
         continue;
       }
-      $item_title='';
+      $item_title = '';
       foreach ($reference->t1 as $value) {
-        $item_title .= ' --- '. $value;
+        $item_title .= ' --- ' . $value;
       }
-      $this->createStandardFedoraStuff($form_values, $dom, $rootElement, $reference );
+      $this->createStandardFedoraStuff($form_values, $dom, $rootElement, $reference);
       $rootElement->appendChild($qdc_element);
       //create relationships
       $this->createRelationShips($form_values, $dom, $rootElement, $pid);
@@ -250,14 +274,14 @@ class Refworks {
 
       $this->createFedoraDataStreams($form_values, $dom, $rootElement, $reference);
 
-      if (!empty ( $this->collectionPolicyStream)) {
+      if (!empty($this->collectionPolicyStream)) {
         $this->create_security_policies($dom, $rootElement, $reference);
       }
 
       $params = array(
-          'objectXML' => $dom->saveXML(), 
-          'format' => 'info:fedora/fedora-system:FOXML-1.1',
-          'logMessage' => "Fedora Object Ingested",
+        'objectXML' => $dom->saveXML(),
+        'format' => 'info:fedora/fedora-system:FOXML-1.1',
+        'logMessage' => "Fedora Object Ingested",
       );
 
       try {
@@ -270,34 +294,36 @@ class Refworks {
           return;
         }
         $object = $client->__soapCall('ingest', array(
-            $params
-        ));
+              $params
+            ));
         watchdog(t("FEDORA_REPOSITORY"), t("Successfully added repository item !pid - !it", array('!pid' => $pid, '!it' => $item_title)), NULL, WATCHDOG_INFO);
         $deleteFiles = $form_values['delete_file']; //remove files from drupal file system
 
         if ($deleteFiles > 0) {
           unlink($form_values['fullpath']);
         }
-      }
-      catch (exception $e) {
+      } catch (exception $e) {
         $errors++;
         $errorMessage = 'yes';
         watchdog(t("FEDORA_REPOSITORY"), t("Error during ingest !it !e", array('!it' => $item_title, '!e' => $e)), NULL, WATCHDOG_ERROR);
-      }     
+      }
       $success++;
     }
     if (isset($errorMessage)) {
-      drupal_set_message(t('Error ingesting one or more records! Check Drupal watchdog logs for more info') , 'error');
+      drupal_set_message(t('Error ingesting one or more records! Check Drupal watchdog logs for more info'), 'error');
     }
     $endTime = time();
-    drupal_set_message(t('Successfull ingest of %success records.  %errors records failed.  Ingest took %seconds seconds',
-      array('%success' => $success-$errors, '%errors' => $errors, '%seconds' => $endTime-$startTime)) , 'info');
+    drupal_set_message(t('Successfull ingest of %success records.  %errors records failed.  Ingest took %seconds seconds', array('%success' => $success - $errors, '%errors' => $errors, '%seconds' => $endTime - $startTime)), 'info');
   }
 
   /**
    * Creates the RELS-EXT for the foxml
+   * @param type $form_values
+   * @param type $dom
+   * @param type $rootElement
+   * @param type $pid 
    */
-  function createRelationShips( $form_values, &$dom, &$rootElement, $pid = NULL ) {
+  function createRelationShips($form_values, &$dom, &$rootElement, $pid = NULL) {
     $drdf = $dom->createElement("foxml:datastream");
     $drdf->setAttribute("ID", "RELS-EXT");
     $drdf->setAttribute("CONTROL_GROUP", "X");
@@ -326,9 +352,13 @@ class Refworks {
     $rdfdesc->appendChild($member);
     $rdfdesc->appendChild($model);
     $rootElement->appendChild($drdf);
-
   }
 
+  /**
+   * Create Romeo Datastream
+   * @param type $dom
+   * @param type $rootElement 
+   */
   function createRomeoDataStream(&$dom, &$rootElement) {
     $ds1 = $dom->createElement("foxml:datastream");
     $ds1->setAttribute("ID", "ROMEO");
@@ -340,7 +370,7 @@ class Refworks {
     $ds1v->setAttribute("LABEL", "ROMEO");
     $ds1content = $dom->createElement('foxml:contentLocation');
     $url = $this->romeoUrlString . $this->issn;
-    $this->issn=''; //clear the issn's for next ingest in case we are doing batch
+    $this->issn = ''; //clear the issn's for next ingest in case we are doing batch
     $ds1content->setAttribute("REF", "$url");
     $ds1content->setAttribute("TYPE", "URL");
     $ds1->appendChild($ds1v);
@@ -348,6 +378,14 @@ class Refworks {
     $rootElement->appendChild($ds1);
   }
 
+  /**
+   * Create Fedora Datastream
+   * @global type $base_url
+   * @param type $form_values
+   * @param type $dom
+   * @param type $rootElement
+   * @param type $reference 
+   */
   function createFedoraDataStreams($form_values, &$dom, &$rootElement, $reference) {
     global $base_url;
     module_load_include('inc', 'fedora_repository', 'MimeClass');
@@ -374,6 +412,10 @@ class Refworks {
 
   /**
    * Creates the standard foxml properties
+   * @param type $form_values
+   * @param type $dom
+   * @param type $rootElement
+   * @param type $reference 
    */
   function createStandardFedoraStuff($form_values, &$dom, &$rootElement, $reference) {
     // Foxml object properties section
@@ -397,10 +439,9 @@ class Refworks {
     $rootElement->appendChild($objproperties);
   }
 
-
   /**
    * Read the list of Users from the U1 field and Roles from the U2 field and add elements
-   * to the security policy record for this item, then add the record as the security policy datastream.
+   *  to the security policy record for this item, then add the record as the security policy datastream.
    *
    * @param array $form_values
    * @param DOMDocument $dom
@@ -417,8 +458,8 @@ class Refworks {
     $ds1v->setAttribute("ID", "POLICY.0");
     $ds1v->setAttribute("MIMETYPE", "text/xml");
     $ds1v->setAttribute("LABEL", "POLICY Record");
-    $ds1content = $dom->createElement( "foxml:xmlContent" );
-    
+    $ds1content = $dom->createElement("foxml:xmlContent");
+
     $custom_policy = $this->collectionPolicyStream;
     $allowed_users_and_roles = array();
     $allowed_users_and_roles['users'] = array();
@@ -428,11 +469,11 @@ class Refworks {
         array_push($allowed_users_and_roles['users'], $name);
       }
     }
-    if (empty( $reference->u1)) {
+    if (empty($reference->u1)) {
       // If no "u1" value exists, add the currently logged-in user to the item's security policy.
       array_push($allowed_users_and_roles['users'], $user->name);
     }
-    
+
     foreach ($reference->u2 as $rolelist) {
       foreach (explode(';', strip_tags($rolelist->asXML())) as $role) {
         array_push($allowed_users_and_roles['roles'], $role);
@@ -444,6 +485,7 @@ class Refworks {
     $ds1v->appendChild($ds1content);
 
     $rootElement->appendChild($ds1);
-    $ds1content->appendChild($dom->importNode( dom_import_simplexml($custom_policy_sxe), TRUE));    
+    $ds1content->appendChild($dom->importNode(dom_import_simplexml($custom_policy_sxe), TRUE));
   }
+
 }

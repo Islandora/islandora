@@ -2,40 +2,54 @@
 
 // $Id$
 
-/*
- *
- *
- * This Class implements the methods defined in the STANDARD_IMAGE content model
+/**
+ * @file
+ * Image Manipulation class
  */
 
+/**
+ * This Class implements the methods defined in the STANDARD_IMAGE content model
+ */
 class ImageManipulation {
 
+  /**
+   * Constructor
+   */
   function ImageManipulation() {
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');
   }
 
+  /**
+   * Create a preview ??
+   * @param type $parameterArray
+   * @param type $dsid
+   * @param type $file
+   * @param type $file_ext
+   * @return string 
+   */
   function createPreview($parameterArray, $dsid, $file, $file_ext) {
     $system = getenv('System');
     $file_suffix = '_' . $dsid . '.' . $file_ext;
-    $width = $parameterArray['width']; 
+    $width = $parameterArray['width'];
 
     if (!isset($parameterArray['height'])) {
-	$height = $width;
-    } else { 
-	$height = $parameterArray['height'];
+      $height = $width;
+    }
+    else {
+      $height = $parameterArray['height'];
     }
 
     $returnValue = TRUE;
     $output = array();
-    
-    $destDir  = dirname($file).'/work';
-    $destFile = $destDir .'/'. basename($file) . $file_suffix;
-    if (!is_dir($destDir)) { 
+
+    $destDir = dirname($file) . '/work';
+    $destFile = $destDir . '/' . basename($file) . $file_suffix;
+    if (!is_dir($destDir)) {
       @mkdir($destDir);
     }
 
     if (!file_exists($destFile)) {
-      exec('convert -resize ' . $width . 'x'.$height.' -quality 85  "' . $file . '"[0] -strip "' .$destFile . '" 2>&1 &', $output, $returnValue);
+      exec('convert -resize ' . $width . 'x' . $height . ' -quality 85  "' . $file . '"[0] -strip "' . $destFile . '" 2>&1 &', $output, $returnValue);
     }
     else
       $returnValue = '0';
@@ -49,6 +63,14 @@ class ImageManipulation {
     }
   }
 
+  /**
+   * Create PNG
+   * @param type $parameterArray
+   * @param type $dsid
+   * @param type $file
+   * @param type $file_ext
+   * @return string 
+   */
   function createPNG($parameterArray = NULL, $dsid, $file, $file_ext) {
     $file_suffix = '_' . $dsid . '.' . $file_ext;
     $returnValue = TRUE;
@@ -69,6 +91,14 @@ class ImageManipulation {
     }
   }
 
+  /**
+   * Create JPEG 2000
+   * @param type $parameterArray
+   * @param type $dsid
+   * @param type $file
+   * @param type $file_ext
+   * @return type 
+   */
   function createJP2($parameterArray = NULL, $dsid, $file, $file_ext) {
     $file_suffix = "_$dsid.$file_ext";
     $return_value = TRUE;
@@ -115,7 +145,14 @@ class ImageManipulation {
     }
   }
 
-  //use imagemapi to manipulate images instead of going directly to imagemagick or whatever
+  /**
+   * use imagemapi to manipulate images instead of going directly to imagemagick or whatever
+   * @param type $parameterArray
+   * @param type $dsid
+   * @param type $file
+   * @param type $file_ext
+   * @return type 
+   */
   function manipulateImage($parameterArray = NULL, $dsid, $file, $file_ext) {
     $height = $parameterArray['height'];
     $width = $parameterArray['width'];
@@ -151,6 +188,14 @@ class ImageManipulation {
     }
   }
 
+  /**
+   * Create Thumbnail from PDF
+   * @param type $parameterArray
+   * @param type $dsid
+   * @param type $file
+   * @param type $file_ext
+   * @return boolean 
+   */
   function createThumbnailFromPDF($parameterArray, $dsid, $file, $file_ext) {
     $height = $parameterArray['height'];
     $width = $parameterArray['width'];
@@ -185,6 +230,14 @@ class ImageManipulation {
     }
   }
 
+  /**
+   * Create Thumbnail
+   * @param type $parameterArray
+   * @param type $dsid
+   * @param type $file
+   * @param type $file_ext
+   * @return boolean 
+   */
   function createThumbnail($parameterArray, $dsid, $file, $file_ext) {
     // var_dump($parameterArray);exit(0);
     $file_suffix = '_' . $dsid . '.' . $file_ext;

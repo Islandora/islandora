@@ -1,18 +1,31 @@
 <?php
+
 // $Id$
 
-/*
- * Created on 19-Feb-08
- *
- *
+/**
+ * @file
+ * Form Builder class
+ */
+
+/**
  * implements method from content model ingest form xml
  */
 class FormBuilder {
+
+  /**
+   * Constructor
+   */
   function FormBuilder() {
     module_load_include('inc', 'Flv', '');
     drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
   }
 
+  /**
+   * Create QDC Stream ???
+   * @param type $form_values
+   * @param type $dom
+   * @param type $rootElement 
+   */
   function createQDCStream($form_values, &$dom, &$rootElement) {
     $datastream = $dom->createElement("foxml:datastream");
     $datastream->setAttribute("ID", "QDC");
@@ -33,7 +46,7 @@ class FormBuilder {
     $oai->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
     $content->appendChild($oai);
     //dc elements
-    $previousElement=NULL; //used in case we have to nest elements for qualified dublin core
+    $previousElement = NULL; //used in case we have to nest elements for qualified dublin core
     foreach ($form_values as $key => $value) {
       $index = strrpos($key, '-');
       if ($index > 01) {
@@ -42,7 +55,7 @@ class FormBuilder {
 
       $test = substr($key, 0, 2);
 
-      if ($test=='dc'||$test=='ap') {//don't try to process other form values
+      if ($test == 'dc' || $test == 'ap') {//don't try to process other form values
         try {
           if (!strcmp(substr($key, 0, 4), 'app_')) {
             $key = substr($key, 4);
@@ -52,8 +65,7 @@ class FormBuilder {
             $previousElement = $dom->createElement($key, $value);
             $oai->appendChild($previousElement);
           }
-        }
-        catch (exception $e) {
+        } catch (exception $e) {
           drupal_set_message(t("!e", array('!e' => $e->getMessage())), 'error');
           continue;
         }
@@ -62,10 +74,15 @@ class FormBuilder {
     }
   }
 
+  /**
+   * Handle QDC Form ???
+   * @param type $form_values
+   * @return type 
+   */
   function handleQDCForm($form_values) {
     $dom = new DomDocument("1.0", "UTF-8");
     $dom->formatOutput = TRUE;
-    $pid=$form_values['pid'];
+    $pid = $form_values['pid'];
     $rootElement = $dom->createElement("foxml:digitalObject");
     $rootElement->setAttribute('PID', "$pid");
     $rootElement->setAttribute('xmlns:foxml', "info:fedora/fedora-system:def/foxml#");
@@ -87,13 +104,13 @@ class FormBuilder {
 
     try {
       $soapHelper = new ConnectionHelper();
-      $client=$soapHelper->getSoapClient(variable_get('fedora_soap_manage_url', 'http://localhost:8080/fedora/services/management?wsdl'));
+      $client = $soapHelper->getSoapClient(variable_get('fedora_soap_manage_url', 'http://localhost:8080/fedora/services/management?wsdl'));
 
       if ($client == NULL) {
         drupal_set_message(t('Error getting SOAP client.'), 'error');
         return;
       }
-      $object=$client->__soapCall('ingest', array($params));
+      $object = $client->__soapCall('ingest', array($params));
       $deleteFiles = $form_values['delete_file']; //remove files from drupal file system
 
       if ($deleteFiles > 0) {
@@ -102,20 +119,25 @@ class FormBuilder {
         }
         unlink($form_values['fullpath']);
       }
-    } 
-    catch (exception $e) {
+    } catch (exception $e) {
       drupal_set_message(t('Error ingesting object: !e', array('!e' => $e->getMessage())), 'error');
       return;
     }
   }
 
+  /**
+   * Create Fedora DataStream
+   * @param type $form_values
+   * @param type $dom
+   * @param type $rootElement 
+   */
   function createFedoraDataStreams($form_values, &$dom, &$rootElement) {
     module_load_include('inc', 'fedora_repository', 'MimeClass');
     $mimetype = new MimeClass();
     $server = NULL;
-    $file=$form_values['ingest-file-location'];
+    $file = $form_values['ingest-file-location'];
     $dformat = $mimetype->getType($file);
-    $fileUrl = 'http://'. $_SERVER['HTTP_HOST'] . $file;
+    $fileUrl = 'http://' . $_SERVER['HTTP_HOST'] . $file;
     $beginIndex = strrpos($fileUrl, '/');
     $dtitle = substr($fileUrl, $beginIndex + 1);
     $dtitle = substr($dtitle, 0, strpos($dtitle, "."));
@@ -123,7 +145,7 @@ class FormBuilder {
     $ds1->setAttribute("ID", "OBJ");
     $ds1->setAttribute("STATE", "A");
     $ds1->setAttribute("CONTROL_GROUP", "M");
-    $ds1v= $dom->createElement("foxml:datastreamVersion");
+    $ds1v = $dom->createElement("foxml:datastreamVersion");
     $ds1v->setAttribute("ID", "OBJ.0");
     $ds1v->setAttribute("MIMETYPE", "$dformat");
     $ds1v->setAttribute("LABEL", "$dtitle");
@@ -137,16 +159,16 @@ class FormBuilder {
     foreach ($_SESSION['fedora_ingest_files'] as $dsid => $createdFile) {
       $createdFile = strstr($createdFile, $file);
       $dformat = $mimetype->getType($createdFile);
-      $fileUrl = 'http://'. $_SERVER['HTTP_HOST'] . $createdFile;
+      $fileUrl = 'http://' . $_SERVER['HTTP_HOST'] . $createdFile;
       $beginIndex = strrpos($fileUrl, '/');
       $dtitle = substr($fileUrl, $beginIndex + 1);
-      $dtitle =  substr($dtitle, 0, strpos($dtitle, "."));
-      $dtitle = $dtitle . '_'. $dsid;
+      $dtitle = substr($dtitle, 0, strpos($dtitle, "."));
+      $dtitle = $dtitle . '_' . $dsid;
       $ds1 = $dom->createElement("foxml:datastream");
       $ds1->setAttribute("ID", "$dsid");
       $ds1->setAttribute("STATE", "A");
       $ds1->setAttribute("CONTROL_GROUP", "M");
-      $ds1v= $dom->createElement("foxml:datastreamVersion");
+      $ds1v = $dom->createElement("foxml:datastreamVersion");
       $ds1v->setAttribute("ID", "$dsid.0");
       $ds1v->setAttribute("MIMETYPE", "$dformat");
       $ds1v->setAttribute("LABEL", "$dtitle");
@@ -158,9 +180,12 @@ class FormBuilder {
       $rootElement->appendChild($ds1);
     }
   }
-  
+
   /**
    * creates the RELS-EXT for the foxml
+   * @param type $form_values
+   * @param type $dom
+   * @param type $rootElement 
    */
   function createRelationShips($form_values, &$dom, &$rootElement) {
     $drdf = $dom->createElement("foxml:datastream");
@@ -190,14 +215,16 @@ class FormBuilder {
     $rdf->appendChild($rdfdesc);
     $rdfdesc->appendChild($member);
     $rootElement->appendChild($drdf);
-
   }
-  
+
   /**
    * creates the standard foxml properties
+   * @param type $form_values
+   * @param type $dom
+   * @param type $rootElement 
    */
   function createStandardFedoraStuff($form_values, &$dom, &$rootElement) {
-    /*foxml object properties section */
+    /* foxml object properties section */
     $objproperties = $dom->createElement("foxml:objectProperties");
     $prop1 = $dom->createElement("foxml:property");
     $prop1->setAttribute("NAME", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
@@ -222,11 +249,17 @@ class FormBuilder {
     $rootElement->appendChild($objproperties);
   }
 
-
+  /**
+   * Build QDC Form
+   * @param type $form
+   * @param type $ingest_form_definition
+   * @param type $form_values
+   * @return type 
+   */
   function buildQDCForm(&$form, $ingest_form_definition, &$form_values) {
     $form['indicator2'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Ingest Digital Object Step #2')
+      '#type' => 'fieldset',
+      '#title' => t('Ingest Digital Object Step #2')
     );
     foreach ($ingest_form_definition->form_elements->element as $element) {
       $name = strip_tags($element->name->asXML());
@@ -234,7 +267,7 @@ class FormBuilder {
       $required = strip_tags($element->required->asXML());
       $required = strtolower($required);
       if ($required != 'TRUE') {
-        $required='0';
+        $required = '0';
       }
 
       $description = strip_tags($element->description->asXML());
@@ -247,20 +280,19 @@ class FormBuilder {
           $options["$field"] = $value;
         }
         $form['indicator2']["$name"] = array(
-            '#title' => $title,
-            '#required' => $required,
-            '#description' => $description,
-            '#type' => $type,
-            '#options' => $options,
+          '#title' => $title,
+          '#required' => $required,
+          '#description' => $description,
+          '#type' => $type,
+          '#options' => $options,
         );
-
       }
       else {
         $form['indicator2']["$name"] = array(
-            '#title' => $title,
-            '#required' => $required,
-            '#description' => $description,
-            '#type' => $type
+          '#title' => $title,
+          '#required' => $required,
+          '#description' => $description,
+          '#type' => $type
         );
       }
     }
@@ -269,3 +301,4 @@ class FormBuilder {
   }
 
 }
+

@@ -2,19 +2,31 @@
 
 // $Id$
 
-/*
- * Created on 19-Feb-08
- *
- *
+/**
+ * @file
+ * FormBuilder class
+ */
+
+/**
  * implements methods from content model ingest form xml
  * builds a dc metadata form
-*/
+ */
 class FormBuilder {
+
+  /**
+   * Constructor
+   */
   function FormBuilder() {
     module_load_include('inc', 'FormBuilder', '');
     drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
   }
 
+  /**
+   * Create QDC Stream ??
+   * @param type $form_values
+   * @param type $dom
+   * @param type $rootElement 
+   */
   function createQDCStream($form_values, &$dom, &$rootElement) {
     $datastream = $dom->createElement("foxml:datastream");
     $datastream->setAttribute("ID", "DC");
@@ -35,7 +47,7 @@ class FormBuilder {
     $oai->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
     $content->appendChild($oai);
     //dc elements
-    $previousElement=NULL;//used in case we have to nest elements for qualified dublin core
+    $previousElement = NULL; //used in case we have to nest elements for qualified dublin core
     foreach ($form_values as $key => $value) {
       $key = str_replace('_', ':', $key);
       $index = strrpos($key, '-');
@@ -55,18 +67,22 @@ class FormBuilder {
             $previousElement = $dom->createElement($key, $value);
             $oai->appendChild($previousElement);
           }
-        }
-        catch (exception $e) {
+        } catch (exception $e) {
           drupal_set_message(t("!e", array('!e' => $e->getMessage())), 'error');
           continue;
         }
       }
       $rootElement->appendChild($datastream);
     }
-
   }
 
-  //create the security Policy
+  /**
+   * Create the security policy
+   * @param type $collectionPid
+   * @param type $dom
+   * @param type $rootElement
+   * @return type 
+   */
   function createPolicy($collectionPid, &$dom, &$rootElement) {
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');
     $objectHelper = new ObjectHelper();
@@ -78,8 +94,7 @@ class FormBuilder {
     }
     try {
       $xml = new SimpleXMLElement($policyStreamDoc);
-    }
-    catch (Exception $e) {
+    } catch (Exception $e) {
       watchdog(t("Fedora_Repository"), t("Problem getting security policy."), NULL, WATCHDOG_ERROR);
       drupal_set_message(t('Problem getting security policy: !e', array('!e' => $e->getMessage())), 'error');
       return FALSE;
@@ -91,7 +106,7 @@ class FormBuilder {
       return FALSE;
     }
     $dom->importNode($policyElement, TRUE);
-    $value=$policyElement->appendXML($policyStreamDoc);
+    $value = $policyElement->appendXML($policyStreamDoc);
     if (!$value) {
       drupal_set_message(t('Error creating security policy stream.'));
       watchdog(t("Fedora_Repository"), t("Error creating security policy stream, could not parse collection policy template file."), NULL, WATCHDOG_NOTICE);
@@ -114,14 +129,18 @@ class FormBuilder {
     return TRUE;
   }
 
-
+  /**
+   * Handle QDC Form ??
+   * @param type $form_values
+   * @return type 
+   */
   function handleQDCForm($form_values) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
     module_load_include('inc', 'fedora_repository', 'CollectionPolicy');
-    
+
     $dom = new DomDocument("1.0", "UTF-8");
     $dom->formatOutput = TRUE;
-    $pid=$form_values['pid'];
+    $pid = $form_values['pid'];
     $rootElement = $dom->createElement("foxml:digitalObject");
     $rootElement->setAttribute('VERSION', '1.1');
     $rootElement->setAttribute('PID', "$pid");
@@ -134,13 +153,13 @@ class FormBuilder {
     // Create relationships
     $this->createRelationShips($form_values, $dom, $rootElement);
     $collectionPid = $form_values['collection_pid'];
-        
+
     if (($cp = CollectionPolicy::LoadFromCollection($collectionPid)) !== FALSE) {
-      $collectionName = trim($cp->getName()); 
+      $collectionName = trim($cp->getName());
       if (trim($collectionName) != '') {
         $form_values['dc_relation'] = $collectionName;
       }
-    }    
+    }
     // Create dublin core
     $this->createQDCStream($form_values, $dom, $rootElement);
 
@@ -150,43 +169,49 @@ class FormBuilder {
     $this->createPolicy($collectionPid, &$dom, &$rootElement);
 
     try {
-      
+
       $object = Fedora_Item::ingest_from_FOXML($dom);
       if (!empty($object->pid)) {
         // drupal_set_message("Item ". l($object->pid, 'fedora/repository/'. $object->pid) . " created successfully.", "status");
-        drupal_set_message(t("Item !pid created successfully.", array('!pid' => l($object->pid, 'fedora/repository/'. $object->pid))), "status");
+        drupal_set_message(t("Item !pid created successfully.", array('!pid' => l($object->pid, 'fedora/repository/' . $object->pid))), "status");
       }
-      if (!empty( $_SESSION['fedora_ingest_files'])) {
+      if (!empty($_SESSION['fedora_ingest_files'])) {
         foreach ($_SESSION['fedora_ingest_files'] as $dsid => $createdFile) {
           file_delete($createdFile);
         }
       }
       file_delete($form_values['ingest-file-location']);
-    }
-    catch (exception $e) {
+    } catch (exception $e) {
       drupal_set_message(t('Error ingesting object: !e', array('!e' => $e->getMessage())), 'error');
       watchdog(t("Fedora_Repository"), t("Error ingesting object: !e", array('!e' => $e->getMessage())), NULL, WATCHDOG_ERROR);
       return;
     }
   }
 
+  /**
+   * Create Fedora Data stream
+   * @global type $base_url
+   * @param type $form_values
+   * @param type $dom
+   * @param type $rootElement 
+   */
   function createFedoraDataStreams($form_values, &$dom, &$rootElement) {
     module_load_include('inc', 'fedora_repository', 'MimeClass');
     global $base_url;
     $mimetype = new MimeClass();
-    $server=NULL;
-    $file=$form_values['ingest-file-location'];
+    $server = NULL;
+    $file = $form_values['ingest-file-location'];
 
-    if (!empty( $file)) {
+    if (!empty($file)) {
       $dformat = $mimetype->getType($file);
-      
+
       $parts = explode('/', $file);
       foreach ($parts as $n => $part) {
         $parts[$n] = rawurlencode($part);
       }
       $path = implode('/', $parts);
       $fileUrl = $base_url . '/' . $path;
-      
+
       $beginIndex = strrpos($fileUrl, '/');
       $dtitle = substr($fileUrl, $beginIndex + 1);
       $dtitle = urldecode($dtitle);
@@ -194,7 +219,7 @@ class FormBuilder {
       $ds1->setAttribute("ID", "OBJ");
       $ds1->setAttribute("STATE", "A");
       $ds1->setAttribute("CONTROL_GROUP", "M");
-      $ds1v= $dom->createElement("foxml:datastreamVersion");
+      $ds1v = $dom->createElement("foxml:datastreamVersion");
       $rootElement->appendChild($ds1);
 
       $ds1v->setAttribute("ID", "OBJ.0");
@@ -207,27 +232,24 @@ class FormBuilder {
       $ds1v->appendChild($ds1content);
     }
     if (!empty($_SESSION['fedora_ingest_files'])) {
-      
-     
-      
+
       foreach ($_SESSION['fedora_ingest_files'] as $dsid => $createdFile) {
-	
-	
-        if (!empty($file)) { 
-	   $found = strstr($createdFile, $file);
-	   if ($found !== FALSE) {
-	      $createdFile = $found;
-	   }
-	} 
+
+        if (!empty($file)) {
+          $found = strstr($createdFile, $file);
+          if ($found !== FALSE) {
+            $createdFile = $found;
+          }
+        }
 
         $dformat = $mimetype->getType($createdFile);
-	$parts = explode('/', $createdFile);
+        $parts = explode('/', $createdFile);
         foreach ($parts as $n => $part) {
           $parts[$n] = rawurlencode($part);
         }
         $path = implode('/', $parts);
         $fileUrl = $base_url . '/' . $path;
-      
+
         $beginIndex = strrpos($fileUrl, '/');
         $dtitle = substr($fileUrl, $beginIndex + 1);
         $dtitle = urldecode($dtitle);
@@ -236,7 +258,7 @@ class FormBuilder {
         $ds1->setAttribute("ID", "$dsid");
         $ds1->setAttribute("STATE", "A");
         $ds1->setAttribute("CONTROL_GROUP", "M");
-        $ds1v= $dom->createElement("foxml:datastreamVersion");
+        $ds1v = $dom->createElement("foxml:datastreamVersion");
         $ds1v->setAttribute("ID", "$dsid.0");
         $ds1v->setAttribute("MIMETYPE", "$dformat");
         $ds1v->setAttribute("LABEL", "$dtitle");
@@ -250,9 +272,11 @@ class FormBuilder {
     }
   }
 
-  
   /**
    * Creates the RELS-EXT for the foxml
+   * @param type $form_values
+   * @param type $dom
+   * @param type $rootElement 
    */
   function createRelationShips($form_values, &$dom, &$rootElement) {
     $drdf = $dom->createElement("foxml:datastream");
@@ -278,11 +302,11 @@ class FormBuilder {
     if (!isset($relationship)) {
       $relationship = 'isMemberOfCollection';
     }
-    $member = $dom->createElement("fedora:". $relationship);
+    $member = $dom->createElement("fedora:" . $relationship);
     $membr = $form_values['collection_pid'];
     $member->setAttribute("rdf:resource", "info:fedora/$membr");
     $rdfHasModel = $dom->createElement("fedora-model:hasModel");
-    $contentModelPid=$form_values['content_model_pid'];
+    $contentModelPid = $form_values['content_model_pid'];
     $rdfHasModel->setAttribute("rdf:resource", "info:fedora/$contentModelPid");
     $drdf->appendChild($dvrdf);
     $dvrdf->appendChild($dvcontent);
@@ -293,9 +317,11 @@ class FormBuilder {
     $rootElement->appendChild($drdf);
   }
 
-  
   /**
    * Creates the standard foxml properties
+   * @param type $form_values
+   * @param type $dom
+   * @param type $rootElement 
    */
   function createStandardFedoraStuff($form_values, &$dom, &$rootElement) {
     // Foxml object properties section
@@ -315,57 +341,66 @@ class FormBuilder {
     $rootElement->appendChild($objproperties);
   }
 
-
+  /**
+   * Build QDC Form
+   * @param type $form
+   * @param type $elements
+   * @param type $form_values
+   * @return string 
+   */
   function buildQDCForm(&$form, $elements, &$form_values) {
     $form['#multistep'] = TRUE; // used so that it triggers a form rebuild every time.
     $form['indicator2'] = array(
       '#type' => 'fieldset',
       '#title' => t('Ingest digital object step #2'),
     );
-    
-    foreach ($elements as $element) {
-      
-        if ($element['type'] == 'markup') {
-          $el = array('#value'=> $element['description']);
-        } else {
-          $el = array(
-            '#title' => $element['label'],
-            '#required' => ($element['required'] ? 1 : 0),
-            '#description' => $element['description'],
-            '#type' => $element['type']
-          );
-        }
 
-        $name = explode('][', $element['name']);
-        $elLocation = &$form['indicator2'];
-        while (isset($elLocation[$name[0]]) && ($partial = array_shift($name)) != NULL) {
-         $elLocation = &$elLocation[$partial];
-        }
-			
-			$autocomplete_path = FALSE; 
-			$autocomplete_omit_collection = FALSE;
+    foreach ($elements as $element) {
+
+      if ($element['type'] == 'markup') {
+        $el = array('#value' => $element['description']);
+      }
+      else {
+        $el = array(
+          '#title' => $element['label'],
+          '#required' => ($element['required'] ? 1 : 0),
+          '#description' => $element['description'],
+          '#type' => $element['type']
+        );
+      }
+
+      $name = explode('][', $element['name']);
+      $elLocation = &$form['indicator2'];
+      while (isset($elLocation[$name[0]]) && ($partial = array_shift($name)) != NULL) {
+        $elLocation = &$elLocation[$partial];
+      }
+
+      $autocomplete_path = FALSE;
+      $autocomplete_omit_collection = FALSE;
       foreach ($element['parameters'] as $key => $val) {
         if ($key == '#autocomplete_path') {
-					$autocomplete_path = $val;
-        } elseif ($key == '#autocomplete_omit_collection') {
-					$autocomplete_omit_collection = TRUE;
-				} else {				
-	        $el[$key]=$val;
-				}
+          $autocomplete_path = $val;
+        }
+        elseif ($key == '#autocomplete_omit_collection') {
+          $autocomplete_omit_collection = TRUE;
+        }
+        else {
+          $el[$key] = $val;
+        }
       }
 
-			if ($autocomplete_path !== FALSE) { 
-				$el['#autocomplete_path'] = $autocomplete_path . (!$autocomplete_omit_collection?'/'.$form_values['storage']['collection_pid']:'/');
-			}     
+      if ($autocomplete_path !== FALSE) {
+        $el['#autocomplete_path'] = $autocomplete_path . (!$autocomplete_omit_collection ? '/' . $form_values['storage']['collection_pid'] : '/');
+      }
 
       if ($element['type'] == 'select' || $element['type'] == 'other_select') {
-        $el['#options']= isset($element['authoritative_list'])?$element['authoritative_list']:array();
+        $el['#options'] = isset($element['authoritative_list']) ? $element['authoritative_list'] : array();
       }
- 
+
       $elLocation[join('][', $name)] = $el;
     }
-    
+
     return $form;
   }
-  
+
 }

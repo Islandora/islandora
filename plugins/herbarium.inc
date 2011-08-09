@@ -2,8 +2,17 @@
 
 // $Id$
 
+/**
+ * @file
+ * Herbarium class
+ */
+
+/**
+ * Herbarium ???
+ */
 class Herbarium {
-  function  __construct($pid = '') {
+
+  function __construct($pid = '') {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
     if (!empty($pid)) {
       $this->pid = $pid;
@@ -11,15 +20,26 @@ class Herbarium {
     }
   }
 
+  /**
+   * Build a drupal form ??
+   * @param type $form
+   * @param type $form_state
+   * @return type 
+   */
   public function buildDrupalForm($form = array(), $form_state = array()) {
     // We don't need to add anything beyond the standard Darwin Core form so just pass this through
     // If we wanted to we could add other fields.
     module_load_include('inc', 'fedora_repository', 'plugins/DarwinCore');
-    
+
     $dwc = new DarwinCore($this->item);
     return $dwc->buildDrupalForm($form);
   }
 
+  /**
+   * Build edit metadata form
+   * @param type $form
+   * @return type 
+   */
   public function buildEditMetadataForm($form = array()) {
     $form['submit'] = array(
       '#type' => 'submit',
@@ -34,10 +54,17 @@ class Herbarium {
       '#type' => 'hidden',
       '#value' => "DARWIN_CORE",
     );
-    
+
     return $this->buildDrupalForm($form);
   }
 
+  /**
+   * handle edit metadata form ??
+   * @global type $user
+   * @param type $form_id
+   * @param type $form_values
+   * @return type 
+   */
   public function handleEditMetadataForm($form_id, $form_values) {
     /*
      * Process the metadata form
@@ -51,11 +78,15 @@ class Herbarium {
     $dwc = new DarwinCore($this->item);
     $dwc->handleForm($form_values);
     $this->item->purge_datastream('DARWIN_CORE');
-    $this->item->add_datastream_from_string($dwc->darwinCoreXML, 'DARWIN_CORE',
-            'Darwin Core Metadata', 'text/xml', 'X');
+    $this->item->add_datastream_from_string($dwc->darwinCoreXML, 'DARWIN_CORE', 'Darwin Core Metadata', 'text/xml', 'X');
     return TRUE;
   }
 
+  /**
+   * Handle Ingest Form
+   * @global type $user
+   * @param type $form_values 
+   */
   public function handleIngestForm($form_values) {
     /*
      * process the metadata form
@@ -70,51 +101,52 @@ class Herbarium {
     $dwc = new DarwinCore();
     $dwc->handleForm($form_values);
     $label = $form_values['dwc:institutionCode'] . ':'
-            . $form_values['dwc:collectionCode'] . ':'
-            . $form_values['dwc:catalogNumber'];
+        . $form_values['dwc:collectionCode'] . ':'
+        . $form_values['dwc:catalogNumber'];
 
-    $new_item = Fedora_Item::ingest_new_item($form_values['pid'], 'A', $label,
-            $user->name);
+    $new_item = Fedora_Item::ingest_new_item($form_values['pid'], 'A', $label, $user->name);
 
-    $new_item->add_datastream_from_string($dwc->darwinCoreXML, 'DARWIN_CORE',
-            'Darwin Core Metadata', 'text/xml', 'X');
+    $new_item->add_datastream_from_string($dwc->darwinCoreXML, 'DARWIN_CORE', 'Darwin Core Metadata', 'text/xml', 'X');
     $file = $form_values['ingest-file-location'];
 
-    if (!empty( $file)) {
+    if (!empty($file)) {
       $dformat = $mimetype->getType($file);
-      $new_item->add_datastream_from_file($file, 'FULL_SIZE',
-              "$label-full-size", $dformat, 'M');
+      $new_item->add_datastream_from_file($file, 'FULL_SIZE', "$label-full-size", $dformat, 'M');
     }
 
     $new_item->add_relationship('hasModel', $form_values['content_model_pid'], FEDORA_MODEL_URI);
     $new_item->add_relationship(!empty($form_values['relationship']) ? $form_values['relationship'] : 'isMemberOfCollection', $form_values['collection_pid']);
-    
+
     if (!empty($_SESSION['fedora_ingest_files'])) {
       foreach ($_SESSION['fedora_ingest_files'] as $dsid => $created_file) {
         $created_file_format = $mimetype->getType($created_file);
         $created_filename = strstr($created_file, $file);
-        $new_item->add_datastream_from_file($created_file, $dsid,
-                $created_filename, $created_file_format, 'M');
-        
+        $new_item->add_datastream_from_file($created_file, $dsid, $created_filename, $created_file_format, 'M');
       }
     }
   }
 
+  /**
+   * Show Field Sets
+   * @global type $base_url
+   * @global type $user
+   * @return string 
+   */
   public function showFieldSets() {
     module_load_include('inc', 'fedora_repository', 'plugins/tagging_form');
     module_load_include('inc', 'fedora_repository', 'plugins/DarwinCore');
     global $base_url;
 
     $tabset = array();
-    
+
     global $user;
     $qs = '';
     if ($user->uid != 0) {
-      $qs = '?uid='. base64_encode($user->name . ':'. $user->pass);
+      $qs = '?uid=' . base64_encode($user->name . ':' . $user->pass);
     }
 
-    $viewer_url = variable_get('fedora_base_url', '') . '/get/'. $this->pid . '/ilives:viewerSdef/getViewer'. $qs;
-    $html = '<iframe src="'. $viewer_url . '"  scrolling="no" frameborder="0" style="width: 100%; height: 800px;">Errors: unable to load viewer</iframe>';
+    $viewer_url = variable_get('fedora_base_url', '') . '/get/' . $this->pid . '/ilives:viewerSdef/getViewer' . $qs;
+    $html = '<iframe src="' . $viewer_url . '"  scrolling="no" frameborder="0" style="width: 100%; height: 800px;">Errors: unable to load viewer</iframe>';
     $tabset['second_tab'] = array(
 //     $collection_fieldset = array (
       '#type' => 'tabpage',
@@ -126,8 +158,8 @@ class Herbarium {
       '#type' => 'tabpage',
       '#title' => t('View'),
       // This will be the content of the tab.
-      '#content' => '<a href="'. $base_url . '/fedora/repository/'. $this->pid . '/FULL_JPG/"><img src="'. $base_url . '/fedora/imageapi/'.
-        $this->pid . '/JPG/JPG.jpg'. '" /></a>'. '<p>'. drupal_get_form('fedora_repository_image_tagging_form', $this->pid) . '</p>',
+      '#content' => '<a href="' . $base_url . '/fedora/repository/' . $this->pid . '/FULL_JPG/"><img src="' . $base_url . '/fedora/imageapi/' .
+      $this->pid . '/JPG/JPG.jpg' . '" /></a>' . '<p>' . drupal_get_form('fedora_repository_image_tagging_form', $this->pid) . '</p>',
     );
 
     $dwc = new DarwinCore($this->item);
@@ -138,7 +170,7 @@ class Herbarium {
     $tabset['third_tab']['tabset'] = array(
       '#type' => 'tabset',
     );
-    
+
     $tabset['third_tab']['tabset']['view'] = array(
       '#type' => 'tabpage',
       '#title' => t('Darwin Core'),
@@ -168,4 +200,5 @@ class Herbarium {
     }
     return $tabset;
   }
+
 }

@@ -1,31 +1,44 @@
 <?php
+
 // $Id$
 
+/**
+ * @file
+ * 
+ */
 module_load_include('inc', 'fedora_repository', 'plugins/FormBuilder');
-/*
- * Created on 19-Feb-08
- *
- *
+
+/**
  * implements methods from content model ingest form xml
  * builds a dc metadata form
  */
 class DemoFormBuilder extends FormBuilder {
+
+  /**
+   * Constructor
+   */
   function DemoFormBuilder() {
     module_load_include('inc', 'fedora_repository', 'plugins/FormBuilder');
     drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
   }
 
-  //Override this so we can specify the datastream id of FULL_SIZE  should make this easier
+  /**
+   * Override this so we can specify the datastream id of FULL_SIZE  should make this easier
+   * @global type $base_url
+   * @param type $form_values
+   * @param type $dom
+   * @param type $rootElement 
+   */
   function createFedoraDataStreams($form_values, &$dom, &$rootElement) {
     module_load_include('inc', 'fedora_repository', 'MimeClass');
     global $base_url;
     $mimetype = new MimeClass();
     $server = NULL;
-    $file=$form_values['ingest-file-location'];
+    $file = $form_values['ingest-file-location'];
 
     if (!empty($file)) {
       $dformat = $mimetype->getType($file);
-      $fileUrl = $base_url .'/'. drupal_urlencode($file);
+      $fileUrl = $base_url . '/' . drupal_urlencode($file);
       $beginIndex = strrpos($fileUrl, '/');
       $dtitle = substr($fileUrl, $beginIndex + 1);
       $dtitle = urldecode($dtitle);
@@ -50,7 +63,7 @@ class DemoFormBuilder extends FormBuilder {
       foreach ($_SESSION['fedora_ingest_files'] as $dsid => $createdFile) {
         $createdFile = strstr($createdFile, $file);
         $dformat = $mimetype->getType($createdFile);
-        $fileUrl = $base_url .'/'. drupal_urlencode( $createdFile );
+        $fileUrl = $base_url . '/' . drupal_urlencode($createdFile);
         $beginIndex = strrpos($fileUrl, '/');
         $dtitle = substr($fileUrl, $beginIndex + 1);
         $dtitle = urldecode($dtitle);
@@ -60,7 +73,7 @@ class DemoFormBuilder extends FormBuilder {
         $ds1->setAttribute("ID", "$dsid");
         $ds1->setAttribute("STATE", "A");
         $ds1->setAttribute("CONTROL_GROUP", "M");
-        $ds1v= $dom->createElement("foxml:datastreamVersion");
+        $ds1v = $dom->createElement("foxml:datastreamVersion");
         $ds1v->setAttribute("ID", "$dsid.0");
         $ds1v->setAttribute("MIMETYPE", "$dformat");
         $ds1v->setAttribute("LABEL", "$dtitle");
@@ -73,5 +86,6 @@ class DemoFormBuilder extends FormBuilder {
       }
     }
   }
+
 }
 

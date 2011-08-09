@@ -1,13 +1,19 @@
 <?php
+
 // $Id$
 
-/* 
+/**
+ * @file
  * Implements a simple class for working with Dublin Core data and exporting it
  * back to XML. Inspiration and design shamelessly stolen from the pyfedora
  * project at http://pypi.python.org/pypi/pyfedora/0.1.0
  */
 
+/**
+ * Dublin Core Class
+ */
 class Dublin_Core {
+
   public $dc = array(
     'dc:title' => array(),
     'dc:creator' => array(),
@@ -41,25 +47,25 @@ class Dublin_Core {
   }
 
   /**
-   *
+   * Add Elements
    * @param <type> $element_name
    * @param <type> $value
    */
-  function add_element( $element_name, $value ) {
+  function add_element($element_name, $value) {
     if (is_string($value) && is_array($this->dc[$element_name])) {
       $this->dc[$element_name][] = $value;
     }
   }
 
-/**
- * Replace the given DC element with the values in $values
- * @param string $elemnt_name
- * @param array $values 
- */
+  /**
+   * Replace the given DC element with the values in $values
+   * @param string $elemnt_name
+   * @param array $values 
+   */
   function set_element($element_name, $values) {
     if (is_array($values)) {
       $this->dc[$element_name] = $values;
-    } 
+    }
     elseif (is_string($values)) {
       $this->dc[$element_name] = array($values);
     }
@@ -67,8 +73,10 @@ class Dublin_Core {
 
   /**
    * Serialize this object to XML and return it.
+   * @param type $with_preamble
+   * @return type 
    */
-  function as_xml( $with_preamble = FALSE ) {
+  function as_xml($with_preamble = FALSE) {
     $dc_xml = new DomDocument();
     $oai_dc = $dc_xml->createElementNS('http://www.openarchives.org/OAI/2.0/oai_dc/', 'oai_dc:dc');
     $oai_dc->setAttribute('xmlns:dc', 'http://purl.org/dc/elements/1.1/');
@@ -78,7 +86,7 @@ class Dublin_Core {
           $new_item = $dc_xml->createElement($dc_element, $value);
           $oai_dc->appendChild($new_item);
         }
-      } 
+      }
       else {
         $new_item = $dc_xml->createElement($dc_element);
         $oai_dc->appendChild($new_item);
@@ -88,10 +96,17 @@ class Dublin_Core {
     return $dc_xml->saveXML();
   }
 
+  /**
+   * Create dc from dict ( does nothing )
+   */
   static function create_dc_from_dict() {
-
+    
   }
 
+  /**
+   * Save ??
+   * @param type $alt_owner 
+   */
   function save($alt_owner = NULL) {
     $item_to_update = (!empty($alt_owner) ? $alt_owner : $this->owner);
     // My Java roots showing, trying to do polymorphism in PHP.
@@ -114,7 +129,7 @@ class Dublin_Core {
         array_push($new_dc->dc[$child->nodeName], $child->nodeValue);
       }
       return $new_dc;
-    } 
+    }
     else {
       return NULL;
     }
