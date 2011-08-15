@@ -2,12 +2,19 @@
 
 // $Id$
 
+/**
+ * @file 
+ * Content Model Class
+ */
 module_load_include('inc', 'fedora_repository', 'XMLDatastream');
 
+/**
+ * Conent Model ??
+ */
 class ContentModel extends XMLDatastream {
+
   static $SCHEMA_URI = 'http://localhost/islandoracm.xsd';
   static $DEFAULT_DSID = 'ISLANDORACM';
-
   private $mimes = NULL;
   public $pid_namespace;
   public $name;
@@ -33,7 +40,7 @@ class ContentModel extends XMLDatastream {
     $ret = FALSE;
     if (self::validPid($pid)) {
       module_load_include('inc', 'fedora_repository', 'ObjectHelper');
-      $objectHelper=new ObjectHelper();
+      $objectHelper = new ObjectHelper();
 
       $content_models = $objectHelper->get_content_models_list($pid);
       foreach ($content_models as $content_model) {
@@ -58,21 +65,20 @@ class ContentModel extends XMLDatastream {
    */
   public static function ingestFromFile($pid, $name, $modelDsid, $file) {
     $ret = FALSE;
-    
+
     if (($cm = self::loadFromModel($pid, $modelDsid)) === FALSE && file_exists($file)) {
       $cm = new ContentModel(file_get_contents($file), $pid, $modelDsid);
       $rootEl = $cm->xml->getElementsByTagName('content_model')->item(0);
       $rootEl->setAttribute('name', $name);
-      
+
       module_load_include('inc', 'fedora_repository', 'api/fedora_item');
       $fedoraItem = new Fedora_Item($pid);
       $fedoraItem->add_datastream_from_string($cm->dumpXml(), $modelDsid, $name, 'text/xml', 'X');
-      $ret= $cm;
-  }
+      $ret = $cm;
+    }
 
     return $ret;
   }
-  
 
   /**
    * Ingests a Content Model from an existing model to the specified pid/dsid . 
@@ -86,24 +92,23 @@ class ContentModel extends XMLDatastream {
    */
   public static function ingestFromModel($pid, $name, $modelDsid, $copy_model_pid) {
     $ret = FALSE;
-    
+
     if (($cm = self::loadFromModel($pid, $modelDsid)) === FALSE && ($copy_cm = self::loadFromModel($copy_model_pid)) !== FALSE && $copy_cm->validate()) {
       $newDom = $copy_cm->xml;
       $rootEl = $newDom->getElementsByTagName('content_model')->item(0);
       $rootEl->setAttribute('name', $name);
-      
+
       $cm = new ContentModel($newDom, $pid, $modelDsid);
-      
+
       module_load_include('inc', 'fedora_repository', 'api/fedora_item');
       $fedoraItem = new Fedora_Item($pid);
       $fedoraItem->add_datastream_from_string($cm->dumpXml(), $modelDsid, $name, 'text/xml', 'X');
       $ret = $cm;
-}
+    }
 
-   return $ret;
+    return $ret;
   }
-   
-  
+
   /**
    * Ingests a minimum Content Model to the specified pid/dsid. 
    * Returns false on failure.
@@ -123,9 +128,9 @@ class ContentModel extends XMLDatastream {
    * @param string $ingestFormHandler
    *
    * @return ContentModel $cm
-   */  
+   */
   public static function ingestBlankModel($pid, $name, $modelDsid, $defaultMimetype, $ingestFormDsid, $ingestFormPage, $ingestFormHideChooser, $ingestFormModule, $ingestFormModule, $ingestFormFile, $ingestFormClass, $ingestFormMethod, $ingestFormHandler) {
-    $ret = FALSE; 
+    $ret = FALSE;
     if (($cm = self::loadFromModel($pid, $modelDsid)) === FALSE) {
       $newDom = new DOMDocument('1.0', 'utf-8');
       $newDom->formatOutput = TRUE;
@@ -133,48 +138,47 @@ class ContentModel extends XMLDatastream {
       $rootEl->setAttribute('name', $name);
       $rootEl->setAttribute('xmlns', self::$XMLNS);
       $rootEl->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
-      $rootEl->setAttribute('xsi:schemaLocation', self::$XMLNS .' '. self::$SCHEMA_URI);
-  
+      $rootEl->setAttribute('xsi:schemaLocation', self::$XMLNS . ' ' . self::$SCHEMA_URI);
+
       $mimeEl = $newDom->createElement('mimetypes');
-      $typeEl=$newDom->createElement('type', $defaultMimetype);
-      $mimeEl->appendChild($typeEl); 
+      $typeEl = $newDom->createElement('type', $defaultMimetype);
+      $mimeEl->appendChild($typeEl);
       $rootEl->appendChild($mimeEl);
-      
+
       $ingestRulesEl = $newDom->createElement('ingest_rules');
       $rootEl->appendChild($ingestRulesEl);
-      
+
       $ingestFormEl = $newDom->createElement('ingest_form');
       $ingestFormEl->setAttribute('dsid', $ingestFormDsid);
       $ingestFormEl->setAttribute('page', $ingestFormPage);
       if ($ingestFormHideChooser == 'true') {
         $ingestFormEl->setAttribute('hide_file_chooser', 'true');
       }
-      
-      $builderEl= $newDom->createElement('form_builder_method');
+
+      $builderEl = $newDom->createElement('form_builder_method');
       $builderEl->setAttribute('module', $ingestFormModule);
       $builderEl->setAttribute('file', $ingestFormFile);
       $builderEl->setAttribute('class', $ingestFormClass);
       $builderEl->setAttribute('method', $ingestFormMethod);
       $builderEl->setAttribute('handler', $ingestFormHandler);
-      $ingestFormEl->appendChild($builderEl);    
-      
+      $ingestFormEl->appendChild($builderEl);
+
       $elementsEl = $newDom->createElement('form_elements');
       $ingestFormEl->appendChild($elementsEl);
       $rootEl->appendChild($ingestFormEl);
       $newDom->appendChild($rootEl);
-      
+
       $cm = new ContentModel($newDom, $pid, $modelDsid);
 
-       module_load_include('inc', 'fedora_repository', 'api/fedora_item');
-       $fedoraItem = new Fedora_Item($pid);
-       $fedoraItem->add_datastream_from_string($cm->dumpXml(), $modelDsid, $name, 'text/xml', 'X');
-       $ret = $cm;
+      module_load_include('inc', 'fedora_repository', 'api/fedora_item');
+      $fedoraItem = new Fedora_Item($pid);
+      $fedoraItem->add_datastream_from_string($cm->dumpXml(), $modelDsid, $name, 'text/xml', 'X');
+      $ret = $cm;
     }
-    
+
     return $ret;
   }
-  
-  
+
   /**
    * Constructs a ContentModel object from the PID of the model in Fedora.
    * If DSID is specified it will use that datastream as the model, otherwise it will
@@ -200,11 +204,10 @@ class ContentModel extends XMLDatastream {
         $dsid = ($dsid != NULL && self::validDsid($dsid)) ? $dsid : ContentModel::getDefaultDSID();
         $ds = $fedoraItem->get_datastream_dissemination($dsid);
         if (!empty($ds)) {
-          $ret=new ContentModel($ds, $pid, $dsid, $pid_namespace, $name);
+          $ret = new ContentModel($ds, $pid, $dsid, $pid_namespace, $name);
         }
       }
-    } 
-    catch (SOAPException $e) {
+    } catch (SOAPException $e) {
       $ret = FALSE;
     }
     return $ret;
@@ -224,7 +227,7 @@ class ContentModel extends XMLDatastream {
   public function __construct($xmlStr, $pid = NULL, $dsid = NULL, $pid_namespace = NULL, $name = NULL) {
     parent::__construct($xmlStr, $pid, $dsid);
     $this->pid_namespace = $pid_namespace;
-    $this->name = ($name == NULL)?'Islandora Content Model':$name;
+    $this->name = ($name == NULL) ? 'Islandora Content Model' : $name;
     $this->xpath = new DOMXPath($this->xml);
     $this->xpath->registerNamespace('cm', 'http://www.islandora.ca');
   }
@@ -244,7 +247,7 @@ class ContentModel extends XMLDatastream {
     $rootEl->setAttribute('name', $sXml['name']);
     $rootEl->setAttribute('xmlns', self::$XMLNS);
     $rootEl->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
-    $rootEl->setAttribute('xsi:schemaLocation', self::$XMLNS .' ' . self::$SCHEMA_URI);
+    $rootEl->setAttribute('xsi:schemaLocation', self::$XMLNS . ' ' . self::$SCHEMA_URI);
 
     $mimeEl = $newDom->createElement('mimetypes');
     foreach ($sXml->mimetypes->type as $mime) {
@@ -270,7 +273,7 @@ class ContentModel extends XMLDatastream {
           $methodEl->setAttribute('method', $method->method_name);
           $methodEl->setAttribute('dsid', $method->datastream_id);
           $methodEl->setAttribute('modified_files_ext', $method->modified_files_ext);
-           
+
           if (isset($method->parameters)) {
             $paramsEl = $newDom->createElement('parameters');
             foreach ($method->parameters->parameter as $param) {
@@ -280,14 +283,13 @@ class ContentModel extends XMLDatastream {
             }
             $methodEl->appendChild($paramsEl);
           }
-           
-           
+
+
           $methodsEl->appendChild($methodEl);
         }
         $ruleEl->appendChild($methodsEl);
         $ingestRulesEl->appendChild($ruleEl);
       }
-
     }
     $rootEl->appendChild($ingestRulesEl);
 
@@ -306,7 +308,7 @@ class ContentModel extends XMLDatastream {
           $add_ds_methodEl->setAttribute('method', $ds->add_datastream_method->method_name);
           $add_ds_methodEl->setAttribute('dsid', $ds->add_datastream_method->datastream_id);
           $add_ds_methodEl->setAttribute('modified_files_ext', $ds->add_datastream_method->modified_files_ext);
-           
+
           if (isset($ds->add_datastream_method->parameters)) {
             $paramsEl = $newDom->createElement('parameters');
             foreach ($ds->add_datastream_method->parameters->parameter as $param) {
@@ -316,7 +318,7 @@ class ContentModel extends XMLDatastream {
             }
             $add_ds_methodEl->appendChild($paramsEl);
           }
-           
+
           $dsEl->appendChild($add_ds_methodEl);
         }
 
@@ -354,12 +356,12 @@ class ContentModel extends XMLDatastream {
       //I found an XML where the label was HTML..  this code will attempt to
       //walk the object setting the label to be the first string it finds.
       if (count(get_object_vars($element->label)) > 0) {
-        $obj=$element->label;
+        $obj = $element->label;
         while ($obj != NULL && !is_string($obj)) {
           $keys = get_object_vars($obj);
           $obj = array_shift($keys);
         }
-        $element->label=($obj == NULL) ? '' : $obj;
+        $element->label = ($obj == NULL) ? '' : $obj;
       }
 
       $elEl = $newDom->createElement('element');
@@ -390,15 +392,15 @@ class ContentModel extends XMLDatastream {
     $ingest_formEl->appendChild($form_elementsEl);
     $rootEl->appendChild($ingest_formEl);
 
-    if (isset($sXml->edit_metadata) && 
-	trim($sXml->edit_metadata->build_form_method->module) != '' && 
-	trim($sXml->edit_metadata->build_form_method->file) != '' && 
-	trim($sXml->edit_metadata->build_form_method->class_name) != '' && 
-	trim($sXml->edit_metadata->build_form_method->method_name) != '' && 
-	trim($sXml->edit_metadata->submit_form_method->method_name) != '' && 
-	trim($sXml->edit_metadata->build_form_method['dsid']) != ''
-       ) {
-      $edit_metadata_methodEl= $newDom->createElement('edit_metadata_method');
+    if (isset($sXml->edit_metadata) &&
+        trim($sXml->edit_metadata->build_form_method->module) != '' &&
+        trim($sXml->edit_metadata->build_form_method->file) != '' &&
+        trim($sXml->edit_metadata->build_form_method->class_name) != '' &&
+        trim($sXml->edit_metadata->build_form_method->method_name) != '' &&
+        trim($sXml->edit_metadata->submit_form_method->method_name) != '' &&
+        trim($sXml->edit_metadata->build_form_method['dsid']) != ''
+    ) {
+      $edit_metadata_methodEl = $newDom->createElement('edit_metadata_method');
       $edit_metadata_methodEl->setAttribute('module', $sXml->edit_metadata->build_form_method->module);
       $edit_metadata_methodEl->setAttribute('file', $sXml->edit_metadata->build_form_method->file);
       $edit_metadata_methodEl->setAttribute('class', $sXml->edit_metadata->build_form_method->class_name);
@@ -411,39 +413,38 @@ class ContentModel extends XMLDatastream {
     $newDom->appendChild($rootEl);
 
     $this->xml = DOMDocument::loadXML($newDom->saveXml());
-    
   }
 
   /**
-  * Gets a list of service deployments that this model has.  
-  *
-  * NOTE: Not currently being used. 
-  *
-  * @return String[] $serviceDepPids
-  */
+   * Gets a list of service deployments that this model has.  
+   *
+   * NOTE: Not currently being used. 
+   *
+   * @return String[] $serviceDepPids
+   */
   public function getServices() {
-   $query = 'select $object $title from <#ri>
+    $query = 'select $object $title from <#ri>
    where ($object <dc:title> $title
    and $object <fedora-model:isDeploymentOf> $deploymentOf
    and $object <fedora-model:hasModel> <info:fedora/fedora-system:ServiceDeployment-3.0>
-   and $object <fedora-model:isContractorOf> <info:fedora/'. $this->pid .'>
+   and $object <fedora-model:isContractorOf> <info:fedora/' . $this->pid . '>
    and $object <fedora-model:state> <info:fedora/fedora-system:def/model#Active>)
    order by $title';
-   
-   module_load_include('inc', 'fedora_repository', 'CollectionClass');
-   
-   $collectionHelper = new CollectionClass();
-   $xml = simplexml_load_string($collectionHelper->getRelatedItems($this->pid, $query));
-   
-   $results = array();
-   foreach ($xml->results->result as $result) {
-     $pid = strval(($result->object['uri']));
-     $pid = substr($pid, strpos($pid, "/") + 1, strlen($pid));
-     $results[] = $pid;
-   }
-   
-   return $results;
- }
+
+    module_load_include('inc', 'fedora_repository', 'CollectionClass');
+
+    $collectionHelper = new CollectionClass();
+    $xml = simplexml_load_string($collectionHelper->getRelatedItems($this->pid, $query));
+
+    $results = array();
+    foreach ($xml->results->result as $result) {
+      $pid = strval(($result->object['uri']));
+      $pid = substr($pid, strpos($pid, "/") + 1, strlen($pid));
+      $results[] = $pid;
+    }
+
+    return $results;
+  }
 
   /**
    * Gets the name of the ContentModel
@@ -455,7 +456,7 @@ class ContentModel extends XMLDatastream {
     $ret = FALSE;
     if ($this->name != NULL) {
       $ret = $this->name;
-    } 
+    }
     elseif ($this->validate()) {
       $rootEl = $this->xml->getElementsByTagName('content_model')->item(0);
       $this->name = $rootEl->getAttribute('name');
@@ -463,7 +464,6 @@ class ContentModel extends XMLDatastream {
     }
     return $ret;
   }
-
 
   /**
    * Gets the element corresponding to the datastream specified
@@ -476,12 +476,12 @@ class ContentModel extends XMLDatastream {
   private function getDSModel($dsid) {
     $ret = FALSE;
     if (self::validDsid($dsid) && $this->validate()) {
-      $result=$this->xml->getElementsByTagName('datastreams');
-      if ($result->length > 0) { 
-        $result=$result->item(0)->getElementsByTagName('datastream');
+      $result = $this->xml->getElementsByTagName('datastreams');
+      if ($result->length > 0) {
+        $result = $result->item(0)->getElementsByTagName('datastream');
         for ($i = 0; $ret == FALSE && $i < $result->length; $i++) {
           if ($result->item($i)->getAttribute('dsid') == $dsid)
-          $ret=$result->item($i);
+            $ret = $result->item($i);
         }
       }
     }
@@ -501,59 +501,59 @@ class ContentModel extends XMLDatastream {
     if ($this->validate()) {
       $elements_array = array();
       $form_elements_wrapper = $this->xml->getElementsbyTagName('ingest_form')->item(0)->getElementsByTagName('form_elements');
-      
+
       if ($form_elements_wrapper->length == 0) {
         return $ret;
       }
       $elements = $this->xml->getElementsbyTagName('ingest_form')->item(0)->getElementsByTagName('form_elements')->item(0)->getElementsByTagName('element');
-      for ($i=0;$i<$elements->length;$i++) {
+      for ($i = 0; $i < $elements->length; $i++) {
         $desc = $elements->item($i)->getElementsByTagName('description');
-        $desc = ($desc->length > 0)?$desc->item(0)->nodeValue:'';
-         
+        $desc = ($desc->length > 0) ? $desc->item(0)->nodeValue : '';
+
         $label = $elements->item($i)->getAttribute('label');
         if ($label == NULL) {
-          $label=$elements->item($i)->getAttribute('name');
+          $label = $elements->item($i)->getAttribute('name');
         }
-        
-        $element=array('name' => $elements->item($i)->getAttribute('name'),
-            'label' => $label,
-            'type' => $elements->item($i)->getAttribute('type'),
-            'required' => ($elements->item($i)->getAttribute('required') == 'true') ? TRUE : FALSE,
-            'description' => $desc
+
+        $element = array('name' => $elements->item($i)->getAttribute('name'),
+          'label' => $label,
+          'type' => $elements->item($i)->getAttribute('type'),
+          'required' => ($elements->item($i)->getAttribute('required') == 'true') ? TRUE : FALSE,
+          'description' => $desc
         );
-        
+
         $auth_list = $elements->item($i)->getElementsByTagName('authoritative_list');
         if ($auth_list->length > 0) {
           $list = array();
           $items = $auth_list->item(0)->getElementsByTagName('item');
           for ($j = 0; $j < $items->length; $j++) {
             $field = $items->item($j)->attributes->getNamedItem('field');
-            $list[ $items->item($j)->nodeValue ] = ($field !== NULL) ? $field->nodeValue : $items->item($j)->nodeValue;
+            $list[$items->item($j)->nodeValue] = ($field !== NULL) ? $field->nodeValue : $items->item($j)->nodeValue;
           }
-          $element['authoritative_list']=$list;
+          $element['authoritative_list'] = $list;
         }
-        
+
 
         $params = $elements->item($i)->getElementsByTagName('parameters');
         $list = array();
         if ($params->length > 0) {
           $items = $params->item(0)->getElementsByTagName('parameter');
           for ($j = 0; $j < $items->length; $j++) {
-            $value = $items-> item($j)->nodeValue;
+            $value = $items->item($j)->nodeValue;
             $list[$items->item($j)->getAttribute('name')] = (strtolower($value) == 'true' ? TRUE : (strtolower($value) == 'false' ? FALSE : $value));
           }
         }
         $element['parameters'] = $list;
-        
+
         $elements_array[] = $element;
-      }      
+      }
       $ret = $elements_array;
     }
 
-      return $ret;    
+    return $ret;
   }
 
-  /** 
+  /**
    * Decrements an ingest form element in the list of elements.  
    * Updates the "order".  This method is simply an overload to the incIngestFormElement
    * which has a direction parameter.
@@ -563,12 +563,12 @@ class ContentModel extends XMLDatastream {
    *
    * @param String $name 
    * @return boolean $success
-   */ 
+   */
   public function decIngestFormElement($name) {
     return $this->incIngestFormElement($name, 'dec');
   }
-  
- /** 
+
+  /**
    * Increments (or decrements) ingest form element in the list of elements.  
    * Updates the "order".  The $reorder parameter accepts 'inc' or 'dec' to
    * specify the direction to move (defaults to increment.)
@@ -579,7 +579,7 @@ class ContentModel extends XMLDatastream {
    * @param String $name 
    * @param String $reorder
    * @return boolean $success
-   */   
+   */
   public function incIngestFormElement($name, $reorder = 'inc') {
     $ret = FALSE;
     if ($this->validate()) {
@@ -590,26 +590,26 @@ class ContentModel extends XMLDatastream {
       for ($i = 0; $found === FALSE && $i < $elements->length; $i++) {
         if ($elements->item($i)->getAttribute('name') == trim($name)) {
           if ($reorder == 'inc') {
-            $found=$elements->item($i);
-            $refEl = ($i > 0)?$elements->item($i-1):false;
-          } 
+            $found = $elements->item($i);
+            $refEl = ($i > 0) ? $elements->item($i - 1) : false;
+          }
           else {
             $found = ($i + 1 < $elements->length) ? $elements->item($i + 1) : FALSE;
             $refEl = $elements->item($i);
           }
         }
       }
-      
+
       if ($found !== FALSE) {
         $elementsEl->removeChild($found);
         $elementsEl->insertBefore($found, $refEl);
         $ret = TRUE;
       }
-    } 
+    }
     return $ret;
-  }  
-  
-  /** 
+  }
+
+  /**
    * Removes an ingest form element from the list of ingest form elements.
    * @param String $name
    * @return boolean $success
@@ -622,18 +622,18 @@ class ContentModel extends XMLDatastream {
       $found = FALSE;
       for ($i = 0; $found === FALSE && $i < $elements->length; $i++) {
         if ($elements->item($i)->getAttribute('name') == trim($name)) {
-          $found=$elements->item($i);
+          $found = $elements->item($i);
         }
       }
-      
+
       if ($found !== FALSE) {
         $elementsEl->removeChild($found);
         $ret = TRUE;
       }
-    } 
+    }
     return $ret;
   }
-  
+
   /**
    * Sets a parameter of an ingest form element.  If the value of the element is FALSE the parameter
    * will be removed entirely (if you want to store false as a value, then send the String "false").
@@ -646,7 +646,7 @@ class ContentModel extends XMLDatastream {
   public function setIngestFormElementParam($name, $paramName, $paramValue) {
     $ret = FALSE;
 
-    if ($this->validate()) {   
+    if ($this->validate()) {
       $elements = $this->xml->getElementsbyTagName('ingest_form')->item(0)->getElementsByTagName('form_elements')->item(0)->getElementsByTagName('element');
       $element = FALSE;
       for ($i = 0; $element === FALSE && $i < $elements->length; $i++) {
@@ -661,24 +661,24 @@ class ContentModel extends XMLDatastream {
           if ($paramValue !== FALSE) {
             $paramsEl = $this->xml->createElement('parameters');
             $element->appendChild($paramsEl);
-          } 
+          }
           else {
             $ret = TRUE;
           }
-        } 
-        else {
-          $paramsEl=$paramsEl->item(0);
         }
-        
+        else {
+          $paramsEl = $paramsEl->item(0);
+        }
+
         if (!$ret) {
           $params = $paramsEl->getElementsByTagName('parameter');
           $found = FALSE;
           for ($i = 0; $found === FALSE && $i < $params->length; $i++) {
             if ($params->item($i)->getAttribute('name') == $paramName) {
-              $found=$params->item($i);
+              $found = $params->item($i);
             }
           }
-          
+
           if ($paramValue === FALSE) {
             if ($found !== FALSE) {
               $paramsEl->removeChild($found);
@@ -687,27 +687,26 @@ class ContentModel extends XMLDatastream {
               }
             }
             $ret = TRUE;
-          } 
+          }
           else {
             if ($found !== FALSE) {
               $found->nodeValue = $paramValue;
-            } 
+            }
             else {
-              $paramEl=$this->xml->createElement('parameter', $paramValue);
+              $paramEl = $this->xml->createElement('parameter', $paramValue);
               $paramEl->setAttribute('name', $paramName);
               $paramsEl->appendChild($paramEl);
             }
             $ret = TRUE;
           }
         }
-      } 
+      }
     }
 
     return $ret;
   }
-  
-  
-/**
+
+  /**
    * Gets a list of all parameters that belong to the specified ingest form element.
    * 
    * @param String $elementName
@@ -719,7 +718,7 @@ class ContentModel extends XMLDatastream {
     if ($this->validate()) {
       $elements = $this->xml->getElementsbyTagName('ingest_form')->item(0)->getElementsByTagName('form_elements')->item(0)->getElementsByTagName('element');
       $element = FALSE;
-      for ($i=0; $element === FALSE && $i < $elements->length; $i++) {
+      for ($i = 0; $element === FALSE && $i < $elements->length; $i++) {
         if ($elements->item($i)->getAttribute('name') == $name) {
           $element = $elements->item($i);
         }
@@ -727,20 +726,20 @@ class ContentModel extends XMLDatastream {
 
       if ($element !== FALSE) {
         $ret = array();
-  $paramsEl = $element->getElementsByTagName('parameters');
-        
+        $paramsEl = $element->getElementsByTagName('parameters');
+
         if ($paramsEl->length > 0) {
-    $params = $paramsEl->item(0)->getElementsByTagName('parameter');
-    for ($i = 0; $i < $params->length; $i++) {
-      $ret[$params->item($i)->getAttribute('name')]=$params->item($i)->nodeValue;
-    }
-  }
-      } 
+          $params = $paramsEl->item(0)->getElementsByTagName('parameter');
+          for ($i = 0; $i < $params->length; $i++) {
+            $ret[$params->item($i)->getAttribute('name')] = $params->item($i)->nodeValue;
+          }
+        }
+      }
     }
 
     return $ret;
-  }  
-  
+  }
+
   /**
    * Edits the ingest form element specified. 
    * NOTE: The element name can not be changed.  To update an elements name
@@ -763,45 +762,44 @@ class ContentModel extends XMLDatastream {
           $found = $elements->item($i);
         }
       }
-      
+
       $found->setAttribute('name', $name);
       $found->setAttribute('type', $type);
       $found->setAttribute('required', $required ? 'true' : 'false');
       if (trim($label) != '' && trim($label) != trim($name)) {
         $found->setAttribute('label', $label);
-      } 
+      }
       elseif ($found->getAttribute('label') != '') {
         $found->removeAttribute('label');
       }
-      
-      $descEl=$found->getElementsByTagName('description');
+
+      $descEl = $found->getElementsByTagName('description');
       if (trim($description) != '') {
-  if ($descEl->length > 0) {
-      $descEl=$descEl->item(0);
-      $descEl->nodeValue = $description;
-  } 
+        if ($descEl->length > 0) {
+          $descEl = $descEl->item(0);
+          $descEl->nodeValue = $description;
+        }
         else {
-    $descEl = $this->xml->createElement('description', $description);
-    $found->appendChild($descEl);
-  }
-      } 
-      elseif ($descEl->length > 0) {
-  $found->removeChild($descEl->item(0));
+          $descEl = $this->xml->createElement('description', $description);
+          $found->appendChild($descEl);
+        }
       }
-      
-      if ($found->getAttribute('type') != 'select' && $found->getAttribute('type') != 'radio') {      
+      elseif ($descEl->length > 0) {
+        $found->removeChild($descEl->item(0));
+      }
+
+      if ($found->getAttribute('type') != 'select' && $found->getAttribute('type') != 'radio') {
         $authList = $found->getElementsByTagName('authoritative_list');
         if ($authList->length > 0) {
           $found->removeChild($authList->item(0));
         }
       }
-      
+
       $ret = TRUE;
     }
     return $ret;
   }
-  
-  
+
   /**
    * Add an ingest form element to the model.
    *
@@ -822,19 +820,19 @@ class ContentModel extends XMLDatastream {
       $elementEl->setAttribute('required', $requiredi ? 'true' : 'false');
       if (trim($label) != '' && trim($label) != trim($name)) {
         $elementEl->setAttribute('label', $label);
-      } 
+      }
       if (trim($description) != '') {
-  $descEl=$this->xml->createElement('description', $description);
-  $elementEl->appendChild($descEl);
+        $descEl = $this->xml->createElement('description', $description);
+        $elementEl->appendChild($descEl);
       }
       $elements->appendChild($elementEl);
-      
+
       $ret = TRUE;
     }
     return $ret;
   }
-  
-  /** 
+
+  /**
    * Decrements an authority list item from a form element in the list of elements.  
    * Updates the "order".  This method is simply an overload to the incAuthListItem
    * which has a direction parameter.
@@ -843,12 +841,12 @@ class ContentModel extends XMLDatastream {
    * @param String $elementName 
    * @param String $value
    * @return boolean $success
-   */ 
+   */
   public function decAuthListItem($elementName, $value) {
     return $this->incAuthListItem($elementName, $value, 'dec');
-  }  
+  }
 
-  /** 
+  /**
    * Increments (or decrements) an authority list item from a form element in the list of elements.  
    * Updates the "order".  
    *
@@ -856,7 +854,7 @@ class ContentModel extends XMLDatastream {
    * @param String $value
    * @param String $direction
    * @return boolean $success
-   */   
+   */
   public function incAuthListItem($elementName, $value, $reorder = 'inc') {
     $ret = FALSE;
     if ($this->validate()) {
@@ -869,43 +867,43 @@ class ContentModel extends XMLDatastream {
       }
 
       if ($found !== FALSE) {
-        
-         $authListEl = $found->getElementsByTagName('authoritative_list');
-         if ($authListEl->length > 0) {
-           $authListEl = $authListEl->item(0);
 
-           $items = $authListEl->getElementsByTagName('item');
-           $found = FALSE;
-           $refEl = FALSE;
-           for ($i = 0; $found === FALSE && $i < $items->length; $i++) {
-             if ($items->item($i)->nodeValue == $value) {
-               if ($reorder == 'inc') {
-                 $refEl = ($i > 0) ? $items->item($i - 1) : FALSE;
-                 $found = $items->item($i); 
-               } 
-               else {
-                 $refEl = $items->item($i); 
-                 $found = ($i + 1 < $items->length) ? $items->item($i + 1) : FALSE;
-               }
-             }
-           }
-           
-           if ($found !== FALSE && $refEl !== FALSE) {
-             $authListEl->removeChild($found);
-             $authListEl->insertBefore($found, $refEl);
-             $ret = TRUE;
-           }
-         }
+        $authListEl = $found->getElementsByTagName('authoritative_list');
+        if ($authListEl->length > 0) {
+          $authListEl = $authListEl->item(0);
+
+          $items = $authListEl->getElementsByTagName('item');
+          $found = FALSE;
+          $refEl = FALSE;
+          for ($i = 0; $found === FALSE && $i < $items->length; $i++) {
+            if ($items->item($i)->nodeValue == $value) {
+              if ($reorder == 'inc') {
+                $refEl = ($i > 0) ? $items->item($i - 1) : FALSE;
+                $found = $items->item($i);
+              }
+              else {
+                $refEl = $items->item($i);
+                $found = ($i + 1 < $items->length) ? $items->item($i + 1) : FALSE;
+              }
+            }
+          }
+
+          if ($found !== FALSE && $refEl !== FALSE) {
+            $authListEl->removeChild($found);
+            $authListEl->insertBefore($found, $refEl);
+            $ret = TRUE;
+          }
+        }
       }
     }
     return $ret;
-  }    
+  }
 
   /**
    * Removes an authority list item from a form element.  
-     @param String $elementName
-     @param String $value
-     @return boolean $success
+   * @param String $elementName
+   * @param String $value
+   * @return boolean $success
    */
   public function removeAuthListItem($elementName, $value) {
     $ret = FALSE;
@@ -913,46 +911,46 @@ class ContentModel extends XMLDatastream {
       $elements = $this->xml->getElementsbyTagName('ingest_form')->item(0)->getElementsByTagName('form_elements')->item(0)->getElementsByTagName('element');
       $found = FALSE;
       for ($i = 0; $found === FALSE && $i < $elements->length; $i++) {
-  if ($elements->item($i)->getAttribute('name') == $elementName) {
-    $found = $elements->item($i);
-  }
+        if ($elements->item($i)->getAttribute('name') == $elementName) {
+          $found = $elements->item($i);
+        }
       }
 
       if ($found !== FALSE) {
-   $authListEl = $found->getElementsByTagName('authoritative_list');
-   if ($authListEl->length > 0) {
-     $authListEl = $authListEl->item(0);
-     $items = $authListEl->getElementsByTagName('item');
-     $found = FALSE;
-     for ($i = 0; $found === FALSE && $i < $items->length; $i++) {
-       if ($items->item($i)->nodeValue == $value) {
-     $found=$items->item($i); 
-       }
-     }
-     
-     if ($found !== FALSE) {
-       if ($items->length == 1) {
-         $found->removeChild($authListEl);
-       } 
-             else {
-         $authListEl->removeChild($found);
-       }
-       
-       $ret = TRUE;
-     }
-   }
+        $authListEl = $found->getElementsByTagName('authoritative_list');
+        if ($authListEl->length > 0) {
+          $authListEl = $authListEl->item(0);
+          $items = $authListEl->getElementsByTagName('item');
+          $found = FALSE;
+          for ($i = 0; $found === FALSE && $i < $items->length; $i++) {
+            if ($items->item($i)->nodeValue == $value) {
+              $found = $items->item($i);
+            }
+          }
+
+          if ($found !== FALSE) {
+            if ($items->length == 1) {
+              $found->removeChild($authListEl);
+            }
+            else {
+              $authListEl->removeChild($found);
+            }
+
+            $ret = TRUE;
+          }
+        }
       }
     }
     return $ret;
-  }    
+  }
 
   /**
    * Adds an authority list item to a form element.  
-     @param String $elementName
-     @param String $value
-     @param String $label (optional)
-     @return boolean $success
-   */  
+   * @param String $elementName
+   * @param String $value
+   * @param String $label (optional)
+   * @return boolean $success
+   */
   public function addAuthListItem($elementName, $value, $label = '') {
     $ret = FALSE;
     if ($this->validate()) {
@@ -965,37 +963,36 @@ class ContentModel extends XMLDatastream {
       }
 
       if ($found !== FALSE) {
-         $authListEl = $found->getElementsByTagName('authoritative_list');
-         if ($authListEl->length == 0) {
-           $authListEl = $this->xml->createElement('authoritative_list');
-           $found->appendChild($authListEl);
-         } 
-         else {
-           $authListEl = $authListEl->item(0);
-         }
-         
-         $items = $authListEl->getElementsByTagName('item');
-         $found = FALSE;
-         for ($i = 0; $found == FALSE && $i < $items->length; $i++) {
-           if ($items->item($i)->nodeValue == $value) {
-             $found = TRUE; 
-           }
-         }
-         
-         if (!$found) {
-           $itemEl = $this->xml->createElement('item', trim($value));
-           if (trim($label) != '' && trim($label) != trim($value)) {
-             $itemEl->setAttribute('field', trim($label));
-           }
-           $authListEl->appendChild($itemEl);
-           $ret = TRUE;
-         }
+        $authListEl = $found->getElementsByTagName('authoritative_list');
+        if ($authListEl->length == 0) {
+          $authListEl = $this->xml->createElement('authoritative_list');
+          $found->appendChild($authListEl);
+        }
+        else {
+          $authListEl = $authListEl->item(0);
+        }
+
+        $items = $authListEl->getElementsByTagName('item');
+        $found = FALSE;
+        for ($i = 0; $found == FALSE && $i < $items->length; $i++) {
+          if ($items->item($i)->nodeValue == $value) {
+            $found = TRUE;
+          }
+        }
+
+        if (!$found) {
+          $itemEl = $this->xml->createElement('item', trim($value));
+          if (trim($label) != '' && trim($label) != trim($value)) {
+            $itemEl->setAttribute('field', trim($label));
+          }
+          $authListEl->appendChild($itemEl);
+          $ret = TRUE;
+        }
       }
-      
     }
     return $ret;
   }
-  
+
   /**
    * Builds an ingest form using the method specified in  <form_builder_method> element of <ingest_form>
    * Returns FALSE on failure.
@@ -1009,9 +1006,9 @@ class ContentModel extends XMLDatastream {
     if ($this->validate()) {
       $docRoot = $_SERVER['DOCUMENT_ROOT'];
       $file = (isset($form_state['values']['ingest-file-location']) ? $form_state['values']['ingest-file-location'] : '');
-      
+
       $fullpath = $file;
-      
+
       $form['step'] = array(
         '#type' => 'hidden',
         '#value' => (isset($form_state['values']['step']) ? $form_state['values']['step'] : 0) + 1,
@@ -1024,7 +1021,7 @@ class ContentModel extends XMLDatastream {
         '#type' => 'hidden',
         '#value' => 'ISLANDORACM',
       );
-      $form['models'] = array( //content models available
+      $form['models'] = array(//content models available
         '#type' => 'hidden',
         '#value' => $form_state['values']['models'],
       );
@@ -1050,27 +1047,27 @@ class ContentModel extends XMLDatastream {
       }
       $dsid = $ingest_form->getAttribute('dsid');
 
-      $method=$ingest_form->getElementsByTagName('form_builder_method')->item(0);
+      $method = $ingest_form->getElementsByTagName('form_builder_method')->item(0);
       $module = $method->getAttribute('module');
-      $path=drupal_get_path('module', !empty($module) ? $module : 'fedora_repository') . '/' .   $method->getAttribute('file');
+      $path = drupal_get_path('module', !empty($module) ? $module : 'fedora_repository') . '/' . $method->getAttribute('file');
       if (!file_exists($path)) {
-        self::$errors[]='Build Ingest Form: file \''. $path .'\' does not exist.';
-      } 
+        self::$errors[] = 'Build Ingest Form: file \'' . $path . '\' does not exist.';
+      }
       else {
         @require_once($path);
-        $className=$method->getAttribute('class');
-        $methodName=($method->getAttribute('method'));
+        $className = $method->getAttribute('class');
+        $methodName = ($method->getAttribute('method'));
         if (!class_exists($className)) {
-          self::$errors[] = 'Build Ingest Form: class \''. $className .' does not exist.';
-        } 
+          self::$errors[] = 'Build Ingest Form: class \'' . $className . ' does not exist.';
+        }
         else {
           $class = new $className;
-          $elements_array=$this->getIngestFormElements();
+          $elements_array = $this->getIngestFormElements();
           if (method_exists($class, $methodName)) {
-            $ret = $class->$methodName ($form, $elements_array, $form_state);
-          } 
+            $ret = $class->$methodName($form, $elements_array, $form_state);
+          }
           else {
-            self::$errors[] = 'Build Ingest Form: method \''. $className .'->'. $methodName .'\' does not exist.';
+            self::$errors[] = 'Build Ingest Form: method \'' . $className . '->' . $methodName . '\' does not exist.';
           }
         }
       }
@@ -1080,7 +1077,7 @@ class ContentModel extends XMLDatastream {
 
   /**
    * Builds an edit metadata form using the method specified in the <edit_metadata_method> element
-=   * The DSID specified must match the DSID attribute of <edit_metadata_method>. Returns FALSE on failure.
+   * The DSID specified must match the DSID attribute of <edit_metadata_method>. Returns FALSE on failure.
    *
    * @param string $dsid
    * @return $form
@@ -1092,22 +1089,22 @@ class ContentModel extends XMLDatastream {
       if ($method->length > 0 && $method->item(0)->getAttribute('dsid') == $dsid) {
         $method = $method->item(0);
         $module = $method->getAttribute('module');
-        $path = drupal_get_path('module', !empty($module) ? $module : 'fedora_repository') . '/' .   $method->getAttribute('file') ;
+        $path = drupal_get_path('module', !empty($module) ? $module : 'fedora_repository') . '/' . $method->getAttribute('file');
         if (!file_exists($path)) {
-          self::$errors[] = 'Build Edit Metadata Form: file  \''. $path .'\' does not exist.';
-        } 
+          self::$errors[] = 'Build Edit Metadata Form: file  \'' . $path . '\' does not exist.';
+        }
         else {
           @require_once($path );
-          $className=$method->getAttribute('class');
-          $methodName=($method->getAttribute('method'));
+          $className = $method->getAttribute('class');
+          $methodName = ($method->getAttribute('method'));
           if (!class_exists($className)) {
-            self::$errors[] = 'Build Edit Metadata Form: class \''. $className .'\' does not exist.';
-          } 
+            self::$errors[] = 'Build Edit Metadata Form: class \'' . $className . '\' does not exist.';
+          }
           else {
             $class = new $className($pid);
             if (!method_exists($class, $methodName)) {
-              self::$errors[] = 'Build Edit Metadata Form: method \''. $className .'->'. $methodName .'\' does not exist.';
-            } 
+              self::$errors[] = 'Build Edit Metadata Form: method \'' . $className . '->' . $methodName . '\' does not exist.';
+            }
             else {
               $ret = $class->$methodName();
             }
@@ -1133,24 +1130,24 @@ class ContentModel extends XMLDatastream {
     if ($this->validate()) {
       $method = $this->xml->getElementsByTagName('edit_metadata_method');
       if ($method->length > 0) {
-        $method=$method->item(0);
+        $method = $method->item(0);
         $module = $method->getAttribute('module');
-        $path = drupal_get_path('module', !empty($module) ? $module : 'fedora_repository') . '/' .   $method->getAttribute('file');
+        $path = drupal_get_path('module', !empty($module) ? $module : 'fedora_repository') . '/' . $method->getAttribute('file');
         if (!file_exists($path)) {
-          self::$errors[] = 'Handle Edit Metadata Form: file \''. $path .'\' does not exist.';
-        } 
+          self::$errors[] = 'Handle Edit Metadata Form: file \'' . $path . '\' does not exist.';
+        }
         else {
           @require_once($path);
           $className = $method->getAttribute('class');
           $methodName = ($method->getAttribute('handler'));
           if (!class_exists($className)) {
-            self::$errors[] = 'Handle Edit Metadata Form: class \''. $className .'\' does not exist.';
-          } 
+            self::$errors[] = 'Handle Edit Metadata Form: class \'' . $className . '\' does not exist.';
+          }
           else {
             $class = new $className($form_state['values']['pid']);
             if (!method_exists($class, $methodName)) {
-              self::$errors[] = 'Handle Edit Metadata Form: metho \''. $className .'->'. $methodName .'\' does not exist.';
-            } 
+              self::$errors[] = 'Handle Edit Metadata Form: metho \'' . $className . '->' . $methodName . '\' does not exist.';
+            }
             else {
               $ret = $class->$methodName($form_id, $form_state['values'], $soap_client);
             }
@@ -1164,12 +1161,10 @@ class ContentModel extends XMLDatastream {
         $ret = $metaDataForm->updateMetaData($form_state['values']['form_id'], $form_state['values'], $soap_client);
         $form_state['storage'] = NULL;
         $form_state['redirect'] = $base_url . '/fedora/repository/' . $form_state['values']['pid'];
-
       }
     }
     return $ret;
   }
-
 
   /**
    * Gets an associative array describing the edit metadata method.
@@ -1179,21 +1174,21 @@ class ContentModel extends XMLDatastream {
   public function getEditMetadataMethod() {
     $ret = FALSE;
     if ($this->validate()) {
-      $method=$this->xml->getElementsByTagName('content_model')->item(0)->getElementsByTagName('edit_metadata_method');
+      $method = $this->xml->getElementsByTagName('content_model')->item(0)->getElementsByTagName('edit_metadata_method');
       if ($method->length > 0) {
         $method = $method->item(0);
         $ret = array('module' => $method->getAttribute('module') == '' ? 'fedora_repository' : $method->getAttribute('module'),
-                   'file' => $method->getAttribute('file'),
-                   'class' => $method->getAttribute('class'),
-                   'method' => $method->getAttribute('method'),
-                   'handler' => $method->getAttribute('handler'),
-                   'dsid' => $method->getAttribute('dsid')
+          'file' => $method->getAttribute('file'),
+          'class' => $method->getAttribute('class'),
+          'method' => $method->getAttribute('method'),
+          'handler' => $method->getAttribute('handler'),
+          'dsid' => $method->getAttribute('dsid')
         );
       }
     }
     return $ret;
-  }  
-  
+  }
+
   /**
    * Removes the edit data method from the Content Model.
    * @return boolean $success
@@ -1201,7 +1196,7 @@ class ContentModel extends XMLDatastream {
   public function removeEditMetadataMethod() {
     $ret = FALSE;
     if ($this->validate()) {
-      $rootEl=$this->xml->getElementsByTagName('content_model')->item(0);
+      $rootEl = $this->xml->getElementsByTagName('content_model')->item(0);
       $method = $rootEl->getElementsByTagName('edit_metadata_method');
       if ($method->length > 0) {
         $rootEl->removeChild($method->item(0));
@@ -1210,8 +1205,8 @@ class ContentModel extends XMLDatastream {
     }
     return $ret;
   }
-  
-  /** 
+
+  /**
    * Update the Edit Metadata Method defined in the Content Model
    * @param String $module
    * @param String $file
@@ -1226,8 +1221,8 @@ class ContentModel extends XMLDatastream {
     if (self::validDsid($dsid) && $this->validate()) {
       $methodEl = $this->xml->getElementsByTagName('content_model')->item(0)->getElementsByTagName('edit_metadata_method');
       if ($methodEl->length > 0) {
-        $methodEl=$methodEl->item(0);
-      } 
+        $methodEl = $methodEl->item(0);
+      }
       else {
         $methodEl = $this->xml->createElement('edit_metadata_method');
         $this->xml->getElementsByTagName('content_model')->item(0)->appendChild($methodEl);
@@ -1242,7 +1237,7 @@ class ContentModel extends XMLDatastream {
     }
     return $ret;
   }
-  
+
   /**
    * Executes the add datastream method for the specified datastream on the specified file.
    * Returns FALSE on failure.
@@ -1256,32 +1251,32 @@ class ContentModel extends XMLDatastream {
     if (self::validDsid($dsid) && $this->validate() && ($ds = $this->getDSModel($dsid)) !== FALSE) {
       $addMethod = $ds->getElementsByTagName('add_datastream_method');
       if ($addMethod->length > 0) {
-        $addMethod=$addMethod->item(0);
+        $addMethod = $addMethod->item(0);
         $paramArray = array();
-        $params= $addMethod->getElementsByTagName('parameters');
+        $params = $addMethod->getElementsByTagName('parameters');
         if ($params->length > 0) {
-          $params=$params->item(0)->getElementsByTagName('parameter');
+          $params = $params->item(0)->getElementsByTagName('parameter');
           for ($i = 0; $i < $params->length; $i++) {
             $paramsArray[$params->item($i)->getAttribute('name')] = $params->item($i)->nodeValue;
           }
         }
         $module = $addMethod->getAttribute('module');
-        $path = drupal_get_path('module', !empty($module) ? $module : 'fedora_repository') . '/' . $addMethod->getAttribute('file') ;
+        $path = drupal_get_path('module', !empty($module) ? $module : 'fedora_repository') . '/' . $addMethod->getAttribute('file');
         if (!file_exists($path)) {
-          self::$errors[] = 'Execute Add Datastream Methods: file \''. $path .'\' does not exist.';
-        } 
+          self::$errors[] = 'Execute Add Datastream Methods: file \'' . $path . '\' does not exist.';
+        }
         else {
           @require_once($path);
           $className = $addMethod->getAttribute('class');
           $methodName = $addMethod->getAttribute('method');
           if (!class_exists($className)) {
-            self::$errors[] = 'Execute Add Datastream Methods: class \''. $className .'\' does not exist.';
-          } 
+            self::$errors[] = 'Execute Add Datastream Methods: class \'' . $className . '\' does not exist.';
+          }
           else {
             $class = new $className;
             if (!method_exists($class, $methodName)) {
-              self::$errors[] = 'Execute Add Datastream Methods: method \''. $className .'->'. $methodName .'\' does not exist.';
-            } 
+              self::$errors[] = 'Execute Add Datastream Methods: method \'' . $className . '->' . $methodName . '\' does not exist.';
+            }
             else {
               $ret = $class->$methodName($paramsArray, $addMethod->getAttribute('dsid'), $file, $addMethod->getAttribute('modified_files_ext'));
             }
@@ -1310,11 +1305,11 @@ class ContentModel extends XMLDatastream {
       $ret = TRUE;
       $rules = $this->xml->getElementsByTagName('ingest_rules')->item(0)->getElementsByTagName('rule');
       for ($i = 0; $i < $rules->length; $i++) {
-        $rule=$rules->item($i);
+        $rule = $rules->item($i);
         $types = $rule->getElementsbyTagName('applies_to');
         $valid_types = array();
         for ($j = 0; $j < $types->length; $j++) {
-          $valid_types[]=trim($types->item($j)->nodeValue);
+          $valid_types[] = trim($types->item($j)->nodeValue);
         }
 
         if (in_array($mimetype, $valid_types)) {
@@ -1322,38 +1317,39 @@ class ContentModel extends XMLDatastream {
           if ($methods->length > 0) {
             $methods = $methods->item(0)->getElementsbyTagName('ingest_method');
             for ($j = 0; $j < $methods->length; $j++) {
-              $method=$methods->item($j);
-              $param_array=array();
-              $params=$method->getElementsByTagName('parameters');
+              $method = $methods->item($j);
+              $param_array = array();
+              $params = $method->getElementsByTagName('parameters');
               $param_array['model_pid'] = $this->pid;
-        if ($params->length > 0) {
+              if ($params->length > 0) {
                 $params = $params->item(0)->getElementsByTagName('parameter');
                 for ($k = 0; $k < $params->length; $k++)
-                $param_array[$params->item($k)->getAttribute('name')]=$params->item($k)->nodeValue;
+                  $param_array[$params->item($k)->getAttribute('name')] = $params->item($k)->nodeValue;
               }
-              
-              
+
+
               if (!$preview || isset($param_array['preview'])) {
                 $module = $method->getAttribute('module');
-                $path = drupal_get_path('module', !empty($module) ? $module : 'fedora_repository') . '/' .   $method->getAttribute('file') ;
+                $path = drupal_get_path('module', !empty($module) ? $module : 'fedora_repository') . '/' . $method->getAttribute('file');
 
                 if (!file_exists($path) || substr_compare($path, 'fedora_repository/', -strlen('fedora_repository/'), strlen('fedora_repository/')) === 0) {
-                  self::$errors[] = 'Execute Ingest Rules: file \''. $path .'\' does not exist.';
+                  self::$errors[] = 'Execute Ingest Rules: file \'' . $path . '\' does not exist.';
                   $ret = FALSE;
-                } 
+                }
                 else {
                   require_once($path);
-                  $className=$method->getAttribute('class');
-                  $methodName=($method->getAttribute('method'));
+                  $className = $method->getAttribute('class');
+                  $methodName = ($method->getAttribute('method'));
                   if (!class_exists($className)) {
-                    self::$errors[] = 'Execute Ingest Rules: class \''. $className .'\' does not exist.';
+                    self::$errors[] = 'Execute Ingest Rules: class \'' . $className . '\' does not exist.';
                     $ret = FALSE;
-                  } 
-                  else $class = new $className;
+                  }
+                  else
+                    $class = new $className;
                   if (!method_exists($class, $methodName)) {
-                    self::$errors[] = 'Execute Ingest Rules: method \''. $className .'->' . $methodName .'\' does not exist.';
+                    self::$errors[] = 'Execute Ingest Rules: method \'' . $className . '->' . $methodName . '\' does not exist.';
                     $ret = FALSE;
-                  } 
+                  }
                   else {
                     $status = $class->$methodName($param_array, $method->getAttribute('dsid'), $file, $method->getAttribute('modified_files_ext'));
                     if ($status !== TRUE) {
@@ -1366,7 +1362,6 @@ class ContentModel extends XMLDatastream {
           }
         }
       }
-
     }
     return $ret;
   }
@@ -1378,29 +1373,29 @@ class ContentModel extends XMLDatastream {
    * @param &$form_state
    * @return boolean $success
    */
-  public function execFormHandler(&$data,&$form_state) {
+  public function execFormHandler(&$data, &$form_state) {
     $ret = FALSE;
     if ($this->validate()) {
-      $method =$this->xml->getElementsByTagName('ingest_form')->item(0)->getElementsByTagName('form_builder_method')->item(0);
+      $method = $this->xml->getElementsByTagName('ingest_form')->item(0)->getElementsByTagName('form_builder_method')->item(0);
       $module = $method->getAttribute('module');
-      $path=drupal_get_path('module', !empty($module) ? $module : 'fedora_repository') . '/' .   $method->getAttribute('file') ;
+      $path = drupal_get_path('module', !empty($module) ? $module : 'fedora_repository') . '/' . $method->getAttribute('file');
       if (!file_exists($path)) {
-        self::$errors[] = 'Execute Form Handler: file \''. $path .'\' does not exist.';
-      } 
+        self::$errors[] = 'Execute Form Handler: file \'' . $path . '\' does not exist.';
+      }
       else {
         require_once($path);
-        $className=$method->getAttribute('class');
-        $methodName=($method->getAttribute('handler'));
+        $className = $method->getAttribute('class');
+        $methodName = ($method->getAttribute('handler'));
         if (!class_exists($className)) {
-          self::$errors[] = 'Execute Form Handler: class \''. $className .'\' does not exist.';
-        } 
+          self::$errors[] = 'Execute Form Handler: class \'' . $className . '\' does not exist.';
+        }
         else {
           $class = new $className;
           if (!method_exists($class, $methodName)) {
-            self::$errors[] = 'Execute Form Handler: method \''. $className .'->'. $methodName .'\' does not exist.';
-          } 
+            self::$errors[] = 'Execute Form Handler: method \'' . $className . '->' . $methodName . '\' does not exist.';
+          }
           else {
-            $class->$methodName($data,$form_state);
+            $class->$methodName($data, $form_state);
             $ret = TRUE;
           }
         }
@@ -1420,13 +1415,13 @@ class ContentModel extends XMLDatastream {
     //only proceed if the xml is valid.
     if ($this->validate()) {
       if ($this->mimes === NULL) {
-        $result=$this->xml->getElementsByTagName('mimetypes');
-        $result=$result->item(0)->getElementsByTagName('type');
+        $result = $this->xml->getElementsByTagName('mimetypes');
+        $result = $result->item(0)->getElementsByTagName('type');
         $mimes = array();
         for ($i = 0; $i < $result->length; $i++) {
           $mimes[] = trim($result->item($i)->nodeValue);
         }
-        $this->mimes=$mimes;
+        $this->mimes = $mimes;
       }
       return $this->mimes;
     }
@@ -1446,29 +1441,29 @@ class ContentModel extends XMLDatastream {
       $datastreams = $this->xml->getElementsByTagName('datastreams');
       if ($datastreams->length > 0) {
         $datastreams = $datastreams->item(0)->getElementsByTagName('datastream');
-        for ($i=0; $i < $datastreams->length; $i++) {
+        for ($i = 0; $i < $datastreams->length; $i++) {
           $ds = $datastreams->item($i);
-          if ($ds->attributes->getNamedItem('display_in_fieldset') == NULL || strtolower($ds->getAttribute('display_in_fieldset')) != 'false' ) {
+          if ($ds->attributes->getNamedItem('display_in_fieldset') == NULL || strtolower($ds->getAttribute('display_in_fieldset')) != 'false') {
             $dispMethods = $ds->getElementsByTagName('display_method');
             for ($j = 0; $j < $dispMethods->length; $j++) {
               $method = $dispMethods->item($j);
               $module = $method->getAttribute('module');
-              $path=drupal_get_path('module', !empty($module) ? $module : 'fedora_repository') . '/' . $method->getAttribute('file') ;
+              $path = drupal_get_path('module', !empty($module) ? $module : 'fedora_repository') . '/' . $method->getAttribute('file');
               if (!file_exists($path)) {
-                self::$errors[] = 'Execute Form Handler: file \''. $path .'\' does not exist.';
-              } 
+                self::$errors[] = 'Execute Form Handler: file \'' . $path . '\' does not exist.';
+              }
               else {
                 require_once($path);
                 $className = $method->getAttribute('class');
                 $methodName = ($method->getAttribute('method'));
                 if (!class_exists($className)) {
-                  self::$errors[] = 'Execute Form Handler: class \''. $className .'\' does not exist.';
-                } 
+                  self::$errors[] = 'Execute Form Handler: class \'' . $className . '\' does not exist.';
+                }
                 else {
                   $class = new $className($pid);
                   if (!method_exists($class, $methodName)) {
-                    self::$errors[] = 'Execute Form Handler: method \''. $className .'->'. $methodName .'\' does not exist.';
-                  } 
+                    self::$errors[] = 'Execute Form Handler: method \'' . $className . '->' . $methodName . '\' does not exist.';
+                  }
                   else {
                     $output = $class->$methodName($page_number);
                   }
@@ -1491,17 +1486,17 @@ class ContentModel extends XMLDatastream {
    * @return string[] $datastreams
    */
   public function listDatastreams() {
-    $ds_array=array();
+    $ds_array = array();
     if ($this->validate()) {
       $datastreams = $this->xml->getElementsByTagName('datastreams');
       if ($datastreams->length > 0) {
-        $datastreams=$datastreams->item(0)->getElementsByTagName('datastream');
-        for ($i=0;$i<$datastreams->length;$i++) {
-          $dsName=$datastreams->item($i)->getAttribute('dsid');
-         // if ($dsName != 'QDC')
-         // {
-            $ds_array[]=$dsName;
-         // }
+        $datastreams = $datastreams->item(0)->getElementsByTagName('datastream');
+        for ($i = 0; $i < $datastreams->length; $i++) {
+          $dsName = $datastreams->item($i)->getAttribute('dsid');
+          // if ($dsName != 'QDC')
+          // {
+          $ds_array[] = $dsName;
+          // }
         }
       }
     }
@@ -1509,30 +1504,29 @@ class ContentModel extends XMLDatastream {
     return $ds_array;
   }
 
-  /** 
+  /**
    * Adds an allowed mimetype to the model. 
    * 
    * @param String $type
    * @return boolean $success
    */
   public function addMimetype($type) {
-    $ret=FALSE;
+    $ret = FALSE;
     if ($this->validate()) {
       $mimetypesEl = $this->xml->getElementsByTagName('mimetypes')->item(0);
-      $types= $mimetypesEl->getElementsByTagName('type');
+      $types = $mimetypesEl->getElementsByTagName('type');
 
       $found = FALSE;
-      for ($i=0;!$found && $i<$types->length;$i++) {
+      for ($i = 0; !$found && $i < $types->length; $i++) {
         if ($types->item($i)->nodeValue == $type)
-        $found = TRUE;
+          $found = TRUE;
       }
 
       if (!$found) {
         $newTypeEl = $this->xml->createElement('type', $type);
         $mimetypesEl->appendChild($newTypeEl);
-        $ret=TRUE;
+        $ret = TRUE;
       }
-
     }
     return $ret;
   }
@@ -1544,54 +1538,64 @@ class ContentModel extends XMLDatastream {
    * @return boolean $success
    */
   public function removeMimetype($type) {
-    $ret=FALSE;
+    $ret = FALSE;
     if ($this->validate()) {
       $mimetypesEl = $this->xml->getElementsByTagName('mimetypes')->item(0);
-      $types= $mimetypesEl->getElementsByTagName('type');
-      $found=FALSE;
-      for ($i=0;!$found && $i<$types->length;$i++) {
+      $types = $mimetypesEl->getElementsByTagName('type');
+      $found = FALSE;
+      for ($i = 0; !$found && $i < $types->length; $i++) {
         if ($types->item($i)->nodeValue == $type)
-        $found=$types->item($i);
+          $found = $types->item($i);
       }
 
       if ($found !== FALSE && $types->length > 1) {
         $mimetypesEl->removeChild($found);
         $ret = TRUE;
       }
-
     }
     return $ret;
   }
 
+  /**
+   * getDisplayMethods ??
+   * @param type $ds
+   * @return type 
+   */
   public function getDisplayMethods($ds) {
-    $ret=FALSE;
-    if (($ds = $this->getDSModel($ds))!==FALSE) {
-      $ret=array();
-      $dispMethods= $ds->getElementsByTagName('display_method');
-      for ($i=0;$i<$dispMethods->length;$i++) {
-        $ret[] = array( 'module' => $dispMethods->item($i)->getAttribute('module')==''?'fedora_repository':$dispMethods->item($i)->getAttribute('module'),
-                        'file' => $dispMethods->item($i)->getAttribute('file'),
-      'class' => $dispMethods->item($i)->getAttribute('class'),
-      'method' => $dispMethods->item($i)->getAttribute('method'),
-      'default' => ($dispMethods->item($i)->attributes->getNamedItem('default') !== NULL ? strtolower($dispMethods->item($i)->getAttribute('default')) == 'true' : FALSE));
+    $ret = FALSE;
+    if (($ds = $this->getDSModel($ds)) !== FALSE) {
+      $ret = array();
+      $dispMethods = $ds->getElementsByTagName('display_method');
+      for ($i = 0; $i < $dispMethods->length; $i++) {
+        $ret[] = array('module' => $dispMethods->item($i)->getAttribute('module') == '' ? 'fedora_repository' : $dispMethods->item($i)->getAttribute('module'),
+          'file' => $dispMethods->item($i)->getAttribute('file'),
+          'class' => $dispMethods->item($i)->getAttribute('class'),
+          'method' => $dispMethods->item($i)->getAttribute('method'),
+          'default' => ($dispMethods->item($i)->attributes->getNamedItem('default') !== NULL ? strtolower($dispMethods->item($i)->getAttribute('default')) == 'true' : FALSE));
       }
     }
     return $ret;
   }
 
+  /**
+   * addDs ??
+   * @param type $dsid
+   * @param type $display_in_fieldset
+   * @return boolean 
+   */
   public function addDs($dsid, $display_in_fieldset = FALSE) {
-    $ret=FALSE;
-     
+    $ret = FALSE;
+
     if (self::validDsid($dsid) && ($ds = $this->getDSModel($dsid)) === FALSE) {
       $datastreamsEl = $this->xml->getElementsByTagName('datastreams');
       if ($datastreamsEl->length > 0) {
-        $datastreamsEl=$datastreamsEl->item(0);
-      } 
+        $datastreamsEl = $datastreamsEl->item(0);
+      }
       else {
         $datastreamsEl = $this->xml->createElement('datastreams');
         $this->xml->getElementsByTagName('content_model')->item(0)->appendChild($datastreamsEl);
       }
-      
+
       $dsEl = $this->xml->createElement('datastream');
       $dsEl->setAttribute('dsid', $dsid);
       if ($display_in_fieldset == TRUE) {
@@ -1603,6 +1607,11 @@ class ContentModel extends XMLDatastream {
     return $ret;
   }
 
+  /**
+   * removeDs ??
+   * @param type $dsid
+   * @return boolean 
+   */
   public function removeDs($dsid) {
     $ret = FALSE;
 
@@ -1614,6 +1623,11 @@ class ContentModel extends XMLDatastream {
     return $ret;
   }
 
+  /**
+   * displayInFieldset ??
+   * @param type $dsid
+   * @return type 
+   */
   public function displayInFieldset($dsid) {
     $ret = FALSE;
     if (self::validDsid($dsid) && ($ds = $this->getDSModel($dsid)) !== FALSE) {
@@ -1622,13 +1636,19 @@ class ContentModel extends XMLDatastream {
     return $ret;
   }
 
+  /**
+   * setDisplayInFieldset ??
+   * @param type $dsid
+   * @param type $value
+   * @return boolean 
+   */
   public function setDisplayInFieldset($dsid, $value = TRUE) {
     $ret = FALSE;
     if (self::validDsid($dsid) && ($ds = $this->getDSModel($dsid)) !== FALSE) {
       if ($value == FALSE && $ds->attributes->getNamedItem('display_in_fieldset') !== NULL) {
         $ds->removeAttribute('display_in_fieldset');
         $ret = TRUE;
-      } 
+      }
       elseif ($value == TRUE) {
         $ds->setAttribute('display_in_fieldset', 'true');
         $ret = TRUE;
@@ -1637,18 +1657,27 @@ class ContentModel extends XMLDatastream {
     return $ret;
   }
 
+  /**
+   * setDefaultDispMeth ??
+   * @param type $dsid
+   * @param type $module
+   * @param type $file
+   * @param type $class
+   * @param type $method
+   * @return boolean 
+   */
   public function setDefaultDispMeth($dsid, $module, $file, $class, $method) {
     $ret = FALSE;
-     
+
     if (self::validDsid($dsid) && ($ds = $this->getDSModel($dsid)) !== FALSE) {
       $found = FALSE;
       $dispMethods = $ds->getElementsByTagName('display_method');
       for ($i = 0; !$found && $i < $dispMethods->length; $i++) {
         if ($module == ($dispMethods->item($i)->getAttribute('module') == '' ? 'fedora_repository' : $dispMethods->item($i)->getAttribute('module')) &&
-        $file == $dispMethods->item($i)->getAttribute('file') &&
-        $class == $dispMethods->item($i)->getAttribute('class') &&
-        $method == $dispMethods->item($i)->getAttribute('method')) {
-          $found=$dispMethods->item($i);
+            $file == $dispMethods->item($i)->getAttribute('file') &&
+            $class == $dispMethods->item($i)->getAttribute('class') &&
+            $method == $dispMethods->item($i)->getAttribute('method')) {
+          $found = $dispMethods->item($i);
         }
       }
 
@@ -1663,22 +1692,30 @@ class ContentModel extends XMLDatastream {
         $found->setAttribute('default', 'true');
         $ret = TRUE;
       }
-
     }
     return $ret;
   }
 
+  /**
+   * removeDispMeth ??
+   * @param type $dsid
+   * @param type $module
+   * @param type $file
+   * @param type $class
+   * @param type $method
+   * @return boolean 
+   */
   public function removeDispMeth($dsid, $module, $file, $class, $method) {
     $ret = FALSE;
     if (self::validDsid($dsid) && ($ds = $this->getDSModel($dsid)) !== FALSE) {
       $found = FALSE;
-      $dispMethods= $ds->getElementsByTagName('display_method');
-      for ($i=0;!$found && $i<$dispMethods->length;$i++) {
+      $dispMethods = $ds->getElementsByTagName('display_method');
+      for ($i = 0; !$found && $i < $dispMethods->length; $i++) {
         if ($module == ($dispMethods->item($i)->getAttribute('module') == '' ? 'fedora_repository' : $dispMethods->item($i)->getAttribute('module') == '') &&
-        $file == $dispMethods->item($i)->getAttribute('file') &&
-        $class == $dispMethods->item($i)->getAttribute('class') &&
-        $method == $dispMethods->item($i)->getAttribute('method')) {
-          $found=$dispMethods->item($i);
+            $file == $dispMethods->item($i)->getAttribute('file') &&
+            $class == $dispMethods->item($i)->getAttribute('class') &&
+            $method == $dispMethods->item($i)->getAttribute('method')) {
+          $found = $dispMethods->item($i);
         }
       }
 
@@ -1686,20 +1723,29 @@ class ContentModel extends XMLDatastream {
         $ds->removeChild($found);
         $ret = TRUE;
       }
-
     }
     return $ret;
   }
 
+  /**
+   * addDispMeth ??
+   * @param type $dsid
+   * @param type $module
+   * @param type $file
+   * @param type $class
+   * @param type $method
+   * @param type $default
+   * @return boolean 
+   */
   public function addDispMeth($dsid, $module, $file, $class, $method, $default = FALSE) {
-    $ret=FALSE;
-    if (self::validDsid($dsid) && ($ds = $this->getDSModel($dsid))!==FALSE) {
+    $ret = FALSE;
+    if (self::validDsid($dsid) && ($ds = $this->getDSModel($dsid)) !== FALSE) {
       $dispMethEl = $this->xml->createElement('display_method');
       $dispMethEl->setAttribute('module', $module);
       $dispMethEl->setAttribute('file', $file);
       $dispMethEl->setAttribute('class', $class);
       $dispMethEl->setAttribute('method', $method);
-      if ($default==TRUE) {
+      if ($default == TRUE) {
         $dispMethEl->setAttribute('default', TRUE);
       }
       $ds->appendChild($dispMethEl);
@@ -1708,39 +1754,55 @@ class ContentModel extends XMLDatastream {
     return $ret;
   }
 
+  /**
+   * getAddDsMethod ??
+   * @param type $ds
+   * @return type 
+   */
   public function getAddDsMethod($ds) {
-    $ret=FALSE;
-    if (($ds = $this->getDSModel($ds))!==FALSE) {
-      $addDsMethod= $ds->getElementsByTagName('add_datastream_method');
+    $ret = FALSE;
+    if (($ds = $this->getDSModel($ds)) !== FALSE) {
+      $addDsMethod = $ds->getElementsByTagName('add_datastream_method');
       if ($addDsMethod !== FALSE && $addDsMethod->length > 0) {
         $ret = array('module' => $addDsMethod->item(0)->getAttribute('module') == '' ? 'fedora_repository' : $addDsMethod->item(0)->getAttribute('module'),
-                 'file' => $addDsMethod->item(0)->getAttribute('file'),
-                 'class' => $addDsMethod->item(0)->getAttribute('class'),
-                 'method' => $addDsMethod->item(0)->getAttribute('method'),
-                 'modified_files_ext' => $addDsMethod->item(0)->getAttribute('modified_files_ext'),
-                 'dsid' => $addDsMethod->item(0)->getAttribute('dsid')
+          'file' => $addDsMethod->item(0)->getAttribute('file'),
+          'class' => $addDsMethod->item(0)->getAttribute('class'),
+          'method' => $addDsMethod->item(0)->getAttribute('method'),
+          'modified_files_ext' => $addDsMethod->item(0)->getAttribute('modified_files_ext'),
+          'dsid' => $addDsMethod->item(0)->getAttribute('dsid')
         );
       }
     }
     return $ret;
   }
 
+  /**
+   * getIngestRule ??
+   * @param type $rule_id
+   * @return type 
+   */
   public function getIngestRule($rule_id) {
     $ret = FALSE;
     if ($this->validate()) {
       $rules = $this->xml->getElementsByTagName('ingest_rules')->item(0)->getElementsByTagName('rule');
       if ($rule_id < $rules->length)
-      $ret = $rules->item($rule_id);
+        $ret = $rules->item($rule_id);
     }
     return $ret;
   }
 
+  /**
+   * removeAppliesTo ??
+   * @param type $rule_id
+   * @param type $type
+   * @return boolean 
+   */
   public function removeAppliesTo($rule_id, $type) {
     $ret = FALSE;
     if (($rule = $this->getIngestRule($rule_id)) !== FALSE) {
       $applies = $rule->getElementsByTagName('applies_to');
       $found = FALSE;
-      for ($i=0; $found === FALSE && $i < $applies->length; $i++) {
+      for ($i = 0; $found === FALSE && $i < $applies->length; $i++) {
         if ($type == $applies->item($i)->nodeValue) {
           $found = $applies->item($i);
         }
@@ -1754,12 +1816,18 @@ class ContentModel extends XMLDatastream {
     return $ret;
   }
 
+  /**
+   * addAppliesTo ??
+   * @param type $rule_id
+   * @param type $type
+   * @return boolean 
+   */
   public function addAppliesTo($rule_id, $type) {
-    $ret=FALSE;
-    if (($rule = $this->getIngestRule($rule_id))!==FALSE) {
+    $ret = FALSE;
+    if (($rule = $this->getIngestRule($rule_id)) !== FALSE) {
       $applies = $rule->getElementsByTagName('applies_to');
       $found = FALSE;
-      for ($i=0;!$found && $i<$applies->length;$i++) {
+      for ($i = 0; !$found && $i < $applies->length; $i++) {
         $found = ($type == $applies->item($i)->nodeValue);
       }
 
@@ -1772,9 +1840,20 @@ class ContentModel extends XMLDatastream {
     return $ret;
   }
 
+  /**
+   * addIngestMethods ??
+   * @param type $rule_id
+   * @param type $module
+   * @param type $file
+   * @param type $class
+   * @param type $method
+   * @param type $dsid
+   * @param type $modified_files_ext
+   * @return boolean 
+   */
   public function addIngestMethod($rule_id, $module, $file, $class, $method, $dsid, $modified_files_ext) {
-    $ret=FALSE;
-    if (self::validDsid($dsid) && ($rule=$this->getIngestRule($rule_id))!==FALSE) {
+    $ret = FALSE;
+    if (self::validDsid($dsid) && ($rule = $this->getIngestRule($rule_id)) !== FALSE) {
       $methodsEl = $rule->getElementsByTagName('ingest_methods')->item(0);
       $meth = $this->xml->createElement('ingest_method');
       $meth->setAttribute('module', $module);
@@ -1790,13 +1869,22 @@ class ContentModel extends XMLDatastream {
     return $ret;
   }
 
+  /**
+   * removeIngestMethod ??
+   * @param type $rule_id
+   * @param type $module
+   * @param type $file
+   * @param type $class
+   * @param type $method
+   * @return boolean 
+   */
   public function removeIngestMethod($rule_id, $module, $file, $class, $method) {
-    $ret=FALSE;
-    if (($rule=$this->getIngestRule($rule_id))!==FALSE) {
-      $found=FALSE;
+    $ret = FALSE;
+    if (($rule = $this->getIngestRule($rule_id)) !== FALSE) {
+      $found = FALSE;
       $methodsEl = $rule->getElementsByTagName('ingest_methods')->item(0);
       $methods = $methodsEl->getElementsByTagName('ingest_method');
-      for ($i=0;!$found && $i<$methods->length;$i++) {
+      for ($i = 0; !$found && $i < $methods->length; $i++) {
         if ($methods->item($i)->getAttribute('module') == $module && $methods->item($i)->getAttribute('file') == $file && $methods->item($i)->getAttribute('class') == $class && $methods->item($i)->getAttribute('method') == $method) {
           $found = $methods->item($i);
         }
@@ -1809,33 +1897,44 @@ class ContentModel extends XMLDatastream {
     }
     return $ret;
   }
-  
+
+  /**
+   * addIngestMethodParam ??
+   * @param type $rule_id
+   * @param type $module
+   * @param type $file
+   * @param type $class
+   * @param type $method
+   * @param type $name
+   * @param type $value
+   * @return boolean 
+   */
   public function addIngestMethodParam($rule_id, $module, $file, $class, $method, $name, $value) {
     $ret = FALSE;
-    if (($rule=$this->getIngestRule($rule_id)) !== FALSE) {
+    if (($rule = $this->getIngestRule($rule_id)) !== FALSE) {
       $methods = $rule->getElementsByTagName('ingest_methods')->item(0)->getElementsByTagName('ingest_method');
       $found = FALSE;
       for ($i = 0; $found === FALSE && $i < $methods->length; $i++) {
         if (($methods->item($i)->getAttribute('module') == '' ? 'fedora_repository' : $methods->item($i)->getAttribute('module')) == $module &&
-        $methods->item($i)->getAttribute('file') == $file &&
-        $methods->item($i)->getAttribute('class') == $class &&
-        $methods->item($i)->getAttribute('method') == $method) {
-          $found=$methods->item($i);
+            $methods->item($i)->getAttribute('file') == $file &&
+            $methods->item($i)->getAttribute('class') == $class &&
+            $methods->item($i)->getAttribute('method') == $method) {
+          $found = $methods->item($i);
         }
       }
 
       if ($found !== FALSE) {
         $paramsEl = $found->getElementsByTagName('parameters');
         if ($paramsEl->length == 0) {
-          $paramsEl=$found->appendChild($this->xml->createElement('parameters'));
-        } 
+          $paramsEl = $found->appendChild($this->xml->createElement('parameters'));
+        }
         else {
-          $paramsEl=$paramsEl->item(0);
+          $paramsEl = $paramsEl->item(0);
         }
 
         $params = $paramsEl->getElementsByTagName('parameter');
         $found = FALSE;
-        for ($i=0; $found === FALSE && $i < $params->length; $i++) {
+        for ($i = 0; $found === FALSE && $i < $params->length; $i++) {
           if ($params->item($i)->getAttribute('name') == $name) {
             $found = $params->item($i);
           }
@@ -1852,14 +1951,24 @@ class ContentModel extends XMLDatastream {
     return $ret;
   }
 
+  /**
+   * removeIngestMethodParam ??
+   * @param type $rule_id
+   * @param type $module
+   * @param type $file
+   * @param type $class
+   * @param type $method
+   * @param type $name
+   * @return boolean 
+   */
   public function removeIngestMethodParam($rule_id, $module, $file, $class, $method, $name) {
     $ret = FALSE;
-    if (($rule=$this->getIngestRule($rule_id)) !== FALSE) {
+    if (($rule = $this->getIngestRule($rule_id)) !== FALSE) {
       $found = FALSE;
       $methodsEl = $rule->getElementsByTagName('ingest_methods')->item(0);
       $methods = $methodsEl->getElementsByTagName('ingest_method');
-      for ($i=0; !$found && $i < $methods->length; $i++) {
-        if (( trim($methods->item($i)->getAttribute('module')) == $module || (trim($methods->item($i)->getAttribute('module')) == '' && $module == 'fedora_repository'))  && trim($methods->item($i)->getAttribute('file')) == $file && trim($methods->item($i)->getAttribute('class')) == $class && trim($methods->item($i)->getAttribute('method')) == $method) {
+      for ($i = 0; !$found && $i < $methods->length; $i++) {
+        if (( trim($methods->item($i)->getAttribute('module')) == $module || (trim($methods->item($i)->getAttribute('module')) == '' && $module == 'fedora_repository')) && trim($methods->item($i)->getAttribute('file')) == $file && trim($methods->item($i)->getAttribute('class')) == $class && trim($methods->item($i)->getAttribute('method')) == $method) {
           $found = $methods->item($i);
         }
       }
@@ -1867,38 +1976,53 @@ class ContentModel extends XMLDatastream {
         $methodEl = $found;
         $paramsEl = $found->getElementsByTagName('parameters');
         if ($paramsEl->length > 0) {
-          $paramsEl=$paramsEl->item(0);
+          $paramsEl = $paramsEl->item(0);
           $params = $paramsEl->getElementsByTagName('parameter');
           $found = FALSE;
-          for ($i=0; $found === FALSE && $i < $params->length; $i++) {
+          for ($i = 0; $found === FALSE && $i < $params->length; $i++) {
             if ($params->item($i)->getAttribute('name') == $name) {
-              $found=$params->item($i);
+              $found = $params->item($i);
             }
           }
-           
+
           if ($found !== FALSE) {
             $paramsEl->removeChild($found);
             if ($params->length == 0) {
               $methodEl->removeChild($paramsEl);
             }
-             
+
             $ret = TRUE;
           }
         }
-
       }
     }
     return $ret;
   }
 
+  /**
+   * removeIngestRule ??
+   * @param type $rule_id
+   * @return type 
+   */
   public function removeIngestRule($rule_id) {
     $ret = FALSE;
-    if (($rule = $this->getIngestRule($rule_id))!==FALSE) {
+    if (($rule = $this->getIngestRule($rule_id)) !== FALSE) {
       $ret = $this->xml->getElementsByTagName('ingest_rules')->item(0)->removeChild($rule);
     }
     return $ret;
   }
 
+  /**
+   * addIngestRule ??
+   * @param type $applies_to
+   * @param type $module
+   * @param type $file
+   * @param type $class
+   * @param type $method
+   * @param type $dsid
+   * @param type $modified_files_ext
+   * @return type 
+   */
   public function addIngestRule($applies_to, $module, $file, $class, $method, $dsid, $modified_files_ext) {
     $ret = FALSE;
     if (self::validDsid($dsid) && $this->validate()) {
@@ -1913,39 +2037,42 @@ class ContentModel extends XMLDatastream {
     return $ret;
   }
 
+  /**
+   * getIngestRules ??
+   * @return type 
+   */
   public function getIngestRules() {
     $ret = FALSE;
     if ($this->validate()) {
       $ret = array();
       $rules = $this->xml->getElementsByTagName('ingest_rules')->item(0)->getElementsByTagName('rule');
-      for ($i=0; $i < $rules->length; $i++) {
+      for ($i = 0; $i < $rules->length; $i++) {
         $rule = array('applies_to' => array(),
           'ingest_methods' => array());
         $applies_to = $rules->item($i)->getElementsByTagName('applies_to');
-        for ($j=0; $j < $applies_to->length; $j++) {
+        for ($j = 0; $j < $applies_to->length; $j++) {
           $rule['applies_to'][] = trim($applies_to->item($j)->nodeValue);
         }
 
         $methods = $rules->item($i)->getElementsByTagName('ingest_methods')->item(0)->getElementsByTagName('ingest_method');
-        for ($j=0; $j < $methods->length; $j++) {
+        for ($j = 0; $j < $methods->length; $j++) {
           $method = array('module' => $methods->item($j)->getAttribute('module') == '' ? 'fedora_repository' : $methods->item($j)->getAttribute('module'),
-                          'file' => $methods->item($j)->getAttribute('file'),
-        'class' => $methods->item($j)->getAttribute('class'),
-        'method' => $methods->item($j)->getAttribute('method'),
-        'dsid' => $methods->item($j)->getAttribute('dsid'),
-        'modified_files_ext' => $methods->item($j)->getAttribute('modified_files_ext'),
-        'parameters' => array());
-           
+            'file' => $methods->item($j)->getAttribute('file'),
+            'class' => $methods->item($j)->getAttribute('class'),
+            'method' => $methods->item($j)->getAttribute('method'),
+            'dsid' => $methods->item($j)->getAttribute('dsid'),
+            'modified_files_ext' => $methods->item($j)->getAttribute('modified_files_ext'),
+            'parameters' => array());
+
           $params = $methods->item($j)->getElementsByTagName('parameters');
           if ($params->length > 0) {
-            $params=$params->item(0)->getElementsByTagName('parameter');
-            for ($k=0; $k < $params->length; $k++) {
+            $params = $params->item(0)->getElementsByTagName('parameter');
+            for ($k = 0; $k < $params->length; $k++) {
               $method['parameters'][$params->item($k)->getAttribute('name')] = $params->item($k)->nodeValue;
             }
           }
-           
+
           $rule['ingest_methods'][] = $method;
-           
         }
 
         $ret[] = $rule;
@@ -1954,55 +2081,79 @@ class ContentModel extends XMLDatastream {
     return $ret;
   }
 
+  /**
+   * getIngestFormAttributes ??
+   * @return type 
+   */
   public function getIngestFormAttributes() {
     $ret = FALSE;
     if ($this->validate()) {
       $ingest_formEl = $this->xml->getElementsByTagName('ingest_form')->item(0);
-      $ret=array('dsid' => $ingest_formEl->getAttribute('dsid'),
-                 'page' => $ingest_formEl->getAttribute('page'),
-                 'hide_file_chooser' => strtolower($ingest_formEl->getAttribute('hide_file_chooser')) == 'true',
-                 'redirect' => strtolower($ingest_formEl->getAttribute('redirect')) == 'false' ? FALSE : TRUE);
-
+      $ret = array('dsid' => $ingest_formEl->getAttribute('dsid'),
+        'page' => $ingest_formEl->getAttribute('page'),
+        'hide_file_chooser' => strtolower($ingest_formEl->getAttribute('hide_file_chooser')) == 'true',
+        'redirect' => strtolower($ingest_formEl->getAttribute('redirect')) == 'false' ? FALSE : TRUE);
     }
     return $ret;
   }
-  
+
+  /**
+   * editIngestFormAttributes ??
+   * @param type $dsid
+   * @param type $page
+   * @param type $hide_file_chooser
+   * @param type $redirect
+   * @return boolean 
+   */
   public function editIngestFormAttributes($dsid, $page, $hide_file_chooser = FALSE, $redirect = TRUE) {
     $ret = FALSE;
     if (self::validDsid($dsid) && $this->validate()) {
-       $ingest_formEl = $this->xml->getElementsByTagName('ingest_form')->item(0);
-       $ingest_formEl->setAttribute('dsid', $dsid);
-       $ingest_formEl->setAttribute('page', $page);
-       if (!$redirect) {
-   $ingest_formEl->setAttribute('redirect', 'false');
-       } 
-       else {
-   $ingest_formEl->removeAttribute('redirect');
-       }
-       if ($hide_file_chooser) {
+      $ingest_formEl = $this->xml->getElementsByTagName('ingest_form')->item(0);
+      $ingest_formEl->setAttribute('dsid', $dsid);
+      $ingest_formEl->setAttribute('page', $page);
+      if (!$redirect) {
+        $ingest_formEl->setAttribute('redirect', 'false');
+      }
+      else {
+        $ingest_formEl->removeAttribute('redirect');
+      }
+      if ($hide_file_chooser) {
         $ingest_formEl->setAttribute('hide_file_chooser', 'true');
-       } 
-       else {
+      }
+      else {
         $ingest_formEl->removeAttribute('hide_file_chooser');
-       }
-       $ret = TRUE;
+      }
+      $ret = TRUE;
     }
     return $ret;
   }
 
+  /**
+   * getIngestFormBuilderMethod
+   * @return type 
+   */
   public function getIngestFormBuilderMethod() {
     $ret = FALSE;
     if ($this->validate()) {
       $method = $this->xml->getElementsByTagName('ingest_form')->item(0)->getElementsByTagName('form_builder_method')->item(0);
-      $ret = array(  'module' => ($method->getAttribute('module')==''?'fedora_repository':$method->getAttribute('module')),
-                     'file' => $method->getAttribute('file'),
-                     'class' => $method->getAttribute('class'),
-                     'method' => $method->getAttribute('method'),
-                     'handler' => $method->getAttribute('handler'));      
+      $ret = array('module' => ($method->getAttribute('module') == '' ? 'fedora_repository' : $method->getAttribute('module')),
+        'file' => $method->getAttribute('file'),
+        'class' => $method->getAttribute('class'),
+        'method' => $method->getAttribute('method'),
+        'handler' => $method->getAttribute('handler'));
     }
     return $ret;
   }
-  
+
+  /**
+   * editIngestFormBuilderMethod ??
+   * @param type $module
+   * @param type $file
+   * @param type $class
+   * @param type $method
+   * @param type $handler
+   * @return boolean 
+   */
   public function editIngestFormBuilderMethod($module, $file, $class, $method, $handler) {
     $ret = FALSE;
     if ($this->validate()) {
@@ -2014,7 +2165,7 @@ class ContentModel extends XMLDatastream {
       $methodEl->setAttribute('handler', $handler);
       $ret = TRUE;
     }
-    return $ret;    
+    return $ret;
   }
 
   /**
@@ -2041,7 +2192,7 @@ class ContentModel extends XMLDatastream {
     }
     $names = FALSE;
     $result = $this->xpath->query('//cm:forms/cm:form/@name'); // Select the name attribute of all forms.
-    for($i = 0; $i < $result->length; $i++) {
+    for ($i = 0; $i < $result->length; $i++) {
       $attribute = $result->item($i);
       $name = $attribute->value;
       $names[$name] = $name;
@@ -2059,7 +2210,7 @@ class ContentModel extends XMLDatastream {
       return FALSE;
     }
     $result = $this->xpath->query('//cm:forms/cm:form[@ingest_class and @ingest_file and @ingest_module]/@name'); // Select the name attribute of all forms.
-    for($i = 0; $i < $result->length; $i++) {
+    for ($i = 0; $i < $result->length; $i++) {
       $attribute = $result->item($i);
       $name = $attribute->value;
       $names[$name] = $name;
@@ -2077,7 +2228,7 @@ class ContentModel extends XMLDatastream {
       return FALSE;
     }
     $result = $this->xpath->query('//cm:forms/cm:form[@edit_class and @edit_file and @edit_module]/@name'); // Select the name attribute of all forms.
-    for($i = 0; $i < $result->length; $i++) {
+    for ($i = 0; $i < $result->length; $i++) {
       $attribute = $result->item($i);
       $name = $attribute->value;
       $names[$name] = $name;
@@ -2131,7 +2282,6 @@ class ContentModel extends XMLDatastream {
     return FALSE;
   }
 
-
   /**
    * Edits a form element with attribute name='$name' from the 'forms' element.
    *
@@ -2142,11 +2292,11 @@ class ContentModel extends XMLDatastream {
       return FALSE;
     }
     $result = $this->xpath->query("//cm:form[@name='$name']");
-    if($result->length == 1) {
+    if ($result->length == 1) {
       $form = $result->item(0);
       $result = $this->xpath->query("child::node()", $form);
       $element = $this->xml->importNode($element);
-      for($i = 0; $i < $result->length; $i++) {
+      for ($i = 0; $i < $result->length; $i++) {
         $child = $result->item($i);
         $element->appendChild($child);
       }
@@ -2177,10 +2327,10 @@ class ContentModel extends XMLDatastream {
     $new_element = $this->xml->importNode($new_element, TRUE);
     $name = $new_element->tagName;
     $result = $new_element->getElementsByTagName('content');
-    if($result->length == 1) {
+    if ($result->length == 1) {
       $new_content = $result->item(0);
       $result = $this->xpath->query("child::cm:content/child::node()", $edit_element);
-      for($i = 0; $i < $result->length; $i++) {
+      for ($i = 0; $i < $result->length; $i++) {
         $child = $result->item($i);
         $new_content->appendChild($child);
       }

@@ -38,6 +38,7 @@ class FormBuilder {
     $datastream->appendChild($version);
     $content = $dom->createElement("foxml:xmlContent");
     $version->appendChild($content);
+    
     ///begin writing qdc
     $oai = $dom->createElement("oai_dc:dc");
     $oai->setAttribute('xmlns:oai_dc', "http://www.openarchives.org/OAI/2.0/oai_dc/");
@@ -45,10 +46,12 @@ class FormBuilder {
     $oai->setAttribute('xmlns:dcterms', "http://purl.org/dc/terms/");
     $oai->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
     $content->appendChild($oai);
+    
     //dc elements
     $previousElement = NULL; //used in case we have to nest elements for qualified dublin core
     foreach ($form_values as $key => $value) {
       $index = strrpos($key, '-');
+      
       if ($index > 01) {
         $key = substr($key, 0, $index);
       }
@@ -89,10 +92,13 @@ class FormBuilder {
     $rootElement->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
     $rootElement->setAttribute('xsi:schemaLocation', "info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-0.xsd");
     $dom->appendChild($rootElement);
+    
     //create standard fedora stuff
     $this->createStandardFedoraStuff($form_values, $dom, $rootElement);
+    
     //create relationships
     $this->createRelationShips($form_values, $dom, $rootElement);
+    
     //create dublin core
     $this->createQDCStream($form_values, $dom, $rootElement);
     $this->createFedoraDataStreams($form_values, $dom, $rootElement);
@@ -261,11 +267,13 @@ class FormBuilder {
       '#type' => 'fieldset',
       '#title' => t('Ingest Digital Object Step #2')
     );
+    
     foreach ($ingest_form_definition->form_elements->element as $element) {
       $name = strip_tags($element->name->asXML());
       $title = strip_tags($element->label->asXML());
       $required = strip_tags($element->required->asXML());
       $required = strtolower($required);
+      
       if ($required != 'TRUE') {
         $required = '0';
       }
@@ -273,6 +281,7 @@ class FormBuilder {
       $description = strip_tags($element->description->asXML());
       $type = strip_tags($element->type->asXML());
       $options = array();
+      
       if ($element->type == 'select') {
         foreach ($element->authoritative_list->item as $item) {
           $field = strip_tags($item->field->asXML());

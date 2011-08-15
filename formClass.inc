@@ -2,10 +2,6 @@
 
 // $Id$
 
-/*
- * Created on Jan 22, 2008
- */
-
 class formClass {
 
   function formClass() {

@@ -1,141 +1,186 @@
 <?php
+
 // $Id$
 
+/**
+ * @file 
+ * SearchClass Class
+ */
+
+/**
+ * SearchClass ??
+ */
 class SearchClass {
+
   public static $SEARCH_CLASS_ADVANCED_SEARCH_NUMBER_FIELDS = 5;
-  function solr_search($query,  $startPage=1, $fq = NULL, $dismax = NULL) {
+
+  /**
+   * solr_search ??
+   * @param type $query
+   * @param type $startPage
+   * @param type $fq
+   * @param type $dismax
+   * @return type 
+   */
+  function solr_search($query, $startPage=1, $fq = NULL, $dismax = NULL) {
     $solrFile = trim(variable_get('islandora_solr_search_block_handler_file', 'plugins/SolrResults.inc'));
     if (strpos($solrField, '../')) {  // Don't let us bust out of fedora_repository modules directory when looking for a handler
       drupal_set_message(t('You have illegal characters in your solr handler function in the Islandora solr block config.'), 'error');
     }
     $solrClass = trim(variable_get('islandora_solr_search_block_handler_class', 'SolrResults'));
     $solrFunction = trim(variable_get('islandora_solr_search_block_handler_function', 'SearchAndDisplay'));
-   require_once(drupal_get_path('module', 'fedora_repository') . '/'. $solrFile);
+    require_once(drupal_get_path('module', 'fedora_repository') . '/' . $solrFile);
     try {
       $implementation = new $solrClass();
     } catch (Exception $e) {
       watchdog(t("Fedora_Repository"), t("Error getting solr search results class: !message", array('!message' => $e->getMessage())), NULL, WATCHDOG_ERROR);
       return 'Error getting solr search results class.  Check watchdog for more info.';
-    }    
+    }
     return $implementation->$solrFunction($query, $startPage, $fq, $dismax);
   }
+
+  /**
+   * build solr search form ??
+   * @param type $repeat
+   * @param type $pathToSearchTerms
+   * @param type $query
+   * @return type 
+   */
   function build_solr_search_form($repeat = NULL, $pathToSearchTerms = NULL, $query = NULL) {
     $types = $this->get_search_terms_array(NULL, 'solrSearchTerms.xml');
-    $queryArray=NULL;
+    $queryArray = NULL;
     if (isset($query)) {
       $queryArray = explode('AND', $query);
     }
 
     $andOrArray = array(
-            'AND' => 'and',
-            //'OR' => 'or' //removed or for now as it would be a pain to parse
+      'AND' => 'and',
+        //'OR' => 'or' //removed or for now as it would be a pain to parse
     );
     $form = array();
 
     if (!isset($repeat)) {
-      $repeat = variable_get('islandora_solr_search_block_repeat',  t('3'));
+      $repeat = variable_get('islandora_solr_search_block_repeat', t('3'));
     }
     $var0 = explode(':', $queryArray[0]);
     $var1 = explode(':', $queryArray[1]);
     $form['search_type']['type1'] = array(
-            '#title' => t(''),
-            '#type' => 'select',
-            '#options' => $types,
-            '#default_value' => trim($var0[0])
+      '#title' => t(''),
+      '#type' => 'select',
+      '#options' => $types,
+      '#default_value' => trim($var0[0])
     );
     $form['fedora_terms1'] = array(
-            '#size' => '24',
-            '#type' => 'textfield',
-            '#title' => t(''),
-            '#required' => TRUE,
-            '#default_value' => (count($var0) >= 2 ? trim($var0[1]) : ''),
+      '#size' => '24',
+      '#type' => 'textfield',
+      '#title' => t(''),
+      '#required' => TRUE,
+      '#default_value' => (count($var0) >= 2 ? trim($var0[1]) : ''),
     );
     $form['andor1'] = array(
-            '#title' => t(''),
-            '#type' => 'select',
-            '#default_value' =>  'AND',
-            '#options' => $andOrArray
+      '#title' => t(''),
+      '#type' => 'select',
+      '#default_value' => 'AND',
+      '#options' => $andOrArray
     );
     $form['search_type']['type2'] = array(
-            '#title' => t(''),
-            '#type' => 'select',
-            '#options' => $types,
-            '#default_value' => (count($var1) >= 2 ? trim($var1[0]) : ''),
+      '#title' => t(''),
+      '#type' => 'select',
+      '#options' => $types,
+      '#default_value' => (count($var1) >= 2 ? trim($var1[0]) : ''),
     );
     $form['fedora_terms2'] = array(
-            '#size' => '24',
-            '#type' => 'textfield',
-            '#title' => t(''),
-            '#default_value' => (count($var1) >= 2 ? $var1[1] : ''),
+      '#size' => '24',
+      '#type' => 'textfield',
+      '#title' => t(''),
+      '#default_value' => (count($var1) >= 2 ? $var1[1] : ''),
     );
-    if ($repeat>2 && $repeat < 9) { //don't want less then 2 or more then 9
+    if ($repeat > 2 && $repeat < 9) { //don't want less then 2 or more then 9
       for ($i = 3; $i < $repeat + 1; $i++) {
         $t = $i - 1;
         $field_and_term = explode(':', $queryArray[$t]);
         $form["andor$t"] = array(
-                '#title' => t(''),
-                '#type' => 'select',
-                '#default_value' => 'AND',
-                '#options' => $andOrArray
+          '#title' => t(''),
+          '#type' => 'select',
+          '#default_value' => 'AND',
+          '#options' => $andOrArray
         );
         $form['search_type']["type$i"] = array(
-                '#title' => t(''),
-                '#type' => 'select',
-                '#options' => $types,
-                '#default_value' => trim($field_and_term[0])
+          '#title' => t(''),
+          '#type' => 'select',
+          '#options' => $types,
+          '#default_value' => trim($field_and_term[0])
         );
         $form["fedora_terms$i"] = array(
-                '#size' => '24',
-                '#type' => 'textfield',
-                '#title' => t(''),
-                '#default_value' => (count($field_and_term) >= 2 ? trim($field_and_term[1]) : ''),
+          '#size' => '24',
+          '#type' => 'textfield',
+          '#title' => t(''),
+          '#default_value' => (count($field_and_term) >= 2 ? trim($field_and_term[1]) : ''),
         );
       }
     }
 
     $form['submit'] = array(
-            '#type' => 'submit',
-            '#value' => t('search')
+      '#type' => 'submit',
+      '#value' => t('search')
     );
     return $form;
   }
 
+  /**
+   * build simple solr form ??
+   * @return string 
+   */
   function build_simple_solr_form() {
     //$form = array();
     $form["search_query"] = array(
-                '#size' => '30',
-                '#type' => 'textfield',
-                '#title' => t(''),
-               // '#default_value' => (count($field_and_term) >= 2 ? trim($field_and_term[1]) : ''),
-        );
+      '#size' => '30',
+      '#type' => 'textfield',
+      '#title' => t(''),
+        // '#default_value' => (count($field_and_term) >= 2 ? trim($field_and_term[1]) : ''),
+    );
     $form['submit'] = array(
-            '#type' => 'submit',
-            '#value' => t('search')
+      '#type' => 'submit',
+      '#value' => t('search')
     );
     return $form;
   }
+
+  /**
+   * theme solr search form ??
+   * @param type $form
+   * @return type 
+   */
   function theme_solr_search_form($form) {
     if (!isset($repeat)) {
-      $repeat = variable_get('islandora_solr_search_block_repeat',  t('3'));
+      $repeat = variable_get('islandora_solr_search_block_repeat', t('3'));
     }
 
-    $output = drupal_render($form['search_type']['type1']) ;
-    $output .= drupal_render($form['fedora_terms1']) ;
-    $output .=  drupal_render($form['andor1'])  . drupal_render($form['search_type']['type2']) ;
+    $output = drupal_render($form['search_type']['type1']);
+    $output .= drupal_render($form['fedora_terms1']);
+    $output .= drupal_render($form['andor1']) . drupal_render($form['search_type']['type2']);
     $output .= drupal_render($form['fedora_terms2']);
-    if ($repeat>2 && $repeat < 9) {
-      for ($i=3;$i<$repeat+1;$i++) {
+    if ($repeat > 2 && $repeat < 9) {
+      for ($i = 3; $i < $repeat + 1; $i++) {
         $t = $i - 1;
-        $output .=  drupal_render($form["andor$t"])  . drupal_render($form['search_type']["type$i"]) ;
-        $output .= drupal_render($form["fedora_terms$i"]) ;
+        $output .= drupal_render($form["andor$t"]) . drupal_render($form['search_type']["type$i"]);
+        $output .= drupal_render($form["fedora_terms$i"]);
       }
     }
-    $output .=  drupal_render($form['submit']) ;
+    $output .= drupal_render($form['submit']);
     $output .= drupal_render($form);
     return $output;
-
-
   }
+
+  /**
+   * quick search ??
+   * @param type $type
+   * @param type $query
+   * @param type $showForm
+   * @param type $orderBy
+   * @param type $userArray
+   * @return type 
+   */
   function quickSearch($type, $query, $showForm = 1, $orderBy = 0, & $userArray) {
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');
     module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
@@ -146,15 +191,15 @@ class SearchClass {
       $keywords = explode(' ', $query);
 
       foreach ($keywords as $keyword) {
-        $luceneQuery .= $type . ':'. $keyword . '+AND+';
+        $luceneQuery .= $type . ':' . $keyword . '+AND+';
       }
       $luceneQuery = substr($luceneQuery, 0, strlen($luceneQuery) - 5);
 
       $indexName = variable_get('fedora_index_name', 'DemoOnLucene');
       $keys = htmlentities(urlencode($query));
       $searchUrl = variable_get('fedora_fgsearch_url', 'http://localhost:8080/fedoragsearch/rest');
-      $searchString = '?operation=gfindObjects&indexName='. $indexName . '&restXslt=copyXml&query='. $luceneQuery;
-      $searchString .= '&hitPageSize='. $numberOfHistPerPage . '&hitPageStart=1';
+      $searchString = '?operation=gfindObjects&indexName=' . $indexName . '&restXslt=copyXml&query=' . $luceneQuery;
+      $searchString .= '&hitPageSize=' . $numberOfHistPerPage . '&hitPageStart=1';
       //$searchString = htmlentities($searchString);
       $searchUrl .= $searchString;
 
@@ -169,20 +214,25 @@ class SearchClass {
         $nodeList = $xPath->query('//field[@name="refworks.u1"]');
         foreach ($nodeList as $node) {
           if (!in_array($node->nodeValue, $userArray)) {
-            $userArray[]=$node->nodeValue;
+            $userArray[] = $node->nodeValue;
           }
         }
       }
       if ($showForm) {
-        $output = '<Strong>Quick Search</strong><br /><table class="table-form"><tr>'. drupal_get_form('fedora_repository_quick_search_form') . '</tr></table>';
+        $output = '<Strong>Quick Search</strong><br /><table class="table-form"><tr>' . drupal_get_form('fedora_repository_quick_search_form') . '</tr></table>';
       }
       $output .= $this->applyXSLT($resultData, $orderBy);
       return $output;
     }
   }
 
-
-  // gets term from a lucene index and displays them in a list
+  /**
+   * gets term from a lucene index and displays them in a list
+   * @param type $fieldName
+   * @param type $startTerm
+   * @param type $displayName
+   * @return type 
+   */
   function getTerms($fieldName, $startTerm, $displayName = NULL) {
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');
     module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
@@ -192,10 +242,10 @@ class SearchClass {
       $startTerm = "";
     }
     $startTerm = drupal_urlencode($startTerm);
-    $query = 'operation=browseIndex&startTerm='. $startTerm . '&fieldName='. $fieldName . '&termPageSize=20&indexName='. $indexName . '&restXslt=copyXml&resultPageXslt=copyXml';
+    $query = 'operation=browseIndex&startTerm=' . $startTerm . '&fieldName=' . $fieldName . '&termPageSize=20&indexName=' . $indexName . '&restXslt=copyXml&resultPageXslt=copyXml';
     // $query=drupal_urlencode($query);
-    $query = '?'. $query;
-    $searchString=$searchUrl . $query;
+    $query = '?' . $query;
+    $searchString = $searchUrl . $query;
 
     $objectHelper = new ObjectHelper();
 
@@ -205,11 +255,16 @@ class SearchClass {
     $output .= $this->applySpecifiedXSLT($resultData, $path . '/xsl/browseIndexToResultPage.xslt', $displayName);
     //$output .= '<br />'.$alpha_out;
     return $output;
-
   }
 
-  
-
+  /**
+   * custom search ??
+   * @param type $query
+   * @param type $startPage
+   * @param type $xslt
+   * @param type $numberOfHistPerPage
+   * @return type 
+   */
   function custom_search($query, $startPage=1, $xslt= '/xsl/advanced_search_results.xsl', $numberOfHistPerPage = 50) {
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');
     module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
@@ -225,8 +280,8 @@ class SearchClass {
       $query = trim($query);
       $query = htmlentities(urlencode($query));
       $searchUrl = variable_get('fedora_fgsearch_url', 'http://localhost:8080/fedoragsearch/rest');
-      $searchString = '?operation=gfindObjects&indexName=' . $indexName . '&restXslt='. $copyXMLFile . '&query=' . $query;
-      $searchString .= '&hitPageSize='. $numberOfHistPerPage . '&hitPageStart='. $startPage;
+      $searchString = '?operation=gfindObjects&indexName=' . $indexName . '&restXslt=' . $copyXMLFile . '&query=' . $query;
+      $searchString .= '&hitPageSize=' . $numberOfHistPerPage . '&hitPageStart=' . $startPage;
       //$searchString = htmlentities($searchString);
       $searchUrl .= $searchString;
 
@@ -242,7 +297,14 @@ class SearchClass {
     }
   }
 
-
+  /**
+   * apply specified xslt ??
+   * @global type $user
+   * @param type $resultData
+   * @param type $pathToXSLT
+   * @param type $displayName
+   * @return type 
+   */
   function applySpecifiedXSLT($resultData, $pathToXSLT, $displayName = NULL) {
     $proc = NULL;
     global $user;
@@ -252,9 +314,8 @@ class SearchClass {
     }
     try {
       $proc = new XsltProcessor();
-    }
-    catch (Exception $e) {
-      drupal_set_message(t('Error loading '. $pathToXSLT . ' xslt!') . $e->getMessage());
+    } catch (Exception $e) {
+      drupal_set_message(t('Error loading ' . $pathToXSLT . ' xslt!') . $e->getMessage());
       return ' ';
     }
 
@@ -270,10 +331,10 @@ class SearchClass {
 
     $xsl = new DomDocument();
 
-    $test= $xsl->load($pathToXSLT);
+    $test = $xsl->load($pathToXSLT);
 
     if (!isset($test)) {
-      drupal_set_message(t('Error loading '. $pathToXSLT . ' xslt!'));
+      drupal_set_message(t('Error loading ' . $pathToXSLT . ' xslt!'));
       return t('Error loading !pathToXSLT xslt.', array('!pathToXSLT' => $pathToXSLT));
     }
 
@@ -291,8 +352,8 @@ class SearchClass {
       return $newdom->saveXML();
     }
   }
-  //default function for lucene results
 
+  //default function for lucene results
 
   /**
    * apply an xslt to lucene gsearch search results
@@ -305,8 +366,8 @@ class SearchClass {
   function applyLuceneXSLT($resultData, $startPage = 1, $xslt_file = '/xsl/results.xsl', $query=NULL) {
     $path = drupal_get_path('module', 'Fedora_Repository');
     $test = $xslt_file;
-    $isRestricted = variable_get('fedora_namespace_restriction_enforced',TRUE);
-    if(!isRestricted && $xslt_file == null){
+    $isRestricted = variable_get('fedora_namespace_restriction_enforced', TRUE);
+    if (!isRestricted && $xslt_file == null) {
       $xslt_file = '/xsl/unfilteredresults.xsl';
     }
     $proc = NULL;
@@ -354,7 +415,12 @@ class SearchClass {
     }
   }
 
-  //xslt for islandscholar these xslt functions can probably be pulled into one
+  /**
+   * xslt for islandscholar these xslt functions can probably be pulled into one
+   * @param type $resultData
+   * @param type $orderBy
+   * @return type 
+   */
   function applyXSLT($resultData, $orderBy = 0) {
     $path = drupal_get_path('module', 'Fedora_Repository');
     $proc = NULL;
@@ -378,7 +444,7 @@ class SearchClass {
     $proc->setParameter('', 'orderBy', $orderBy);
     $xsl = new DomDocument();
 
-    $test=$xsl->load($path . '/ir/xsl/results.xsl');
+    $test = $xsl->load($path . '/ir/xsl/results.xsl');
     if (!isset($test)) {
       drupal_set_message(t('Error loading search results xslt!'));
       return t('Error loading search results XSLT.');
@@ -398,110 +464,127 @@ class SearchClass {
     }
   }
 
+  /**
+   * theme advanced search form ??
+   * @param type $form
+   * @param type $repeat
+   * @return type 
+   */
   function theme_advanced_search_form($form, $repeat=NULL) {
     if (!isset($repeat)) {
-      $repeat = variable_get('fedora_repository_advanced_block_repeat',  t('3'));
+      $repeat = variable_get('fedora_repository_advanced_block_repeat', t('3'));
     }
 
-    $output = drupal_render($form['search_type']['type1']) ;
-    $output .= drupal_render($form['fedora_terms1']) ;
-    $output .=  drupal_render($form['andor1'])  . drupal_render($form['search_type']['type2']) ;
+    $output = drupal_render($form['search_type']['type1']);
+    $output .= drupal_render($form['fedora_terms1']);
+    $output .= drupal_render($form['andor1']) . drupal_render($form['search_type']['type2']);
     $output .= drupal_render($form['fedora_terms2']);
-    if ($repeat>2 && $repeat < 9) {
-      for ($i=3;$i<$repeat+1;$i++) {
+    if ($repeat > 2 && $repeat < 9) {
+      for ($i = 3; $i < $repeat + 1; $i++) {
         $t = $i - 1;
-        $output .=  drupal_render($form["andor$t"])  . drupal_render($form['search_type']["type$i"]) ;
-        $output .= drupal_render($form["fedora_terms$i"]) ;
+        $output .= drupal_render($form["andor$t"]) . drupal_render($form['search_type']["type$i"]);
+        $output .= drupal_render($form["fedora_terms$i"]);
       }
     }
-    $output .=  drupal_render($form['submit']) ;
+    $output .= drupal_render($form['submit']);
     $output .= drupal_render($form);
     return $output;
   }
 
-  //build search form, custom blocks should set the number of repeats or it will use the default
+  /**
+   * build search form, custom blocks should set the number of repeats or it will use the default
+   * @param type $repeat
+   * @param type $pathToSearchTerms
+   * @param type $query
+   * @return string 
+   */
   function build_advanced_search_form($repeat = NULL, $pathToSearchTerms = NULL, $query = NULL) {
     $types = $this->get_search_terms_array($pathToSearchTerms);
-    $queryArray=NULL;
+    $queryArray = NULL;
     if (isset($query)) {
       $queryArray = explode('AND', $query);
     }
 
     $andOrArray = array(
-            'AND' => 'and',
-            //'OR' => 'or' //removed or for now as it would be a pain to parse
+      'AND' => 'and',
+        //'OR' => 'or' //removed or for now as it would be a pain to parse
     );
     $form = array();
 
     if (!isset($repeat)) {
-      $repeat = variable_get('fedora_repository_advanced_block_repeat',  t('3'));
+      $repeat = variable_get('fedora_repository_advanced_block_repeat', t('3'));
     }
     $var0 = explode(':', $queryArray[0]);
     $var1 = explode(':', $queryArray[1]);
     $form['search_type']['type1'] = array(
-            '#title' => t(''),
-            '#type' => 'select',
-            '#options' => $types,
-            '#default_value' => trim($var0[0])
+      '#title' => t(''),
+      '#type' => 'select',
+      '#options' => $types,
+      '#default_value' => trim($var0[0])
     );
     $form['fedora_terms1'] = array(
-            '#size' => '24',
-            '#type' => 'textfield',
-            '#title' => t(''),
-            '#required' => TRUE,
-            '#default_value' => (count($var0) >= 2 ? trim($var0[1]) : ''),
+      '#size' => '24',
+      '#type' => 'textfield',
+      '#title' => t(''),
+      '#required' => TRUE,
+      '#default_value' => (count($var0) >= 2 ? trim($var0[1]) : ''),
     );
     $form['andor1'] = array(
-            '#title' => t(''),
-            '#type' => 'select',
-            '#default_value' =>  'AND',
-            '#options' => $andOrArray
+      '#title' => t(''),
+      '#type' => 'select',
+      '#default_value' => 'AND',
+      '#options' => $andOrArray
     );
     $form['search_type']['type2'] = array(
-            '#title' => t(''),
-            '#type' => 'select',
-            '#options' => $types,
-            '#default_value' => (count($var1) >= 2 ? trim($var1[0]) : ''),
+      '#title' => t(''),
+      '#type' => 'select',
+      '#options' => $types,
+      '#default_value' => (count($var1) >= 2 ? trim($var1[0]) : ''),
     );
     $form['fedora_terms2'] = array(
-            '#size' => '24',
-            '#type' => 'textfield',
-            '#title' => t(''),
-            '#default_value' => (count($var1) >= 2 ? $var1[1] : ''),
+      '#size' => '24',
+      '#type' => 'textfield',
+      '#title' => t(''),
+      '#default_value' => (count($var1) >= 2 ? $var1[1] : ''),
     );
-    if ($repeat>2 && $repeat < 9) { //don't want less then 2 or more then 9
+    if ($repeat > 2 && $repeat < 9) { //don't want less then 2 or more then 9
       for ($i = 3; $i < $repeat + 1; $i++) {
         $t = $i - 1;
         $field_and_term = explode(':', $queryArray[$t]);
         $form["andor$t"] = array(
-                '#title' => t(''),
-                '#type' => 'select',
-                '#default_value' => 'AND',
-                '#options' => $andOrArray
+          '#title' => t(''),
+          '#type' => 'select',
+          '#default_value' => 'AND',
+          '#options' => $andOrArray
         );
         $form['search_type']["type$i"] = array(
-                '#title' => t(''),
-                '#type' => 'select',
-                '#options' => $types,
-                '#default_value' => trim($field_and_term[0])
+          '#title' => t(''),
+          '#type' => 'select',
+          '#options' => $types,
+          '#default_value' => trim($field_and_term[0])
         );
         $form["fedora_terms$i"] = array(
-                '#size' => '24',
-                '#type' => 'textfield',
-                '#title' => t(''),
-                '#default_value' => (count($field_and_term) >= 2 ? trim($field_and_term[1]) : ''),
+          '#size' => '24',
+          '#type' => 'textfield',
+          '#title' => t(''),
+          '#default_value' => (count($field_and_term) >= 2 ? trim($field_and_term[1]) : ''),
         );
       }
     }
 
     $form['submit'] = array(
-            '#type' => 'submit',
-            '#value' => t('search')
+      '#type' => 'submit',
+      '#value' => t('search')
     );
     return $form;
   }
 
-
+  /**
+   * get search terms array 
+   * @param type $path
+   * @param string $file
+   * @return type 
+   */
   function get_search_terms_array($path = NULL, $file = NULL) {
     if (!isset($path)) {
       $path = drupal_get_path('module', 'Fedora_Repository');
@@ -510,7 +593,7 @@ class SearchClass {
     if (!isset($file)) {
       $file = 'searchTerms.xml';
     }
-    $xmlDoc->load($path . '/'. $file);
+    $xmlDoc->load($path . '/' . $file);
     $nodeList = $xmlDoc->getElementsByTagName('term');
     $types = array();
     for ($i = 0; $i < $nodeList->length; $i++) {
@@ -522,4 +605,5 @@ class SearchClass {
     }
     return $types;
   }
+
 }

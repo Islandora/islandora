@@ -2,15 +2,21 @@
 
 // $Id$
 
+/**
+ * @file 
+ * Collection Policy Class
+ */
 module_load_include('inc', 'fedora_repository', 'XMLDatastream');
 
+/**
+ * Collection Policy class ??
+ */
 class CollectionPolicy extends XMLDatastream {
 
-  static $SCHEMA_URI = 'http://syn.lib.umanitoba.ca/collection_policy.xsd'; 
+  static $SCHEMA_URI = 'http://syn.lib.umanitoba.ca/collection_policy.xsd';
   static $DEFAULT_DSID = 'COLLECTION_POLICY';
+  private $staging_area = NULL;
 
-  private $staging_area=NULL;
-  
   /**
    * Gets the default DSID to use for ContentModel datastreams.
    *
@@ -33,31 +39,30 @@ class CollectionPolicy extends XMLDatastream {
   static function loadFromCollection($pid, $preFetch=TRUE) {
     $ret = FALSE;
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
-  
+
     try {
       if (self::validPid($pid)) {
-        $dsid=CollectionPolicy::getDefaultDSID();
+        $dsid = CollectionPolicy::getDefaultDSID();
 
         if ($preFetch) {
           $fedoraItem = new Fedora_Item($pid);
           $ds = $fedoraItem->get_datastream_dissemination($dsid);
-        } else {
-          $ds=null;
         }
+        else {
+          $ds = null;
+        }
+      }
 
-      }
-      
       if (!empty($ds) || !$preFetch) {
-        $ret=new CollectionPolicy($ds, $pid, $dsid);
+        $ret = new CollectionPolicy($ds, $pid, $dsid);
       }
-    } 
-    catch (SOAPException $e) {
-      
+    } catch (SOAPException $e) {
+
       $ret = FALSE;
     }
     return $ret;
   }
-  
+
   /**
    * Ingests a new Collection Policy datastream to the specified 
    * PID with the DSID specified.  The file should be a valid collection
@@ -68,24 +73,24 @@ class CollectionPolicy extends XMLDatastream {
    * @param string $cpDsid
    * @param string $file
    * @return CollectionPolicy $ret
-   */  
+   */
   public static function ingestFromFile($pid, $name, $cpDsid, $file) {
     $ret = FALSE;
-    
+
     if (($cp = self::loadFromCollection($pid, $cpDsid)) === FALSE && file_exists($file)) {
       $cp = new ContentModel(file_get_contents($file), $pid, $cpDsid);
       $rootEl = $cp->xml->getElementsByTagName('collection_policy')->item(0);
       $rootEl->setAttribute('name', $name);
-      
+
       module_load_include('inc', 'fedora_repository', 'api/fedora_item');
       $fedoraItem = new Fedora_Item($pid);
       $fedoraItem->add_datastream_from_string($cp->dumpXml(), $cpDsid, $name, 'text/xml', 'X');
       $ret = $cp;
     }
-    
+
     return $ret;
   }
-  
+
   /**
    * Ingests a new Collection Policy datastream to the specified 
    * PID with the DSID specified.  Clones the collection policy from the 
@@ -96,26 +101,26 @@ class CollectionPolicy extends XMLDatastream {
    * @param string $cpDsid
    * @param string $copy_collection_pid
    * @return CollectionPolicy $ret
-   */   
+   */
   public static function ingestFromCollection($pid, $name, $cpDsid, $copy_collection_pid) {
     $ret = FALSE;
-    
+
     if (($cp = self::loadFromCollection($pid, $cpDsid)) === FALSE && ($copy_cp = self::loadFromCollection($copy_collection_pid)) !== FALSE && $copy_cp->validate()) {
       $newDom = $copy_cp->xml;
       $rootEl = $newDom->getElementsByTagName('collection_policy')->item(0);
       $rootEl->setAttribute('name', $name);
-      
+
       $cp = new CollectionPolicy($newDom, $pid, $cpDsid);
-      
+
       module_load_include('inc', 'fedora_repository', 'api/fedora_item');
       $fedoraItem = new Fedora_Item($pid);
       $fedoraItem->add_datastream_from_string($cp->dumpXml(), $cpDsid, $name, 'text/xml', 'X');
       $ret = $cp;
     }
-    
+
     return $ret;
-  }  
-  
+  }
+
   /**
    * Ingests a new minimum  Collection Policy datastream to the specified 
    * PID with the DSID specified.  Initializes the policy with the specified values.
@@ -130,10 +135,10 @@ class CollectionPolicy extends XMLDatastream {
    * @param string $searchField
    * @param string $searchValue
    * @return CollectionPolicy $ret
-   */   
+   */
   public static function ingestBlankPolicy($pid, $name, $policyDsid, $model_pid, $model_namespace, $relationship, $searchField, $searchValue) {
-    $ret = FALSE; 
-    if (($cp = self::loadFromCollection($pid )) === FALSE) {   //removed second, non-existant variable
+    $ret = FALSE;
+    if (($cp = self::loadFromCollection($pid)) === FALSE) {   //removed second, non-existant variable
       module_load_include('inc', 'fedora_repository', 'ContentModel');
       if (($cm = ContentModel::loadFromModel($model_pid)) !== FALSE && $cm->validate()) {
         $newDom = new DOMDocument('1.0', 'utf-8');
@@ -142,45 +147,43 @@ class CollectionPolicy extends XMLDatastream {
         $rootEl->setAttribute('name', $name);
         $rootEl->setAttribute('xmlns', self::$XMLNS);
         $rootEl->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
-        $rootEl->setAttribute('xsi:schemaLocation', self::$XMLNS .' '. self::$SCHEMA_URI);
-        
+        $rootEl->setAttribute('xsi:schemaLocation', self::$XMLNS . ' ' . self::$SCHEMA_URI);
+
         $modelsEl = $newDom->createElement('content_models');
-        
+
         $cmEl = $newDom->createElement('content_model');
         $cmEl->setAttribute('name', $cm->getName());
         $cmEl->setAttribute('dsid', $cm->dsid);
         $cmEl->setAttribute('namespace', $model_namespace);
         $cmEl->setAttribute('pid', $cm->pid);
-        
-        $modelsEl->appendChild($cmEl); 
+
+        $modelsEl->appendChild($cmEl);
         $rootEl->appendChild($modelsEl);
-        
+
         $relEl = $newDom->createElement('relationship', $relationship);
         $rootEl->appendChild($relEl);
-        
+
         $searchTermsEl = $newDom->createElement('search_terms');
         $newTermEl = $newDom->createElement('term', $searchValue);
         $newTermEl->setAttribute('field', $searchField);
         $searchTermsEl->appendChild($newTermEl);
         $rootEl->appendChild($searchTermsEl);
-        
+
         $newDom->appendChild($rootEl);
-        
+
         $cp = new CollectionPolicy($newDom, $pid, $policyDsid);
-        
+
         module_load_include('inc', 'fedora_repository', 'api/fedora_item');
-        
-        
+
+
         $fedoraItem = new Fedora_Item($pid);
         $fedoraItem->add_datastream_from_string($cp->dumpXml(), $policyDsid, $name, 'text/xml', 'X');
         $ret = $cp;
       }
-      
     }
-    
+
     return $ret;
-  }  
-  
+  }
 
   /**
    * Constructor
@@ -192,10 +195,10 @@ class CollectionPolicy extends XMLDatastream {
    * @return XMLDatastream $cm
    */
   public function __construct($xmlStr, $pid = NULL, $dsid = NULL) {
-      parent::__construct($xmlStr,$pid,$dsid);
-      $this->name= 'Collection Policy';
+    parent::__construct($xmlStr, $pid, $dsid);
+    $this->name = 'Collection Policy';
   }
-  
+
   /**
    * Attempts to convert from the old XML schema to the new by 
    * traversing the XML DOM and building a new DOM.  When done
@@ -205,17 +208,17 @@ class CollectionPolicy extends XMLDatastream {
    */
   protected function convertFromOldSchema() {
     if ($this->xml == NULL) {
-      $this->fetchXml(); 
+      $this->fetchXml();
     }
     $sXml = simplexml_load_string($this->xml->saveXML());
     $newDom = new DOMDocument('1.0', 'utf-8');
     $newDom->formatOutput = TRUE;
-    
+
     $rootEl = $newDom->createElement('collection_policy');
     $rootEl->setAttribute('name', $sXml['name']);
     $rootEl->setAttribute('xmlns', self::$XMLNS);
     $rootEl->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
-    $rootEl->setAttribute('xsi:schemaLocation', self::$XMLNS .' '. self::$SCHEMA_URI);
+    $rootEl->setAttribute('xsi:schemaLocation', self::$XMLNS . ' ' . self::$SCHEMA_URI);
 
     $content_modelsEl = $newDom->createElement('content_models');
     foreach ($sXml->contentmodels->contentmodel as $contentmodel) {
@@ -227,13 +230,13 @@ class CollectionPolicy extends XMLDatastream {
       $content_modelsEl->appendChild($content_modelEl);
     }
     $rootEl->appendChild($content_modelsEl);
-    
+
     $search_termsEl = $newDom->createElement('search_terms');
     foreach ($sXml->search_terms->term as $term) {
       $termEl = $newDom->createElement('term', $term->value);
       $termEl->setAttribute('field', $term->field);
       if (strval($sXml->search_terms->default) == $term->field) {
-  $termEl->setAttribute('default', 'true');
+        $termEl->setAttribute('default', 'true');
       }
       $search_termsEl->appendChild($termEl);
     }
@@ -241,12 +244,11 @@ class CollectionPolicy extends XMLDatastream {
 
     $relationshipEl = $newDom->createElement('relationship', $sXml->relationship);
     $rootEl->appendChild($relationshipEl);
-    
+
     $newDom->appendChild($rootEl);
 
     $this->xml = DOMDocument::loadXML($newDom->saveXml());
   }
-
 
   /**
    * Gets the name of the relationship to use 
@@ -256,14 +258,14 @@ class CollectionPolicy extends XMLDatastream {
    * @return string $relationship
    */
   public function getRelationship() {
-    $ret=FALSE;
+    $ret = FALSE;
     if ($this->validate()) {
-      $ret=trim($this->xml->getElementsByTagName('relationship')->item(0)->nodeValue);
+      $ret = trim($this->xml->getElementsByTagName('relationship')->item(0)->nodeValue);
     }
     return $ret;
   }
-  
-   /**
+
+  /**
    * Sets the name of the relationship to use 
    * for members of this collection. 
    * Returns FALSE on failure.
@@ -272,16 +274,16 @@ class CollectionPolicy extends XMLDatastream {
    * @return boolean $ret
    */
   public function setRelationship($relationship) {
-    $ret=FALSE;
+    $ret = FALSE;
     if ($this->validate()) {
-      $relationshipEl=$this->xml->getElementsByTagName('relationship')->item(0);
-      $relationshipEl->nodeValue=trim($relationship);
+      $relationshipEl = $this->xml->getElementsByTagName('relationship')->item(0);
+      $relationshipEl->nodeValue = trim($relationship);
       $ret = TRUE;
     }
-    return $ret;    
+    return $ret;
   }
-  
-    /**
+
+  /**
    * Gets the path to the staging area to use for this 
    * collection. By default recurses to the parent collection
    * if the staging area is undefined
@@ -290,17 +292,18 @@ class CollectionPolicy extends XMLDatastream {
    * @return string $path
    */
   public function getStagingArea($recurse=TRUE) {
-    $ret=FALSE;
+    $ret = FALSE;
     if ($this->validate()) {
       if ($this->staging_area === NULL) {
-        $stagingEl=$this->xml->getElementsByTagName('staging_area');
-  
+        $stagingEl = $this->xml->getElementsByTagName('staging_area');
+
         if ($stagingEl->length > 0) {
           $this->staging_area = trim($stagingEl->item(0)->nodeValue);
-        } elseif ($recurse) {
+        }
+        elseif ($recurse) {
           module_load_include('inc', 'fedora_repository', 'api/fedora_item');
-          $item=new Fedora_Item($this->pid);
-          $rels=$item->get_relationships();
+          $item = new Fedora_Item($this->pid);
+          $rels = $item->get_relationships();
           if (count($rels) > 0) {
             foreach ($rels as $rel) {
               $cp = CollectionPolicy::loadFromCollection($rel['object']);
@@ -310,16 +313,15 @@ class CollectionPolicy extends XMLDatastream {
               }
             }
           }
-        } 
+        }
       }
-      
+
       $ret = $this->staging_area;
-      
     }
     return $ret;
   }
-  
-    /**
+
+  /**
    * Sets the path to the staging area to use for this 
    * collection. If specified path is blank (or false) it will
    * remove the staging are path element from the collection policy.
@@ -329,83 +331,76 @@ class CollectionPolicy extends XMLDatastream {
    * @return string $relationship
    */
   public function setStagingArea($path) {
-    $ret=FALSE;
+    $ret = FALSE;
     if ($this->validate()) {
-     $rootEl=$this->xml->getElementsByTagName('collection_policy')->item(0);
-      $stagingEl=$this->xml->getElementsByTagName('staging_area');
+      $rootEl = $this->xml->getElementsByTagName('collection_policy')->item(0);
+      $stagingEl = $this->xml->getElementsByTagName('staging_area');
       if ($stagingEl->length > 0) {
-  $stagingEl=$stagingEl->item(0);
-  if (trim($path) == '') {
-    $rootEl->removeChild($stagingEl);
-  } 
+        $stagingEl = $stagingEl->item(0);
+        if (trim($path) == '') {
+          $rootEl->removeChild($stagingEl);
+        }
         else {
-    $stagingEl->nodeValue=trim($path);
-  }
-      } 
+          $stagingEl->nodeValue = trim($path);
+        }
+      }
       elseif (trim($path) != '') {
-   $stagingEl=$this->xml->createElement('staging_area', trim($path));
-   $rootEl->appendChild($stagingEl);
+        $stagingEl = $this->xml->createElement('staging_area', trim($path));
+        $rootEl->appendChild($stagingEl);
       }
 
       $ret = TRUE;
     }
-    return $ret;    
-  }  
-  
-  
+    return $ret;
+  }
+
   /**
-  * Gets the next available PID for the 
-  * content model specified by the DSID 
-  * parameter.
-  *
-  * @param string $dsid
-  * @return string $nextPid
-  */
+   * Gets the next available PID for the 
+   * content model specified by the DSID 
+   * parameter.
+   *
+   * @param string $dsid
+   * @return string $nextPid
+   */
   public function getNextPid($dsid) {
     $ret = FALSE;
     if (self::validDsid($dsid) && $this->validate()) {
       $content_models = $this->xml->getElementsByTagName('content_models')->item(0)->getElementsByTagName('content_model');
       $namespace = FALSE;
-      for ($i=0; $namespace === FALSE && $i<$content_models->length;$i++) {
+      for ($i = 0; $namespace === FALSE && $i < $content_models->length; $i++) {
         if (strtolower($content_models->item($i)->getAttribute('dsid')) == strtolower($dsid)) {
           $namespace = $content_models->item($i)->getAttribute('namespace');
         }
       }
 
       $pname = substr($namespace, 0, strpos($namespace, ":"));
-     
+
       module_load_include('inc', 'fedora_repository', 'api/fedora_item');
       $ret = Fedora_Item::get_next_pid_in_namespace($pname);
     }
     return $ret;
   }
-  
+
   /**
-  * Gets a list of ContentModel objects supported by this collection.
-  *
-  * @return ContentModel[] $models 
-  */
+   * Gets a list of ContentModel objects supported by this collection.
+   *
+   * @return ContentModel[] $models 
+   */
   function getContentModels() {
-    $ret=FALSE;
+    $ret = FALSE;
     if ($this->validate()) {
       module_load_include('inc', 'Fedora_Repository', 'ContentModel');
-      $ret=array();
+      $ret = array();
       $content_models = $this->xml->getElementsByTagName('content_models')->item(0)->getElementsByTagName('content_model');
-      for ($i=0;$i<$content_models->length;$i++) {
-             $cm=ContentModel::loadFromModel($content_models->item($i)->getAttribute('pid'),
-             $content_models->item($i)->getAttribute('dsid'),
-             $content_models->item($i)->getAttribute('namespace'),
-             $content_models->item($i)->getAttribute('name'));
-            if ($cm !== FALSE) {
-              $ret[]=$cm;
-            }
-
+      for ($i = 0; $i < $content_models->length; $i++) {
+        $cm = ContentModel::loadFromModel($content_models->item($i)->getAttribute('pid'), $content_models->item($i)->getAttribute('dsid'), $content_models->item($i)->getAttribute('namespace'), $content_models->item($i)->getAttribute('name'));
+        if ($cm !== FALSE) {
+          $ret[] = $cm;
+        }
       }
     }
     return $ret;
   }
-
-
 
   /**
    * Gets a list of search terms from the Collection Policy.  If asArray is set
@@ -421,51 +416,50 @@ class CollectionPolicy extends XMLDatastream {
    */
   function getSearchTerms($asArray = FALSE, $recurse = FALSE, $cache = FALSE) {
     $ret = FALSE;
-    
-    if ($cache == TRUE && ($cache = cache_get('collection_policy_search_terms-'.$this->pid)) !== 0 ) {
-      $ret=$cache->data; 
-    } else {
-      
+
+    if ($cache == TRUE && ($cache = cache_get('collection_policy_search_terms-' . $this->pid)) !== 0) {
+      $ret = $cache->data;
+    }
+    else {
+
       if ($this->xml == NULL) {
-	  $fedoraItem = new Fedora_Item($this->pid);
-	  $ds = $fedoraItem->get_datastream_dissemination($this->dsid); 
-	  $this->xml = DOMDocument::loadXML($ds);  
+        $fedoraItem = new Fedora_Item($this->pid);
+        $ds = $fedoraItem->get_datastream_dissemination($this->dsid);
+        $this->xml = DOMDocument::loadXML($ds);
       }
-      
+
 
       if ($this->validate()) {
-	$ret=array();
-	$terms= $this->xml->getElementsByTagName('search_terms')->item(0)->getElementsByTagName('term');
-	for ($i=0;$i<$terms->length;$i++) {
-	  $default = $terms->item($i)->attributes->getNamedItem('default');
-	  $default = ($default !== NULL) ? (strtolower($default->nodeValue) == 'true') : FALSE;
-	  $ret[] = ($asArray)?array( 'value' => $terms->item($i)->nodeValue, 
-	    'field' => $terms->item($i)->getAttribute('field'),
-	    'default' => $default): $terms->item($i)->nodeValue;
-	}
-	
-	
-	if ($recurse && count($ret) == 0) {
-	  module_load_include('inc', 'fedora_repository', 'api/fedora_item');
-	  $item=new Fedora_Item($this->pid);
-	  $rels=$item->get_relationships();
-	  if (count($rels) > 0) {
-	    foreach ($rels as $rel) {
-	      $cp = CollectionPolicy::loadFromCollection($rel['object']);
-	      if ($cp !== FALSE) {
-		$ret = $cp->getSearchTerms($asArray, $recurse);
-		break;
-	      }
-	    }
-	  }
-	}
-	cache_set('collection_policy_search_terms-'.$this->pid, $ret, 'cache', time()+3600);
-	
+        $ret = array();
+        $terms = $this->xml->getElementsByTagName('search_terms')->item(0)->getElementsByTagName('term');
+        for ($i = 0; $i < $terms->length; $i++) {
+          $default = $terms->item($i)->attributes->getNamedItem('default');
+          $default = ($default !== NULL) ? (strtolower($default->nodeValue) == 'true') : FALSE;
+          $ret[] = ($asArray) ? array('value' => $terms->item($i)->nodeValue,
+            'field' => $terms->item($i)->getAttribute('field'),
+            'default' => $default) : $terms->item($i)->nodeValue;
+        }
+
+
+        if ($recurse && count($ret) == 0) {
+          module_load_include('inc', 'fedora_repository', 'api/fedora_item');
+          $item = new Fedora_Item($this->pid);
+          $rels = $item->get_relationships();
+          if (count($rels) > 0) {
+            foreach ($rels as $rel) {
+              $cp = CollectionPolicy::loadFromCollection($rel['object']);
+              if ($cp !== FALSE) {
+                $ret = $cp->getSearchTerms($asArray, $recurse);
+                break;
+              }
+            }
+          }
+        }
+        cache_set('collection_policy_search_terms-' . $this->pid, $ret, 'cache', time() + 3600);
       }
     }
     return $ret;
   }
-
 
   /**
    * Adds a search term to the collection policy.  
@@ -476,17 +470,17 @@ class CollectionPolicy extends XMLDatastream {
    * @return boolean $success
    */
   function addTerm($field, $value) {
-    $ret=FALSE;
+    $ret = FALSE;
     if ($this->validate()) {
       $search_termsEl = $this->xml->getElementsByTagName('search_terms')->item(0);
-      $terms= $search_termsEl->getElementsByTagName('term');
-      $found=FALSE;
-      for ($i=0;!$found && $i<$terms->length;$i++) {
+      $terms = $search_termsEl->getElementsByTagName('term');
+      $found = FALSE;
+      for ($i = 0; !$found && $i < $terms->length; $i++) {
         if ($terms->item($i)->getAttribute('field') == $field) {
-          $found = TRUE; 
+          $found = TRUE;
         }
       }
-      
+
       if (!$found) {
         $newTermEl = $this->xml->createElement('term', $value);
         $newTermEl->setAttribute('field', $field);
@@ -502,19 +496,19 @@ class CollectionPolicy extends XMLDatastream {
    *
    * @param string $field
    * @return boolean $success
-   */  
+   */
   function removeTerm($field) {
-    $ret=FALSE;
+    $ret = FALSE;
     if ($this->validate()) {
       $search_termsEl = $this->xml->getElementsByTagName('search_terms')->item(0);
       $terms = $search_termsEl->getElementsByTagName('term');
       $found = FALSE;
-      for ($i=0; !$found && $i < $terms->length; $i++) {
+      for ($i = 0; !$found && $i < $terms->length; $i++) {
         if ($terms->item($i)->getAttribute('field') == $field) {
-          $found = $terms->item($i); 
+          $found = $terms->item($i);
         }
       }
-      
+
       if ($found !== FALSE) {
         $search_termsEl->removeChild($found);
         $ret = TRUE;
@@ -523,21 +517,25 @@ class CollectionPolicy extends XMLDatastream {
     return $ret;
   }
 
- 
- function setDefaultTerm($field) {
+  /**
+   * setDefaultTerm ??
+   * @param type $field
+   * @return boolean 
+   */
+  function setDefaultTerm($field) {
     $ret = FALSE;
     if ($this->validate()) {
       $search_termsEl = $this->xml->getElementsByTagName('search_terms')->item(0);
-      $terms= $search_termsEl->getElementsByTagName('term');
-      $found=FALSE;
-      for ($i=0;!$found && $i<$terms->length;$i++) {
+      $terms = $search_termsEl->getElementsByTagName('term');
+      $found = FALSE;
+      for ($i = 0; !$found && $i < $terms->length; $i++) {
         if ($terms->item($i)->getAttribute('field') == $field) {
-          $found = $terms->item($i); 
+          $found = $terms->item($i);
         }
       }
-      
+
       if ($found !== FALSE) {
-        for ($i=0;$i<$terms->length;$i++)
+        for ($i = 0; $i < $terms->length; $i++)
           if ($terms->item($i)->attributes->getNamedItem('default') !== NULL) {
             $terms->item($i)->removeAttribute('default');
           }
@@ -547,8 +545,7 @@ class CollectionPolicy extends XMLDatastream {
     }
     return $ret;
   }
-  
-  
+
   /**
    * Removes the specified content model from the collection policy.  This will only 
    * prevent future ingests of the removed model to the collection.  $cm should be 
@@ -559,17 +556,17 @@ class CollectionPolicy extends XMLDatastream {
    * @return boolean $valid
    */
   function removeModel($cm) {
-    $ret=FALSE;
+    $ret = FALSE;
     if ($this->validate() && $cm->validate()) {
       $contentmodelsEl = $this->xml->getElementsByTagName('content_models');
       $models = $contentmodelsEl->item(0)->getElementsByTagName('content_model');
       $found = FALSE;
-      for ($i=0; $found === FALSE && $i < $models->length; $i++) {
+      for ($i = 0; $found === FALSE && $i < $models->length; $i++) {
         if ($models->item($i)->getAttribute('pid') == $cm->pid) {
-          $found=$models->item($i);
+          $found = $models->item($i);
         }
-      }      
-      
+      }
+
       if ($found !== FALSE && $models->length > 1) {
         $contentmodelsEl->item(0)->removeChild($found);
         $ret = TRUE;
@@ -577,21 +574,24 @@ class CollectionPolicy extends XMLDatastream {
     }
     return $ret;
   }
-  
 
-  
-  
+  /**
+   * addModel ??
+   * @param type $cm
+   * @param type $namespace
+   * @return type 
+   */
   function addModel($cm, $namespace) {
     $ret = FALSE;
     if (self::validPid($namespace) && $this->validate() && $cm->validate()) {
       $contentmodelsEl = $this->xml->getElementsByTagName('content_models');
       $models = $contentmodelsEl->item(0)->getElementsByTagName('content_model');
       $found = FALSE;
-      for ($i=0;!$found && $i<$models->length;$i++) {
+      for ($i = 0; !$found && $i < $models->length; $i++) {
         if ($models->item($i)->getAttribute('pid') == $cm->pid)
           $found = TRUE;
       }
-      
+
       if (!$found) {
         $cmEl = $this->xml->createElement('content_model');
         $cmEl->setAttribute('name', $cm->getName());
@@ -600,16 +600,20 @@ class CollectionPolicy extends XMLDatastream {
         $cmEl->setAttribute('pid', $cm->pid);
         $contentmodelsEl->item(0)->appendChild($cmEl);
       }
-      
+
       $ret = !$found;
     }
     return $ret;
   }
-  
+
+  /**
+   * getName ??
+   * @return type 
+   */
   function getName() {
-    $ret=FALSE;
+    $ret = FALSE;
     if ($this->validate()) {
-      $ret=$this->xml->getElementsByTagName('collection_policy')->item(0)->getAttribute('name');
+      $ret = $this->xml->getElementsByTagName('collection_policy')->item(0)->getAttribute('name');
     }
     return $ret;
   }

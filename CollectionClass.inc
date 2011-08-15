@@ -2,15 +2,18 @@
 
 // $Id$
 
-/*
- * Created on 18-Feb-08
- *
- * To change the template for this generated file go to
- * Window - Preferences - PHPeclipse - PHP - Code Templates
+/**
+ * @file
+ * 
+ * Collection Class Class
  */
-// module_load_include('nc', 'CollectionClass', '');
-// This CLASS caches the streams so once you call a getstream once it will always return the same stream as long as you are using the
-// instance of this class.  Cached to prevent mutiple hits to fedora.  maybe a bit confusing though if this class is used in a different context.
+
+/**
+ * This CLASS caches the streams so once you call a getstream once it will always return
+ * the same stream as long as you are using the instance of this class. Cached to
+ * prevent mutiple hits to fedora.  maybe a bit confusing though if this class is used in 
+ * a different context.
+ */
 class CollectionClass {
 
   public static $COLLECTION_CLASS_COLLECTION_POLICY_STREAM = 'COLLECTION_POLICY';
@@ -34,10 +37,10 @@ class CollectionClass {
     }
   }
 
-  /* gets objects related to this object.  must include offset and limit
+  /**
+   * gets objects related to this object.  must include offset and limit
    * calls getRelatedItems but enforces limit and offset
    */
-
   function getRelatedObjects($pid, $limit, $offset, $itqlquery=NULL) {
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');
     $objectHelper = new ObjectHelper();
@@ -96,6 +99,11 @@ class CollectionClass {
     return $content;
   }
 
+  /**
+   * getCollectionPolicyStream ??
+   * @param type $collection_pid
+   * @return type 
+   */
   function getCollectionPolicyStream($collection_pid) {
     if ($this->collectionPolicyStream != NULL) {
       return $this->collectionPolicyStream;
@@ -104,6 +112,11 @@ class CollectionClass {
     return $this->collectionPolicyStream;
   }
 
+  /**
+   * getRelationshipElement
+   * @param type $collection_pid
+   * @return type 
+   */
   function getRelationshipElement($collection_pid) {
     $stream = $this->getCollectionPolicyStream($collection_pid);
     try {
@@ -116,17 +129,35 @@ class CollectionClass {
     return $relationship;
   }
 
+  /**
+   * getCollectionViewStream ??
+   * @param type $collection_pid
+   * @return type 
+   */
   function getCollectionViewStream($collection_pid) {
     $this->collectionViewStream = $this->getStream($collection_pid, CollectionClass :: $COLLECTION_CLASS_COLLECTION_VIEW_STREAM, 0);
     return $this->collectionViewStream;
   }
 
+  /**
+   * getStream ??
+   * @param type $pid
+   * @param type $dsid
+   * @param type $showError
+   * @return type 
+   */
   function getStream($pid, $dsid, $showError = 1) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
     $item = new fedora_item($pid);
     return isset($item->datastreams[$dsid]) ? $item->get_datastream_dissemination($dsid) : NULL;
   }
 
+  /**
+   * getPidNameSpace ??
+   * @param type $pid
+   * @param type $dsid
+   * @return type 
+   */
   function getPidNameSpace($pid, $dsid) {
     $stream = $this->getCollectionPolicyStream($pid);
     try {
@@ -218,6 +249,12 @@ class CollectionClass {
     return NULL;
   }
 
+  /**
+   * getAllowedMimeType ??
+   * @param type $contentModelPid
+   * @param type $contentModel_dsid
+   * @return type 
+   */
   function getAllowedMimeTypes($contentModelPid, $contentModel_dsid) {
     $stream = $this->getContentModelStream($contentModelPid, $contentModel_dsid);
     try {
@@ -357,8 +394,13 @@ class CollectionClass {
     return $thisClass->$phpMethod($form, $ingest_form, $form_state['values'], $form_state);
   }
 
-  //this will also create a personal collection for an existing user if they don't have one
-  //not using this function currently
+  /**
+   * This will also create a personal collection for an existing user if they don't have one
+   * not using this function currently.
+   *
+   * @param type $user
+   * @return type 
+   */
   function createUserCollection(& $user) {
     if (isset($user->fedora_personal_pid)) {
       return;
@@ -414,6 +456,13 @@ class CollectionClass {
     return $xslContent;
   }
 
+  /**
+   * showFieldSets ??
+   * @global type $base_url
+   * @global type $user
+   * @param type $page_number
+   * @return string 
+   */
   function showFieldSets($page_number) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
     global $base_url;
@@ -451,6 +500,11 @@ class CollectionClass {
     return $tabset;
   }
 
+  /**
+   * getIngestInterface ??
+   * @global type $base_url
+   * @return string 
+   */
   function getIngestInterface() {
     global $base_url;
     $objectHelper = new ObjectHelper();
@@ -474,6 +528,16 @@ class CollectionClass {
     return $ingestObject;
   }
 
+  /**
+   * renderCOllection ??
+   * @global type $base_url
+   * @param type $content
+   * @param type $pid
+   * @param type $dsId
+   * @param type $collection
+   * @param int $pageNumber
+   * @return type 
+   */
   function renderCollection($content, $pid, $dsId, $collection, $pageNumber = NULL) {
     $path = drupal_get_path('module', 'fedora_repository');
     global $base_url;

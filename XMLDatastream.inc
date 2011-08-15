@@ -2,6 +2,14 @@
 
 // $Id$
 
+/**
+ * @file 
+ * XMLDatastream Abstract Class
+ */
+
+/**
+ * XMLDatastream class ??
+ */
 abstract class XMLDatastream {
 
   static $XMLNS = 'http://www.islandora.ca';
@@ -95,14 +103,14 @@ abstract class XMLDatastream {
 
     $this->pid = $pid;
     $this->dsid = $dsid;
-    if ($xmlStr !== NULL) { 
-      if(is_object($xmlStr) && get_class($xmlStr) == DOMDocument) {
+    if ($xmlStr !== NULL) {
+      if (is_object($xmlStr) && get_class($xmlStr) == DOMDocument) {
         $this->xml = $xmlStr;
       }
       else {
         $this->xml = new DOMDocument();
         $this->xml->loadXML($xmlStr);
-      } 
+      }
     }
   }
 
@@ -180,7 +188,8 @@ abstract class XMLDatastream {
         // a subclass.
         $vars = get_class_vars(get_class($this));
         $schemaLocation = $vars['SCHEMA_URI'];
-      } elseif ($rootEl->attributes->getNamedItem('schemaLocation') !== NULL) {
+      }
+      elseif ($rootEl->attributes->getNamedItem('schemaLocation') !== NULL) {
         //figure out where the schema is located and validate.
         list(, $schemaLocation) = preg_split('/\s+/', $rootEl->attributes->getNamedItem('schemaLocation')->nodeValue);
       }
@@ -193,10 +202,12 @@ abstract class XMLDatastream {
           foreach ($errors as $err) {
             self::$errors[] = 'XML Error: Line ' . $err->line . ': ' . $err->message;
           }
-        } else {
+        }
+        else {
           $this->name = $rootEl->attributes->getNamedItem('name')->nodeValue;
         }
-      } else {
+      }
+      else {
         $ret = FALSE;
         self::$errors[] = 'Unable to load schema.';
       }
