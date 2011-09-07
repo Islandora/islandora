@@ -128,7 +128,7 @@ class ImageManipulation {
     else {
       ObjectHelper::warnIfMisconfigured('ImageMagick');
     }
-    exec("convert {$file}[0] -thumbnail x2000 -thumbnail x450  -resize '450x<' -resize 50% -fuzz 1% -trim +repage -gravity center -crop 200x200+0+0 +repage -format jpg -quality 100  $file-tn.jpg", $output, $returnValue);
+    exec("convert \"{$file}\"[0] -thumbnail x2000 -thumbnail x450  -resize '450x<' -resize 50% -fuzz 1% -trim +repage -gravity center -crop 200x200+0+0 +repage -format jpg -quality 100  $file-tn.jpg", $output, $returnValue);
     if ($returnValue == '0') {
       $_SESSION['fedora_ingest_files']["TN"] = $file . '-tn.jpg';
     }
