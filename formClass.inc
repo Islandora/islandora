@@ -17,10 +17,9 @@ class formClass {
     drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
   }
 
-  /*
+  /**
    * create the paths for urls and map them to php functions
    */
-
   function createMenu() {
     $items = array();
 
@@ -166,7 +165,6 @@ class formClass {
       'access arguments' => array('edit tags datastream'),
       'type' => MENU_CALLBACK,
     );
-
 
     /* Export functionality */
     $items['fedora/basket'] = array(
@@ -453,7 +451,10 @@ class formClass {
   /**
    * queries the collection object for a childsecurity datastream and if found parses it
    * to determine if this user is allowed to ingest in this collection
-   */ we assume if they are able to modify objects in the collection they can ingest as well.
+   * we assume if they are able to modify objects in the collection they can ingest as well.
+   * @param type $collection_pid
+   * @return type 
+   */
   function can_ingest_here($collection_pid) {
     module_load_include('inc', 'fedora_repository', 'SecurityClass');
     $securityClass = new SecurityClass();
@@ -462,7 +463,6 @@ class formClass {
 
   /**
    * Drupal's permissions at this point no xacml yet. xacml decisions are made by fedora
-   *
    * @param type $collection_pid
    * @return type 
    */
