@@ -3,6 +3,6 @@ name = Digital Repository
 dependencies[] = imageapi
 dependencies[] = tabs
 description = Shows a list of items in a fedora collection.
-package = Fedora Repository
+package = Islandora
 version = 6.x-$Format:%h$-dev
 core = 6.x

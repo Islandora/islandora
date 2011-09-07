@@ -24,8 +24,8 @@ class formClass {
     $items = array();
 
     $items['admin/settings/fedora_repository'] = array(
-      'title' => t('Fedora collection list'),
-      'description' => t('Enter the Fedora Collection information here'),
+      'title' => t('Configure Islandora'),
+      'description' => t('Enter the Islandora Collection information here'),
       'page callback' => 'drupal_get_form',
       'page arguments' => array('fedora_repository_admin'),
       'access arguments' => array('administer site configuration'),
@@ -33,7 +33,7 @@ class formClass {
     );
     $items['admin/settings/fedora_repository/collection'] = array(
       'title' => t('Collection list'),
-      'description' => t('Enter the Fedora collection information here.'),
+      'description' => t('Enter the Islandora collection information here.'),
       'access arguments' => array('administer site configuration'),
       'type' => MENU_DEFAULT_LOCAL_TASK,
       'weight' => 0,
@@ -49,7 +49,7 @@ class formClass {
     );
 
     $items['islandoracm.xsd'] = array(
-      'title' => t('Islandoracm XML Schema Definition'),
+      'title' => t('Islandora Content Model XML Schema Definition'),
       'page callback' => 'fedora_repository_display_schema',
       'page arguments' => array('islandoracm.xsd'),
       'type' => MENU_CALLBACK,
@@ -57,7 +57,7 @@ class formClass {
     );
 
     $items['collection_policy.xsd'] = array(
-      'title' => t('Islandoracm XML Schema Definition'),
+      'title' => t('Islandora Content Model XML Schema Definition'),
       'page callback' => 'fedora_repository_display_schema',
       'page arguments' => array('collection_policy.xsd'),
       'type' => MENU_CALLBACK,
@@ -113,9 +113,7 @@ class formClass {
     $items['fedora/repository/replaceStream'] = array(
       'title' => t('Replace Stream'),
       'page callback' => 'fedora_repository_replace_stream',
-//       'callback arguments' => array(3, 4),
       'type' => MENU_CALLBACK,
-//       'access callback' => 'fedora_repository_user_access',
       'access arguments' => array('add fedora datastreams'),
     );
     $items['fedora/repository/purgeObject'] = array(
