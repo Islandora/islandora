@@ -11,6 +11,7 @@
  * Show Demo Streams in Field Sets ???
  */
 class ShowDemoStreamsInFieldSets {
+
   private $pid = NULL;
   
   /**
@@ -18,7 +19,7 @@ class ShowDemoStreamsInFieldSets {
    * @param type $pid 
    */
   function ShowDemoStreamsInFieldSets($pid) {
-  //drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+    //drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
     $this->pid = $pid;
   }
 
@@ -30,10 +31,11 @@ class ShowDemoStreamsInFieldSets {
   function showMediumSize() {
     global $base_url;
     $collection_fieldset = array(
-        '#collapsible' => FALSE,
-        '#value' => '<a href="'. $base_url . '/fedora/repository/'. $this->pid . '/MEDIUM_SIZE/"><img src="'.
-          $base_url . '/fedora/repository/'. $this->pid . '/MEDIUM_SIZE/MEDIUM_SIZE'. '" /></a>',
+      '#collapsible' => FALSE,
+      '#value' => '<a href="' . $base_url . '/fedora/repository/' . $this->pid . '/MEDIUM_SIZE/"><img src="' .
+      $base_url . '/fedora/repository/' . $this->pid . '/MEDIUM_SIZE/MEDIUM_SIZE' . '" /></a>',
     );
     return theme('fieldset', $collection_fieldset);
   }
+
 }

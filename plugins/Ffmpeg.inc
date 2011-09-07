@@ -30,7 +30,7 @@ class Ffmpeg {
    * @return type 
    */
   function extract_thumbnail($parameterArray, $dsid, $file, $file_ext) {
-    $defaults = array('ss' => '00:00:10', 's' => null);
+    $defaults = array('ss' => '00:00:10', 's' => NULL);
     $params = array_merge($defaults, $parameterArray);
     $system = getenv('System');
     $file_suffix = '_' . $dsid . '.' . $file_ext;
@@ -38,13 +38,13 @@ class Ffmpeg {
     $output = array();
     $size = '';
 
-    if ($params['s'] != null) {
+    if ($params['s'] != NULL) {
       $size = ' -s ' . escapeshellarg($params['s']);
     }
     exec('ffmpeg -i ' . escapeshellarg($file) . ' -r 1 -ss ' . escapeshellarg($params['ss']) . ' ' . $size . ' -t 1 ' . escapeshellarg($file . $file_suffix));
 
     if (!file_exists($file . $file_suffix)) {
-      return false;
+      return FALSE;
     }
 
     $_SESSION['fedora_ingest_files']["$dsid"] = $file . $file_suffix;

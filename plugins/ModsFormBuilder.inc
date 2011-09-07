@@ -22,9 +22,9 @@ class ModsFormBuilder extends FormBuilder {
    * Constructor
    * @param type $pid 
    */
-  function __construct($pid=null) {
+  function __construct($pid=NULL) {
     parent::__construct();
-    if ($pid !== null) {
+    if ($pid !== NULL) {
       module_load_include('inc', 'fedora_repository', 'ContentModel');
       module_load_include('inc', 'fedora_repository', 'api/fedora_item');
 
@@ -87,7 +87,7 @@ class ModsFormBuilder extends FormBuilder {
             '#type' => $element['type']
           );
 
-          $includeEl = true;
+          $includeEl = TRUE;
           $elname = explode('][', $element['name']);
           $elLocation = &$form['indicator2'];
           while (isset($elLocation[$name[0]]) && ($partial = array_shift($elname)) != NULL) {
@@ -114,13 +114,13 @@ class ModsFormBuilder extends FormBuilder {
                 if (is_string($nodeList)) {
                   $el['#default_value'] = $nodeList;
                 }
-                else if ($nodeList->length > 1) {
+                elseif ($nodeList->length > 1) {
                   $el['#default_value'] = array();
                   foreach ($nodeList as $node) {
                     $el['#default_value'][] = $node->nodeValue;
                   }
                 }
-                else if ($nodeList->length > 0) {
+                elseif ($nodeList->length > 0) {
                   if ($el['#type'] == 'list') {
                     $values = array();
                     for ($i = 0; $i < $nodeList->length; $i++) {
@@ -259,7 +259,7 @@ class ModsFormBuilder extends FormBuilder {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
     module_load_include('inc', 'fedora_repository', 'CollectionPolicy');
 
-    $form_state['storage']['people'] = NULL; //clears out old entities for the next run of the formbuilder. 
+    $form_state['storage']['people'] = NULL; //clears out old entities for the next run of the formbuilder.
 
     $dom = new DomDocument("1.0", "UTF-8");
     $dom->formatOutput = TRUE;
@@ -302,7 +302,7 @@ class ModsFormBuilder extends FormBuilder {
     try {
       $object = Fedora_Item::ingest_from_FOXML($dom);
       //for some reason, ingest_from_FOXML does not generate a JMS message
-      //I just modify the workflow DS and it sends a JMS message.  
+      //I just modify the workflow DS and it sends a JMS message.
       $item = new Fedora_Item($object->pid);
       $item->modify_datastream_by_value($item->get_datastream_dissemination('WORKFLOW'), 'WORKFLOW', "Workflow Record", 'text/xml');
 
@@ -317,7 +317,7 @@ class ModsFormBuilder extends FormBuilder {
       file_delete($form_values['ingest-file-location']);
     } catch (exception $e) {
       drupal_set_message(t('Error ingesting object: !e', array('!e' => $e->getMessage())), 'error');
-      watchdog(t("Fedora_Repository"), t("Error ingesting object: !e", array('!e' => $e->getMessage())), NULL, WATCHDOG_ERROR);
+      watchdog(t("Fedora_Repository"), "Error ingesting object: !e", array('!e' => $e->getMessage()), NULL, WATCHDOG_ERROR);
       return;
     }
   }
@@ -522,12 +522,12 @@ class ModsFormBuilder extends FormBuilder {
 
 
     if (isset($form_values['mods_pubinfo_date']) && trim($form_values['mods_pubinfo_date']) != '' &&
-        isset($form_values['mods_pubinfo_dateType']) && trim($form_values['mods_pubinfo_dateType']) != '') {
+      isset($form_values['mods_pubinfo_dateType']) && trim($form_values['mods_pubinfo_dateType']) != '') {
       if (in_array($form_values['mods_pubinfo_dateType'], array('issued', 'created', 'copyright', 'captured'))) {
         $date = $dom->createElement('mods:' . trim($form_values['mods_pubinfo_dateType']) . 'Date', htmlspecialchars(trim($form_values['mods_pubinfo_date'])));
       }
       else {
-        //how to handle other types?  otherDate? 
+        //how to handle other types?  otherDate?
         $date = $dom->createElement('mods:otherDate', htmlspecialchars(trim($form_values['mods_pubinfo_date'])));
         $date->setAttribute('type', htmlspecialchars(trim($form_values['mods_pubinfo_dateType'])));
       }
@@ -679,7 +679,6 @@ class ModsFormBuilder extends FormBuilder {
       $modifications = trim($form_values['mods_cc']['cc']['cc_modifications']);
       $jurisdiction = trim($form_values['mods_cc']['cc']['cc_jurisdiction']);
 
-      // Include islandora form elements only if needed ??
       module_load_include('inc', 'islandora_form_elements', 'includes/creative_commons.inc');
 
       if (!isset(CreativeCommons::$cc_jurisdiction_vals[$jurisdiction]))

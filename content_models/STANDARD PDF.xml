@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content_model name="standard_pdf">
-     <mimetypes>
+    <mimetypes>
         <type>application/pdf</type>
-         </mimetypes>
+    </mimetypes>
     <ingest_rules>
         <rule>
             <applies_to>
               application/pdf
             </applies_to>
-             <methods>
+            <methods>
                 <method>
                     <file>plugins/ImageManipulation.inc</file>
                     <class_name>ImageManipulation</class_name>
@@ -32,7 +32,7 @@
                 </disseminator>
             </disseminators>
         </rule>
-      </ingest_rules>a868aef684fa34923d4fe697db1e785b
+    </ingest_rules>a868aef684fa34923d4fe697db1e785b
     <ingest_form dsid="QDC" page="2">
         <form_builder_method>
             <file>plugins/FormBuilder.inc</file>
@@ -40,8 +40,8 @@
             <method_name>buildQDCForm</method_name>
             <form_handler>handleQDCForm</form_handler>
             <!--need validation method as well-->
-            </form_builder_method>
-            <form_elements>
+        </form_builder_method>
+        <form_elements>
             <element>
                 <label>Title/Caption/Object Name</label>
                 <name>dc:title</name>
@@ -233,4 +233,4 @@
             </element>
         </form_elements>
     </ingest_form>
-  </content_model>
+</content_model>

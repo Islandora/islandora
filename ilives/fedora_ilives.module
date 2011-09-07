@@ -1,6 +1,6 @@
 <?php
 
-// $Id$
+
 
 /*
  * To change this template, choose Tools | Templates
@@ -529,7 +529,7 @@ function fedora_ilives_requirements($phase) {
       $requirements['iiv-war']['value'] = ("Not available");
       $requirements['iiv-war']['severity'] = REQUIREMENT_ERROR;
       $requirements['iiv-war']['description'] = t('Ensure that Fedora is running and that the <a href="@iiv-home">IIV</a> app is deployed.',
-              array('@iiv-home' => 'http://github.com/islandora/iiv'));
+          array('@iiv-home' => 'http://github.com/islandora/iiv'));
     }
     else {
       $requirements['iiv-war']['value'] = ("Available");

@@ -1,6 +1,5 @@
 <?php
 
-// $Id$
 
 /**
  * @file
@@ -71,7 +70,7 @@ class DocumentConverter {
 
       $returnValue = file_put_contents($outputFile, $data);
       if ($returnValue > 0) {
-        drupal_set_message("Conversion successful.", 'status');
+        drupal_set_message(t("Conversion successful."), 'status');
         $_SESSION['fedora_ingest_files']["$dsid"] = $outputFile;
         return $outputFile;
       }
@@ -80,7 +79,7 @@ class DocumentConverter {
       }
     }
     else {
-      drupal_set_message("Conversion Failed. Webservice returned $code.", 'status');
+      drupal_set_message(t("Conversion Failed. Webservice returned $code."), 'status');
       return FALSE;
     }
   }
@@ -88,8 +87,8 @@ class DocumentConverter {
 }
 
 /*
-$documentConverter = new DocumentConverter();
-$inputFile = "document.docx";
-$outputType = "txt";
-$documentConverter->convert( null, 'TXT', $inputFile, $outputType);
-/* */
+  $documentConverter = new DocumentConverter();
+  $inputFile = "document.docx";
+  $outputType = "txt";
+  $documentConverter->convert( NULL, 'TXT', $inputFile, $outputType);
+  /* */

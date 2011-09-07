@@ -55,7 +55,7 @@ Copyright © 2006-2007 Apple Computer, Inc., All Rights Reserved
 /************** LOCALIZABLE GLOBAL VARIABLES ****************/
 
 var gArgCountErr =	'The "%%" function requires an even number of arguments.'
-				+	'\nArguments should be in the form "atttributeName", "attributeValue", ...';
++	'\nArguments should be in the form "atttributeName", "attributeValue", ...';
 
 /******************** END LOCALIZABLE **********************/
 
@@ -64,299 +64,301 @@ var gQTGeneratorVersion		= 1.2;
 var gQTBehaviorID			= "qt_event_source";
 var gQTEventsEnabled		= false;
 
-function AC_QuickTimeVersion()	{ return gQTGeneratorVersion; }
+function AC_QuickTimeVersion()	{
+    return gQTGeneratorVersion;
+}
 
 function _QTComplain(callingFcnName, errMsg)
 {
     errMsg = errMsg.replace("%%", callingFcnName);
-	alert(errMsg);
+    alert(errMsg);
 }
 
 function _QTIsMSIE()
 {
     var ua = navigator.userAgent.toLowerCase();
-	var msie = /msie/.test(ua) && !/opera/.test(ua);
+    var msie = /msie/.test(ua) && !/opera/.test(ua);
 
-	return msie;
+    return msie;
 }
 
 
 function _QTGenerateBehavior()
 {
-	return objTag = '<!--[if IE]>'
-				 + '<object id="' + gQTBehaviorID + '" classid="clsid:CB927D12-4FF7-4a9e-A169-56E4B8A75598"></object>'
-				 + '<![endif]-->';
+    return objTag = '<!--[if IE]>'
+    + '<object id="' + gQTBehaviorID + '" classid="clsid:CB927D12-4FF7-4a9e-A169-56E4B8A75598"></object>'
+    + '<![endif]-->';
 }
 
 function _QTPageHasBehaviorObject(callingFcnName, args)
 {
-	var haveBehavior = false;
-	var objects = document.getElementsByTagName('object');
+    var haveBehavior = false;
+    var objects = document.getElementsByTagName('object');
 	
-	for ( var ndx = 0, obj; obj = objects[ndx]; ndx++ )
-	{
-		if ( obj.getAttribute('classid') == "clsid:CB927D12-4FF7-4a9e-A169-56E4B8A75598" )
-		{
-			if ( obj.getAttribute('id') == gQTBehaviorID )
-				haveBehavior = false;
-			break;
-		}
-	}
+    for ( var ndx = 0, obj; obj = objects[ndx]; ndx++ )
+    {
+        if ( obj.getAttribute('classid') == "clsid:CB927D12-4FF7-4a9e-A169-56E4B8A75598" )
+        {
+            if ( obj.getAttribute('id') == gQTBehaviorID )
+                haveBehavior = false;
+            break;
+        }
+    }
 
-	return haveBehavior;
+    return haveBehavior;
 }
 
 
 function _QTShouldInsertBehavior()
 {
-	var		shouldDo = false;
+    var		shouldDo = false;
 
-	if ( gQTEventsEnabled && _QTIsMSIE() && !_QTPageHasBehaviorObject() )
-		shouldDo = true;
+    if ( gQTEventsEnabled && _QTIsMSIE() && !_QTPageHasBehaviorObject() )
+        shouldDo = true;
 	
-	return shouldDo;
+    return shouldDo;
 }
 
 
 function _QTAddAttribute(prefix, slotName, tagName)
 {
-	var		value;
+    var		value;
 
-	value = gTagAttrs[prefix + slotName];
-	if ( null == value )
-		value = gTagAttrs[slotName];
+    value = gTagAttrs[prefix + slotName];
+    if ( null == value )
+        value = gTagAttrs[slotName];
 
-	if ( null != value )
-	{
-		if ( 0 == slotName.indexOf(prefix) && (null == tagName) )
-			tagName = slotName.substring(prefix.length); 
-		if ( null == tagName ) 
-			tagName = slotName;
-		return ' ' + tagName + '="' + value + '"';
-	}
-	else
-		return "";
+    if ( null != value )
+    {
+        if ( 0 == slotName.indexOf(prefix) && (null == tagName) )
+            tagName = slotName.substring(prefix.length);
+        if ( null == tagName )
+            tagName = slotName;
+        return ' ' + tagName + '="' + value + '"';
+    }
+    else
+        return "";
 }
 
 function _QTAddObjectAttr(slotName, tagName)
 {
-	// don't bother if it is only for the embed tag
-	if ( 0 == slotName.indexOf("emb#") )
-		return "";
+    // don't bother if it is only for the embed tag
+    if ( 0 == slotName.indexOf("emb#") )
+        return "";
 
-	if ( 0 == slotName.indexOf("obj#") && (null == tagName) )
-		tagName = slotName.substring(4); 
+    if ( 0 == slotName.indexOf("obj#") && (null == tagName) )
+        tagName = slotName.substring(4);
 
-	return _QTAddAttribute("obj#", slotName, tagName);
+    return _QTAddAttribute("obj#", slotName, tagName);
 }
 
 function _QTAddEmbedAttr(slotName, tagName)
 {
-	// don't bother if it is only for the object tag
-	if ( 0 == slotName.indexOf("obj#") )
-		return "";
+    // don't bother if it is only for the object tag
+    if ( 0 == slotName.indexOf("obj#") )
+        return "";
 
-	if ( 0 == slotName.indexOf("emb#") && (null == tagName) )
-		tagName = slotName.substring(4); 
+    if ( 0 == slotName.indexOf("emb#") && (null == tagName) )
+        tagName = slotName.substring(4);
 
-	return _QTAddAttribute("emb#", slotName, tagName);
+    return _QTAddAttribute("emb#", slotName, tagName);
 }
 
 
 function _QTAddObjectParam(slotName, generateXHTML)
 {
-	var		paramValue;
-	var		paramStr = "";
-	var		endTagChar = (generateXHTML) ? ' />' : '>';
+    var		paramValue;
+    var		paramStr = "";
+    var		endTagChar = (generateXHTML) ? ' />' : '>';
 
-	if ( -1 == slotName.indexOf("emb#") )
-	{
-		// look for the OBJECT-only param first. if there is none, look for a generic one
-		paramValue = gTagAttrs["obj#" + slotName];
-		if ( null == paramValue )
-			paramValue = gTagAttrs[slotName];
+    if ( -1 == slotName.indexOf("emb#") )
+    {
+        // look for the OBJECT-only param first. if there is none, look for a generic one
+        paramValue = gTagAttrs["obj#" + slotName];
+        if ( null == paramValue )
+            paramValue = gTagAttrs[slotName];
 
-		if ( 0 == slotName.indexOf("obj#") )
-			slotName = slotName.substring(4); 
+        if ( 0 == slotName.indexOf("obj#") )
+            slotName = slotName.substring(4);
 	
-		if ( null != paramValue )
-			paramStr = '<param name="' + slotName + '" value="' + paramValue + '"' + endTagChar;
-	}
+        if ( null != paramValue )
+            paramStr = '<param name="' + slotName + '" value="' + paramValue + '"' + endTagChar;
+    }
 
-	return paramStr;
+    return paramStr;
 }
 
 function _QTDeleteTagAttrs()
 {
-	for ( var ndx = 0; ndx < arguments.length; ndx++ )
-	{
-		var attrName = arguments[ndx];
-		delete gTagAttrs[attrName];
-		delete gTagAttrs["emb#" + attrName];
-		delete gTagAttrs["obj#" + attrName];
-	}
+    for ( var ndx = 0; ndx < arguments.length; ndx++ )
+    {
+        var attrName = arguments[ndx];
+        delete gTagAttrs[attrName];
+        delete gTagAttrs["emb#" + attrName];
+        delete gTagAttrs["obj#" + attrName];
+    }
 }
 
 
 // generate an embed and object tag, return as a string
 function _QTGenerate(callingFcnName, generateXHTML, args)
 {
-	// is the number of optional arguments even?
-	if ( args.length < 4 || (0 != (args.length % 2)) )
-	{
-		_QTComplain(callingFcnName, gArgCountErr);
-		return "";
-	}
+    // is the number of optional arguments even?
+    if ( args.length < 4 || (0 != (args.length % 2)) )
+    {
+        _QTComplain(callingFcnName, gArgCountErr);
+        return "";
+    }
 	
-	// allocate an array, fill in the required attributes with fixed place params and defaults
-	gTagAttrs = new Object();
-	gTagAttrs["src"] = args[0];
-	gTagAttrs["width"] = args[1];
-	gTagAttrs["height"] = args[2];
-	gTagAttrs["classid"] = "clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B";
-		//Impportant note: It is recommended that you use this exact classid in order to ensure a seamless experience for all viewers
-	gTagAttrs["pluginspage"] = "http://www.apple.com/quicktime/download/";
+    // allocate an array, fill in the required attributes with fixed place params and defaults
+    gTagAttrs = new Object();
+    gTagAttrs["src"] = args[0];
+    gTagAttrs["width"] = args[1];
+    gTagAttrs["height"] = args[2];
+    gTagAttrs["classid"] = "clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B";
+    //Impportant note: It is recommended that you use this exact classid in order to ensure a seamless experience for all viewers
+    gTagAttrs["pluginspage"] = "http://www.apple.com/quicktime/download/";
 
-	// set up codebase attribute with specified or default version before parsing args so
-	//  anything passed in will override
-	var activexVers = args[3]
-	if ( (null == activexVers) || ("" == activexVers) )
-		activexVers = "7,3,0,0";
-	gTagAttrs["codebase"] = "http://www.apple.com/qtactivex/qtplugin.cab#version=" + activexVers;
+    // set up codebase attribute with specified or default version before parsing args so
+    //  anything passed in will override
+    var activexVers = args[3]
+    if ( (null == activexVers) || ("" == activexVers) )
+        activexVers = "7,3,0,0";
+    gTagAttrs["codebase"] = "http://www.apple.com/qtactivex/qtplugin.cab#version=" + activexVers;
 
-	var	attrName,
-		attrValue;
+    var	attrName,
+    attrValue;
 
-	// add all of the optional attributes to the array
-	for ( var ndx = 4; ndx < args.length; ndx += 2)
-	{
-		attrName = args[ndx].toLowerCase();
-		attrValue = args[ndx + 1];
+    // add all of the optional attributes to the array
+    for ( var ndx = 4; ndx < args.length; ndx += 2)
+    {
+        attrName = args[ndx].toLowerCase();
+        attrValue = args[ndx + 1];
 
-		gTagAttrs[attrName] = attrValue;
+        gTagAttrs[attrName] = attrValue;
 
-		if ( ("postdomevents" == attrName) && (attrValue.toLowerCase() != "false") )
-		{
-			gQTEventsEnabled = true;
-			if ( _QTIsMSIE() )
-				gTagAttrs["obj#style"] = "behavior:url(#" + gQTBehaviorID + ")";
-		}
-	}
+        if ( ("postdomevents" == attrName) && (attrValue.toLowerCase() != "false") )
+        {
+            gQTEventsEnabled = true;
+            if ( _QTIsMSIE() )
+                gTagAttrs["obj#style"] = "behavior:url(#" + gQTBehaviorID + ")";
+        }
+    }
 
-	// init both tags with the required and "special" attributes
-	var objTag =  '<object '
-					+ _QTAddObjectAttr("classid")
-					+ _QTAddObjectAttr("width")
-					+ _QTAddObjectAttr("height")
-					+ _QTAddObjectAttr("codebase")
-					+ _QTAddObjectAttr("name")
-					+ _QTAddObjectAttr("id")
-					+ _QTAddObjectAttr("tabindex")
-					+ _QTAddObjectAttr("hspace")
-					+ _QTAddObjectAttr("vspace")
-					+ _QTAddObjectAttr("border")
-					+ _QTAddObjectAttr("align")
-					+ _QTAddObjectAttr("class")
-					+ _QTAddObjectAttr("title")
-					+ _QTAddObjectAttr("accesskey")
-					+ _QTAddObjectAttr("noexternaldata")
-					+ _QTAddObjectAttr("obj#style")
-					+ '>'
-					+ _QTAddObjectParam("src", generateXHTML);
-	var embedTag = '<embed '
-					+ _QTAddEmbedAttr("src")
-					+ _QTAddEmbedAttr("width")
-					+ _QTAddEmbedAttr("height")
-					+ _QTAddEmbedAttr("pluginspage")
-					+ _QTAddEmbedAttr("name")
-					+ _QTAddEmbedAttr("id")
-					+ _QTAddEmbedAttr("align")
-					+ _QTAddEmbedAttr("tabindex");
+    // init both tags with the required and "special" attributes
+    var objTag =  '<object '
+    + _QTAddObjectAttr("classid")
+    + _QTAddObjectAttr("width")
+    + _QTAddObjectAttr("height")
+    + _QTAddObjectAttr("codebase")
+    + _QTAddObjectAttr("name")
+    + _QTAddObjectAttr("id")
+    + _QTAddObjectAttr("tabindex")
+    + _QTAddObjectAttr("hspace")
+    + _QTAddObjectAttr("vspace")
+    + _QTAddObjectAttr("border")
+    + _QTAddObjectAttr("align")
+    + _QTAddObjectAttr("class")
+    + _QTAddObjectAttr("title")
+    + _QTAddObjectAttr("accesskey")
+    + _QTAddObjectAttr("noexternaldata")
+    + _QTAddObjectAttr("obj#style")
+    + '>'
+    + _QTAddObjectParam("src", generateXHTML);
+    var embedTag = '<embed '
+    + _QTAddEmbedAttr("src")
+    + _QTAddEmbedAttr("width")
+    + _QTAddEmbedAttr("height")
+    + _QTAddEmbedAttr("pluginspage")
+    + _QTAddEmbedAttr("name")
+    + _QTAddEmbedAttr("id")
+    + _QTAddEmbedAttr("align")
+    + _QTAddEmbedAttr("tabindex");
 
-	// delete the attributes/params we have already added
-	_QTDeleteTagAttrs("src","width","height","pluginspage","classid","codebase","name","tabindex",
-					"hspace","vspace","border","align","noexternaldata","class","title","accesskey","id","style");
+    // delete the attributes/params we have already added
+    _QTDeleteTagAttrs("src","width","height","pluginspage","classid","codebase","name","tabindex",
+        "hspace","vspace","border","align","noexternaldata","class","title","accesskey","id","style");
 
-	// and finally, add all of the remaining attributes to the embed and object
-	for ( var attrName in gTagAttrs )
-	{
-		attrValue = gTagAttrs[attrName];
-		if ( null != attrValue )
-		{
-			embedTag += _QTAddEmbedAttr(attrName);
-			objTag += _QTAddObjectParam(attrName, generateXHTML);
-		}
-	} 
+    // and finally, add all of the remaining attributes to the embed and object
+    for ( var attrName in gTagAttrs )
+    {
+        attrValue = gTagAttrs[attrName];
+        if ( null != attrValue )
+        {
+            embedTag += _QTAddEmbedAttr(attrName);
+            objTag += _QTAddObjectParam(attrName, generateXHTML);
+        }
+    }
 
-	// end both tags, we're done
-	return objTag + embedTag + '></em' + 'bed></ob' + 'ject' + '>';
+    // end both tags, we're done
+    return objTag + embedTag + '></em' + 'bed></ob' + 'ject' + '>';
 }
 
 
 // return the object/embed as a string
 function QT_GenerateOBJECTText()
 {
-	var	txt = _QTGenerate("QT_GenerateOBJECTText", false, arguments);
-	if ( _QTShouldInsertBehavior() )
-		txt = _QTGenerateBehavior() + txt;
-	return txt;
+    var	txt = _QTGenerate("QT_GenerateOBJECTText", false, arguments);
+    if ( _QTShouldInsertBehavior() )
+        txt = _QTGenerateBehavior() + txt;
+    return txt;
 }
 
 function QT_GenerateOBJECTText_XHTML()
 {
-	var	txt = _QTGenerate("QT_GenerateOBJECTText_XHTML", true, arguments);
-	if ( _QTShouldInsertBehavior() )
-		txt = _QTGenerateBehavior() + txt;
-	return txt;
+    var	txt = _QTGenerate("QT_GenerateOBJECTText_XHTML", true, arguments);
+    if ( _QTShouldInsertBehavior() )
+        txt = _QTGenerateBehavior() + txt;
+    return txt;
 }
 
 function QT_WriteOBJECT()
 {
-	var	txt = _QTGenerate("QT_WriteOBJECT", false, arguments);
-	if ( _QTShouldInsertBehavior() )
-		document.writeln(_QTGenerateBehavior());
-	document.writeln(txt);
+    var	txt = _QTGenerate("QT_WriteOBJECT", false, arguments);
+    if ( _QTShouldInsertBehavior() )
+        document.writeln(_QTGenerateBehavior());
+    document.writeln(txt);
 }
 
 function QT_WriteOBJECT_XHTML()
 {
-	var	txt = _QTGenerate("QT_WriteOBJECT_XHTML", true, arguments);
-	if ( _QTShouldInsertBehavior() )
-		document.writeln(_QTGenerateBehavior());
-	document.writeln(txt);
+    var	txt = _QTGenerate("QT_WriteOBJECT_XHTML", true, arguments);
+    if ( _QTShouldInsertBehavior() )
+        document.writeln(_QTGenerateBehavior());
+    document.writeln(txt);
 }
 
 function QT_GenerateBehaviorOBJECT()
 {
-	return _QTGenerateBehavior();
+    return _QTGenerateBehavior();
 }
 
 function QT_ReplaceElementContents()
 {
-	var element = arguments[0];
-	var args = [];
+    var element = arguments[0];
+    var args = [];
 
-	// copy all other arguments we want to pass through to the fcn
-	for ( var ndx = 1; ndx < arguments.length; ndx++ )
-		args.push(arguments[ndx]);
+    // copy all other arguments we want to pass through to the fcn
+    for ( var ndx = 1; ndx < arguments.length; ndx++ )
+        args.push(arguments[ndx]);
 
-	var	txt = _QTGenerate("QT_ReplaceElementContents", false, args);
-	if ( txt.length > 0 )
-		element.innerHTML = txt;
+    var	txt = _QTGenerate("QT_ReplaceElementContents", false, args);
+    if ( txt.length > 0 )
+        element.innerHTML = txt;
 }
 
 
 function QT_ReplaceElementContents_XHTML()
 {
-	var element = arguments[0];
-	var args = [];
+    var element = arguments[0];
+    var args = [];
 
-	// copy all other arguments we want to pass through to the fcn
-	for ( var ndx = 1; ndx < arguments.length; ndx++ )
-		args.push(arguments[ndx]);
+    // copy all other arguments we want to pass through to the fcn
+    for ( var ndx = 1; ndx < arguments.length; ndx++ )
+        args.push(arguments[ndx]);
 
-	var	txt = _QTGenerate("QT_ReplaceElementContents_XHTML", true, args);
-	if ( txt.length > 0 )
-		element.innerHTML = txt;
+    var	txt = _QTGenerate("QT_ReplaceElementContents_XHTML", true, args);
+    if ( txt.length > 0 )
+        element.innerHTML = txt;
 }
 

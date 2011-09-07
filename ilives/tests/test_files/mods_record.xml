@@ -1,83 +1,83 @@
 <?xml version="1.0"?>
 <mods:modsCollection xmlns:mods="http://www.loc.gov/mods/v3" version="3.0">
-  <mods:mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" version="3.0" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-0.xsd">
-    <titleInfo>
-      <nonSort>The </nonSort>
-      <title>amazing Maurice and his educated rodents</title>
-    </titleInfo>
-    <name type="personal">
-      <namePart>Pratchett, Terry.</namePart>
-      <role>
-        <roleTerm authority="marcrelator" type="text">creator</roleTerm>
-      </role>
-    </name>
-    <typeOfResource>text</typeOfResource>
-    <genre authority="marc">novel</genre>
-    <originInfo>
-      <place>
-        <placeTerm type="code" authority="marccountry">enk</placeTerm>
-      </place>
-      <place>
-        <placeTerm type="text">London</placeTerm>
-      </place>
-      <publisher>Corgi Books</publisher>
-      <dateIssued>2002</dateIssued>
-      <dateIssued encoding="marc">2001</dateIssued>
-      <issuance>monographic</issuance>
-    </originInfo>
-    <language>
-      <languageTerm authority="iso639-2b" type="code">eng</languageTerm>
-    </language>
-    <physicalDescription>
-      <form authority="marcform">print</form>
-      <extent>269 p. ; 22 cm.</extent>
-    </physicalDescription>
-    <abstract>A talking cat, intelligent rats, and a strange boy cooperate in a Pied Piper scam until they try to con the wrong town and are confronted by a deadly evil rat king.</abstract>
-    <targetAudience authority="marctarget">juvenile</targetAudience>
-    <note type="statement of responsibility">Terry Pratchett.</note>
-    <note>Carnegie Medal winner.</note>
-    <subject authority="lcsh">
-      <topic>Discworld (Imaginary place)</topic>
-      <topic>Fiction</topic>
-    </subject>
-    <subject authority="lcsh">
-      <topic>Discworld (Imaginary place)</topic>
-      <topic>Fiction</topic>
-    </subject>
-    <subject authority="lcsh">
-      <topic>Rats</topic>
-      <topic>Fiction</topic>
-    </subject>
-    <subject authority="lcsh">
-      <topic>Cats</topic>
-      <topic>Fiction</topic>
-    </subject>
-    <subject authority="lcsh">
-      <topic>Fantasy fiction</topic>
-    </subject>
-    <subject authority="lcsh">
-      <topic>Humorous stories</topic>
-    </subject>
-    <classification authority="lcc">PZ7.P8865 Am 2002</classification>
-    <relatedItem>
-      <titleInfo>
-        <title>Discworld series</title>
-      </titleInfo>
-      <name type="personal">
-        <namePart>Pratchett, Terry.</namePart>
-      </name>
-    </relatedItem>
-    <identifier type="isbn">006001234X (library binding)</identifier>
-    <identifier type="isbn">0385601239</identifier>
-    <identifier type="isbn">0552546933 (pbk.)</identifier>
-    <recordInfo>
-      <recordContentSource authority="marcorg">CaNWHRN</recordContentSource>
-      <recordCreationDate encoding="marc">010730</recordCreationDate>
-      <recordChangeDate encoding="iso8601">20020314      .0</recordChangeDate>
-      <languageOfCataloging>
-        <languageTerm authority="iso639-2b" type="code">eng</languageTerm>
-      </languageOfCataloging>
-    </recordInfo>
-  </mods:mods>
+    <mods:mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" version="3.0" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-0.xsd">
+        <titleInfo>
+            <nonSort>The </nonSort>
+            <title>amazing Maurice and his educated rodents</title>
+        </titleInfo>
+        <name type="personal">
+            <namePart>Pratchett, Terry.</namePart>
+            <role>
+                <roleTerm authority="marcrelator" type="text">creator</roleTerm>
+            </role>
+        </name>
+        <typeOfResource>text</typeOfResource>
+        <genre authority="marc">novel</genre>
+        <originInfo>
+            <place>
+                <placeTerm type="code" authority="marccountry">enk</placeTerm>
+            </place>
+            <place>
+                <placeTerm type="text">London</placeTerm>
+            </place>
+            <publisher>Corgi Books</publisher>
+            <dateIssued>2002</dateIssued>
+            <dateIssued encoding="marc">2001</dateIssued>
+            <issuance>monographic</issuance>
+        </originInfo>
+        <language>
+            <languageTerm authority="iso639-2b" type="code">eng</languageTerm>
+        </language>
+        <physicalDescription>
+            <form authority="marcform">print</form>
+            <extent>269 p. ; 22 cm.</extent>
+        </physicalDescription>
+        <abstract>A talking cat, intelligent rats, and a strange boy cooperate in a Pied Piper scam until they try to con the wrong town and are confronted by a deadly evil rat king.</abstract>
+        <targetAudience authority="marctarget">juvenile</targetAudience>
+        <note type="statement of responsibility">Terry Pratchett.</note>
+        <note>Carnegie Medal winner.</note>
+        <subject authority="lcsh">
+            <topic>Discworld (Imaginary place)</topic>
+            <topic>Fiction</topic>
+        </subject>
+        <subject authority="lcsh">
+            <topic>Discworld (Imaginary place)</topic>
+            <topic>Fiction</topic>
+        </subject>
+        <subject authority="lcsh">
+            <topic>Rats</topic>
+            <topic>Fiction</topic>
+        </subject>
+        <subject authority="lcsh">
+            <topic>Cats</topic>
+            <topic>Fiction</topic>
+        </subject>
+        <subject authority="lcsh">
+            <topic>Fantasy fiction</topic>
+        </subject>
+        <subject authority="lcsh">
+            <topic>Humorous stories</topic>
+        </subject>
+        <classification authority="lcc">PZ7.P8865 Am 2002</classification>
+        <relatedItem>
+            <titleInfo>
+                <title>Discworld series</title>
+            </titleInfo>
+            <name type="personal">
+                <namePart>Pratchett, Terry.</namePart>
+            </name>
+        </relatedItem>
+        <identifier type="isbn">006001234X (library binding)</identifier>
+        <identifier type="isbn">0385601239</identifier>
+        <identifier type="isbn">0552546933 (pbk.)</identifier>
+        <recordInfo>
+            <recordContentSource authority="marcorg">CaNWHRN</recordContentSource>
+            <recordCreationDate encoding="marc">010730</recordCreationDate>
+            <recordChangeDate encoding="iso8601">20020314      .0</recordChangeDate>
+            <languageOfCataloging>
+                <languageTerm authority="iso639-2b" type="code">eng</languageTerm>
+            </languageOfCataloging>
+        </recordInfo>
+    </mods:mods>
 </mods:modsCollection>
 

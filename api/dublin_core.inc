@@ -60,7 +60,7 @@ class Dublin_Core {
   /**
    * Replace the given DC element with the values in $values
    * @param string $elemnt_name
-   * @param array $values 
+   * @param array $values
    */
   function set_element($element_name, $values) {
     if (is_array($values)) {

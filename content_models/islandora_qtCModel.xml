@@ -3,161 +3,172 @@
 xmlns:foxml="info:fedora/fedora-system:def/foxml#"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
-<foxml:objectProperties>
-<foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
-<foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="Generic Content Model for Fedora Attach"/>
-<foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="fedoraAdmin"/>
-<foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2010-01-26T21:29:20.416Z"/>
-<foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2010-03-11T21:01:44.921Z"/>
-</foxml:objectProperties>
-<foxml:datastream ID="DC" STATE="A" CONTROL_GROUP="X" VERSIONABLE="true">
-<foxml:datastreamVersion ID="DC1.0" LABEL="Dublin Core Record for this object" CREATED="2010-01-26T21:29:20.416Z" MIMETYPE="text/xml" FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/" SIZE="396">
-<foxml:xmlContent>
-<oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
-  <dc:title>Quicktime Content Model</dc:title>
-  <dc:identifier>islandora:qtCModel</dc:identifier> 
-</oai_dc:dc>
-</foxml:xmlContent>
-</foxml:datastreamVersion>
-</foxml:datastream>
-<foxml:datastream ID="ISLANDORACM" CONTROL_GROUP="X" STATE="A" >
-  <foxml:datastreamVersion ID="ISLANDORACM.0" MIMETYPE="application/xml" LABEL="ISLANDORACM.0">
-    <foxml:xmlContent>
-<content_model xmlns="http://www.islandora.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="standard_qt" xsi:schemaLocation="http://www.islandora.ca http://localhost/islandoracm.xsd">
-  <mimetypes>
-    <type>video/quicktime</type>
-    <type>video/mp4</type>
-    <type>audio/mp3</type>
-    <type>audio/x-aiff</type>
-  </mimetypes>
-  <ingest_rules>
-    <rule>
-      <applies_to>video/quicktime</applies_to>
-      <applies_to>video/mp4</applies_to>
+    <foxml:objectProperties>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="Generic Content Model for Fedora Attach"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="fedoraAdmin"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2010-01-26T21:29:20.416Z"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2010-03-11T21:01:44.921Z"/>
+    </foxml:objectProperties>
+    <foxml:datastream ID="DC" STATE="A" CONTROL_GROUP="X" VERSIONABLE="true">
+        <foxml:datastreamVersion ID="DC1.0" LABEL="Dublin Core Record for this object" CREATED="2010-01-26T21:29:20.416Z" MIMETYPE="text/xml" FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/" SIZE="396">
+            <foxml:xmlContent>
+                <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+                    <dc:title>Quicktime Content Model</dc:title>
+                    <dc:identifier>islandora:qtCModel</dc:identifier>
+                </oai_dc:dc>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream ID="ISLANDORACM" CONTROL_GROUP="X" STATE="A" >
+        <foxml:datastreamVersion ID="ISLANDORACM.0" MIMETYPE="application/xml" LABEL="ISLANDORACM.0">
+            <foxml:xmlContent>
+                <content_model xmlns="http://www.islandora.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="standard_qt" xsi:schemaLocation="http://www.islandora.ca http://localhost/islandoracm.xsd">
+                    <mimetypes>
+                        <type>video/quicktime</type>
+                        <type>video/mp4</type>
+                        <type>audio/mp3</type>
+                        <type>audio/x-aiff</type>
+                    </mimetypes>
+                    <ingest_rules>
+                        <rule>
+                            <applies_to>video/quicktime</applies_to>
+                            <applies_to>video/mp4</applies_to>
 
-      <applies_to>audio/mp3</applies_to>
-      <applies_to>audio/x-aiff</applies_to>
-      <ingest_methods>
-        <ingest_method file="plugins/Exiftool.inc" class="Exiftool" method="extractMetadata" dsid="OBJ_EXIFTOOL" modified_files_ext="">
-          <parameters></parameters>
-        </ingest_method>
+                            <applies_to>audio/mp3</applies_to>
+                            <applies_to>audio/x-aiff</applies_to>
+                            <ingest_methods>
+                                <ingest_method file="plugins/Exiftool.inc" class="Exiftool" method="extractMetadata" dsid="OBJ_EXIFTOOL" modified_files_ext="">
+                                    <parameters></parameters>
+                                </ingest_method>
 
-        <ingest_method class="Ffmpeg" dsid="FULL_SIZE" file="plugins/Ffmpeg.inc" method="extract_thumbnail" modified_files_ext="jpg">
-          <parameters>
-          </parameters>
-        </ingest_method>
+                                <ingest_method class="Ffmpeg" dsid="FULL_SIZE" file="plugins/Ffmpeg.inc" method="extract_thumbnail" modified_files_ext="jpg">
+                                    <parameters>
+                                    </parameters>
+                                </ingest_method>
 
-        <ingest_method class="Ffmpeg" dsid="TN" file="plugins/Ffmpeg.inc" method="extract_thumbnail" modified_files_ext="jpg">
-          <parameters>
-            <parameter name="s">92x92</parameter>
-          </parameters>
-        </ingest_method>
-      </ingest_methods>
-    </rule>
-  </ingest_rules>
-  <datastreams>
-    <datastream dsid="OBJ">
-      <display_method class="ShowQtStreamsInFieldSets" file="plugins/qt_viewer.inc" method="showQt" module=""></display_method>
-    </datastream>
-    <datastream dsid="PROXY"></datastream>
-    <datastream dsid="OBJ_EXIFTOOL"></datastream>
-    <datastream dsid="TN"></datastream>
-    <datastream dsid="FULL_SIZE"></datastream>
-    <datastream dsid="QDC">
-      <display_method class="ShowStreamsInFieldSets" file="plugins/ShowStreamsInFieldSets.inc" method="showQdc" module=""></display_method>
-    </datastream>
-  </datastreams>
-  <ingest_form dsid="QDC" page="2">
-    <form_builder_method class="QtFormBuilder" file="plugins/QtFormBuilder.php" handler="handleQDCForm" method="buildQDCForm" module=""></form_builder_method>
-    <form_elements>
-      <element label="Title/Caption/Media Name" name="dc:title" required="true" type="textfield">
-        <description>The name given to the file</description>
-      </element>
-      <element label="Creator/" name="dc:creator" type="textfield">
-        <description>An entity primarily responsible for making the
+                                <ingest_method class="Ffmpeg" dsid="TN" file="plugins/Ffmpeg.inc" method="extract_thumbnail" modified_files_ext="jpg">
+                                    <parameters>
+                                        <parameter name="s">92x92</parameter>
+                                    </parameters>
+                                </ingest_method>
+                            </ingest_methods>
+                        </rule>
+                    </ingest_rules>
+                    <datastreams>
+                        <datastream dsid="OBJ">
+                            <display_method class="ShowQtStreamsInFieldSets" file="plugins/qt_viewer.inc" method="showQt" module=""></display_method>
+                        </datastream>
+                        <datastream dsid="PROXY"></datastream>
+                        <datastream dsid="OBJ_EXIFTOOL"></datastream>
+                        <datastream dsid="TN"></datastream>
+                        <datastream dsid="FULL_SIZE"></datastream>
+                        <datastream dsid="QDC">
+                            <display_method class="ShowStreamsInFieldSets" file="plugins/ShowStreamsInFieldSets.inc" method="showQdc" module=""></display_method>
+                        </datastream>
+                    </datastreams>
+                    <ingest_form dsid="QDC" page="2">
+                        <form_builder_method class="QtFormBuilder" file="plugins/QtFormBuilder.php" handler="handleQDCForm" method="buildQDCForm" module=""></form_builder_method>
+                        <form_elements>
+                            <element label="Title/Caption/Media Name" name="dc:title" required="true" type="textfield">
+                                <description>The name given to the file</description>
+                            </element>
+                            <element label="Creator/" name="dc:creator" type="textfield">
+                                <description>An entity primarily responsible for making the
         content of the resource such as a person, organization or
-        service.</description>
-      </element>
-      <element label="Subject" name="dc:subject" type="select">
-        <description>An entity primarily responsible for making the
+        service.
+                                </description>
+                            </element>
+                            <element label="Subject" name="dc:subject" type="select">
+                                <description>An entity primarily responsible for making the
         content of the resource such as a person, organization or
-        service.</description>
-        <authoritative_list>
-          <item>home recording</item>
-          <item>meeting</item>
-          <item>presentation</item>
-          <item>sound</item>
-        </authoritative_list>
-      </element>
-      <element label="Description of Media" name="dc:description" required="true" type="textarea">
-        <description>Examples include an abstract, table of
+        service.
+                                </description>
+                                <authoritative_list>
+                                    <item>home recording</item>
+                                    <item>meeting</item>
+                                    <item>presentation</item>
+                                    <item>sound</item>
+                                </authoritative_list>
+                            </element>
+                            <element label="Description of Media" name="dc:description" required="true" type="textarea">
+                                <description>Examples include an abstract, table of
         contents, or free-text account of the content of the
-        resource.</description>
-      </element>
-      <element label="Publisher" name="dc:publisher" type="textfield">
-        <description>An entity, (including persons, organizations,
+        resource.
+                                </description>
+                            </element>
+                            <element label="Publisher" name="dc:publisher" type="textfield">
+                                <description>An entity, (including persons, organizations,
         or services), responsible for making the resource
-        available.</description>
-      </element>
-      <element label="Contributor" name="dc:contributor" type="textfield">
-        <description>An entity responsible for contributing to the
+        available.
+                                </description>
+                            </element>
+                            <element label="Contributor" name="dc:contributor" type="textfield">
+                                <description>An entity responsible for contributing to the
         content of the resource such as a person, organization or
-        service.</description>
-      </element>
-      <element label="Date" name="dc:date" type="textfield">
-        <description>Temporal scope of the content if known. Date
+        service.
+                                </description>
+                            </element>
+                            <element label="Date" name="dc:date" type="textfield">
+                                <description>Temporal scope of the content if known. Date
         format is YYYY-MM-DD (e.g. 1890,1910-10,or
-        2007-10-23)</description>
-      </element>
-      <element label="Resource Type" name="dc:type" type="select">
-        <description>Genre of the content of the resource. Examples
+        2007-10-23)
+                                </description>
+                            </element>
+                            <element label="Resource Type" name="dc:type" type="select">
+                                <description>Genre of the content of the resource. Examples
         include: home page, novel, poem, working paper, technical
-        report, essay, dictionary.</description>
-        <authoritative_list>
-          <item>none</item>
-          <item>video</item>
-          <item>event</item>
-          <item>image</item>
-          <item>interactive resource</item>
-          <item>model</item>
-          <item>party</item>
-          <item>physical object</item>
-          <item>place</item>
-          <item>service</item>
-          <item>software</item>
-          <item>sound</item>
-          <item>text</item>
-        </authoritative_list>
-      </element>
-      <element label="Source" name="dc:source" type="textfield">
-        <description>A reference to a resource from which the
-        present resource is derived.</description>
-      </element>
-      <element label="Identifier" name="dc:identifier" type="textfield">
-        <description>A unique reference to the resource; In this
+        report, essay, dictionary.
+                                </description>
+                                <authoritative_list>
+                                    <item>none</item>
+                                    <item>video</item>
+                                    <item>event</item>
+                                    <item>image</item>
+                                    <item>interactive resource</item>
+                                    <item>model</item>
+                                    <item>party</item>
+                                    <item>physical object</item>
+                                    <item>place</item>
+                                    <item>service</item>
+                                    <item>software</item>
+                                    <item>sound</item>
+                                    <item>text</item>
+                                </authoritative_list>
+                            </element>
+                            <element label="Source" name="dc:source" type="textfield">
+                                <description>A reference to a resource from which the
+        present resource is derived.
+                                </description>
+                            </element>
+                            <element label="Identifier" name="dc:identifier" type="textfield">
+                                <description>A unique reference to the resource; In this
         instance, the accession number or collection
-        number.</description>
-      </element>
-      <element label="Language" name="dc:language" type="select">
-        <description>The language of the intellectual content of       
- the resource.</description>
-        <authoritative_list>
-          <item field="eng">English</item>
-          <item field="fre">French</item>
-        </authoritative_list>
-      </element>
-      <element label="Relation" name="dc:relation" type="textfield">
-        <description>Reference to a related resource.</description>
-      </element>
-      <element label="Rights Management" name="dc:rights" type="textarea">
-        <description>Information about intellectual property
+        number.
+                                </description>
+                            </element>
+                            <element label="Language" name="dc:language" type="select">
+                                <description>The language of the intellectual content of
+ the resource.
+                                </description>
+                                <authoritative_list>
+                                    <item field="eng">English</item>
+                                    <item field="fre">French</item>
+                                </authoritative_list>
+                            </element>
+                            <element label="Relation" name="dc:relation" type="textfield">
+                                <description>Reference to a related resource.</description>
+                            </element>
+                            <element label="Rights Management" name="dc:rights" type="textarea">
+                                <description>Information about intellectual property
         rights, copyright, and various property
-        rights.</description>
-      </element>
-    </form_elements>
-  </ingest_form>
-</content_model>
-    </foxml:xmlContent>
-  </foxml:datastreamVersion>
-</foxml:datastream>
+        rights.
+                                </description>
+                            </element>
+                        </form_elements>
+                    </ingest_form>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
 </foxml:digitalObject>

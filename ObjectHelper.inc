@@ -60,7 +60,7 @@ class ObjectHelper {
     }
     $headers = module_invoke_all('file_download', "/fedora/repository/$pid/$dsID");
     if (in_array(-1, $headers)) {
-      drupal_set_message('hello');
+      drupal_set_message(t('hello'));
       drupal_access_denied();
 
       return ' ';
@@ -300,8 +300,8 @@ class ObjectHelper {
       }
       if ($allow) {
         $purgeImage = '<a title="purge datastream ' . $dataStreamValue->label . '" href="' . $base_url . '/fedora/repository/purgeStream/' .
-            $pid . '/' . $dataStreamValue->ID . '/' . $dataStreamValue->label . '"><img src="' . $base_url . '/' . $path .
-            '/images/purge.gif" alt="purge datastream" /></a>';
+          $pid . '/' . $dataStreamValue->ID . '/' . $dataStreamValue->label . '"><img src="' . $base_url . '/' . $path .
+          '/images/purge.gif" alt="purge datastream" /></a>';
       }
     }
     else {
@@ -329,7 +329,7 @@ class ObjectHelper {
     $mimeType = $dataStreamValue->MIMEType;
 
     $view = '<a href="' . $base_url . '/fedora/repository/' . drupal_urlencode($pid) . '/' . $id . '/' . drupal_urlencode($label) .
-        '" target="_blank" >' . t('View') . '</a>';
+      '" target="_blank" >' . t('View') . '</a>';
     $action = "$base_url/fedora/repository/object_download/" . drupal_urlencode($pid) . '/' . $id . '/' . drupal_urlencode(preg_replace('/\//i', '${1}_', $label)); // Necessary to handle the case of Datastream labels that contain slashes. Ugh.
     $downloadVersion = '<form method="GET" action="' . $action . '"><input type="submit" value="' . t('Download') . '"></form>';
     if (user_access(ObjectHelper :: $EDIT_FEDORA_METADATA)) {
@@ -383,7 +383,7 @@ class ObjectHelper {
       $input = new DomDocument();
       $input->loadXML(trim($xmlstr));
     } catch (exception $e) {
-      watchdog(t("Fedora_Repository"), t("Problem loading XSL file: !e", array('!e' => $e)), NULL, WATCHDOG_ERROR);
+      watchdog(t("Fedora_Repository"), "Problem loading XSL file: !e", array('!e' => $e), NULL, WATCHDOG_ERROR);
     }
     $xsl = $proc->importStylesheet($xsl);
     $newdom = $proc->transformToDoc($input);
@@ -416,7 +416,7 @@ class ObjectHelper {
       if ($allow) {
 
         $output .= '<br /><a title = "' . t('Edit Meta Data') . '" href="' . $base_url . '/fedora/repository/' . 'editmetadata/' . $pid . '/' .
-            $dsid . '"><img src="' . $base_url . '/' . $path . '/images/edit.gif" alt="' . t('Edit Meta Data') . '" /></a>';
+          $dsid . '"><img src="' . $base_url . '/' . $path . '/images/edit.gif" alt="' . t('Edit Meta Data') . '" /></a>';
       }
     }
     return $output;
@@ -560,7 +560,7 @@ class ObjectHelper {
     try {
       $sxml = new SimpleXMLElement($content_models);
     } catch (exception $e) {
-      watchdog(t("Fedora_Repository"), t("Could not find a parent object for %s", $pid), NULL, WATCHDOG_ERROR);
+      watchdog(t("Fedora_Repository"), "Could not find a parent object for %s", $pid, NULL, WATCHDOG_ERROR);
       return $pids;
     }
 
@@ -673,8 +673,8 @@ class ObjectHelper {
           if ($allow) {
             // $ingestObject = '<a title="'. t('Ingest a New object into ') . $collectionName . ' '. $collection_pid . '" href="'. base_path() .
             $ingestObject = '<a title="' . t('Ingest a New object into !collection_name PID !collection_pid', array('!collection_name' => $collectionName, '!collection_pid' => $collection_pid)) . '" href="' . base_path() .
-                'fedora/ingestObject/' . $collection_pid . '/' . $collectionName . '"><img src="' . $base_url . '/' . $path .
-                '/images/ingest.png" alt="' . t('Add a New Object') . '" class="icon"></a>' . t(' Add to this Collection');
+              'fedora/ingestObject/' . $collection_pid . '/' . $collectionName . '"><img src="' . $base_url . '/' . $path .
+              '/images/ingest.png" alt="' . t('Add a New Object') . '" class="icon"></a> ' . t('Add to this Collection');
           }
         }
       }
@@ -763,7 +763,7 @@ class ObjectHelper {
       $parent_collections_HTML .= '<a href="' . $uri . '">' . $collection_label . '</a><br />';
     }
     if (!empty($parent_collections_HTML)) {
-      $parent_collections_HTML = '<tr><td><h3>' . t("Belongs to these collections: ") . '</h3></td><td colspan="4">' . $parent_collections_HTML . '</td></tr>';
+      $parent_collections_HTML = '<tr><td><h3>' . t("Belongs to these collections:") . ' </h3></td><td colspan="4">' . $parent_collections_HTML . '</td></tr>';
     }
 
     return $parent_collections_HTML;
@@ -855,10 +855,10 @@ class ObjectHelper {
     // Get pid, title and description for children of object $pid
     $query_string = 'select $o $title from <#ri> ' .
 //    $query_string = 'select $o $title $desc from <#ri> '.
-        'where $s <info:fedora/fedora-system:def/relations-external#hasMember> $o ' .
-        'and $o <dc:title> $title ' .
+      'where $s <info:fedora/fedora-system:def/relations-external#hasMember> $o ' .
+      'and $o <dc:title> $title ' .
 //    'and $o <dc:description> $desc '.
-        'and ( ';
+      'and ( ';
 
     foreach ($pids as $pid) {
       $query_string .= '$s <mulgara:is> <info:fedora/' . $pid . '> or ';
@@ -972,8 +972,8 @@ class ObjectHelper {
 
     $warnMess = "Creation of one or more datastreams failed.<hr  width='40%' align = 'left'/>";
     $configMess = "Please ensure that %app is installed and configured for this site. ";
-    drupal_set_message($warnMess, 'warning', false);
-    drupal_set_message(t($configMess . "<br />" . $messMap[$app] . "<hr  width='40%' align = 'left'/>", array('%app' => $app)), 'warning', false);
+    drupal_set_message($warnMess, 'warning', FALSE);
+    drupal_set_message(t($configMess . "<br />" . $messMap[$app] . "<hr  width='40%' align = 'left'/>", array('%app' => $app)), 'warning', FALSE);
   }
 
 }

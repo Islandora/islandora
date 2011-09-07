@@ -1,385 +1,386 @@
+
 <xsd:schema xmlns="http://www.islandora.ca" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	targetNamespace="http://www.islandora.ca" elementFormDefault="qualified">
-	<xsd:annotation>
-		<xsd:documentation xml:lang="en">
+    <xsd:annotation>
+        <xsd:documentation xml:lang="en">
       Islandora Content Model Schema
       Islandora, Robertson Library, University of Prince Edward Island, 550 University Ave., Charlottetown, Prince Edward Island
-    </xsd:documentation>
-	</xsd:annotation>
+        </xsd:documentation>
+    </xsd:annotation>
 
-	<xsd:element name="content_model" type="content_modelType"/>
-	<xsd:complexType name="content_modelType">
-		<xsd:all>
-			<xsd:element name="mimetypes" type="mimetypesType"/>
-			<xsd:element name="ingest_form" type="ingest_formType"/>
-			<xsd:element name="datastreams" type="datastreamsType" minOccurs="0"/>
-			<xsd:element name="ingest_rules" type="ingest_rulesType"/>
-			<xsd:element name="edit_metadata_method" type="edit_metadata_methodType" minOccurs="0"/>
+    <xsd:element name="content_model" type="content_modelType"/>
+    <xsd:complexType name="content_modelType">
+        <xsd:all>
+            <xsd:element name="mimetypes" type="mimetypesType"/>
+            <xsd:element name="ingest_form" type="ingest_formType"/>
+            <xsd:element name="datastreams" type="datastreamsType" minOccurs="0"/>
+            <xsd:element name="ingest_rules" type="ingest_rulesType"/>
+            <xsd:element name="edit_metadata_method" type="edit_metadata_methodType" minOccurs="0"/>
 
-			<xsd:element name="forms">
-				<xsd:complexType>
-					<xsd:sequence>
-						<xsd:element maxOccurs="unbounded" minOccurs="1" name="form" type="formType"
+            <xsd:element name="forms">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element maxOccurs="unbounded" minOccurs="1" name="form" type="formType"
 						/>
-					</xsd:sequence>
-				</xsd:complexType>
-			</xsd:element>
-		</xsd:all>
-		<xsd:attribute name="name" type="xsd:normalizedString" use="required"/>
-	</xsd:complexType>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:all>
+        <xsd:attribute name="name" type="xsd:normalizedString" use="required"/>
+    </xsd:complexType>
 
-	<xsd:complexType name="mimetypesType">
-		<xsd:sequence>
-			<xsd:element name="type" type="xsd:string" maxOccurs="unbounded"/>
-		</xsd:sequence>
-	</xsd:complexType>
+    <xsd:complexType name="mimetypesType">
+        <xsd:sequence>
+            <xsd:element name="type" type="xsd:string" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
 
-	<xsd:complexType name="ingest_formType">
-		<xsd:all>
-			<xsd:element name="form_builder_method" type="form_builder_methodType"/>
-			<xsd:element name="form_elements" type="form_elementsType"/>
-		</xsd:all>
-		<xsd:attribute name="dsid" type="xsd:normalizedString" use="required"/>
-		<xsd:attribute name="page" type="xsd:positiveInteger" use="required"/>
-		<xsd:attribute name="hide_file_chooser" type="xsd:boolean" default="false"/>
-		<xsd:attribute name="redirect" type="xsd:boolean" default="true"/>
+    <xsd:complexType name="ingest_formType">
+        <xsd:all>
+            <xsd:element name="form_builder_method" type="form_builder_methodType"/>
+            <xsd:element name="form_elements" type="form_elementsType"/>
+        </xsd:all>
+        <xsd:attribute name="dsid" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="page" type="xsd:positiveInteger" use="required"/>
+        <xsd:attribute name="hide_file_chooser" type="xsd:boolean" default="false"/>
+        <xsd:attribute name="redirect" type="xsd:boolean" default="true"/>
 
-	</xsd:complexType>
-	<xsd:complexType name="form_builder_methodType">
-		<xsd:attribute name="file" type="xsd:normalizedString" use="required"/>
-		<xsd:attribute name="module" type="xsd:normalizedString" default="fedora_repository"/>
-		<xsd:attribute name="class" type="xsd:normalizedString" use="required"/>
-		<xsd:attribute name="method" type="xsd:normalizedString" use="required"/>
-		<xsd:attribute name="handler" type="xsd:normalizedString" use="required"/>
-	</xsd:complexType>
-	<xsd:complexType name="edit_metadata_methodType">
-		<xsd:attribute name="file" type="xsd:normalizedString" use="required"/>
-		<xsd:attribute name="module" type="xsd:normalizedString" default="fedora_repository"/>
-		<xsd:attribute name="class" type="xsd:normalizedString" use="required"/>
-		<xsd:attribute name="method" type="xsd:normalizedString" use="required"/>
-		<xsd:attribute name="handler" type="xsd:normalizedString" use="required"/>
-		<xsd:attribute name="dsid" type="xsd:normalizedString" use="required"/>
-	</xsd:complexType>
-	<xsd:complexType name="form_elementsType">
-		<xsd:sequence>
-			<xsd:element name="element" type="elementType" minOccurs="0" maxOccurs="unbounded"/>
-		</xsd:sequence>
-	</xsd:complexType>
+    </xsd:complexType>
+    <xsd:complexType name="form_builder_methodType">
+        <xsd:attribute name="file" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="module" type="xsd:normalizedString" default="fedora_repository"/>
+        <xsd:attribute name="class" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="method" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="handler" type="xsd:normalizedString" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="edit_metadata_methodType">
+        <xsd:attribute name="file" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="module" type="xsd:normalizedString" default="fedora_repository"/>
+        <xsd:attribute name="class" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="method" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="handler" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="dsid" type="xsd:normalizedString" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="form_elementsType">
+        <xsd:sequence>
+            <xsd:element name="element" type="elementType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
 
-	<xsd:complexType name="elementType">
-		<xsd:all>
-			<xsd:element name="description" type="xsd:string" minOccurs="0"/>
-			<xsd:element name="authoritative_list" type="authoritative_listType" minOccurs="0"/>
-			<xsd:element name="parameters" type="parametersType" minOccurs="0"/>
-		</xsd:all>
-		<xsd:attribute name="label" type="xsd:normalizedString"/>
-		<xsd:attribute name="name" type="xsd:normalizedString" use="required"/>
-		<xsd:attribute name="type" type="xsd:normalizedString" use="required"/>
-		<xsd:attribute name="required" type="xsd:boolean" default="false"/>
-	</xsd:complexType>
+    <xsd:complexType name="elementType">
+        <xsd:all>
+            <xsd:element name="description" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="authoritative_list" type="authoritative_listType" minOccurs="0"/>
+            <xsd:element name="parameters" type="parametersType" minOccurs="0"/>
+        </xsd:all>
+        <xsd:attribute name="label" type="xsd:normalizedString"/>
+        <xsd:attribute name="name" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="type" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="required" type="xsd:boolean" default="false"/>
+    </xsd:complexType>
 
-	<xsd:complexType name="authoritative_listType">
-		<xsd:sequence>
-			<xsd:element name="item" type="itemType" minOccurs="1" maxOccurs="unbounded"/>
-		</xsd:sequence>
-	</xsd:complexType>
-	<xsd:complexType name="itemType">
-		<xsd:simpleContent>
-			<xsd:extension base="xsd:string">
-				<xsd:attribute name="field" type="xsd:string" use="optional"/>
-			</xsd:extension>
-		</xsd:simpleContent>
-	</xsd:complexType>
+    <xsd:complexType name="authoritative_listType">
+        <xsd:sequence>
+            <xsd:element name="item" type="itemType" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="itemType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="field" type="xsd:string" use="optional"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
 
-	<xsd:complexType name="ingest_rulesType">
-		<xsd:sequence>
-			<xsd:element name="rule" type="ruleType" minOccurs="0" maxOccurs="unbounded"/>
-		</xsd:sequence>
-	</xsd:complexType>
+    <xsd:complexType name="ingest_rulesType">
+        <xsd:sequence>
+            <xsd:element name="rule" type="ruleType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
 
-	<xsd:complexType name="ruleType">
-		<xsd:sequence>
-			<xsd:element name="applies_to" type="xsd:normalizedString" minOccurs="1"
+    <xsd:complexType name="ruleType">
+        <xsd:sequence>
+            <xsd:element name="applies_to" type="xsd:normalizedString" minOccurs="1"
 				maxOccurs="unbounded"/>
-			<xsd:element name="ingest_methods" type="ingest_methodsType" minOccurs="0"/>
-		</xsd:sequence>
-	</xsd:complexType>
+            <xsd:element name="ingest_methods" type="ingest_methodsType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
 
-	<xsd:complexType name="ingest_methodsType">
-		<xsd:sequence>
-			<xsd:element name="ingest_method" type="ingest_methodType" minOccurs="1"
+    <xsd:complexType name="ingest_methodsType">
+        <xsd:sequence>
+            <xsd:element name="ingest_method" type="ingest_methodType" minOccurs="1"
 				maxOccurs="unbounded"/>
-		</xsd:sequence>
-	</xsd:complexType>
-	<xsd:complexType name="ingest_methodType">
-		<xsd:all>
-			<xsd:element name="parameters" type="parametersType" minOccurs="0"/>
-		</xsd:all>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ingest_methodType">
+        <xsd:all>
+            <xsd:element name="parameters" type="parametersType" minOccurs="0"/>
+        </xsd:all>
 
-		<xsd:attribute name="file" type="xsd:normalizedString" use="required"/>
-		<xsd:attribute name="module" type="xsd:normalizedString" default="fedora_repository"/>
-		<xsd:attribute name="class" type="xsd:normalizedString" use="required"/>
-		<xsd:attribute name="method" type="xsd:normalizedString" use="required"/>
-		<xsd:attribute name="dsid" type="xsd:normalizedString" use="required"/>
-		<xsd:attribute name="modified_files_ext" type="xsd:normalizedString" use="required"/>
-	</xsd:complexType>
+        <xsd:attribute name="file" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="module" type="xsd:normalizedString" default="fedora_repository"/>
+        <xsd:attribute name="class" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="method" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="dsid" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="modified_files_ext" type="xsd:normalizedString" use="required"/>
+    </xsd:complexType>
 
-	<xsd:complexType name="datastreamsType">
-		<xsd:sequence>
-			<xsd:element name="datastream" type="datastreamType" minOccurs="1" maxOccurs="unbounded"
+    <xsd:complexType name="datastreamsType">
+        <xsd:sequence>
+            <xsd:element name="datastream" type="datastreamType" minOccurs="1" maxOccurs="unbounded"
 			/>
-		</xsd:sequence>
-	</xsd:complexType>
+        </xsd:sequence>
+    </xsd:complexType>
 
-	<xsd:complexType name="datastreamType">
-		<xsd:sequence>
-			<xsd:element name="display_method" type="display_methodType" minOccurs="0"
+    <xsd:complexType name="datastreamType">
+        <xsd:sequence>
+            <xsd:element name="display_method" type="display_methodType" minOccurs="0"
 				maxOccurs="unbounded"/>
-			<xsd:element name="add_datastream_method" type="add_datastream_methodType" minOccurs="0"
+            <xsd:element name="add_datastream_method" type="add_datastream_methodType" minOccurs="0"
 				maxOccurs="1"/>
 
-		</xsd:sequence>
-		<xsd:attribute name="dsid" type="xsd:normalizedString" use="required"/>
-		<xsd:attribute name="display_in_fieldset" type="xsd:boolean" default="true"/>
-	</xsd:complexType>
+        </xsd:sequence>
+        <xsd:attribute name="dsid" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="display_in_fieldset" type="xsd:boolean" default="true"/>
+    </xsd:complexType>
 
-	<xsd:complexType name="add_datastream_methodType">
-		<xsd:all>
-			<xsd:element name="parameters" type="parametersType" minOccurs="0"/>
-		</xsd:all>
-		<xsd:attribute name="file" type="xsd:normalizedString" use="required"/>
-		<xsd:attribute name="module" type="xsd:normalizedString" default="fedora_repository"/>
-		<xsd:attribute name="class" type="xsd:normalizedString" use="required"/>
-		<xsd:attribute name="method" type="xsd:normalizedString" use="required"/>
-		<xsd:attribute name="dsid" type="xsd:normalizedString" use="required"/>
-		<xsd:attribute name="modified_files_ext" type="xsd:normalizedString" use="required"/>
-	</xsd:complexType>
-	<xsd:complexType name="parametersType">
-		<xsd:sequence>
-			<xsd:element name="parameter" type="parameterType" minOccurs="1" maxOccurs="unbounded"/>
-		</xsd:sequence>
-	</xsd:complexType>
-	<xsd:complexType name="parameterType">
-		<xsd:simpleContent>
-			<xsd:extension base="xsd:string">
-				<xsd:attribute name="name" type="xsd:normalizedString" use="required"/>
-			</xsd:extension>
-		</xsd:simpleContent>
-	</xsd:complexType>
-	<xsd:complexType name="display_methodType">
-		<xsd:complexContent>
-			<xsd:restriction base="xsd:anyType">
-				<xsd:attribute name="file" type="xsd:normalizedString" use="required"/>
-				<xsd:attribute name="module" type="xsd:normalizedString" default="fedora_repository"/>
-				<xsd:attribute name="class" type="xsd:normalizedString" use="required"/>
-				<xsd:attribute name="method" type="xsd:normalizedString" use="required"/>
-				<xsd:attribute name="default" type="xsd:boolean" default="false"/>
-			</xsd:restriction>
-		</xsd:complexContent>
-	</xsd:complexType>
+    <xsd:complexType name="add_datastream_methodType">
+        <xsd:all>
+            <xsd:element name="parameters" type="parametersType" minOccurs="0"/>
+        </xsd:all>
+        <xsd:attribute name="file" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="module" type="xsd:normalizedString" default="fedora_repository"/>
+        <xsd:attribute name="class" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="method" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="dsid" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="modified_files_ext" type="xsd:normalizedString" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="parametersType">
+        <xsd:sequence>
+            <xsd:element name="parameter" type="parameterType" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="parameterType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="name" type="xsd:normalizedString" use="required"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="display_methodType">
+        <xsd:complexContent>
+            <xsd:restriction base="xsd:anyType">
+                <xsd:attribute name="file" type="xsd:normalizedString" use="required"/>
+                <xsd:attribute name="module" type="xsd:normalizedString" default="fedora_repository"/>
+                <xsd:attribute name="class" type="xsd:normalizedString" use="required"/>
+                <xsd:attribute name="method" type="xsd:normalizedString" use="required"/>
+                <xsd:attribute name="default" type="xsd:boolean" default="false"/>
+            </xsd:restriction>
+        </xsd:complexContent>
+    </xsd:complexType>
 
-	<xsd:complexType name="formType">
-		<xsd:complexContent>
-			<xsd:extension base="formElementType">
-				<xsd:attribute name="name" type="xsd:normalizedString" use="required"/>
-				<xsd:attribute name="dsid" type="xsd:normalizedString" use="required"/>
-				<xsd:attribute name="ingest_module" type="xsd:normalizedString"/>
-				<xsd:attribute name="ingest_file" type="xsd:normalizedString"/>
-				<xsd:attribute name="ingest_class" type="xsd:normalizedString"/>
-				<xsd:attribute name="edit_module" type="xsd:normalizedString" use="optional"/>
-				<xsd:attribute name="edit_file" type="xsd:normalizedString" use="optional"/>
-				<xsd:attribute name="edit_class" type="xsd:normalizedString" use="optional"/>
-				<xsd:attribute name="document_module" type="xsd:normalizedString" use="required"/>
-				<xsd:attribute name="document_file" type="xsd:normalizedString" use="required"/>
-				<xsd:attribute name="document_class" type="xsd:normalizedString" use="required"/>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="formElementType">
-		<xsd:choice maxOccurs="unbounded" minOccurs="0">
-			<xsd:element maxOccurs="1" minOccurs="1" name="fieldset">
-				<xsd:complexType>
-					<xsd:all maxOccurs="1" minOccurs="1">
-						<xsd:element name="title" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="description" type="xsd:normalizedString"/>
-						<xsd:element default="true" minOccurs="0" name="collapsible"
+    <xsd:complexType name="formType">
+        <xsd:complexContent>
+            <xsd:extension base="formElementType">
+                <xsd:attribute name="name" type="xsd:normalizedString" use="required"/>
+                <xsd:attribute name="dsid" type="xsd:normalizedString" use="required"/>
+                <xsd:attribute name="ingest_module" type="xsd:normalizedString"/>
+                <xsd:attribute name="ingest_file" type="xsd:normalizedString"/>
+                <xsd:attribute name="ingest_class" type="xsd:normalizedString"/>
+                <xsd:attribute name="edit_module" type="xsd:normalizedString" use="optional"/>
+                <xsd:attribute name="edit_file" type="xsd:normalizedString" use="optional"/>
+                <xsd:attribute name="edit_class" type="xsd:normalizedString" use="optional"/>
+                <xsd:attribute name="document_module" type="xsd:normalizedString" use="required"/>
+                <xsd:attribute name="document_file" type="xsd:normalizedString" use="required"/>
+                <xsd:attribute name="document_class" type="xsd:normalizedString" use="required"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="formElementType">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+            <xsd:element maxOccurs="1" minOccurs="1" name="fieldset">
+                <xsd:complexType>
+                    <xsd:all maxOccurs="1" minOccurs="1">
+                        <xsd:element name="title" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="description" type="xsd:normalizedString"/>
+                        <xsd:element default="true" minOccurs="0" name="collapsible"
 							type="xsd:boolean"/>
-						<xsd:element default="false" minOccurs="0" name="collapsed"
+                        <xsd:element default="false" minOccurs="0" name="collapsed"
 							type="xsd:boolean"/>
-						<xsd:element name="content" type="formElementType"/>
-						<xsd:element minOccurs="0" name="form_builder" type="formBuilderControlType"
+                        <xsd:element name="content" type="formElementType"/>
+                        <xsd:element minOccurs="0" name="form_builder" type="formBuilderControlType"
 						/>
-					</xsd:all>
-				</xsd:complexType>
-			</xsd:element>
-			<xsd:element name="textfield">
-				<xsd:complexType>
-					<xsd:all maxOccurs="1" minOccurs="1">
-						<xsd:element name="title" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="description" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="required" type="xsd:boolean"/>
-						<xsd:element minOccurs="0" name="default_value" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="autocomplete_path"
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="textfield">
+                <xsd:complexType>
+                    <xsd:all maxOccurs="1" minOccurs="1">
+                        <xsd:element name="title" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="description" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="required" type="xsd:boolean"/>
+                        <xsd:element minOccurs="0" name="default_value" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="autocomplete_path"
 							type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="form_builder" type="formBuilderControlType"
+                        <xsd:element minOccurs="0" name="form_builder" type="formBuilderControlType"
 						/>
-					</xsd:all>
-				</xsd:complexType>
-			</xsd:element>
-			<xsd:element minOccurs="1" name="textarea">
-				<xsd:complexType>
-					<xsd:all maxOccurs="1" minOccurs="1">
-						<xsd:element name="title" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="description" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="required" type="xsd:boolean"/>
-						<xsd:element minOccurs="0" name="default_value" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="form_builder" type="formBuilderControlType"
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element minOccurs="1" name="textarea">
+                <xsd:complexType>
+                    <xsd:all maxOccurs="1" minOccurs="1">
+                        <xsd:element name="title" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="description" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="required" type="xsd:boolean"/>
+                        <xsd:element minOccurs="0" name="default_value" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="form_builder" type="formBuilderControlType"
 						/>
-					</xsd:all>
-				</xsd:complexType>
-			</xsd:element>
-			<xsd:element maxOccurs="1" minOccurs="1" name="select">
-				<xsd:complexType>
-					<xsd:all maxOccurs="1" minOccurs="1">
-						<xsd:element name="title" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="description" type="xsd:normalizedString"/>
-						<xsd:element name="options" type="formControlOptionsType"/>
-						<xsd:element minOccurs="0" name="required" type="xsd:boolean"/>
-						<xsd:element minOccurs="0" name="default_value" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="form_builder" type="formBuilderControlType"
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element maxOccurs="1" minOccurs="1" name="select">
+                <xsd:complexType>
+                    <xsd:all maxOccurs="1" minOccurs="1">
+                        <xsd:element name="title" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="description" type="xsd:normalizedString"/>
+                        <xsd:element name="options" type="formControlOptionsType"/>
+                        <xsd:element minOccurs="0" name="required" type="xsd:boolean"/>
+                        <xsd:element minOccurs="0" name="default_value" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="form_builder" type="formBuilderControlType"
 						/>
-					</xsd:all>
-				</xsd:complexType>
-			</xsd:element>
-			<xsd:element minOccurs="1" name="set">
-				<xsd:complexType>
-					<xsd:all maxOccurs="1" minOccurs="1">
-						<xsd:element name="title" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="description" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="required" type="xsd:boolean"/>
-						<xsd:element minOccurs="0" name="default_value" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="autocomplete_path"
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element minOccurs="1" name="set">
+                <xsd:complexType>
+                    <xsd:all maxOccurs="1" minOccurs="1">
+                        <xsd:element name="title" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="description" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="required" type="xsd:boolean"/>
+                        <xsd:element minOccurs="0" name="default_value" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="autocomplete_path"
 							type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="form_builder" type="formBuilderControlType"
+                        <xsd:element minOccurs="0" name="form_builder" type="formBuilderControlType"
 						/>
-					</xsd:all>
-				</xsd:complexType>
-			</xsd:element>
-			<xsd:element minOccurs="1" name="filechooser">
-				<xsd:complexType>
-					<xsd:all maxOccurs="1" minOccurs="1">
-						<xsd:element name="title" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="description" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="required" type="xsd:boolean"/>
-						<xsd:element minOccurs="0" name="default_value" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="form_builder" type="formBuilderControlType"
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element minOccurs="1" name="filechooser">
+                <xsd:complexType>
+                    <xsd:all maxOccurs="1" minOccurs="1">
+                        <xsd:element name="title" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="description" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="required" type="xsd:boolean"/>
+                        <xsd:element minOccurs="0" name="default_value" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="form_builder" type="formBuilderControlType"
 						/>
-					</xsd:all>
-				</xsd:complexType>
-			</xsd:element>
-			<xsd:element minOccurs="1" name="datepicker">
-				<xsd:complexType>
-					<xsd:all maxOccurs="1" minOccurs="1">
-						<xsd:element name="title" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="description" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="required" type="xsd:boolean"/>
-						<xsd:element minOccurs="0" name="default_value" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="form_builder" type="formBuilderControlType"
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element minOccurs="1" name="datepicker">
+                <xsd:complexType>
+                    <xsd:all maxOccurs="1" minOccurs="1">
+                        <xsd:element name="title" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="description" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="required" type="xsd:boolean"/>
+                        <xsd:element minOccurs="0" name="default_value" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="form_builder" type="formBuilderControlType"
 						/>
-					</xsd:all>
-				</xsd:complexType>
-			</xsd:element>
-			<xsd:element maxOccurs="1" minOccurs="1" name="tabpanel">
-				<xsd:complexType>
-					<xsd:all maxOccurs="1" minOccurs="1">
-						<xsd:element name="title" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="description" type="xsd:normalizedString"/>
-						<xsd:element default="true" minOccurs="0" name="collapsible"
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element maxOccurs="1" minOccurs="1" name="tabpanel">
+                <xsd:complexType>
+                    <xsd:all maxOccurs="1" minOccurs="1">
+                        <xsd:element name="title" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="description" type="xsd:normalizedString"/>
+                        <xsd:element default="true" minOccurs="0" name="collapsible"
 							type="xsd:boolean"/>
-						<xsd:element default="false" minOccurs="0" name="collapsed"
+                        <xsd:element default="false" minOccurs="0" name="collapsed"
 							type="xsd:boolean"/>
-						<xsd:element name="content" type="formElementType"/>
-						<xsd:element minOccurs="0" name="form_builder" type="formBuilderControlType"
+                        <xsd:element name="content" type="formElementType"/>
+                        <xsd:element minOccurs="0" name="form_builder" type="formBuilderControlType"
 						/>
-					</xsd:all>
-				</xsd:complexType>
-			</xsd:element>
-			<xsd:element name="checkbox">
-				<xsd:complexType>
-					<xsd:all maxOccurs="1" minOccurs="1">
-						<xsd:element name="title" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="description" type="xsd:normalizedString"/>
-						<xsd:element name="return_value" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="form_builder" type="formBuilderControlType"
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="checkbox">
+                <xsd:complexType>
+                    <xsd:all maxOccurs="1" minOccurs="1">
+                        <xsd:element name="title" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="description" type="xsd:normalizedString"/>
+                        <xsd:element name="return_value" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="form_builder" type="formBuilderControlType"
 						/>
-					</xsd:all>
-				</xsd:complexType>
-			</xsd:element>
-			<xsd:element minOccurs="1" name="hidden">
-				<xsd:complexType>
-					<xsd:all>
-						<xsd:element minOccurs="1" name="value" type="xsd:normalizedString"/>
-						<xsd:element minOccurs="0" name="form_builder" type="formBuilderControlType"/>
-						<xsd:element minOccurs="0" name="content" type="formElementType"/>
-					</xsd:all>
-				</xsd:complexType>
-			</xsd:element>
-		</xsd:choice>
-	</xsd:complexType>
-	<xsd:complexType name="formControlXPathType">
-		<xsd:simpleContent>
-			<xsd:extension base="xsd:normalizedString">
-				<xsd:attribute name="full_path" type="xsd:boolean"/>
-			</xsd:extension>
-		</xsd:simpleContent>
-	</xsd:complexType>
-	<xsd:complexType name="formControlElementValidateType">
-		<xsd:complexContent>
-			<xsd:extension base="array"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="array">
-		<xsd:sequence>
-			<xsd:element maxOccurs="unbounded" name="item" type="xsd:normalizedString"/>
-		</xsd:sequence>
-	</xsd:complexType>
-	<xsd:complexType name="formControlOptionsType">
-		<xsd:sequence>
-			<xsd:element maxOccurs="unbounded" name="option" type="xsd:normalizedString"/>
-		</xsd:sequence>
-		<xsd:attribute name="ignoreFirstOption" type="xsd:boolean" use="required"/>
-	</xsd:complexType>
-	<xsd:complexType name="formBuilderControlType">
-		<xsd:sequence>
-			<xsd:element name="xpath">
-				<xsd:complexType>
-					<xsd:sequence>
-						<xsd:element name="path">
-							<xsd:complexType>
-								<xsd:simpleContent>
-									<xsd:extension base="xsd:normalizedString">
-										<xsd:attribute name="full" type="xsd:boolean" use="required"
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element minOccurs="1" name="hidden">
+                <xsd:complexType>
+                    <xsd:all>
+                        <xsd:element minOccurs="1" name="value" type="xsd:normalizedString"/>
+                        <xsd:element minOccurs="0" name="form_builder" type="formBuilderControlType"/>
+                        <xsd:element minOccurs="0" name="content" type="formElementType"/>
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:choice>
+    </xsd:complexType>
+    <xsd:complexType name="formControlXPathType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:normalizedString">
+                <xsd:attribute name="full_path" type="xsd:boolean"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="formControlElementValidateType">
+        <xsd:complexContent>
+            <xsd:extension base="array"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="array">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" name="item" type="xsd:normalizedString"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="formControlOptionsType">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" name="option" type="xsd:normalizedString"/>
+        </xsd:sequence>
+        <xsd:attribute name="ignoreFirstOption" type="xsd:boolean" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="formBuilderControlType">
+        <xsd:sequence>
+            <xsd:element name="xpath">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="path">
+                            <xsd:complexType>
+                                <xsd:simpleContent>
+                                    <xsd:extension base="xsd:normalizedString">
+                                        <xsd:attribute name="full" type="xsd:boolean" use="required"
 										/>
-									</xsd:extension>
-								</xsd:simpleContent>
-							</xsd:complexType>
-						</xsd:element>
-						<xsd:element name="parent_path" minOccurs="0">
-							<xsd:complexType>
-								<xsd:simpleContent>
-									<xsd:extension base="xsd:normalizedString"> </xsd:extension>
-								</xsd:simpleContent>
-							</xsd:complexType>
-						</xsd:element>
-						<xsd:choice>
-							<xsd:element name="xml" type="xsd:normalizedString"/>
-							<xsd:element name="element" type="xsd:normalizedString"/>
-							<xsd:element name="attribute" type="xsd:normalizedString"/>
-						</xsd:choice>
-					</xsd:sequence>
-				</xsd:complexType>
-			</xsd:element>
-			<xsd:element name="require_value" type="xsd:boolean"/>
-		</xsd:sequence>
-	</xsd:complexType>
+                                    </xsd:extension>
+                                </xsd:simpleContent>
+                            </xsd:complexType>
+                        </xsd:element>
+                        <xsd:element name="parent_path" minOccurs="0">
+                            <xsd:complexType>
+                                <xsd:simpleContent>
+                                    <xsd:extension base="xsd:normalizedString"> </xsd:extension>
+                                </xsd:simpleContent>
+                            </xsd:complexType>
+                        </xsd:element>
+                        <xsd:choice>
+                            <xsd:element name="xml" type="xsd:normalizedString"/>
+                            <xsd:element name="element" type="xsd:normalizedString"/>
+                            <xsd:element name="attribute" type="xsd:normalizedString"/>
+                        </xsd:choice>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="require_value" type="xsd:boolean"/>
+        </xsd:sequence>
+    </xsd:complexType>
 </xsd:schema>

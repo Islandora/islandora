@@ -1,166 +1,167 @@
+
 <content_model name="standard_slide">
-  <mimetypes>
-    <type>image/tiff</type>
-    <type>image/tif</type>
-  </mimetypes>
-  <display_in_fieldset>
-    <datastream id="JPG">
-      <method>
-        <file>plugins/slide_viewer.inc</file>
-        <class_name>ShowSlideStreamsInFieldSets</class_name>
-        <method_name>showJPG</method_name>
-      </method>
-    </datastream>
-    <datastream id="JP2"/>
-    <datastream id="FULL_SIZE"/>
-    <datastream id="FULL_JPG"/>
-  </display_in_fieldset>
-  <ingest_rules>
-    <rule>
-      <applies_to>
+    <mimetypes>
+        <type>image/tiff</type>
+        <type>image/tif</type>
+    </mimetypes>
+    <display_in_fieldset>
+        <datastream id="JPG">
+            <method>
+                <file>plugins/slide_viewer.inc</file>
+                <class_name>ShowSlideStreamsInFieldSets</class_name>
+                <method_name>showJPG</method_name>
+            </method>
+        </datastream>
+        <datastream id="JP2"/>
+        <datastream id="FULL_SIZE"/>
+        <datastream id="FULL_JPG"/>
+    </display_in_fieldset>
+    <ingest_rules>
+        <rule>
+            <applies_to>
               image/tiff
             </applies_to>
-      <applies_to>
+            <applies_to>
               image/tif
-      </applies_to>
-      <methods>
-        <method>
-          <file>plugins/ImageManipulation.inc</file>
-          <class_name>ImageManipulation</class_name>
-          <method_name>createJP2</method_name>
-          <modified_files_ext>jp2</modified_files_ext>
-          <datastream_id>JP2</datastream_id>
-        </method>
-      </methods>
-    </rule>
-  </ingest_rules>
-  <ingest_form dsid="QDC" page="2">
-    <form_builder_method>
-      <file>plugins/DemoFormBuilder.inc</file>
-      <class_name>DemoFormBuilder</class_name>
-      <method_name>buildQDCForm</method_name>
-      <form_handler>handleQDCForm</form_handler>
-    </form_builder_method>
-    <form_elements>
-      <element>
-        <label>Title/Caption/Image Name</label>
-        <name>dc:title</name>
-        <type>textfield</type>
-        <description>The name given to the resource</description>
-        <required>true</required>
-      </element>
-      <element>
-        <label>Creator/Photographer</label>
-        <name>dc:creator</name>
-        <type>textfield</type>
-        <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
-        <required>false</required>
-      </element>
-      <element>
-        <label>Subject</label>
-        <name>dc:subject</name>
-        <type>select</type>
-        <description>Subject</description>
-        <required>false</required>
-        <authoritative_list>
-          <item>
-            <field>image</field>
-            <value>image</value>
-          </item>
-          <item>
-            <field>photograph</field>
-            <value>photograph</value>
-          </item>
-          <item>
-            <field>presentation</field>
-            <value>presentation</value>
-          </item>
-          <item>
-            <field>art</field>
-            <value>art</value>
-          </item>
-        </authoritative_list>
-      </element>
-      <element>
-        <label>Description</label>
-        <name>dc:description</name>
-        <type>textarea</type>
-        <description>Description of the Image</description>
-        <required>true</required>
-      </element>
-      <element>
-        <label>Publisher</label>
-        <name>dc:publisher</name>
-        <type>textfield</type>
-        <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
-        <required>false</required>
-      </element>
-      <element>
-        <label>Contributor</label>
-        <name>dc:contributor</name>
-        <type>textfield</type>
-        <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
-        <required>false</required>
-      </element>
-      <element>
-        <label>Date</label>
-        <name>dc:date</name>
-        <type>textfield</type>
-        <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
-        <required>false</required>
-      </element>
-      <element>
-        <label>Resource Type</label>
-        <name>dc:type</name>
-        <type>textfield</type>
-        <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
-        <required>false</required>
-      </element>
-      <element>
-        <label>Source</label>
-        <name>dc:source</name>
-        <type>textfield</type>
-        <description>A reference to a resource from which the present resource is derived.</description>
-        <required>false</required>
-      </element>
-      <element>
-        <label>Identifier</label>
-        <name>dc:identifier</name>
-        <type>textfield</type>
-        <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
-        <required>false</required>
-      </element>
-      <element>
-        <label>Language</label>
-        <name>dc:language</name>
-        <type>select</type>
-        <description>The language of the intellectual content of the resource.</description>
-        <required>false</required>
-        <authoritative_list>
-          <item>
-            <field>eng</field>
-            <value>English</value>
-          </item>
-          <item>
-            <field>fre</field>
-            <value>French</value>
-          </item>
-        </authoritative_list>
-      </element>
-      <element>
-        <label>Relation</label>
-        <name>dc:relation</name>
-        <type>textfield</type>
-        <description>Reference to a related resource.</description>
-        <required>false</required>
-      </element>
-      <element>
-        <label>Rights Management</label>
-        <name>dc:rights</name>
-        <type>textarea</type>
-        <description>Information about intellectual property rights, copyright, and various property rights.</description>
-        <required>false</required>
-      </element>
-    </form_elements>
-  </ingest_form>
+            </applies_to>
+            <methods>
+                <method>
+                    <file>plugins/ImageManipulation.inc</file>
+                    <class_name>ImageManipulation</class_name>
+                    <method_name>createJP2</method_name>
+                    <modified_files_ext>jp2</modified_files_ext>
+                    <datastream_id>JP2</datastream_id>
+                </method>
+            </methods>
+        </rule>
+    </ingest_rules>
+    <ingest_form dsid="QDC" page="2">
+        <form_builder_method>
+            <file>plugins/DemoFormBuilder.inc</file>
+            <class_name>DemoFormBuilder</class_name>
+            <method_name>buildQDCForm</method_name>
+            <form_handler>handleQDCForm</form_handler>
+        </form_builder_method>
+        <form_elements>
+            <element>
+                <label>Title/Caption/Image Name</label>
+                <name>dc:title</name>
+                <type>textfield</type>
+                <description>The name given to the resource</description>
+                <required>true</required>
+            </element>
+            <element>
+                <label>Creator/Photographer</label>
+                <name>dc:creator</name>
+                <type>textfield</type>
+                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                <required>false</required>
+            </element>
+            <element>
+                <label>Subject</label>
+                <name>dc:subject</name>
+                <type>select</type>
+                <description>Subject</description>
+                <required>false</required>
+                <authoritative_list>
+                    <item>
+                        <field>image</field>
+                        <value>image</value>
+                    </item>
+                    <item>
+                        <field>photograph</field>
+                        <value>photograph</value>
+                    </item>
+                    <item>
+                        <field>presentation</field>
+                        <value>presentation</value>
+                    </item>
+                    <item>
+                        <field>art</field>
+                        <value>art</value>
+                    </item>
+                </authoritative_list>
+            </element>
+            <element>
+                <label>Description</label>
+                <name>dc:description</name>
+                <type>textarea</type>
+                <description>Description of the Image</description>
+                <required>true</required>
+            </element>
+            <element>
+                <label>Publisher</label>
+                <name>dc:publisher</name>
+                <type>textfield</type>
+                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
+                <required>false</required>
+            </element>
+            <element>
+                <label>Contributor</label>
+                <name>dc:contributor</name>
+                <type>textfield</type>
+                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
+                <required>false</required>
+            </element>
+            <element>
+                <label>Date</label>
+                <name>dc:date</name>
+                <type>textfield</type>
+                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
+                <required>false</required>
+            </element>
+            <element>
+                <label>Resource Type</label>
+                <name>dc:type</name>
+                <type>textfield</type>
+                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
+                <required>false</required>
+            </element>
+            <element>
+                <label>Source</label>
+                <name>dc:source</name>
+                <type>textfield</type>
+                <description>A reference to a resource from which the present resource is derived.</description>
+                <required>false</required>
+            </element>
+            <element>
+                <label>Identifier</label>
+                <name>dc:identifier</name>
+                <type>textfield</type>
+                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
+                <required>false</required>
+            </element>
+            <element>
+                <label>Language</label>
+                <name>dc:language</name>
+                <type>select</type>
+                <description>The language of the intellectual content of the resource.</description>
+                <required>false</required>
+                <authoritative_list>
+                    <item>
+                        <field>eng</field>
+                        <value>English</value>
+                    </item>
+                    <item>
+                        <field>fre</field>
+                        <value>French</value>
+                    </item>
+                </authoritative_list>
+            </element>
+            <element>
+                <label>Relation</label>
+                <name>dc:relation</name>
+                <type>textfield</type>
+                <description>Reference to a related resource.</description>
+                <required>false</required>
+            </element>
+            <element>
+                <label>Rights Management</label>
+                <name>dc:rights</name>
+                <type>textarea</type>
+                <description>Information about intellectual property rights, copyright, and various property rights.</description>
+                <required>false</required>
+            </element>
+        </form_elements>
+    </ingest_form>
 </content_model>

@@ -68,7 +68,7 @@ class Exiftool {
               $output .= '<li><b>' . $name . '</b>:  ' . $value . ' </li>';
             }
           }
-          $output.='</ul></div>';
+          $output .= '</ul></div>';
 
           $fieldset = array(
             '#title' => t("!text", array('!text' => 'Technical Metadata')),

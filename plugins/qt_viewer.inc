@@ -47,7 +47,7 @@ class ShowQtStreamsInFieldSets {
       $doc->registerXPathNamespace('Composite', 'http://ns.exiftool.ca/Composite/1.0/');
       $mime = reset($doc->xpath('//File:MIMEType'));
       $data['mime'] = $mime;
-      if (strpos($mime, 'audio/') !== false) {
+      if (strpos($mime, 'audio/') !== FALSE) {
         $data['width'] = 300;
         $data['height'] = 0;
       }
@@ -73,8 +73,8 @@ class ShowQtStreamsInFieldSets {
    */
   function getPosterFrameDatastreamInfo($dsid = 'FULL_SIZE') {
     $p = ObjectHelper::getDatastreamInfo($this->pid, $dsid);
-    if (empty($p) || $p == ' ' || $p === false) {
-      return false;
+    if (empty($p) || $p == ' ' || $p === FALSE) {
+      return FALSE;
     }
     return $p;
   }
@@ -87,12 +87,12 @@ class ShowQtStreamsInFieldSets {
    */
   function getMediaDatastreamInfo($dsid = 'OBJ', $alt = array('')) {
     $p = ObjectHelper::getDatastreamInfo($this->pid, $dsid);
-    if (empty($p) || $p == ' ' || $p === false) {
+    if (empty($p) || $p == ' ' || $p === FALSE) {
       if (!empty($alt)) {
         $ds = array_shift($alt);
         return $this->getMediaDatastreamInfo($ds, $alt);
       }
-      return false;
+      return FALSE;
     }
 
     return $p;
@@ -103,7 +103,7 @@ class ShowQtStreamsInFieldSets {
    * @return FALSE 
    */
   function enableDownload() {
-    return false;
+    return FALSE;
   }
 
   /**
@@ -122,7 +122,7 @@ class ShowQtStreamsInFieldSets {
 
     $pframe = $this->getPosterFrameDatastreamInfo();
     $media = $this->getMediaDatastreamInfo('PROXY', array('OBJ'));
-    if ($media === false) {
+    if ($media === FALSE) {
       return '';
     }
     global $base_url;
@@ -134,7 +134,7 @@ class ShowQtStreamsInFieldSets {
 
     $divid = 'player' . md5($this->pid) . 'MOV';
     $content .= '<div  class="player"  id="' . $divid . '">';
-    if ($pframe !== false) {
+    if ($pframe !== FALSE) {
       $content .= '<div class="poster" style="cursor: pointer; position: relative; width: ' . $width . 'px; min-height: ' . ($height) . 'px;">';
       $content .= '<img src="' . base_path() . 'fedora/repository/' . $this->pid . '/' . $pframe->ID . '/poster.jpg' . '" />';
       $content .= '<div class="play" style="font-size: 128px; color: white; position: absolute; top: 50%; left: 50%; margin-top: -0.085em; margin-left: -0.33em; opacity: 0.9; ">▶</div>';
@@ -147,7 +147,7 @@ class ShowQtStreamsInFieldSets {
     }
     $src = base_path() . 'fedora/repository/' . $this->pid . '/' . $media->ID . '/MOV.mov';
     $qtparams = '';
-    $qtparams .= "'autostart', '" . ($pframe !== false ? 'true' : 'false') . "', ";
+    $qtparams .= "'autostart', '" . ($pframe !== FALSE ? 'true' : 'false') . "', ";
     $init = <<<EOD
      $(function() { 
        src = "$src";
@@ -156,12 +156,12 @@ class ShowQtStreamsInFieldSets {
        }
      	str = QT_GenerateOBJECTText_XHTML(src, "$width", ($height+15), '', 
 		$qtparams
-       		'postdomevents', 'true',
-      		'EnableJavaScript', 'true',
+       		'postdomevents', 'TRUE',
+      		'EnableJavaScript', 'TRUE',
        		'bgcolor', 'black',
-       		'controller', 'true',
+       		'controller', 'TRUE',
        		'SCALE', 'aspect',
-       		'LOOP', 'false'
+       		'LOOP', 'FALSE'
        	);		
 	if($('.poster', '#$divid').length ==0) {
       	$('#$divid').append(str);

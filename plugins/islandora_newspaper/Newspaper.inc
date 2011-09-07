@@ -1,10 +1,12 @@
 <?php
 
-// $Id$
+/* @file
+ * News Paper Plugin for Fedora Repository module.
+ */
 
 class Newspaper {
 
-  function  __construct($pid = '') {
+  function __construct($pid = '') {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
     if (!empty($pid)) {
 
@@ -13,16 +15,16 @@ class Newspaper {
     }
   }
 
- public function buildDrupalForm($form = array(), $ingest_form = array(), &$form_state = array()) {
-   
+  public function buildDrupalForm($form = array(), $ingest_form = array(), &$form_state = array()) {
+
     // Give the user an option to enter a custom PID
     $form['custom_pid'] = array(
       '#type' => 'textfield',
       '#title' => 'Custom PID',
-      '#description' => 'If you want to manually specify the PID for the new object, enter it here. '.
-                        'Leave it blank for an automatically-generated PID.',
+      '#description' => 'If you want to manually specify the PID for the new object, enter it here. ' .
+      'Leave it blank for an automatically-generated PID.',
     );
-    
+
     $form['mods'] = array(
       '#tree' => TRUE,
       '#prefix' => '<div id="mods-wrapper">',
@@ -32,12 +34,11 @@ class Newspaper {
       '#type' => 'textarea',
       '#title' => 'MODS Record to Import',
       '#rows' => 20,
-      
     );
-    
+
     return $form;
   }
-  
+
   public function handleIngestForm($form_values, &$form_state) {
     /*
      * process the metadata form
@@ -53,22 +54,22 @@ class Newspaper {
     $mods_item = $mods_list_doc->getElementsByTagNameNS('http://www.loc.gov/mods/v3', 'mods')->item(0);
     $new_mods_item = $mods_item_doc->importNode($mods_item, TRUE);
     $mods_item_doc->appendChild($new_mods_item);
-    
+
     $title_info = $mods_item_doc->getElementsByTagNameNS('http://www.loc.gov/mods/v3', 'titleInfo')->item(0);
     $title = '';
-    foreach(array('nonSort', 'title') as $title_field) {
+    foreach (array('nonSort', 'title') as $title_field) {
       $title .= $title_info->getElementsByTagNameNS('http://www.loc.gov/mods/v3', $title_field)->item(0)->nodeValue;
     }
-    
+
     $mods_text = $mods_item_doc->saveXML();
     global $user;
     $mimetype = new MimeClass();
-    
+
     $new_item = Fedora_Item::ingest_new_item(!empty($form_values['custom_pid']) ? $form_values['custom_pid'] : $form_values['pid'], 'A', $title,
-            $user->name);
-    
+        $user->name);
+
     $new_item->add_datastream_from_string($mods_text, 'MODS',
-            'MODS Metadata', 'text/xml', 'X');
+      'MODS Metadata', 'text/xml', 'X');
 
     $dc = transform_mods_to_dc($mods_text);
     if ($dc) {
@@ -76,17 +77,16 @@ class Newspaper {
       $dc_doc = simplexml_load_string($dc);
       $dc_doc->registerXPathNamespace('oai_dc', 'http://www.openarchives.org/OAI/2.0/oai_dc/');
       $dc_item = $dc_doc->xpath('//oai_dc:dc');
-      foreach($dc_item as $node) {
+      foreach ($dc_item as $node) {
         $node->addChild('dc:identifier', $new_item->pid, 'http://purl.org/dc/elements/1.1/');
       }
       $new_item->modify_datastream_by_value($dc_doc->saveXML(), 'DC', 'Dublin Core XML Metadata', 'text/xml');
     }
     $new_item->add_relationship('hasModel', $form_values['content_model_pid'], FEDORA_MODEL_URI);
     $new_item->add_relationship(!empty($form_values['relationship']) ? $form_values['relationship'] : 'isMemberOfCollection', $form_values['collection_pid']);
-    drupal_set_message(t("Item !pid created successfully.", array('!pid' => l($new_item->pid, 'fedora/repository/'. $new_item->pid))), "status");
-
+    drupal_set_message(t("Item !pid created successfully.", array('!pid' => l($new_item->pid, 'fedora/repository/' . $new_item->pid))), "status");
   }
-  
+
   public function showFieldSets() {
     module_load_include('inc', 'fedora_ilives', 'book');
     global $base_url;
@@ -100,11 +100,11 @@ class Newspaper {
     global $user;
     $qs = '';
     if ($user->uid != 0) {
-      $qs = '?uid='. base64_encode($user->name . ':'. $user->pass);
+      $qs = '?uid=' . base64_encode($user->name . ':' . $user->pass);
     }
 
-    $viewer_url = variable_get('fedora_base_url', '') . '/get/'. $this->pid . '/ilives:viewerSdef/getViewer'. $qs;
-    $html = '<iframe src="'. $viewer_url . '"  scrolling="no" frameborder="0" style="width: 100%; height: 800px;">Errors: unable to load viewer</iframe>';
+    $viewer_url = variable_get('fedora_base_url', '') . '/get/' . $this->pid . '/ilives:viewerSdef/getViewer' . $qs;
+    $html = '<iframe src="' . $viewer_url . '"  scrolling="no" frameborder="0" style="width: 100%; height: 800px;">Errors: unable to load viewer</iframe>';
 
     $tabset['read'] = array(
       '#type' => 'tabpage',
@@ -114,7 +114,7 @@ class Newspaper {
     );
 
     $item = new Fedora_Item($this->pid);
-    
+
     $tabset['description'] = array(
       '#type' => 'tabpage',
       '#title' => 'Description',
@@ -141,11 +141,11 @@ class Newspaper {
     global $user;
     $qs = '';
     if ($user->uid != 0) {
-      $qs = '?uid='. base64_encode($user->name . ':'. $user->pass);
+      $qs = '?uid=' . base64_encode($user->name . ':' . $user->pass);
     }
 
-    $viewer_url = variable_get('fedora_base_url', '') . '/get/'. $this->pid . '/ilives:viewerSdef/getViewer'. $qs;
-    $html = '<iframe src="'. $viewer_url . '" frameborder="0" style="width: 100%; height: 800px;">Errors: unable to load viewer</iframe>';
+    $viewer_url = variable_get('fedora_base_url', '') . '/get/' . $this->pid . '/ilives:viewerSdef/getViewer' . $qs;
+    $html = '<iframe src="' . $viewer_url . '" frameborder="0" style="width: 100%; height: 800px;">Errors: unable to load viewer</iframe>';
 
     $tabset['first_tab'] = array(
       '#type' => 'tabpage',
@@ -162,8 +162,8 @@ class Newspaper {
       if (strstr($rel['predicate'], 'isPartOf')) {
         $parent_pid = $rel['object'];
         break;
-      }      
-    }    
+      }
+    }
     $parent_item = new Fedora_Item($parent_pid);
     $tabset['second_tab'] = array(
       '#type' => 'tabpage',
@@ -173,4 +173,5 @@ class Newspaper {
 
     return $tabset;
   }
+
 }

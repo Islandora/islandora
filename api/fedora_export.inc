@@ -100,14 +100,14 @@ function export_foxml_for_pid($pid, $dir, $paths, &$log, $format = FOXML_11, $re
   // Remove rdf elements added during ingest (if present)
   if ($remove_islandora) {
     $xpath->registerNamespace('rdf', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#');
-    $descNode = $xpath->query("//rdf:RDF/rdf:Description")->item(0);
+    $desc_node = $xpath->query("//rdf:RDF/rdf:Description")->item(0);
 
-    if ($model = $descNode->getElementsByTagName('hasModel')->item(0)) {
-      $descNode->removeChild($model);
+    if ($model = $desc_node->getElementsByTagName('hasModel')->item(0)) {
+      $desc_node->removeChild($model);
     }
 
-    if ($member = $descNode->getElementsByTagName('rel:isMemberOfCollection')->item(0)) {
-      $descNode->removeChild($member);
+    if ($member = $desc_node->getElementsByTagName('rel:isMemberOfCollection')->item(0)) {
+      $desc_node->removeChild($member);
     }
   }
 
@@ -121,24 +121,24 @@ function export_foxml_for_pid($pid, $dir, $paths, &$log, $format = FOXML_11, $re
 
         // Update datastream uris
         $xpath->registerNamespace('foxml', 'info:fedora/fedora-system:def/foxml#');
-        foreach ($xpath->query("//foxml:datastream[@ID]") as $dsNode) {
+        foreach ($xpath->query("//foxml:datastream[@ID]") as $ds_node) {
 
           // Don't update datastreams having external uris
-          if (in_array($dsNode->getAttribute('CONTROL_GROUP'), $disallowed_groups)) {
+          if (in_array($ds_node->getAttribute('CONTROL_GROUP'), $disallowed_groups)) {
             continue;
           }
 
-          $dsId = $dsNode->getAttribute('ID');
+          $ds_id = $ds_node->getAttribute('ID');
 
           // Remove QUERY datastream
-          if ($dsId == "QUERY") {
-            $parentNode = $xpath->query('/foxml:digitalObject')->item(0);
-            $parentNode->removeChild($dsNode);
+          if ($ds_id == "QUERY") {
+            $parent_node = $xpath->query('/foxml:digitalObject')->item(0);
+            $parent_node->removeChild($ds_node);
           }
 
-          foreach ($dsNode->getElementsByTagName('*') as $contentNode) {
-            if ($str = $contentNode->getAttribute('REF')) {
-              $contentNode->setAttribute('REF', url($paths[$dsId], array('absolute' => TRUE)));
+          foreach ($ds_node->getElementsByTagName('*') as $content_node) {
+            if ($str = $content_node->getAttribute('REF')) {
+              $content_node->setAttribute('REF', url($paths[$ds_id], array('absolute' => TRUE)));
             }
           }
         }
@@ -148,29 +148,29 @@ function export_foxml_for_pid($pid, $dir, $paths, &$log, $format = FOXML_11, $re
       case METS_11:
         // Update datastream uris
         $xpath->registerNamespace('METS', 'http://www.loc.gov/METS/');
-        foreach ($xpath->query('//METS:fileGrp[@ID="DATASTREAMS"]/METS:fileGrp') as $dsNode) {
+        foreach ($xpath->query('//METS:fileGrp[@ID="DATASTREAMS"]/METS:fileGrp') as $ds_node) {
 
-          $dsId = $dsNode->getAttribute('ID');
+          $ds_id = $ds_node->getAttribute('ID');
 
           // Remove QUERY datastream
-          if ($dsId == "QUERY") {
-            $parentNode = $xpath->query('//METS:fileGrp[@ID="DATASTREAMS"]')->item(0);
-            $parentNode->removeChild($dsNode);
+          if ($ds_id == "QUERY") {
+            $parent_node = $xpath->query('//METS:fileGrp[@ID="DATASTREAMS"]')->item(0);
+            $parent_node->removeChild($ds_node);
           }
 
           $xpath->registerNamespace('xlink', 'http://www.loc.gov/METS/');
-          foreach ($xpath->query('METS:file[@OWNERID!="E"][@OWNERID!="R"]/METS:FLocat[@xlink:href]', $dsNode) as $Floc) {
-            $Floc->setAttribute('xlink:href', url($paths[$dsId], array('absolute' => TRUE)));
+          foreach ($xpath->query('METS:file[@OWNERID!="E"][@OWNERID!="R"]/METS:FLocat[@xlink:href]', $ds_node) as $floc) {
+            $floc->setAttribute('xlink:href', url($paths[$ds_id], array('absolute' => TRUE)));
           }
           /*
-            foreach ($dsNode->getElementsByTagName('METS:file') as $contentNode) {
+            foreach ($ds_node->getElementsByTagName('METS:file') as $content_node) {
             // Don't update datastreams having external uris
-            if (in_array($dsNode->getAttribute('OWNERID'), $disallowed_groups)) {
+            if (in_array($ds_node->getAttribute('OWNERID'), $disallowed_groups)) {
             continue;
             }
 
-            foreach ($xpath->('METS:FLocat[@xlink:href]', $contentNode) as $Floc) {
-            $Floc->setAttribute('xlink:href', url($paths[$dsId], array('absolute' => true)));
+            foreach ($xpath->('METS:FLocat[@xlink:href]', $content_node) as $floc) {
+            $floc->setAttribute('xlink:href', url($paths[$ds_id], array('absolute' => true)));
             }
             `}
            */
@@ -201,8 +201,8 @@ function export_foxml_for_pid($pid, $dir, $paths, &$log, $format = FOXML_11, $re
  * @param type $mimeType
  * @return type 
  */
-function get_file_extension($mimeType) {
-  return substr(strstr($mimeType, '/'), 1);
+function get_file_extension($mime_type) {
+  return substr(strstr($mime_type, '/'), 1);
 }
 
 /**

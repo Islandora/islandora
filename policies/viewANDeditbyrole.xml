@@ -12,26 +12,26 @@
     <!--  -->
     <!-- *********************************************************************************************************************************************************-->
     <Description>This policy will allow users with the roles listed below to view and edit objects with this policy</Description>
-     <Target>
+    <Target>
         <!-- *********************************************************************************************************************************************************-->
         <!--  This policy is applicable to any Subject.  However, the scope of the Subject is narrowed down in the Rule Condition (below). -->
         <!-- *********************************************************************************************************************************************************-->
-            <Subjects>
-                <AnySubject/>
-            </Subjects>
+        <Subjects>
+            <AnySubject/>
+        </Subjects>
         <!-- *********************************************************************************************************************************************************-->
         <!--    -->
         <!-- *********************************************************************************************************************************************************-->
-            <Resources>
-                <AnyResource/>
-            </Resources>
+        <Resources>
+            <AnyResource/>
+        </Resources>
         <!-- *********************************************************************************************************************************************************-->
         <!--  This policy is applicable to the actions below. -->
         <!-- *********************************************************************************************************************************************************-->
-            <Actions>
-                <AnyAction/>
-            </Actions>
-        </Target>
+        <Actions>
+            <AnyAction/>
+        </Actions>
+    </Target>
     <!-- ***************************************************************************************************************************************** -->
     <!-- Rule 1:  Deny access to edit functions of apim to everyone EXCEPT particular users (e.g., who are the object owners) -->
     <!-- and also the Fedora repository administrator.   -->
@@ -49,7 +49,7 @@
         <!-- module is set for DENY to override permit.   So, in this example, we add the administrator's userid to the list of users -->
         <!-- who are not to be denied. -->
         <!-- ***************************************************************************************************************************************** -->
-         <Condition FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+        <Condition FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
                     <SubjectAttributeDesignator AttributeId="fedoraRole" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>

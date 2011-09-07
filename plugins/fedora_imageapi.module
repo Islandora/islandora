@@ -1,5 +1,6 @@
 <?php
-// $Id$
+
+
 
 function fedora_imageapi_menu() {
   $items = array();
@@ -21,54 +22,53 @@ function fedora_imageapi_menu() {
  * @param string $params
  */
 function fedora_repository_image_manip($pid = '', $dsid = '', $op = '', $params = '') {
-  module_load_include( 'inc', 'Fedora_Repository', 'ObjectHelper');
-  module_load_include( 'module', 'imageapi');
+  module_load_include('inc', 'Fedora_Repository', 'ObjectHelper');
+  module_load_include('module', 'imageapi');
   $obj = new ObjectHelper();
-  $mimetype = $obj->getMimeType( $pid, $dsid);
-  $ext = substr( strstr($mimetype, '/'), 1);
+  $mimetype = $obj->getMimeType($pid, $dsid);
+  $ext = substr(strstr($mimetype, '/'), 1);
   $op = (!empty($_GET['op']) ? $_GET['op'] : '');
   $safe_pid = str_replace(':', '_', $pid);
-  
-  $cache_key = 'fedora_repository_image_manip_'.md5($safe_pid.'_'.$dsid.'_'.$ext.'_'.$op.(isset($_GET['width'])?'_'.$_GET['width']:'').(isset($_GET['height'])?'_'.$_GET['height']:''));
-  if (($file=cache_get($cache_key))===0)
-  {
+
+  $cache_key = 'fedora_repository_image_manip_' . md5($safe_pid . '_' . $dsid . '_' . $ext . '_' . $op . (isset($_GET['width']) ? '_' . $_GET['width'] : '') . (isset($_GET['height']) ? '_' . $_GET['height'] : ''));
+  if (($file = cache_get($cache_key)) === 0) {
     //added the slash as sys_get_temp_dir in linux does not seem to include the slash
-    $tmp_file_name = sys_get_temp_dir() .'/'. $safe_pid . '_'. $dsid . '.'. $ext;
-    $handle = fopen( $tmp_file_name, "w");
+    $tmp_file_name = sys_get_temp_dir() . '/' . $safe_pid . '_' . $dsid . '.' . $ext;
+    $handle = fopen($tmp_file_name, "w");
     $numbytes = fwrite($handle, $obj->getStream($pid, $dsid));
     fclose($handle);
     if ($numbytes == 0) {
       return;
     }
-    
-    
-    $image = imageapi_image_open( $tmp_file_name);
-    
+
+
+    $image = imageapi_image_open($tmp_file_name);
+
     switch ($op) {
       case 'scale':
-	if (!empty( $_GET['height'] ) || !empty( $_GET['width'])) {
-	  imageapi_image_scale($image, $_GET['width'], $_GET['height']);
-	}
-		  case 'centerscale':
-			  if (!empty($_GET['height']) && !empty($_GET['width']))  {
-				  imageapi_image_scale_and_crop($image, $_GET['width'], $_GET['height']);
-				  
-			  }	
+        if (!empty($_GET['height']) || !empty($_GET['width'])) {
+          imageapi_image_scale($image, $_GET['width'], $_GET['height']);
+        }
+      case 'centerscale':
+        if (!empty($_GET['height']) && !empty($_GET['width'])) {
+          imageapi_image_scale_and_crop($image, $_GET['width'], $_GET['height']);
+        }
     }
     imageapi_image_close($image);
     $file = file_get_contents($tmp_file_name);
-    cache_set($cache_key,$file,'cache',time()+variable_get('fedora_image_blocks_cache_time',3600));
+    cache_set($cache_key, $file, 'cache', time() + variable_get('fedora_image_blocks_cache_time', 3600));
     file_delete($tmp_file_name);
-  } else {
+  }
+  else {
     $file = $file->data;
   }
-  
+
 
   header("Content-type: $mimetype");
-  header('Content-Disposition: attachment; filename="'. $dsid . '.'. $ext . '"');
+  header('Content-Disposition: attachment; filename="' . $dsid . '.' . $ext . '"');
   echo $file;
-  
-  
+
+
 //  return "$numbytes bytes written to ".sys_get_temp_dir()."$pid_$dsid.$ext\n";
 }
 
@@ -79,38 +79,38 @@ function fedora_repository_image_manip($pid = '', $dsid = '', $op = '', $params 
  * @param unknown_type $form_state
  * @param unknown_type $form_id
  */
- /*
-function fedora_imageapi_form_alter( &$form, $form_state, $form_id) {
-  
-  switch ( $form_id ) {
-    case 'fedora_repository_admin':
-      
-      $fedora_base_url = $form['fedora_base_url']['#default_value'];
-      
-      $fedora_server_url = substr($fedora_base_url,0,strpos($fedora_base_url,'/',7));
-      // Add the Djatoka server location. Set it to default to the same server as fedora.
-      $form['djatoka_server_url'] = array (
-        '#type' => 'textfield',
-        '#title' => '<h3>'.t('Fedora Image API Module').'</h3><br />'.t('aDORe Djatoka image server resolver URL'),
-        '#default_value' => variable_get('djatoka_server_url', $fedora_server_url.'/adore-djatoka/resolver' ),
-        '#description' => t('The location of your <a href="http://african.lanl.gov/aDORe/projects/djatoka/" title="aDORe Djatoka Home Page">aDORe Djatoka</a> image server, if you have one installed.'),
-        '#weight' => 1,
-      );
-      $form['openlayers_server_url'] = array(
-        '#type' => 'textfield',
-        '#title' => t('OpenLayers servlet URL'),
-        '#default_value' => variable_get('openlayers_server_url', $fedora_server_url.'/islandora/OpenLayers'),
-        '#description' => t('URL of your installation of the <a href="http://openlayers.org/">OpenLayers</a> servlet, if you have one.'),
-        '#weight' => 1, 
-      );
-      $form['buttons']['#weight'] = 2;
-      break; 
-  }
-}
+/*
+  function fedora_imageapi_form_alter( &$form, $form_state, $form_id) {
 
-function show_openlayers_viewer() {
+  switch ( $form_id ) {
+  case 'fedora_repository_admin':
+
+  $fedora_base_url = $form['fedora_base_url']['#default_value'];
+
+  $fedora_server_url = substr($fedora_base_url,0,strpos($fedora_base_url,'/',7));
+  // Add the Djatoka server location. Set it to default to the same server as fedora.
+  $form['djatoka_server_url'] = array (
+  '#type' => 'textfield',
+  '#title' => '<h3>'.t('Fedora Image API Module').'</h3><br />'.t('aDORe Djatoka image server resolver URL'),
+  '#default_value' => variable_get('djatoka_server_url', $fedora_server_url.'/adore-djatoka/resolver' ),
+  '#description' => t('The location of your <a href="http://african.lanl.gov/aDORe/projects/djatoka/" title="aDORe Djatoka Home Page">aDORe Djatoka</a> image server, if you have one installed.'),
+  '#weight' => 1,
+  );
+  $form['openlayers_server_url'] = array(
+  '#type' => 'textfield',
+  '#title' => t('OpenLayers servlet URL'),
+  '#default_value' => variable_get('openlayers_server_url', $fedora_server_url.'/islandora/OpenLayers'),
+  '#description' => t('URL of your installation of the <a href="http://openlayers.org/">OpenLayers</a> servlet, if you have one.'),
+  '#weight' => 1,
+  );
+  $form['buttons']['#weight'] = 2;
+  break;
+  }
+  }
+
+  function show_openlayers_viewer() {
   $output = 'Hi.';
-  
+
   return $output;
-}
-*/
+  }
+ */

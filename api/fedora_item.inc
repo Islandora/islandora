@@ -1,6 +1,10 @@
 <?php
 
-// $Id$
+
+/**
+ * @file 
+ * 
+ */
 
 /**
  * @file
@@ -76,7 +80,7 @@ class Fedora_Item {
    * @param type $logMessage
    * @return type 
    */
-  function add_datastream_from_file($datastream_file, $datastream_id, $datastream_label = NULL, $datastream_mimetype = '', $controlGroup = 'M', $logMessage = null) {
+  function add_datastream_from_file($datastream_file, $datastream_id, $datastream_label = NULL, $datastream_mimetype = '', $controlGroup = 'M', $logMessage = NULL) {
     module_load_include('inc', 'fedora_repository', 'MimeClass');
     if (empty($datastream_mimetype)) {
       // Get mime type from the file extension.
@@ -107,7 +111,7 @@ class Fedora_Item {
    * @param type $logMessage
    * @return type 
    */
-  function add_datastream_from_url($datastream_url, $datastream_id, $datastream_label = NULL, $datastream_mimetype = '', $controlGroup = 'M', $logMessage = null) {
+  function add_datastream_from_url($datastream_url, $datastream_id, $datastream_label = NULL, $datastream_mimetype = '', $controlGroup = 'M', $logMessage = NULL) {
     if (empty($datastream_label)) {
       $datastream_label = $datastream_id;
     }
@@ -125,7 +129,7 @@ class Fedora_Item {
       'dsState' => 'A',
       'checksumType' => 'DISABLED',
       'checksum' => 'none',
-      'logMessage' => ($logMessage != null) ? $logMessage : 'Ingested object ' . $datastream_id
+      'logMessage' => ($logMessage != NULL) ? $logMessage : 'Ingested object ' . $datastream_id
     );
 
 
@@ -142,7 +146,7 @@ class Fedora_Item {
    * @param type $logMessage
    * @return type 
    */
-  function add_datastream_from_string($str, $datastream_id, $datastream_label = NULL, $datastream_mimetype = 'text/xml', $controlGroup = 'M', $logMessage = null) {
+  function add_datastream_from_string($str, $datastream_id, $datastream_label = NULL, $datastream_mimetype = 'text/xml', $controlGroup = 'M', $logMessage = NULL) {
     $dir = sys_get_temp_dir();
     $tmpfilename = tempnam($dir, 'fedoratmp');
     $tmpfile = fopen($tmpfilename, 'w');
@@ -310,7 +314,7 @@ class Fedora_Item {
       }
       $cursor += count($resultelements->resultList->objectFields);
       if (count($resultelements->resultList->objectFields) < $max_results
-          || count($resultelements->resultList->objectFields) == 0) {
+        || count($resultelements->resultList->objectFields) == 0) {
         $done = TRUE;
       }
       foreach ($resultelements->resultList->objectFields as $obj) {
@@ -402,7 +406,7 @@ class Fedora_Item {
    * @param type $as_of_date_time
    * @return string 
    */
-  function get_dissemination($service_definition_pid, $method_name, $parameters = array(), $as_of_date_time = null) {
+  function get_dissemination($service_definition_pid, $method_name, $parameters = array(), $as_of_date_time = NULL) {
     $params = array(
       'pid' => $this->pid,
       'serviceDefinitionPid' => $service_definition_pid,
@@ -546,7 +550,7 @@ class Fedora_Item {
     try {
       $relsext = $this->get_datastream_dissemination('RELS-EXT');
     } catch (exception $e) {
-      drupal_set_message("Error retrieving RELS-EXT of object $pid", 'error');
+      drupal_set_message(t("Error retrieving RELS-EXT of object $pid"), 'error');
       return $relationships;
     }
 
@@ -582,12 +586,12 @@ class Fedora_Item {
     // Verify the array format and that it isn't empty.
     if (!empty($relationships)) {
       $relsextxml = '<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:fedora="info:fedora/fedora-system:def/relations-external#" xmlns:fedora-model="info:fedora/fedora-system:def/model#" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">'
-          . '<rdf:description rdf:about="' . $this->pid . '">';
+        . '<rdf:description rdf:about="' . $this->pid . '">';
 
       foreach ($relationships as $rel) {
         if (empty($rel['subject']) || empty($rel['predicate']) || empty($rel['object']) || $rel['subject'] != 'info:fedora/' . $this->pid) {
           // drupal_set_message should use parameterized variables, not interpolated.
-          drupal_set_message("Error with relationship format: " . $rel['subject'] . " - " . $rel['predicate'] . ' - ' . $rel['object'], "error");
+          drupal_set_message(t("Error with relationship format: " . $rel['subject'] . " - " . $rel['predicate'] . ' - ' . $rel['object']), "error");
           return FALSE;
         }
       }
@@ -727,7 +731,7 @@ class Fedora_Item {
    * @param type $quiet
    * @return type 
    */
-  function modify_object($label = '', $state = null, $ownerId = null, $logMessage = 'Modified by Islandora API', $quiet=TRUE) {
+  function modify_object($label = '', $state = NULL, $ownerId = NULL, $logMessage = 'Modified by Islandora API', $quiet=TRUE) {
 
     $params = array(
       'pid' => $this->pid,
@@ -828,7 +832,7 @@ class Fedora_Item {
             $result = $soap_client->__soapCall($function_name, array('parameters' => $params_array));
           }
           else {
-            watchdog(t("FEDORA_REPOSITORY"), t("Error trying to get SOAP client connection."));
+            watchdog(t("FEDORA_REPOSITORY"), "Error trying to get SOAP client connection.");
             return NULL;
           }
         } catch (exception $e) {
@@ -841,7 +845,7 @@ class Fedora_Item {
               drupal_set_message(t("Error trying to call SOAP function $function_name. Check watchdog logs for more information."), 'error');
             }
 
-            watchdog(t("FEDORA_REPOSITORY"), t("Error Trying to call SOAP function !fn: !e", array('!fn' => $function_name, '!e' => $e)), NULL, WATCHDOG_ERROR);
+            watchdog(t("FEDORA_REPOSITORY"), "Error Trying to call SOAP function !fn: !e", array('!fn' => $function_name, '!e' => $e), NULL, WATCHDOG_ERROR);
           }
           return NULL;
         }
@@ -854,13 +858,13 @@ class Fedora_Item {
             $result = $soap_client->__soapCall($function_name, array('parameters' => $params_array));
           }
           else {
-            watchdog(t("FEDORA_REPOSITORY"), t("Error trying to get SOAP client connection."));
+            watchdog(t("FEDORA_REPOSITORY"), "Error trying to get SOAP client connection.");
             return NULL;
           }
         } catch (exception $e) {
 
           if (!$quiet) {
-            watchdog(t("FEDORA_REPOSITORY"), t("Error trying to call SOAP function !fn: !e", array('!fn' => $function_name, '!e' => $e)), NULL, WATCHDOG_ERROR);
+            watchdog(t("FEDORA_REPOSITORY"), "Error trying to call SOAP function !fn: !e", array('!fn' => $function_name, '!e' => $e), NULL, WATCHDOG_ERROR);
           }
           return NULL;
         }

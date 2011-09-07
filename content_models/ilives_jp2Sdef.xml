@@ -1,73 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <foxml:digitalObject PID="ilives:jp2Sdef" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
-  <foxml:objectProperties>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="ilives:jp2Sdef"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="fedoraAdmin"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2009-05-18T15:07:42.398Z"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2010-05-25T13:17:14.106Z"/>
-  </foxml:objectProperties>
-  <foxml:datastream CONTROL_GROUP="X" ID="AUDIT" STATE="A" VERSIONABLE="false">
-    <foxml:datastreamVersion CREATED="2009-05-18T15:07:42.398Z"
+    <foxml:objectProperties>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="ilives:jp2Sdef"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="fedoraAdmin"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2009-05-18T15:07:42.398Z"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2010-05-25T13:17:14.106Z"/>
+    </foxml:objectProperties>
+    <foxml:datastream CONTROL_GROUP="X" ID="AUDIT" STATE="A" VERSIONABLE="false">
+        <foxml:datastreamVersion CREATED="2009-05-18T15:07:42.398Z"
       FORMAT_URI="info:fedora/fedora-system:format/xml.fedora.audit" ID="AUDIT.0" LABEL="Audit Trail for this object" MIMETYPE="text/xml">
-      <foxml:xmlContent>
-        <audit:auditTrail xmlns:audit="info:fedora/fedora-system:def/audit#">
-          <audit:record ID="AUDREC1">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>ingest</audit:action>
-            <audit:componentID/>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2009-11-12T14:56:59.840Z</audit:date>
-            <audit:justification>Ingested from local file /Users/aoneill/dev/iiv/iiv/etc/fedora-objects/ilives_jp2Sdef.xml</audit:justification>
-          </audit:record>
-          <audit:record ID="AUDREC2">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>ingest</audit:action>
-            <audit:componentID/>
-            <audit:responsibility>admin</audit:responsibility>
-            <audit:date>2010-05-25T13:17:14.106Z</audit:date>
-            <audit:justification>Fedora Object Ingested</audit:justification>
-          </audit:record>
-        </audit:auditTrail>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="RELS-EXT" STATE="A" VERSIONABLE="false">
-    <foxml:datastreamVersion CREATED="2009-05-18T15:07:42.487Z" FORMAT_URI="info:fedora/fedora-system:FedoraRELSExt-1.0"
+            <foxml:xmlContent>
+                <audit:auditTrail xmlns:audit="info:fedora/fedora-system:def/audit#">
+                    <audit:record ID="AUDREC1">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>ingest</audit:action>
+                        <audit:componentID/>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2009-11-12T14:56:59.840Z</audit:date>
+                        <audit:justification>Ingested from local file /Users/aoneill/dev/iiv/iiv/etc/fedora-objects/ilives_jp2Sdef.xml</audit:justification>
+                    </audit:record>
+                    <audit:record ID="AUDREC2">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>ingest</audit:action>
+                        <audit:componentID/>
+                        <audit:responsibility>admin</audit:responsibility>
+                        <audit:date>2010-05-25T13:17:14.106Z</audit:date>
+                        <audit:justification>Fedora Object Ingested</audit:justification>
+                    </audit:record>
+                </audit:auditTrail>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="RELS-EXT" STATE="A" VERSIONABLE="false">
+        <foxml:datastreamVersion CREATED="2009-05-18T15:07:42.487Z" FORMAT_URI="info:fedora/fedora-system:FedoraRELSExt-1.0"
       ID="RELS-EXT1.0" LABEL="RDF Statements about this object" MIMETYPE="application/rdf+xml" SIZE="363">
-      <foxml:xmlContent>
-        <rdf:RDF xmlns:fedora-model="info:fedora/fedora-system:def/model#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-          <rdf:Description rdf:about="info:fedora/ilives:jp2Sdef">
-            <fedora-model:hasModel rdf:resource="info:fedora/fedora-system:ServiceDefinition-3.0"/>
-          </rdf:Description>
-        </rdf:RDF>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="DC" STATE="A" VERSIONABLE="false">
-    <foxml:datastreamVersion CREATED="2009-05-18T15:07:42.398Z" FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/"
+            <foxml:xmlContent>
+                <rdf:RDF xmlns:fedora-model="info:fedora/fedora-system:def/model#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                    <rdf:Description rdf:about="info:fedora/ilives:jp2Sdef">
+                        <fedora-model:hasModel rdf:resource="info:fedora/fedora-system:ServiceDefinition-3.0"/>
+                    </rdf:Description>
+                </rdf:RDF>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="DC" STATE="A" VERSIONABLE="false">
+        <foxml:datastreamVersion CREATED="2009-05-18T15:07:42.398Z" FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/"
       ID="DC1.0" LABEL="Dublin Core Record for this object" MIMETYPE="text/xml" SIZE="381">
-      <foxml:xmlContent>
-        <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
+            <foxml:xmlContent>
+                <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
           xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
-          <dc:title>ilives:jp2Sdef</dc:title>
-          <dc:identifier>ilives:jp2Sdef</dc:identifier>
-        </oai_dc:dc>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="METHODMAP" STATE="A" VERSIONABLE="false">
-    <foxml:datastreamVersion CREATED="2009-05-18T20:08:16.294Z"
+                    <dc:title>ilives:jp2Sdef</dc:title>
+                    <dc:identifier>ilives:jp2Sdef</dc:identifier>
+                </oai_dc:dc>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="METHODMAP" STATE="A" VERSIONABLE="false">
+        <foxml:datastreamVersion CREATED="2009-05-18T20:08:16.294Z"
       FORMAT_URI="info:fedora/fedora-system:FedoraSDefMethodMap-1.0" ID="METHODMAP.3" LABEL="Abstract Method Map"
       MIMETYPE="text/xml" SIZE="245">
-      <foxml:xmlContent>
-        <fmm:MethodMap name="methodmap" xmlns:fmm="http://fedora.comm.nsdlib.org/service/methodmap">
-          <fmm:Method operationName="getMetadata"/>
-          <fmm:Method operationName="getRegion"/>
-        </fmm:MethodMap>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
+            <foxml:xmlContent>
+                <fmm:MethodMap name="methodmap" xmlns:fmm="http://fedora.comm.nsdlib.org/service/methodmap">
+                    <fmm:Method operationName="getMetadata"/>
+                    <fmm:Method operationName="getRegion"/>
+                </fmm:MethodMap>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
 </foxml:digitalObject>

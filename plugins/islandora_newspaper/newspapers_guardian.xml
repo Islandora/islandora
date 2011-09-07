@@ -1,378 +1,379 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <foxml:digitalObject PID="newspapers:guardian" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
-  <foxml:objectProperties>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="newspapers:guardian"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="fedoraAdmin"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2010-05-27T13:55:30.474Z"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2010-05-31T15:14:58.313Z"/>
-  </foxml:objectProperties>
-  <foxml:datastream CONTROL_GROUP="X" ID="AUDIT" STATE="A" VERSIONABLE="false">
-    <foxml:datastreamVersion CREATED="2010-05-27T13:55:30.474Z"
+    <foxml:objectProperties>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="newspapers:guardian"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="fedoraAdmin"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2010-05-27T13:55:30.474Z"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2010-05-31T15:14:58.313Z"/>
+    </foxml:objectProperties>
+    <foxml:datastream CONTROL_GROUP="X" ID="AUDIT" STATE="A" VERSIONABLE="false">
+        <foxml:datastreamVersion CREATED="2010-05-27T13:55:30.474Z"
       FORMAT_URI="info:fedora/fedora-system:format/xml.fedora.audit" ID="AUDIT.0" LABEL="Audit Trail for this object" MIMETYPE="text/xml">
-      <foxml:xmlContent>
-        <audit:auditTrail xmlns:audit="info:fedora/fedora-system:def/audit#">
-          <audit:record ID="AUDREC1">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>MODS</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-05-28T18:38:36.223Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-          <audit:record ID="AUDREC2">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>ingest</audit:action>
-            <audit:componentID/>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-05-31T15:14:58.313Z</audit:date>
-            <audit:justification>Ingested from local file /Users/al/Desktop/newspapers_guardian.xml</audit:justification>
-          </audit:record>
-        </audit:auditTrail>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="POLICY" STATE="A" VERSIONABLE="true">
-    <foxml:datastreamVersion CREATED="2010-05-27T13:55:30.556Z" ID="POLICY.0" LABEL="POLICY" MIMETYPE="text/xml" SIZE="9027">
-      <foxml:xmlContent>
-        <Policy PolicyId="noObjectEditbyUserAndRole"
+            <foxml:xmlContent>
+                <audit:auditTrail xmlns:audit="info:fedora/fedora-system:def/audit#">
+                    <audit:record ID="AUDREC1">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>MODS</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-05-28T18:38:36.223Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                    <audit:record ID="AUDREC2">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>ingest</audit:action>
+                        <audit:componentID/>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-05-31T15:14:58.313Z</audit:date>
+                        <audit:justification>Ingested from local file /Users/al/Desktop/newspapers_guardian.xml</audit:justification>
+                    </audit:record>
+                </audit:auditTrail>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="POLICY" STATE="A" VERSIONABLE="true">
+        <foxml:datastreamVersion CREATED="2010-05-27T13:55:30.556Z" ID="POLICY.0" LABEL="POLICY" MIMETYPE="text/xml" SIZE="9027">
+            <foxml:xmlContent>
+                <Policy PolicyId="noObjectEditbyUserAndRole"
           RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable" xmlns="urn:oasis:names:tc:xacml:1.0:policy">
-          <Description>This is an object-specific policy. It could be stored inside the digital object in the POLICY datastream OR in the directory for object-specific policies. (The directory location is set in the Authorization module configuration in the Fedora server configuration file (fedora.fcfg). By using multiple policy Rules, this policy shows how to deny access to all raw datastreams in the object except to particular users (e.g., the object owners). It also shows how to deny access to a particular disseminations to selected user roles.</Description>
-          <Target>
-            <Subjects>
-              <AnySubject/>
-            </Subjects>
-            <Resources>
-              <AnyResource/>
-            </Resources>
-            <Actions>
-              <Action>
-                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-ingest</AttributeValue>
-                  <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
-                </ActionMatch>
-              </Action>
-              <Action>
-                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-modifyDatastreamByReference</AttributeValue>
-                  <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
-                </ActionMatch>
-              </Action>
-              <Action>
-                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-modifyDatastreamByValue</AttributeValue>
-                  <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
-                </ActionMatch>
-              </Action>
-              <Action>
-                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-modifyDisseminator</AttributeValue>
-                  <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
-                </ActionMatch>
-              </Action>
-              <Action>
-                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-modifyDisseminator</AttributeValue>
-                  <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
-                </ActionMatch>
-              </Action>
-              <Action>
-                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-purgeObject</AttributeValue>
-                  <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
-                </ActionMatch>
-              </Action>
-              <Action>
-                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-purgeDatastream</AttributeValue>
-                  <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
-                </ActionMatch>
-              </Action>
-              <Action>
-                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-purgeDisseminator</AttributeValue>
-                  <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
-                </ActionMatch>
-              </Action>
-              <Action>
-                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-setDatastreamState</AttributeValue>
-                  <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
-                </ActionMatch>
-              </Action>
-              <Action>
-                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-setDisseminatorState</AttributeValue>
-                  <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
-                </ActionMatch>
-              </Action>
-              <Action>
-                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-setDatastreamVersionable</AttributeValue>
-                  <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
-                </ActionMatch>
-              </Action>
-              <Action>
-                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-addDatastream</AttributeValue>
-                  <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
-                </ActionMatch>
-              </Action>
-              <Action>
-                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-                  <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-addDisseminator</AttributeValue>
-                  <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
-                </ActionMatch>
-              </Action>
-            </Actions>
-          </Target>
-          <Rule Effect="Deny" RuleId="denyapi-except-to-user">
-            <Condition FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
-              <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
-                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
-                  <SubjectAttributeDesignator AttributeId="fedoraRole"
+                    <Description>This is an object-specific policy. It could be stored inside the digital object in the POLICY datastream OR in the directory for object-specific policies. (The directory location is set in the Authorization module configuration in the Fedora server configuration file (fedora.fcfg). By using multiple policy Rules, this policy shows how to deny access to all raw datastreams in the object except to particular users (e.g., the object owners). It also shows how to deny access to a particular disseminations to selected user roles.</Description>
+                    <Target>
+                        <Subjects>
+                            <AnySubject/>
+                        </Subjects>
+                        <Resources>
+                            <AnyResource/>
+                        </Resources>
+                        <Actions>
+                            <Action>
+                                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-ingest</AttributeValue>
+                                    <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                                </ActionMatch>
+                            </Action>
+                            <Action>
+                                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-modifyDatastreamByReference</AttributeValue>
+                                    <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                                </ActionMatch>
+                            </Action>
+                            <Action>
+                                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-modifyDatastreamByValue</AttributeValue>
+                                    <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                                </ActionMatch>
+                            </Action>
+                            <Action>
+                                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-modifyDisseminator</AttributeValue>
+                                    <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                                </ActionMatch>
+                            </Action>
+                            <Action>
+                                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-modifyDisseminator</AttributeValue>
+                                    <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                                </ActionMatch>
+                            </Action>
+                            <Action>
+                                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-purgeObject</AttributeValue>
+                                    <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                                </ActionMatch>
+                            </Action>
+                            <Action>
+                                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-purgeDatastream</AttributeValue>
+                                    <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                                </ActionMatch>
+                            </Action>
+                            <Action>
+                                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-purgeDisseminator</AttributeValue>
+                                    <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                                </ActionMatch>
+                            </Action>
+                            <Action>
+                                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-setDatastreamState</AttributeValue>
+                                    <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                                </ActionMatch>
+                            </Action>
+                            <Action>
+                                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-setDisseminatorState</AttributeValue>
+                                    <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                                </ActionMatch>
+                            </Action>
+                            <Action>
+                                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-setDatastreamVersionable</AttributeValue>
+                                    <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                                </ActionMatch>
+                            </Action>
+                            <Action>
+                                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-addDatastream</AttributeValue>
+                                    <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                                </ActionMatch>
+                            </Action>
+                            <Action>
+                                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-addDisseminator</AttributeValue>
+                                    <ActionAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:action:id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                                </ActionMatch>
+                            </Action>
+                        </Actions>
+                    </Target>
+                    <Rule Effect="Deny" RuleId="denyapi-except-to-user">
+                        <Condition FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
+                                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+                                    <SubjectAttributeDesignator AttributeId="fedoraRole"
                     DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
-                  <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
-                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">administrator</AttributeValue>
-                  </Apply>
-                </Apply>
-                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
-                  <SubjectAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:subject:loginId"
+                                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+                                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">administrator</AttributeValue>
+                                    </Apply>
+                                </Apply>
+                                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+                                    <SubjectAttributeDesignator AttributeId="urn:fedora:names:fedora:2.1:subject:loginId"
                     DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
-                  <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
-                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">fedoraAdmin</AttributeValue>
-                  </Apply>
-                </Apply>
-              </Apply>
-            </Condition>
-          </Rule>
-          <Rule Effect="Permit" RuleId="3"/>
-        </Policy>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="M" ID="TN" STATE="A" VERSIONABLE="true">
-    <foxml:datastreamVersion CREATED="2010-05-27T13:55:30.556Z" ID="TN.0" LABEL="Thumbnail" MIMETYPE="image/jpeg">
-      <foxml:contentLocation REF="http://localhost:8080/fedora/get/newspapers:guardian/TN/2010-05-27T13:55:30.556Z" TYPE="INTERNAL_ID"/>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="DC" STATE="A" VERSIONABLE="true">
-    <foxml:datastreamVersion CREATED="2010-05-27T13:55:30.556Z" ID="DC.0" LABEL="Default Dublin Core Record"
+                                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+                                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">fedoraAdmin</AttributeValue>
+                                    </Apply>
+                                </Apply>
+                            </Apply>
+                        </Condition>
+                    </Rule>
+                    <Rule Effect="Permit" RuleId="3"/>
+                </Policy>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="M" ID="TN" STATE="A" VERSIONABLE="true">
+        <foxml:datastreamVersion CREATED="2010-05-27T13:55:30.556Z" ID="TN.0" LABEL="Thumbnail" MIMETYPE="image/jpeg">
+            <foxml:contentLocation REF="http://localhost:8080/fedora/get/newspapers:guardian/TN/2010-05-27T13:55:30.556Z" TYPE="INTERNAL_ID"/>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="DC" STATE="A" VERSIONABLE="true">
+        <foxml:datastreamVersion CREATED="2010-05-27T13:55:30.556Z" ID="DC.0" LABEL="Default Dublin Core Record"
       MIMETYPE="text/xml" SIZE="2631">
-      <foxml:xmlContent>
-        <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
+            <foxml:xmlContent>
+                <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
           xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
-          <dc:title>The Guardian</dc:title>
-          <dc:title>Guardian (Charlottetown, P.E.I.)</dc:title>
-          <dc:title>The Island guardian</dc:title>
-          <dc:title>The Charlottetown guardian</dc:title>
-          <dc:title>The Morning guardian</dc:title>
-          <dc:subject>Newspapers</dc:subject>
-          <dc:subject>Newspapers</dc:subject>
-          <dc:description>The Guardian, the successor to the Island Guardian, began publication in 1890 a a politically independent newspaper printing news and advertisements. Its editorials often discussed trade and tariffs, and it supported temperance and the Scott Act.  Lcal, national and international news coverage was excellent in the paper. Twoards the end of the 1890s, headlines and line drawings illustrating the news stories began appearing in the Guardian. 
-            
-            The tone of the newspaper changed during the first decade of the twentieth century; its news coverage became more sensational and its editorials offered less political commentary.  Special weekend issues were printed during the second half of this decade, featuring comic strips, housekeeping articles, popular songs, sermons, local history and Sunday School lessons. Photographs and line drawings appeared frequently during the final years of the decade.
-            
-            .... more in Heather Boylan ... p.54-Checklist and Historical Directory of Prince Edward Island Newspapers.</dc:description>
-          <dc:description>Title varies: 1887-  , The Island guardian; Dec.  1890-Jan. 1891, The Daily guardian; Jan.  1891-  , The Morning guardian.</dc:description>
-          <dc:description>Ceased publication in 1920?</dc:description>
-          <dc:description>Missing issues.</dc:description>
-          <dc:description>Microfilm of the original in Prince Edward Island Public and Legislative Libraries. Ottawa, Canadian Library Association Newspaper Microfilming Project, 1963- reels.</dc:description>
-          <dc:contributor>Hood, J. P.</dc:contributor>
-          <dc:date>1887-1920</dc:date>
-          <dc:type>Text</dc:type>
-          <dc:format>v.</dc:format>
-          <dc:format>microfilm</dc:format>
-          <dc:identifier>http://islandpines.roblib.upei.ca/opac/extras/supercat/mods33/record/274634</dc:identifier>
-          <dc:identifier>newspapers:guardian</dc:identifier>
-          <dc:language>eng</dc:language>
-          <dc:coverage>Prince Edward Island</dc:coverage>
-          <dc:coverage>Charlottetown (P.E.I.)</dc:coverage>
-        </oai_dc:dc>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="MODS" STATE="A" VERSIONABLE="true">
-    <foxml:datastreamVersion CREATED="2010-05-27T13:55:30.557Z" ID="MODS.0" LABEL="Mods Record" MIMETYPE="text/xml" SIZE="4405">
-      <foxml:xmlContent>
-        <mods version="3.3" xmlns="http://www.loc.gov/mods/v3"
-          xmlns:xsisnippet="http://www.w3.org/2001/XMLSchema-instance" xsisnippet:schemaLocation="http://www.loc.gov/mods/ http://www.loc.gov/standards/mods/mods.xsd">
-          <titleInfo>
-            <nonSort>The</nonSort>
-            <title>Guardian</title>
-          </titleInfo>
-          <titleInfo type="uniform">
-            <title>Guardian (Charlottetown, P.E.I.)</title>
-          </titleInfo>
-          <titleInfo type="alternative">
-            <nonSort>The</nonSort>
-            <title>Island guardian</title>
-          </titleInfo>
-          <titleInfo type="alternative">
-            <nonSort>The</nonSort>
-            <title>Charlottetown guardian</title>
-          </titleInfo>
-          <titleInfo type="alternative">
-            <nonSort>The</nonSort>
-            <title>Morning guardian</title>
-          </titleInfo>
-          <name>
-            <namePart>Hood, J. P.
-            </namePart>
-            <role>
-              <roleTerm>Manager</roleTerm>
-            </role>
-            <description>
-              Business Manager from Dec. 29, 1891 - Mar. 9, 1903; Managing Director from July 2, 1912 - Jan. 30, 1913.
-            </description>
-          </name>
-          <typeOfResource>text</typeOfResource>
-          <originInfo>
-            <place>
-              <placeTerm authority="marccountry" type="code">pic</placeTerm>
-            </place>
-            <place>
-              <placeTerm type="text">Charlottetown, P.E.I</placeTerm>
-            </place>
-            <dateIssued>1887-1920</dateIssued>
-            <dateIssued encoding="marc" point="start">1887</dateIssued>
-            <dateIssued encoding="marc" point="end">1920</dateIssued>
-            <issuance>continuing</issuance>
-          </originInfo>
-          <language>
-            <languageTerm authority="iso639-2b" type="code">eng</languageTerm>
-          </language>
-          <abstract>The Guardian, the successor to the Island Guardian, began publication in 1890 a a politically independent newspaper printing news and advertisements. Its editorials often discussed trade and tariffs, and it supported temperance and the Scott Act.  Lcal, national and international news coverage was excellent in the paper. Twoards the end of the 1890s, headlines and line drawings illustrating the news stories began appearing in the Guardian. 
+                    <dc:title>The Guardian</dc:title>
+                    <dc:title>Guardian (Charlottetown, P.E.I.)</dc:title>
+                    <dc:title>The Island guardian</dc:title>
+                    <dc:title>The Charlottetown guardian</dc:title>
+                    <dc:title>The Morning guardian</dc:title>
+                    <dc:subject>Newspapers</dc:subject>
+                    <dc:subject>Newspapers</dc:subject>
+                    <dc:description>The Guardian, the successor to the Island Guardian, began publication in 1890 a a politically independent newspaper printing news and advertisements. Its editorials often discussed trade and tariffs, and it supported temperance and the Scott Act.  Lcal, national and international news coverage was excellent in the paper. Twoards the end of the 1890s, headlines and line drawings illustrating the news stories began appearing in the Guardian.
             
             The tone of the newspaper changed during the first decade of the twentieth century; its news coverage became more sensational and its editorials offered less political commentary.  Special weekend issues were printed during the second half of this decade, featuring comic strips, housekeeping articles, popular songs, sermons, local history and Sunday School lessons. Photographs and line drawings appeared frequently during the final years of the decade.
             
             .... more in Heather Boylan ... p.54-Checklist and Historical Directory of Prince Edward Island Newspapers.
-          </abstract>
-          <physicalDescription>
-            <form authority="marcform">microfilm</form>
-            <form authority="gmd">microform</form>
-            <extent>v.</extent>
-          </physicalDescription>
-          <note>Title varies: 1887-  , The Island guardian; Dec.  1890-Jan. 1891, The Daily guardian; Jan.  1891-  , The Morning guardian.</note>
-          <note>Ceased publication in 1920?</note>
-          <note>Missing issues.</note>
-          <note type="reproduction">Microfilm of the original in Prince Edward Island Public and Legislative Libraries. Ottawa, Canadian Library Association Newspaper Microfilming Project, 1963- reels.</note>
-          <subject authority="lcsh">
-            <geographic>Prince Edward Island</geographic>
-            <topic>Newspapers</topic>
-          </subject>
-          <subject authority="lcsh">
-            <geographic>Charlottetown (P.E.I.)</geographic>
-            <topic>Newspapers</topic>
-          </subject>
-          <identifier type="islandpines">http://islandpines.roblib.upei.ca/opac/extras/supercat/mods33/record/274634</identifier>
-          <recordInfo>
-            <recordContentSource authority="marcorg">CaPCU</recordContentSource>
-            <recordCreationDate encoding="marc">760913</recordCreationDate>
-            <recordChangeDate encoding="iso8601">20090407151822.0</recordChangeDate>
-          </recordInfo>
-        </mods>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2010-05-28T18:38:36.223Z" ID="MODS.1" LABEL="Mods Record" MIMETYPE="text/xml" SIZE="4405">
-      <foxml:xmlContent>
-        <mods version="3.3" xmlns="http://www.loc.gov/mods/v3"
+                    </dc:description>
+                    <dc:description>Title varies: 1887-  , The Island guardian; Dec.  1890-Jan. 1891, The Daily guardian; Jan.  1891-  , The Morning guardian.</dc:description>
+                    <dc:description>Ceased publication in 1920?</dc:description>
+                    <dc:description>Missing issues.</dc:description>
+                    <dc:description>Microfilm of the original in Prince Edward Island Public and Legislative Libraries. Ottawa, Canadian Library Association Newspaper Microfilming Project, 1963- reels.</dc:description>
+                    <dc:contributor>Hood, J. P.</dc:contributor>
+                    <dc:date>1887-1920</dc:date>
+                    <dc:type>Text</dc:type>
+                    <dc:format>v.</dc:format>
+                    <dc:format>microfilm</dc:format>
+                    <dc:identifier>http://islandpines.roblib.upei.ca/opac/extras/supercat/mods33/record/274634</dc:identifier>
+                    <dc:identifier>newspapers:guardian</dc:identifier>
+                    <dc:language>eng</dc:language>
+                    <dc:coverage>Prince Edward Island</dc:coverage>
+                    <dc:coverage>Charlottetown (P.E.I.)</dc:coverage>
+                </oai_dc:dc>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="MODS" STATE="A" VERSIONABLE="true">
+        <foxml:datastreamVersion CREATED="2010-05-27T13:55:30.557Z" ID="MODS.0" LABEL="Mods Record" MIMETYPE="text/xml" SIZE="4405">
+            <foxml:xmlContent>
+                <mods version="3.3" xmlns="http://www.loc.gov/mods/v3"
           xmlns:xsisnippet="http://www.w3.org/2001/XMLSchema-instance" xsisnippet:schemaLocation="http://www.loc.gov/mods/ http://www.loc.gov/standards/mods/mods.xsd">
-          <titleInfo>
-            <nonSort>The</nonSort>
-            <title>Guardian</title>
-          </titleInfo>
-          <titleInfo type="uniform">
-            <title>Guardian (Charlottetown, P.E.I.)</title>
-          </titleInfo>
-          <titleInfo type="alternative">
-            <nonSort>The</nonSort>
-            <title>Island guardian</title>
-          </titleInfo>
-          <titleInfo type="alternative">
-            <nonSort>The</nonSort>
-            <title>Charlottetown guardian</title>
-          </titleInfo>
-          <titleInfo type="alternative">
-            <nonSort>The</nonSort>
-            <title>Morning guardian</title>
-          </titleInfo>
-          <name>
-            <namePart>Hood, J. P.
-            </namePart>
-            <role>
-              <roleTerm>Manager</roleTerm>
-            </role>
-            <description>
+                    <titleInfo>
+                        <nonSort>The</nonSort>
+                        <title>Guardian</title>
+                    </titleInfo>
+                    <titleInfo type="uniform">
+                        <title>Guardian (Charlottetown, P.E.I.)</title>
+                    </titleInfo>
+                    <titleInfo type="alternative">
+                        <nonSort>The</nonSort>
+                        <title>Island guardian</title>
+                    </titleInfo>
+                    <titleInfo type="alternative">
+                        <nonSort>The</nonSort>
+                        <title>Charlottetown guardian</title>
+                    </titleInfo>
+                    <titleInfo type="alternative">
+                        <nonSort>The</nonSort>
+                        <title>Morning guardian</title>
+                    </titleInfo>
+                    <name>
+                        <namePart>Hood, J. P.
+                        </namePart>
+                        <role>
+                            <roleTerm>Manager</roleTerm>
+                        </role>
+                        <description>
               Business Manager from Dec. 29, 1891 - Mar. 9, 1903; Managing Director from July 2, 1912 - Jan. 30, 1913.
-            </description>
-          </name>
-          <typeOfResource>text</typeOfResource>
-          <originInfo>
-            <place>
-              <placeTerm authority="marccountry" type="code">pic</placeTerm>
-            </place>
-            <place>
-              <placeTerm type="text">Charlottetown, P.E.I</placeTerm>
-            </place>
-            <dateIssued>1887-1920</dateIssued>
-            <dateIssued encoding="marc" point="start">1887</dateIssued>
-            <dateIssued encoding="marc" point="end">1920</dateIssued>
-            <issuance>continuing</issuance>
-          </originInfo>
-          <language>
-            <languageTerm authority="iso639-2b" type="code">eng</languageTerm>
-          </language>
-          <abstract>The Guardian, the successor to the Island Guardian, began publication in 1890 a a politically independent newspaper printing news and advertisements. Its editorials often discussed trade and tariffs, and it supported temperance and the Scott Act.  Lcal, national and international news coverage was excellent in the paper. Twoards the end of the 1890s, headlines and line drawings illustrating the news stories began appearing in the Guardian. 
+                        </description>
+                    </name>
+                    <typeOfResource>text</typeOfResource>
+                    <originInfo>
+                        <place>
+                            <placeTerm authority="marccountry" type="code">pic</placeTerm>
+                        </place>
+                        <place>
+                            <placeTerm type="text">Charlottetown, P.E.I</placeTerm>
+                        </place>
+                        <dateIssued>1887-1920</dateIssued>
+                        <dateIssued encoding="marc" point="start">1887</dateIssued>
+                        <dateIssued encoding="marc" point="end">1920</dateIssued>
+                        <issuance>continuing</issuance>
+                    </originInfo>
+                    <language>
+                        <languageTerm authority="iso639-2b" type="code">eng</languageTerm>
+                    </language>
+                    <abstract>The Guardian, the successor to the Island Guardian, began publication in 1890 a a politically independent newspaper printing news and advertisements. Its editorials often discussed trade and tariffs, and it supported temperance and the Scott Act.  Lcal, national and international news coverage was excellent in the paper. Twoards the end of the 1890s, headlines and line drawings illustrating the news stories began appearing in the Guardian.
             
             The tone of the newspaper changed during the first decade of the twentieth century; its news coverage became more sensational and its editorials offered less political commentary.  Special weekend issues were printed during the second half of this decade, featuring comic strips, housekeeping articles, popular songs, sermons, local history and Sunday School lessons. Photographs and line drawings appeared frequently during the final years of the decade.
             
             .... more in Heather Boylan ... p.54-Checklist and Historical Directory of Prince Edward Island Newspapers.
-          </abstract>
-          <physicalDescription>
-            <form authority="marcform">microfilm</form>
-            <form authority="gmd">microform</form>
-            <extent>v.</extent>
-          </physicalDescription>
-          <note>Title varies: 1887-  , The Island guardian; Dec.  1890-Jan. 1891, The Daily guardian; Jan.  1891-  , The Morning guardian.</note>
-          <note>Ceased publication in 1920?</note>
-          <note>Missing issues.</note>
-          <note type="reproduction">Microfilm of the original in Prince Edward Island Public and Legislative Libraries. Ottawa, Canadian Library Association Newspaper Microfilming Project, 1963- reels.</note>
-          <subject authority="lcsh">
-            <geographic>Prince Edward Island</geographic>
-            <topic>Newspapers</topic>
-          </subject>
-          <subject authority="lcsh">
-            <geographic>Charlottetown (P.E.I.)</geographic>
-            <topic>Newspapers</topic>
-          </subject>
-          <identifier type="islandpines">http://islandpines.roblib.upei.ca/opac/extras/supercat/mods33/record/274634</identifier>
-          <recordInfo>
-            <recordContentSource authority="marcorg">CaPCU</recordContentSource>
-            <recordCreationDate encoding="marc">760913</recordCreationDate>
-            <recordChangeDate encoding="iso8601">20090407151822.0</recordChangeDate>
-          </recordInfo>
-        </mods>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="RELS-EXT" STATE="A" VERSIONABLE="true">
-    <foxml:datastreamVersion CREATED="2010-05-27T13:55:30.557Z" ID="RELS-EXT.0"
+                    </abstract>
+                    <physicalDescription>
+                        <form authority="marcform">microfilm</form>
+                        <form authority="gmd">microform</form>
+                        <extent>v.</extent>
+                    </physicalDescription>
+                    <note>Title varies: 1887-  , The Island guardian; Dec.  1890-Jan. 1891, The Daily guardian; Jan.  1891-  , The Morning guardian.</note>
+                    <note>Ceased publication in 1920?</note>
+                    <note>Missing issues.</note>
+                    <note type="reproduction">Microfilm of the original in Prince Edward Island Public and Legislative Libraries. Ottawa, Canadian Library Association Newspaper Microfilming Project, 1963- reels.</note>
+                    <subject authority="lcsh">
+                        <geographic>Prince Edward Island</geographic>
+                        <topic>Newspapers</topic>
+                    </subject>
+                    <subject authority="lcsh">
+                        <geographic>Charlottetown (P.E.I.)</geographic>
+                        <topic>Newspapers</topic>
+                    </subject>
+                    <identifier type="islandpines">http://islandpines.roblib.upei.ca/opac/extras/supercat/mods33/record/274634</identifier>
+                    <recordInfo>
+                        <recordContentSource authority="marcorg">CaPCU</recordContentSource>
+                        <recordCreationDate encoding="marc">760913</recordCreationDate>
+                        <recordChangeDate encoding="iso8601">20090407151822.0</recordChangeDate>
+                    </recordInfo>
+                </mods>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2010-05-28T18:38:36.223Z" ID="MODS.1" LABEL="Mods Record" MIMETYPE="text/xml" SIZE="4405">
+            <foxml:xmlContent>
+                <mods version="3.3" xmlns="http://www.loc.gov/mods/v3"
+          xmlns:xsisnippet="http://www.w3.org/2001/XMLSchema-instance" xsisnippet:schemaLocation="http://www.loc.gov/mods/ http://www.loc.gov/standards/mods/mods.xsd">
+                    <titleInfo>
+                        <nonSort>The</nonSort>
+                        <title>Guardian</title>
+                    </titleInfo>
+                    <titleInfo type="uniform">
+                        <title>Guardian (Charlottetown, P.E.I.)</title>
+                    </titleInfo>
+                    <titleInfo type="alternative">
+                        <nonSort>The</nonSort>
+                        <title>Island guardian</title>
+                    </titleInfo>
+                    <titleInfo type="alternative">
+                        <nonSort>The</nonSort>
+                        <title>Charlottetown guardian</title>
+                    </titleInfo>
+                    <titleInfo type="alternative">
+                        <nonSort>The</nonSort>
+                        <title>Morning guardian</title>
+                    </titleInfo>
+                    <name>
+                        <namePart>Hood, J. P.
+                        </namePart>
+                        <role>
+                            <roleTerm>Manager</roleTerm>
+                        </role>
+                        <description>
+              Business Manager from Dec. 29, 1891 - Mar. 9, 1903; Managing Director from July 2, 1912 - Jan. 30, 1913.
+                        </description>
+                    </name>
+                    <typeOfResource>text</typeOfResource>
+                    <originInfo>
+                        <place>
+                            <placeTerm authority="marccountry" type="code">pic</placeTerm>
+                        </place>
+                        <place>
+                            <placeTerm type="text">Charlottetown, P.E.I</placeTerm>
+                        </place>
+                        <dateIssued>1887-1920</dateIssued>
+                        <dateIssued encoding="marc" point="start">1887</dateIssued>
+                        <dateIssued encoding="marc" point="end">1920</dateIssued>
+                        <issuance>continuing</issuance>
+                    </originInfo>
+                    <language>
+                        <languageTerm authority="iso639-2b" type="code">eng</languageTerm>
+                    </language>
+                    <abstract>The Guardian, the successor to the Island Guardian, began publication in 1890 a a politically independent newspaper printing news and advertisements. Its editorials often discussed trade and tariffs, and it supported temperance and the Scott Act.  Lcal, national and international news coverage was excellent in the paper. Twoards the end of the 1890s, headlines and line drawings illustrating the news stories began appearing in the Guardian.
+            
+            The tone of the newspaper changed during the first decade of the twentieth century; its news coverage became more sensational and its editorials offered less political commentary.  Special weekend issues were printed during the second half of this decade, featuring comic strips, housekeeping articles, popular songs, sermons, local history and Sunday School lessons. Photographs and line drawings appeared frequently during the final years of the decade.
+            
+            .... more in Heather Boylan ... p.54-Checklist and Historical Directory of Prince Edward Island Newspapers.
+                    </abstract>
+                    <physicalDescription>
+                        <form authority="marcform">microfilm</form>
+                        <form authority="gmd">microform</form>
+                        <extent>v.</extent>
+                    </physicalDescription>
+                    <note>Title varies: 1887-  , The Island guardian; Dec.  1890-Jan. 1891, The Daily guardian; Jan.  1891-  , The Morning guardian.</note>
+                    <note>Ceased publication in 1920?</note>
+                    <note>Missing issues.</note>
+                    <note type="reproduction">Microfilm of the original in Prince Edward Island Public and Legislative Libraries. Ottawa, Canadian Library Association Newspaper Microfilming Project, 1963- reels.</note>
+                    <subject authority="lcsh">
+                        <geographic>Prince Edward Island</geographic>
+                        <topic>Newspapers</topic>
+                    </subject>
+                    <subject authority="lcsh">
+                        <geographic>Charlottetown (P.E.I.)</geographic>
+                        <topic>Newspapers</topic>
+                    </subject>
+                    <identifier type="islandpines">http://islandpines.roblib.upei.ca/opac/extras/supercat/mods33/record/274634</identifier>
+                    <recordInfo>
+                        <recordContentSource authority="marcorg">CaPCU</recordContentSource>
+                        <recordCreationDate encoding="marc">760913</recordCreationDate>
+                        <recordChangeDate encoding="iso8601">20090407151822.0</recordChangeDate>
+                    </recordInfo>
+                </mods>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="RELS-EXT" STATE="A" VERSIONABLE="true">
+        <foxml:datastreamVersion CREATED="2010-05-27T13:55:30.557Z" ID="RELS-EXT.0"
       LABEL="Fedora Object-to-Object Relationship Metadata" MIMETYPE="text/xml" SIZE="679">
-      <foxml:xmlContent>
-        <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/"
+            <foxml:xmlContent>
+                <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/"
           xmlns:fedora="info:fedora/fedora-system:def/relations-external#"
           xmlns:fedora-model="info:fedora/fedora-system:def/model#"
           xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
           xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-          <rdf:description rdf:about="info:fedora/newspapers:guardian">
-            <fedora:isMemberOf rdf:resource="info:fedora/newspapers:collection"/>
-            <fedora-model:hasModel rdf:resource="info:fedora/newspapers:newspaperCModel"/>
-          </rdf:description>
-        </rdf:RDF>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
+                    <rdf:description rdf:about="info:fedora/newspapers:guardian">
+                        <fedora:isMemberOf rdf:resource="info:fedora/newspapers:collection"/>
+                        <fedora-model:hasModel rdf:resource="info:fedora/newspapers:newspaperCModel"/>
+                    </rdf:description>
+                </rdf:RDF>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
 </foxml:digitalObject>

@@ -56,7 +56,7 @@ function export_collection($collection_pid, $relationship = 'isMemberOfCollectio
     }
   }
   else {
-    drupal_set_message("Error creating temp directory for batch export.", 'error');
+    drupal_set_message(t("Error creating temp directory for batch export."), 'error');
     return FALSE;
   }
   return TRUE;

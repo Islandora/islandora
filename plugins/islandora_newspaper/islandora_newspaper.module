@@ -40,17 +40,17 @@ function islandora_newspaper_required_fedora_objects() {
           'datastream_file' => NULL,
           'dsversion' => NULL,
         ),
-        array (
+        array(
           'pid' => 'newspapers:collection',
           'label' => 'Newspapers Collection',
           'cmodel' => 'islandora:collectionCModel',
           'parent' => 'islandora:demos',
-          'datastreams' => array (
-            array (
+          'datastreams' => array(
+            array(
               'dsid' => 'COLLECTION_POLICY',
               'datastream_file' => "$module_path/newspapers_collection_policy.xml",
             ),
-            array (
+            array(
               'dsid' => 'TN',
               'datastream_file' => "$module_path/Crystal_Clear_mimetype_document.png",
               'mimetype' => 'image/png',

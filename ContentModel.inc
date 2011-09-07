@@ -1,6 +1,9 @@
 <?php
 
-// $Id$
+/**
+ * @file 
+ * 
+ */
 
 /**
  * @file 
@@ -38,7 +41,7 @@ class ContentModel extends XMLDatastream {
    */
   public static function loadFromObject($pid) {
     $ret = FALSE;
-    if (self::validPid($pid)) {
+    if (self::valid_pid($pid)) {
       module_load_include('inc', 'fedora_repository', 'ObjectHelper');
       $objectHelper = new ObjectHelper();
 
@@ -199,9 +202,9 @@ class ContentModel extends XMLDatastream {
     $ret = FALSE;
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
     try {
-      if (self::validPid($pid)) {
+      if (self::valid_pid($pid)) {
         $fedoraItem = new Fedora_Item($pid);
-        $dsid = ($dsid != NULL && self::validDsid($dsid)) ? $dsid : ContentModel::getDefaultDSID();
+        $dsid = ($dsid != NULL && self::valid_dsid($dsid)) ? $dsid : ContentModel::getDefaultDSID();
         $ds = $fedoraItem->get_datastream_dissemination($dsid);
         if (!empty($ds)) {
           $ret = new ContentModel($ds, $pid, $dsid, $pid_namespace, $name);
@@ -393,12 +396,12 @@ class ContentModel extends XMLDatastream {
     $rootEl->appendChild($ingest_formEl);
 
     if (isset($sXml->edit_metadata) &&
-        trim($sXml->edit_metadata->build_form_method->module) != '' &&
-        trim($sXml->edit_metadata->build_form_method->file) != '' &&
-        trim($sXml->edit_metadata->build_form_method->class_name) != '' &&
-        trim($sXml->edit_metadata->build_form_method->method_name) != '' &&
-        trim($sXml->edit_metadata->submit_form_method->method_name) != '' &&
-        trim($sXml->edit_metadata->build_form_method['dsid']) != ''
+      trim($sXml->edit_metadata->build_form_method->module) != '' &&
+      trim($sXml->edit_metadata->build_form_method->file) != '' &&
+      trim($sXml->edit_metadata->build_form_method->class_name) != '' &&
+      trim($sXml->edit_metadata->build_form_method->method_name) != '' &&
+      trim($sXml->edit_metadata->submit_form_method->method_name) != '' &&
+      trim($sXml->edit_metadata->build_form_method['dsid']) != ''
     ) {
       $edit_metadata_methodEl = $newDom->createElement('edit_metadata_method');
       $edit_metadata_methodEl->setAttribute('module', $sXml->edit_metadata->build_form_method->module);
@@ -416,9 +419,9 @@ class ContentModel extends XMLDatastream {
   }
 
   /**
-   * Gets a list of service deployments that this model has.  
+   * Gets a list of service deployments that this model has.
    *
-   * NOTE: Not currently being used. 
+   * NOTE: Not currently being used.
    *
    * @return String[] $serviceDepPids
    */
@@ -475,7 +478,7 @@ class ContentModel extends XMLDatastream {
    */
   private function getDSModel($dsid) {
     $ret = FALSE;
-    if (self::validDsid($dsid) && $this->validate()) {
+    if (self::valid_dsid($dsid) && $this->validate()) {
       $result = $this->xml->getElementsByTagName('datastreams');
       if ($result->length > 0) {
         $result = $result->item(0)->getElementsByTagName('datastream');
@@ -586,23 +589,23 @@ class ContentModel extends XMLDatastream {
       $elementsEl = $this->xml->getElementsbyTagName('ingest_form')->item(0)->getElementsByTagName('form_elements')->item(0);
       $elements = $elementsEl->getElementsByTagName('element');
       $found = FALSE;
-      $refEl = FALSE;
+      $ref_el = FALSE;
       for ($i = 0; $found === FALSE && $i < $elements->length; $i++) {
         if ($elements->item($i)->getAttribute('name') == trim($name)) {
           if ($reorder == 'inc') {
             $found = $elements->item($i);
-            $refEl = ($i > 0) ? $elements->item($i - 1) : false;
+            $ref_el = ($i > 0) ? $elements->item($i - 1) : FALSE;
           }
           else {
             $found = ($i + 1 < $elements->length) ? $elements->item($i + 1) : FALSE;
-            $refEl = $elements->item($i);
+            $ref_el = $elements->item($i);
           }
         }
       }
 
       if ($found !== FALSE) {
         $elementsEl->removeChild($found);
-        $elementsEl->insertBefore($found, $refEl);
+        $elementsEl->insertBefore($found, $ref_el);
         $ret = TRUE;
       }
     }
@@ -874,23 +877,23 @@ class ContentModel extends XMLDatastream {
 
           $items = $authListEl->getElementsByTagName('item');
           $found = FALSE;
-          $refEl = FALSE;
+          $ref_el = FALSE;
           for ($i = 0; $found === FALSE && $i < $items->length; $i++) {
             if ($items->item($i)->nodeValue == $value) {
               if ($reorder == 'inc') {
-                $refEl = ($i > 0) ? $items->item($i - 1) : FALSE;
+                $ref_el = ($i > 0) ? $items->item($i - 1) : FALSE;
                 $found = $items->item($i);
               }
               else {
-                $refEl = $items->item($i);
+                $ref_el = $items->item($i);
                 $found = ($i + 1 < $items->length) ? $items->item($i + 1) : FALSE;
               }
             }
           }
 
-          if ($found !== FALSE && $refEl !== FALSE) {
+          if ($found !== FALSE && $ref_el !== FALSE) {
             $authListEl->removeChild($found);
-            $authListEl->insertBefore($found, $refEl);
+            $authListEl->insertBefore($found, $ref_el);
             $ret = TRUE;
           }
         }
@@ -1084,7 +1087,7 @@ class ContentModel extends XMLDatastream {
    */
   public function buildEditMetadataForm($pid, $dsid) {
     $ret = FALSE;
-    if (self::validDsid($dsid) && $this->validate()) {
+    if (self::valid_dsid($dsid) && $this->validate()) {
       $method = $this->xml->getElementsByTagName('edit_metadata_method');
       if ($method->length > 0 && $method->item(0)->getAttribute('dsid') == $dsid) {
         $method = $method->item(0);
@@ -1218,7 +1221,7 @@ class ContentModel extends XMLDatastream {
    */
   public function updateEditMetadataMethod($module, $file, $class, $method, $handler, $dsid) {
     $ret = FALSE;
-    if (self::validDsid($dsid) && $this->validate()) {
+    if (self::valid_dsid($dsid) && $this->validate()) {
       $methodEl = $this->xml->getElementsByTagName('content_model')->item(0)->getElementsByTagName('edit_metadata_method');
       if ($methodEl->length > 0) {
         $methodEl = $methodEl->item(0);
@@ -1248,7 +1251,7 @@ class ContentModel extends XMLDatastream {
    */
   public function execAddDatastreamMethods($dsid, $file) {
     $ret = FALSE;
-    if (self::validDsid($dsid) && $this->validate() && ($ds = $this->getDSModel($dsid)) !== FALSE) {
+    if (self::valid_dsid($dsid) && $this->validate() && ($ds = $this->getDSModel($dsid)) !== FALSE) {
       $addMethod = $ds->getElementsByTagName('add_datastream_method');
       if ($addMethod->length > 0) {
         $addMethod = $addMethod->item(0);
@@ -1586,7 +1589,7 @@ class ContentModel extends XMLDatastream {
   public function addDs($dsid, $display_in_fieldset = FALSE) {
     $ret = FALSE;
 
-    if (self::validDsid($dsid) && ($ds = $this->getDSModel($dsid)) === FALSE) {
+    if (self::valid_dsid($dsid) && ($ds = $this->getDSModel($dsid)) === FALSE) {
       $datastreamsEl = $this->xml->getElementsByTagName('datastreams');
       if ($datastreamsEl->length > 0) {
         $datastreamsEl = $datastreamsEl->item(0);
@@ -1615,7 +1618,7 @@ class ContentModel extends XMLDatastream {
   public function removeDs($dsid) {
     $ret = FALSE;
 
-    if (self::validDsid($dsid) && ($ds = $this->getDSModel($dsid)) !== FALSE) {
+    if (self::valid_dsid($dsid) && ($ds = $this->getDSModel($dsid)) !== FALSE) {
       $datastreamsEl = $this->xml->getElementsByTagName('datastreams')->item(0);
       $datastreamsEl->removeChild($ds);
       $ret = TRUE;
@@ -1630,7 +1633,7 @@ class ContentModel extends XMLDatastream {
    */
   public function displayInFieldset($dsid) {
     $ret = FALSE;
-    if (self::validDsid($dsid) && ($ds = $this->getDSModel($dsid)) !== FALSE) {
+    if (self::valid_dsid($dsid) && ($ds = $this->getDSModel($dsid)) !== FALSE) {
       $ret = strtolower($ds->getAttribute('display_in_fieldset')) == 'true';
     }
     return $ret;
@@ -1644,7 +1647,7 @@ class ContentModel extends XMLDatastream {
    */
   public function setDisplayInFieldset($dsid, $value = TRUE) {
     $ret = FALSE;
-    if (self::validDsid($dsid) && ($ds = $this->getDSModel($dsid)) !== FALSE) {
+    if (self::valid_dsid($dsid) && ($ds = $this->getDSModel($dsid)) !== FALSE) {
       if ($value == FALSE && $ds->attributes->getNamedItem('display_in_fieldset') !== NULL) {
         $ds->removeAttribute('display_in_fieldset');
         $ret = TRUE;
@@ -1669,14 +1672,14 @@ class ContentModel extends XMLDatastream {
   public function setDefaultDispMeth($dsid, $module, $file, $class, $method) {
     $ret = FALSE;
 
-    if (self::validDsid($dsid) && ($ds = $this->getDSModel($dsid)) !== FALSE) {
+    if (self::valid_dsid($dsid) && ($ds = $this->getDSModel($dsid)) !== FALSE) {
       $found = FALSE;
       $dispMethods = $ds->getElementsByTagName('display_method');
       for ($i = 0; !$found && $i < $dispMethods->length; $i++) {
         if ($module == ($dispMethods->item($i)->getAttribute('module') == '' ? 'fedora_repository' : $dispMethods->item($i)->getAttribute('module')) &&
-            $file == $dispMethods->item($i)->getAttribute('file') &&
-            $class == $dispMethods->item($i)->getAttribute('class') &&
-            $method == $dispMethods->item($i)->getAttribute('method')) {
+          $file == $dispMethods->item($i)->getAttribute('file') &&
+          $class == $dispMethods->item($i)->getAttribute('class') &&
+          $method == $dispMethods->item($i)->getAttribute('method')) {
           $found = $dispMethods->item($i);
         }
       }
@@ -1707,14 +1710,14 @@ class ContentModel extends XMLDatastream {
    */
   public function removeDispMeth($dsid, $module, $file, $class, $method) {
     $ret = FALSE;
-    if (self::validDsid($dsid) && ($ds = $this->getDSModel($dsid)) !== FALSE) {
+    if (self::valid_dsid($dsid) && ($ds = $this->getDSModel($dsid)) !== FALSE) {
       $found = FALSE;
       $dispMethods = $ds->getElementsByTagName('display_method');
       for ($i = 0; !$found && $i < $dispMethods->length; $i++) {
         if ($module == ($dispMethods->item($i)->getAttribute('module') == '' ? 'fedora_repository' : $dispMethods->item($i)->getAttribute('module') == '') &&
-            $file == $dispMethods->item($i)->getAttribute('file') &&
-            $class == $dispMethods->item($i)->getAttribute('class') &&
-            $method == $dispMethods->item($i)->getAttribute('method')) {
+          $file == $dispMethods->item($i)->getAttribute('file') &&
+          $class == $dispMethods->item($i)->getAttribute('class') &&
+          $method == $dispMethods->item($i)->getAttribute('method')) {
           $found = $dispMethods->item($i);
         }
       }
@@ -1739,7 +1742,7 @@ class ContentModel extends XMLDatastream {
    */
   public function addDispMeth($dsid, $module, $file, $class, $method, $default = FALSE) {
     $ret = FALSE;
-    if (self::validDsid($dsid) && ($ds = $this->getDSModel($dsid)) !== FALSE) {
+    if (self::valid_dsid($dsid) && ($ds = $this->getDSModel($dsid)) !== FALSE) {
       $dispMethEl = $this->xml->createElement('display_method');
       $dispMethEl->setAttribute('module', $module);
       $dispMethEl->setAttribute('file', $file);
@@ -1853,7 +1856,7 @@ class ContentModel extends XMLDatastream {
    */
   public function addIngestMethod($rule_id, $module, $file, $class, $method, $dsid, $modified_files_ext) {
     $ret = FALSE;
-    if (self::validDsid($dsid) && ($rule = $this->getIngestRule($rule_id)) !== FALSE) {
+    if (self::valid_dsid($dsid) && ($rule = $this->getIngestRule($rule_id)) !== FALSE) {
       $methodsEl = $rule->getElementsByTagName('ingest_methods')->item(0);
       $meth = $this->xml->createElement('ingest_method');
       $meth->setAttribute('module', $module);
@@ -1916,9 +1919,9 @@ class ContentModel extends XMLDatastream {
       $found = FALSE;
       for ($i = 0; $found === FALSE && $i < $methods->length; $i++) {
         if (($methods->item($i)->getAttribute('module') == '' ? 'fedora_repository' : $methods->item($i)->getAttribute('module')) == $module &&
-            $methods->item($i)->getAttribute('file') == $file &&
-            $methods->item($i)->getAttribute('class') == $class &&
-            $methods->item($i)->getAttribute('method') == $method) {
+          $methods->item($i)->getAttribute('file') == $file &&
+          $methods->item($i)->getAttribute('class') == $class &&
+          $methods->item($i)->getAttribute('method') == $method) {
           $found = $methods->item($i);
         }
       }
@@ -2025,7 +2028,7 @@ class ContentModel extends XMLDatastream {
    */
   public function addIngestRule($applies_to, $module, $file, $class, $method, $dsid, $modified_files_ext) {
     $ret = FALSE;
-    if (self::validDsid($dsid) && $this->validate()) {
+    if (self::valid_dsid($dsid) && $this->validate()) {
       $ingestRulesEl = $this->xml->getElementsByTagName('ingest_rules')->item(0);
       $rule = $this->xml->createElement('rule');
       $ingestMethodsEl = $this->xml->createElement('ingest_methods');
@@ -2107,7 +2110,7 @@ class ContentModel extends XMLDatastream {
    */
   public function editIngestFormAttributes($dsid, $page, $hide_file_chooser = FALSE, $redirect = TRUE) {
     $ret = FALSE;
-    if (self::validDsid($dsid) && $this->validate()) {
+    if (self::valid_dsid($dsid) && $this->validate()) {
       $ingest_formEl = $this->xml->getElementsByTagName('ingest_form')->item(0);
       $ingest_formEl->setAttribute('dsid', $dsid);
       $ingest_formEl->setAttribute('page', $page);
@@ -2274,7 +2277,7 @@ class ContentModel extends XMLDatastream {
       $result->item(0)->appendChild($forms);
       return TRUE;
     }
-    else if ($result->length == 1) {
+    elseif ($result->length == 1) {
       $element = $this->xml->importNode($element);
       $result->item(0)->appendChild($element);
       return TRUE;

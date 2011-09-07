@@ -1,179 +1,179 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <foxml:digitalObject PID="ilives:jp2Sdep-pageCModel" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
-  <foxml:objectProperties>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="ilives:jp2Sdep-pageCModel"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="fedoraAdmin"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2009-05-21T03:24:05.906Z"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2010-06-01T00:48:39.302Z"/>
-  </foxml:objectProperties>
-  <foxml:datastream CONTROL_GROUP="X" ID="AUDIT" STATE="A" VERSIONABLE="false">
-    <foxml:datastreamVersion CREATED="2009-05-21T03:24:05.906Z"
+    <foxml:objectProperties>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="ilives:jp2Sdep-pageCModel"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="fedoraAdmin"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2009-05-21T03:24:05.906Z"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2010-06-01T00:48:39.302Z"/>
+    </foxml:objectProperties>
+    <foxml:datastream CONTROL_GROUP="X" ID="AUDIT" STATE="A" VERSIONABLE="false">
+        <foxml:datastreamVersion CREATED="2009-05-21T03:24:05.906Z"
       FORMAT_URI="info:fedora/fedora-system:format/xml.fedora.audit" ID="AUDIT.0" LABEL="Audit Trail for this object" MIMETYPE="text/xml">
-      <foxml:xmlContent>
-        <audit:auditTrail xmlns:audit="info:fedora/fedora-system:def/audit#">
-          <audit:record ID="AUDREC1">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>ingest</audit:action>
-            <audit:componentID/>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2009-11-12T14:57:00.246Z</audit:date>
-            <audit:justification>Ingested from local file /Users/aoneill/dev/iiv/iiv/etc/fedora-objects/ilives_jp2Sdep-pageCModel.xml</audit:justification>
-          </audit:record>
-          <audit:record ID="AUDREC2">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>ingest</audit:action>
-            <audit:componentID/>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-06-01T00:46:19.239Z</audit:date>
-            <audit:justification>Ingested from local file /Users/al/Desktop/ilives_jp2Sdep-pageCModel.xml</audit:justification>
-          </audit:record>
-          <audit:record ID="AUDREC3">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>RELS-EXT</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-06-01T00:48:39.302Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-        </audit:auditTrail>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="DC" STATE="A" VERSIONABLE="true">
-    <foxml:datastreamVersion CREATED="2009-05-21T03:24:05.906Z" FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/"
+            <foxml:xmlContent>
+                <audit:auditTrail xmlns:audit="info:fedora/fedora-system:def/audit#">
+                    <audit:record ID="AUDREC1">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>ingest</audit:action>
+                        <audit:componentID/>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2009-11-12T14:57:00.246Z</audit:date>
+                        <audit:justification>Ingested from local file /Users/aoneill/dev/iiv/iiv/etc/fedora-objects/ilives_jp2Sdep-pageCModel.xml</audit:justification>
+                    </audit:record>
+                    <audit:record ID="AUDREC2">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>ingest</audit:action>
+                        <audit:componentID/>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-06-01T00:46:19.239Z</audit:date>
+                        <audit:justification>Ingested from local file /Users/al/Desktop/ilives_jp2Sdep-pageCModel.xml</audit:justification>
+                    </audit:record>
+                    <audit:record ID="AUDREC3">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>RELS-EXT</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-06-01T00:48:39.302Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                </audit:auditTrail>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="DC" STATE="A" VERSIONABLE="true">
+        <foxml:datastreamVersion CREATED="2009-05-21T03:24:05.906Z" FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/"
       ID="DC1.0" LABEL="Dublin Core Record for this object" MIMETYPE="text/xml" SIZE="403">
-      <foxml:xmlContent>
-        <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
+            <foxml:xmlContent>
+                <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
           xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
-          <dc:title>ilives:jp2Sdep-pageCModel</dc:title>
-          <dc:identifier>ilives:jp2Sdep-pageCModel</dc:identifier>
-        </oai_dc:dc>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="METHODMAP" STATE="A" VERSIONABLE="false">
-    <foxml:datastreamVersion CREATED="2009-05-21T03:26:21.830Z"
+                    <dc:title>ilives:jp2Sdep-pageCModel</dc:title>
+                    <dc:identifier>ilives:jp2Sdep-pageCModel</dc:identifier>
+                </oai_dc:dc>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="METHODMAP" STATE="A" VERSIONABLE="false">
+        <foxml:datastreamVersion CREATED="2009-05-21T03:26:21.830Z"
       FORMAT_URI="info:fedora/fedora-system:FedoraSDepMethodMap-1.1" ID="METHODMAP.1" LABEL="Deployment Method Map"
       MIMETYPE="text/xml" SIZE="2498">
-      <foxml:xmlContent>
-        <fmm:MethodMap bDefPID="djatoka:bDef" name="MethodMap - djatoka Service Methods" xmlns:fmm="http://fedora.comm.nsdlib.org/service/methodmap">
-          <fmm:Method operationName="getMetadata" wsdlMsgName="getMetadataRequest" wsdlMsgOutput="response">
-            <fmm:DefaultInputParm defaultValue="$PID" label="fedora object pid" parmName="PID" passBy="VALUE" required="true"/>
-            <fmm:DefaultInputParm defaultValue="JP2" label="content model" parmName="DSID" passBy="VALUE" required="true"/>
-            <fmm:DefaultInputParm defaultValue="info:lanl-repo/svc/getMetadata" parmName="svc_id" passBy="VALUE" required="true"/>
-            <fmm:UserInputParm defaultValue="" parmName="uid" passBy="VALUE" required="false"/>
-            <fmm:MethodReturnType wsdlMsgName="response" wsdlMsgTOMIME="application/json"/>
-          </fmm:Method>
-          <fmm:Method operationName="getRegion" wsdlMsgName="getRegionRequest" wsdlMsgOutput="response">
-            <fmm:DefaultInputParm defaultValue="$PID" label="fedora object pid" parmName="PID" passBy="VALUE" required="true"/>
-            <fmm:DefaultInputParm defaultValue="JP2" label="content model" parmName="DSID" passBy="VALUE" required="true"/>
-            <fmm:DefaultInputParm defaultValue="info:lanl-repo/svc/getRegion" parmName="svc_id" passBy="VALUE" required="true"/>
-            <fmm:UserInputParm defaultValue="" parmName="uid" passBy="VALUE" required="false"/>
-            <fmm:UserInputParm defaultValue="" parmName="region" passBy="VALUE" required="false"/>
-            <fmm:UserInputParm defaultValue="0" parmName="rotate" passBy="VALUE" required="false"/>
-            <fmm:UserInputParm defaultValue="-1" parmName="level" passBy="VALUE" required="false"/>
-            <fmm:UserInputParm defaultValue="" parmName="scale" passBy="VALUE" required="false"/>
-            <fmm:UserInputParm defaultValue="" parmName="clayers" passBy="VALUE" required="false"/>
-            <fmm:UserInputParm defaultValue="image/jpeg" parmName="format" passBy="VALUE" required="false"/>
-            <fmm:MethodReturnType wsdlMsgName="response" wsdlMsgTOMIME="image/jpeg"/>
-          </fmm:Method>
-        </fmm:MethodMap>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="DSINPUTSPEC" STATE="A" VERSIONABLE="false">
-    <foxml:datastreamVersion CREATED="2009-05-21T03:26:44.151Z"
+            <foxml:xmlContent>
+                <fmm:MethodMap bDefPID="djatoka:bDef" name="MethodMap - djatoka Service Methods" xmlns:fmm="http://fedora.comm.nsdlib.org/service/methodmap">
+                    <fmm:Method operationName="getMetadata" wsdlMsgName="getMetadataRequest" wsdlMsgOutput="response">
+                        <fmm:DefaultInputParm defaultValue="$PID" label="fedora object pid" parmName="PID" passBy="VALUE" required="true"/>
+                        <fmm:DefaultInputParm defaultValue="JP2" label="content model" parmName="DSID" passBy="VALUE" required="true"/>
+                        <fmm:DefaultInputParm defaultValue="info:lanl-repo/svc/getMetadata" parmName="svc_id" passBy="VALUE" required="true"/>
+                        <fmm:UserInputParm defaultValue="" parmName="uid" passBy="VALUE" required="false"/>
+                        <fmm:MethodReturnType wsdlMsgName="response" wsdlMsgTOMIME="application/json"/>
+                    </fmm:Method>
+                    <fmm:Method operationName="getRegion" wsdlMsgName="getRegionRequest" wsdlMsgOutput="response">
+                        <fmm:DefaultInputParm defaultValue="$PID" label="fedora object pid" parmName="PID" passBy="VALUE" required="true"/>
+                        <fmm:DefaultInputParm defaultValue="JP2" label="content model" parmName="DSID" passBy="VALUE" required="true"/>
+                        <fmm:DefaultInputParm defaultValue="info:lanl-repo/svc/getRegion" parmName="svc_id" passBy="VALUE" required="true"/>
+                        <fmm:UserInputParm defaultValue="" parmName="uid" passBy="VALUE" required="false"/>
+                        <fmm:UserInputParm defaultValue="" parmName="region" passBy="VALUE" required="false"/>
+                        <fmm:UserInputParm defaultValue="0" parmName="rotate" passBy="VALUE" required="false"/>
+                        <fmm:UserInputParm defaultValue="-1" parmName="level" passBy="VALUE" required="false"/>
+                        <fmm:UserInputParm defaultValue="" parmName="scale" passBy="VALUE" required="false"/>
+                        <fmm:UserInputParm defaultValue="" parmName="clayers" passBy="VALUE" required="false"/>
+                        <fmm:UserInputParm defaultValue="image/jpeg" parmName="format" passBy="VALUE" required="false"/>
+                        <fmm:MethodReturnType wsdlMsgName="response" wsdlMsgTOMIME="image/jpeg"/>
+                    </fmm:Method>
+                </fmm:MethodMap>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="DSINPUTSPEC" STATE="A" VERSIONABLE="false">
+        <foxml:datastreamVersion CREATED="2009-05-21T03:26:44.151Z"
       FORMAT_URI="info:fedora/fedora-system:FedoraDSInputSpec-1.1" ID="DSINPUTSPEC.1"
       LABEL="Datastream Input Specification" MIMETYPE="text/xml" SIZE="401">
-      <foxml:xmlContent>
-        <fbs:DSInputSpec label="jp2SdepInputSpec" xmlns:fbs="http://fedora.comm.nsdlib.org/service/bindspec">
-          <fbs:DSInput DSMax="1" DSMin="1" DSOrdinality="false" wsdlMsgPartName="DC">
-            <fbs:DSInputLabel>DC</fbs:DSInputLabel>
-            <fbs:DSMIME>text/xml</fbs:DSMIME>
-            <fbs:DSInputInstruction/>
-          </fbs:DSInput>
-        </fbs:DSInputSpec>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="WSDL" STATE="A" VERSIONABLE="false">
-    <foxml:datastreamVersion CREATED="2009-05-21T03:27:46.103Z" FORMAT_URI="http://schemas.xmlsoap.org/wsdl/"
+            <foxml:xmlContent>
+                <fbs:DSInputSpec label="jp2SdepInputSpec" xmlns:fbs="http://fedora.comm.nsdlib.org/service/bindspec">
+                    <fbs:DSInput DSMax="1" DSMin="1" DSOrdinality="false" wsdlMsgPartName="DC">
+                        <fbs:DSInputLabel>DC</fbs:DSInputLabel>
+                        <fbs:DSMIME>text/xml</fbs:DSMIME>
+                        <fbs:DSInputInstruction/>
+                    </fbs:DSInput>
+                </fbs:DSInputSpec>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="WSDL" STATE="A" VERSIONABLE="false">
+        <foxml:datastreamVersion CREATED="2009-05-21T03:27:46.103Z" FORMAT_URI="http://schemas.xmlsoap.org/wsdl/"
       ID="WSDL.1" LABEL="WSDL Bindings" MIMETYPE="text/xml" SIZE="3258">
-      <foxml:xmlContent>
-        <wsdl:definitions name="Fedora Local Djatoka Service" targetNamespace="jp2SDep"
+            <foxml:xmlContent>
+                <wsdl:definitions name="Fedora Local Djatoka Service" targetNamespace="jp2SDep"
           xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
           xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap"
           xmlns:soapenc="http://schemas.xmlsoap.org/wsdl/soap/encoding" xmlns:this="djatoka"
           xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-          <wsdl:message name="getMetadataRequest">
-            <wsdl:part name="PID" type="xsd:string"/>
-            <wsdl:part name="DSID" type="xsd:string"/>
-            <wsdl:part name="svc_id" type="xsd:string"/>
-          </wsdl:message>
-          <wsdl:message name="getRegionRequest">
-            <wsdl:part name="PID" type="xsd:string"/>
-            <wsdl:part name="DSID" type="xsd:string"/>
-            <wsdl:part name="svc_id" type="xsd:string"/>
-          </wsdl:message>
-          <wsdl:message name="response">
-            <wsdl:part name="exhibit" type="xsd:base64Binary"/>
-          </wsdl:message>
-          <wsdl:portType name="FedoraDjatokaPortType">
-            <wsdl:operation name="getMetadata">
-              <wsdl:input message="this:getMetadataRequest"/>
-              <wsdl:output message="this:response"/>
-            </wsdl:operation>
-            <wsdl:operation name="getRegion">
-              <wsdl:input message="this:getRegionRequest"/>
-              <wsdl:output message="this:response"/>
-            </wsdl:operation>
-          </wsdl:portType>
-          <wsdl:service name="FedoraDjatoka">
-            <wsdl:port binding="this:FedoraDjatoka_http" name="FedoraDjatoka_port">
-              <http:address location="http://local.fedora.server/"/>
-            </wsdl:port>
-          </wsdl:service>
-          <wsdl:binding name="FedoraDjatoka_http" type="this:FedoraDjatokaPortType">
-            <http:binding verb="GET"/>
-            <wsdl:operation name="getMetadata">
-              <http:operation location="adore-djatoka/resolver?url_ver=Z39.88-2004&amp;rft_id=http://local.fedora.server/fedora/get/(PID)/(DSID)&amp;svc_id=(svc_id)"/>
-              <wsdl:input>
-                <http:urlReplacement/>
-              </wsdl:input>
-              <wsdl:output>
-                <mime:content type="application/json"/>
-              </wsdl:output>
-            </wsdl:operation>
-            <wsdl:operation name="getRegion">
-              <http:operation location="adore-djatoka/resolver?url_ver=Z39.88-2004&amp;rft_id=http://local.fedora.server/fedora/get/(PID)/(DSID)&amp;svc_id=(svc_id)&amp;svc_val_fmt=info:ofi/fmt:kev:mtx:jpeg2000&amp;svc.format=(format)&amp;svc.level=(level)&amp;svc.rotate=(rotate)&amp;svc.region=(region)&amp;svc.scale=(scale)&amp;svc.clayers=(clayers)"/>
-              <wsdl:input>
-                <http:urlReplacement/>
-              </wsdl:input>
-              <wsdl:output>
-                <mime:content type="image/jpeg"/>
-              </wsdl:output>
-            </wsdl:operation>
-          </wsdl:binding>
-        </wsdl:definitions>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="RELS-EXT" STATE="A" VERSIONABLE="false">
-    <foxml:datastreamVersion CREATED="2010-06-01T00:48:39.302Z" FORMAT_URI="info:fedora/fedora-system:FedoraRELSExt-1.0"
+                    <wsdl:message name="getMetadataRequest">
+                        <wsdl:part name="PID" type="xsd:string"/>
+                        <wsdl:part name="DSID" type="xsd:string"/>
+                        <wsdl:part name="svc_id" type="xsd:string"/>
+                    </wsdl:message>
+                    <wsdl:message name="getRegionRequest">
+                        <wsdl:part name="PID" type="xsd:string"/>
+                        <wsdl:part name="DSID" type="xsd:string"/>
+                        <wsdl:part name="svc_id" type="xsd:string"/>
+                    </wsdl:message>
+                    <wsdl:message name="response">
+                        <wsdl:part name="exhibit" type="xsd:base64Binary"/>
+                    </wsdl:message>
+                    <wsdl:portType name="FedoraDjatokaPortType">
+                        <wsdl:operation name="getMetadata">
+                            <wsdl:input message="this:getMetadataRequest"/>
+                            <wsdl:output message="this:response"/>
+                        </wsdl:operation>
+                        <wsdl:operation name="getRegion">
+                            <wsdl:input message="this:getRegionRequest"/>
+                            <wsdl:output message="this:response"/>
+                        </wsdl:operation>
+                    </wsdl:portType>
+                    <wsdl:service name="FedoraDjatoka">
+                        <wsdl:port binding="this:FedoraDjatoka_http" name="FedoraDjatoka_port">
+                            <http:address location="http://local.fedora.server/"/>
+                        </wsdl:port>
+                    </wsdl:service>
+                    <wsdl:binding name="FedoraDjatoka_http" type="this:FedoraDjatokaPortType">
+                        <http:binding verb="GET"/>
+                        <wsdl:operation name="getMetadata">
+                            <http:operation location="adore-djatoka/resolver?url_ver=Z39.88-2004&amp;rft_id=http://local.fedora.server/fedora/get/(PID)/(DSID)&amp;svc_id=(svc_id)"/>
+                            <wsdl:input>
+                                <http:urlReplacement/>
+                            </wsdl:input>
+                            <wsdl:output>
+                                <mime:content type="application/json"/>
+                            </wsdl:output>
+                        </wsdl:operation>
+                        <wsdl:operation name="getRegion">
+                            <http:operation location="adore-djatoka/resolver?url_ver=Z39.88-2004&amp;rft_id=http://local.fedora.server/fedora/get/(PID)/(DSID)&amp;svc_id=(svc_id)&amp;svc_val_fmt=info:ofi/fmt:kev:mtx:jpeg2000&amp;svc.format=(format)&amp;svc.level=(level)&amp;svc.rotate=(rotate)&amp;svc.region=(region)&amp;svc.scale=(scale)&amp;svc.clayers=(clayers)"/>
+                            <wsdl:input>
+                                <http:urlReplacement/>
+                            </wsdl:input>
+                            <wsdl:output>
+                                <mime:content type="image/jpeg"/>
+                            </wsdl:output>
+                        </wsdl:operation>
+                    </wsdl:binding>
+                </wsdl:definitions>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="RELS-EXT" STATE="A" VERSIONABLE="false">
+        <foxml:datastreamVersion CREATED="2010-06-01T00:48:39.302Z" FORMAT_URI="info:fedora/fedora-system:FedoraRELSExt-1.0"
       ID="RELS-EXT.2" LABEL="RDF Statements about this object" MIMETYPE="application/rdf+xml" SIZE="688">
-      <foxml:xmlContent>
-        <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-          <rdf:Description rdf:about="info:fedora/ilives:jp2Sdep-pageCModel">
-            <hasModel rdf:resource="info:fedora/fedora-system:ServiceDeployment-3.0" xmlns="info:fedora/fedora-system:def/model#"/>
-            <isDeploymentOf rdf:resource="info:fedora/ilives:jp2Sdef" xmlns="info:fedora/fedora-system:def/model#"/>
-            <isContractorOf rdf:resource="info:fedora/ilives:pageCModel" xmlns="info:fedora/fedora-system:def/model#"/>
-            <isContractorOf rdf:resource="info:fedora/newspapers:pageCModel" xmlns="info:fedora/fedora-system:def/model#"/>
-          </rdf:Description>
-        </rdf:RDF>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
+            <foxml:xmlContent>
+                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                    <rdf:Description rdf:about="info:fedora/ilives:jp2Sdep-pageCModel">
+                        <hasModel rdf:resource="info:fedora/fedora-system:ServiceDeployment-3.0" xmlns="info:fedora/fedora-system:def/model#"/>
+                        <isDeploymentOf rdf:resource="info:fedora/ilives:jp2Sdef" xmlns="info:fedora/fedora-system:def/model#"/>
+                        <isContractorOf rdf:resource="info:fedora/ilives:pageCModel" xmlns="info:fedora/fedora-system:def/model#"/>
+                        <isContractorOf rdf:resource="info:fedora/newspapers:pageCModel" xmlns="info:fedora/fedora-system:def/model#"/>
+                    </rdf:Description>
+                </rdf:RDF>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
 </foxml:digitalObject>

@@ -1,14 +1,14 @@
 <?php
-// $Id$
+
 
 // @file fedora_attach.install
 
 /**
-* Implementation of hook_install().
-*
-* Ensures fedora_attach runs after module upload
-*/
+ * Implementation of hook_install().
+ *
+ * Ensures fedora_attach runs after module upload
+ */
 function fedora_attach_install() {
   $weight = (int) db_result(db_query("SELECT weight FROM {system} WHERE name = 'upload'"));
-  db_query("UPDATE {system} SET weight = %d WHERE name = 'fedora_attach'", $weight+1);
+  db_query("UPDATE {system} SET weight = %d WHERE name = 'fedora_attach'", $weight + 1);
 }

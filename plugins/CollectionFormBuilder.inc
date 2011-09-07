@@ -13,6 +13,7 @@ module_load_include('inc', 'fedora_repository', 'plugins/FormBuilder');
  * implements methods from content model ingest form xml
  * builds a dc metadata form
  */
+
 class CollectionFormBuilder extends FormBuilder {
 
   /**

@@ -1,7 +1,7 @@
 <?php
 
-
 /**
+ * @file
  * Invokes a hook to any dependent modules asking them if their installations require
  * any fedora objects to be present. Modules implementing this hook should return an array
  * of arrays of the form:
@@ -87,7 +87,8 @@ function fedora_repository_solution_pack_form(&$form_state, $solution_pack_modul
         if (!$item->exists()) {
           $object_status = 'Missing';
           $needs_install = TRUE;
-        } else {
+        }
+        else {
           if (isset($object['dsid']) && isset($object['datastream_file']) && isset($object['dsversion'])) {
             $datastreams = array(
               array(
@@ -96,7 +97,8 @@ function fedora_repository_solution_pack_form(&$form_state, $solution_pack_modul
                 'dsversion' => $object['dsversion'],
               ),
             );
-          } elseif (!empty($object['datastreams'])) {
+          }
+          elseif (!empty($object['datastreams'])) {
             $datastreams = $object['datastreams'];
           }
           if (!empty($datastreams) && is_array($datastreams)) {
@@ -118,7 +120,7 @@ function fedora_repository_solution_pack_form(&$form_state, $solution_pack_modul
                 }
               }
             }
-          }  
+          }
         }
         array_push($table_row, $object_status);
         $table_rows[] = $table_row;
@@ -137,7 +139,8 @@ function fedora_repository_solution_pack_form(&$form_state, $solution_pack_modul
   );
   if (!$needs_install && !$needs_update) {
     $form['install_status']['#value'] = theme_image('misc/watchdog-ok.png') . t('All required objects are installed and up-to-date.');
-  } else {
+  }
+  else {
     $form['install_status']['#value'] = theme_image('misc/watchdog-warning.png') . t('Some objects must be re-ingested. See Objects list for details.');
   }
   $form['submit'] = array(

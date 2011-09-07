@@ -7,14 +7,14 @@
                 <class_name>ShowStreamsInFieldSets</class_name>
                 <method_name>showQdc</method_name>
             </method>
-            </datastream>
-            <datastream id="refworks">
-                <method>
-                    <file>plugins/ShowStreamsInFieldSets.inc</file>
-                    <class_name>ShowStreamsInFieldSets</class_name>
-                    <method_name>showRefworks</method_name>
-                </method>
-            </datastream>
+        </datastream>
+        <datastream id="refworks">
+            <method>
+                <file>plugins/ShowStreamsInFieldSets.inc</file>
+                <class_name>ShowStreamsInFieldSets</class_name>
+                <method_name>showRefworks</method_name>
+            </method>
+        </datastream>
         <datastream id="romeo">
             <method>
                 <file>plugins/ShowStreamsInFieldSets.inc</file>
@@ -29,10 +29,10 @@
             
         </datastream>
     </display_in_fieldset>
-     <mimetypes>
+    <mimetypes>
         <type>text/xml</type>
-         <type>text/plain</type>
-         <type>application/xml</type>
+        <type>text/plain</type>
+        <type>application/xml</type>
     </mimetypes>
     <ingest_rules>
         <rule>
@@ -59,8 +59,8 @@
             <method_name>buildForm</method_name>
             <form_handler>handleForm</form_handler>
             <!--need validation method as well-->
-            </form_builder_method>
-            <form_elements>
+        </form_builder_method>
+        <form_elements>
             <element>
                 <label>Ingest</label>
                 <name>hiddenvalue</name>

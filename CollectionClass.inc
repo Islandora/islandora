@@ -1,6 +1,5 @@
 <?php
 
-// $Id$
 
 /**
  * @file
@@ -321,7 +320,7 @@ class CollectionClass {
       $thisClass = new $phpClass ();
       $returnValue = $thisClass->$phpMethod($parametersArray, $dsid, $file, $file_ext);
       if (!$returnValue) {
-        drupal_set_message('Error! Failed running content model method !m !rv', array('!m' => $phpMethod, '!rv' => $returnValue));
+        drupal_set_message(t('Error! Failed running content model method !m !rv'), array('!m' => $phpMethod, '!rv' => $returnValue));
         return FALSE;
       }
     }
@@ -420,8 +419,8 @@ class CollectionClass {
         'pidNamespace' => $pidNameSpace
       );
       $object = $soapClient->__soapCall('getNextPID', array(
-            $params
-          ));
+          $params
+        ));
     } catch (exception $e) {
       drupal_set_message(t('Error getting Next PID: !e', array('!e' => $e->getMessage())), 'error');
       return FALSE;
@@ -435,7 +434,7 @@ class CollectionClass {
     module_load_include('inc', 'fedora_repository', 'plugins/PersonalCollectionClass');
     $personalCollectionClass = new PersonalCollectionClass();
     if (!$personalCollectionClass->createCollection($user, $pid, $soapClient)) {
-      drupal_set_message("Did not create a personal collection object for !u", array('!u' => $user->name));
+      drupal_set_message(t("Did not create a personal collection object for !u"), array('!u' => $user->name));
       return FALSE; //creation failed don't save the collection pid in drupal db
     }
     user_save($user, $personal_collection_pid);

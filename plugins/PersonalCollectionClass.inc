@@ -54,8 +54,8 @@ class PersonalCollectionClass {
       );
 
       $object = $soapClient->__soapCall('ingest', array(
-            $params
-          ));
+          $params
+        ));
     } catch (exception $e) {
       drupal_set_message(t('Error ingesting personal collection object: !e', array('!e' => $e->getMessage())), 'error');
       return FALSE;
@@ -83,7 +83,7 @@ class PersonalCollectionClass {
 
     if (!$policyElement) {
       drupal_set_message(t('Error parsing policy stream.'));
-      watchdog(t("Fedora_Repository"), t("Error parsing policy stream, could not parse policy stream."), NULL, WATCHDOG_NOTICE);
+      watchdog(t("Fedora_Repository"), "Error parsing policy stream, could not parse policy stream.", NULL, WATCHDOG_NOTICE);
       return FALSE;
     }
     $dom->importNode($policyElement, TRUE);
@@ -91,7 +91,7 @@ class PersonalCollectionClass {
     $value = $policyElement->appendXML($collectionTemplate);
     if (!$value) {
       drupal_set_message(t('Error creating collection policy stream.'));
-      watchdog(t("Fedora_Repository"), t("Error creating collection policy stream, could not parse collection policy template file."), NULL, WATCHDOG_NOTICE);
+      watchdog(t("Fedora_Repository"), "Error creating collection policy stream, could not parse collection policy template file.", NULL, WATCHDOG_NOTICE);
       return FALSE;
     }
 

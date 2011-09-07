@@ -1,18 +1,18 @@
 body {
-	font-family: Arial;
-	font-size: 12px;
-	color: gray;
-	background: black;
+    font-family: Arial;
+    font-size: 12px;
+    color: gray;
+    background: black;
 }
 
 .title {
-	font-size: 18px;
-	font-weight: bold;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 #coverFlowTest .coverFlowLabel {
-	margin-top: 10px;
-	font-size: 14px;
-	color: #C0C0C0;
-	font-weight: bold;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #C0C0C0;
+    font-weight: bold;
 }

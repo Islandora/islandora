@@ -12,7 +12,7 @@
  */
 if (!function_exists('str_getcsv')) {
 
-  function str_getcsv($input, $delimiter=',', $enclosure='"', $escape=null, $eol=null) {
+  function str_getcsv($input, $delimiter=',', $enclosure='"', $escape=NULL, $eol=NULL) {
     $temp = fopen("php://memory", "rw");
     fwrite($temp, $input);
     fseek($temp, 0);
@@ -109,7 +109,7 @@ function fix_encoding($in_str) {
  * @param type $pid
  * @return boolean 
  */
-function validPid($pid) {
+function valid_pid($pid) {
   $valid = FALSE;
   if (strlen(trim($pid)) <= 64 && preg_match('/^([A-Za-z0-9]|-|\.)+:(([A-Za-z0-9])|-|\.|~|_|(%[0-9A-F]{2}))+$/', trim($pid))) {
     $valid = TRUE;
@@ -123,7 +123,7 @@ function validPid($pid) {
  * @param type $dsid
  * @return boolean 
  */
-function validDsid($dsid) {
+function valid_dsid($dsid) {
   $valid = FALSE;
   if (strlen(trim($dsid)) <= 64 && preg_match('/^[a-zA-Z0-9\_\-\.]+$/', trim($dsid))) {
     $valid = TRUE;
@@ -137,7 +137,7 @@ function validDsid($dsid) {
  * @param type $dsid
  * @return string 
  */
-function fixDsid($dsid) {
+function fix_dsid($dsid) {
   $new_dsid = trim($dsid);
 
   $find = '/[^a-zA-Z0-9\.\_\-]/';

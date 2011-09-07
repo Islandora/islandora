@@ -1,66 +1,68 @@
+
 <xsl:stylesheet version="1.0" xmlns:s="http://www.w3.org/2001/sw/DataAccess/rf1/result" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <xsl:template match="/">
-    <xsl:variable name="BASEURL">
-      <xsl:value-of select="$baseUrl"/>
-    </xsl:variable>
-    <xsl:variable name="collTitle" select="/s:sparql/s:results/s:result/s:collTitle"/>
-    <xsl:variable name="collDesc" select="/s:sparql/s:results/s:result/s:collDesc"/>
-    <center>
-      <font face="arial,helvetica">
-        <h2>
-          <xsl:value-of select="$collTitle"/>
-          <br/>
-          <i>
-            <xsl:value-of select="$collDesc"/>
-          </i>
-        </h2>
-      </font>
-    </center>
-    <hr size="1"/>
-    <center>
-      <table border="0" cellpadding="5">
-        <xsl:for-each select="/s:sparql/s:results/s:result">
-          <xsl:variable name="pid" select="substring-after(s:member/@uri, '/')"/>
-          <tr>
-            <td>
-              <center>
-                <a>
-                  <xsl:attribute name="href">
-                    <xsl:value-of select="$BASEURL"/>
-                    <xsl:text>/fedora/repository/</xsl:text>
-                    <xsl:value-of select="$pid"/>
-                    <xsl:text>/FULL_SIZE</xsl:text>
-                  </xsl:attribute>
-                  <img height="120" width="160">
-                    <xsl:attribute name="src">
-                      <xsl:value-of select="$BASEURL"/>
-                      <xsl:text>/fedora/repository/</xsl:text>
-                      <xsl:value-of select="$pid"/>
-                      <xsl:text>/MEDIUM_SIZE</xsl:text>
-                    </xsl:attribute>
-                  </img>
-                  <br/>
+    <xsl:template match="/">
+        <xsl:variable name="BASEURL">
+            <xsl:value-of select="$baseUrl"/>
+        </xsl:variable>
+        <xsl:variable name="collTitle" select="/s:sparql/s:results/s:result/s:collTitle"/>
+        <xsl:variable name="collDesc" select="/s:sparql/s:results/s:result/s:collDesc"/>
+        <center>
+            <font face="arial,helvetica">
+                <h2>
+                    <xsl:value-of select="$collTitle"/>
+                    <br/>
+                    <i>
+                        <xsl:value-of select="$collDesc"/>
+                    </i>
+                </h2>
+            </font>
+        </center>
+        <hr size="1"/>
+        <center>
+            <table border="0" cellpadding="5">
+                <xsl:for-each select="/s:sparql/s:results/s:result">
+                    <xsl:variable name="pid" select="substring-after(s:member/@uri, '/')"/>
+                    <tr>
+                        <td>
+                            <center>
+                                <a>
+                                    <xsl:attribute name="href">
+                                        <xsl:value-of select="$BASEURL"/>
+                                        <xsl:text>/fedora/repository/</xsl:text>
+                                        <xsl:value-of select="$pid"/>
+                                        <xsl:text>/FULL_SIZE</xsl:text>
+                                    </xsl:attribute>
+                                    <img height="120" width="160">
+                                        <xsl:attribute name="src">
+                                            <xsl:value-of select="$BASEURL"/>
+                                            <xsl:text>/fedora/repository/</xsl:text>
+                                            <xsl:value-of select="$pid"/>
+                                            <xsl:text>/MEDIUM_SIZE</xsl:text>
+                                        </xsl:attribute>
+                                    </img>
+                                    <br/>
                       ( Full Size )
-                    </a>
-              </center>
-            </td>
-            <td>
-              <b>
-                <a>
-                  <xsl:attribute name="href">
-                    <xsl:value-of select="$BASEURL"/>
-                    <xsl:text>/fedora/repository/</xsl:text>
-                    <xsl:value-of select="$pid"/>/-/<xsl:value-of select="s:memberTitle"/>
-                  </xsl:attribute>
-                  <xsl:value-of select="s:memberTitle"/>
-                </a>
-              </b>
-              <br/>
-              <xsl:value-of select="s:memberDesc"/>
-            </td>
-          </tr>
-        </xsl:for-each>
-      </table>
-    </center>
-  </xsl:template>
+                                </a>
+                            </center>
+                        </td>
+                        <td>
+                            <b>
+                                <a>
+                                    <xsl:attribute name="href">
+                                        <xsl:value-of select="$BASEURL"/>
+                                        <xsl:text>/fedora/repository/</xsl:text>
+                                        <xsl:value-of select="$pid"/>/-/
+                                        <xsl:value-of select="s:memberTitle"/>
+                                    </xsl:attribute>
+                                    <xsl:value-of select="s:memberTitle"/>
+                                </a>
+                            </b>
+                            <br/>
+                            <xsl:value-of select="s:memberDesc"/>
+                        </td>
+                    </tr>
+                </xsl:for-each>
+            </table>
+        </center>
+    </xsl:template>
 </xsl:stylesheet>

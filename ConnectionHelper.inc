@@ -66,10 +66,10 @@ class ConnectionHelper {
       //with the appropriate entry for a username of anonymous password of anonymous
       try {
         $client = new SoapClient($this->_fixURL($url, 'anonymous', 'anonymous'), array(
-              'login' => 'anonymous',
-              'password' => 'anonymous',
-              'exceptions' => $exceptions,
-            ));
+            'login' => 'anonymous',
+            'password' => 'anonymous',
+            'exceptions' => $exceptions,
+          ));
       } catch (SoapFault $e) {
         drupal_set_message(t("!e", array('!e' => $e->getMessage())));
         return NULL;
@@ -78,10 +78,10 @@ class ConnectionHelper {
     else {
       try {
         $client = new SoapClient($this->_fixURL($url, $user->name, $user->pass), array(
-              'login' => $user->name,
-              'password' => $user->pass,
-              'exceptions' => TRUE,
-            ));
+            'login' => $user->name,
+            'password' => $user->pass,
+            'exceptions' => TRUE,
+          ));
       } catch (SoapFault $e) {
         drupal_set_message(t("!e", array('!e' => $e->getMessage())));
         return NULL;

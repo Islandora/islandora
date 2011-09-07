@@ -21,7 +21,6 @@ class RelsExt {
    * the repository for the given Fedora_Item.
    * @param Fedora_Item $item
    */
-
   function RelsExt($item) {
     $relsextxml = $item->get_datastream_dissemination('RELS-EXT');
   }

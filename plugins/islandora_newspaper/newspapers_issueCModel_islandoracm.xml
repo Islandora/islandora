@@ -1,24 +1,25 @@
+
 <content_model name="Newspaper" xmlns="http://www.islandora.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.islandora.ca http://localhost/islandoracm.xsd" version="2">
-  <mimetypes>
-    <type>text/xml</type>
-  </mimetypes>
-  <ingest_rules>
-    <rule>
-      <applies_to>text/xml</applies_to>
-      <ingest_methods>
-        <ingest_method class="IslandoraBook" dsid="MODS" file="book.inc" method="ingestBook" modified_files_ext="" module="fedora_ilives"/>
-      </ingest_methods>
-    </rule>
-  </ingest_rules>
-  <datastreams>
-    <datastream dsid="MODS">
-      <display_method class="Newspaper" file="Newspaper.inc" method="showFieldSets" module="islandora_newspaper"/>
-    </datastream>
-    <datastream dsid="TN"/>
-    <datastream dsid="DC"/>
-  </datastreams>
-  <ingest_form dsid="MODS" page="2">
-    <form_builder_method class="Newspaper" file="Newspaper.inc" handler="handleIngestForm" method="buildDrupalForm" module="islandora_newspaper"/>
-    <form_elements/>
-  </ingest_form>
+    <mimetypes>
+        <type>text/xml</type>
+    </mimetypes>
+    <ingest_rules>
+        <rule>
+            <applies_to>text/xml</applies_to>
+            <ingest_methods>
+                <ingest_method class="IslandoraBook" dsid="MODS" file="book.inc" method="ingestBook" modified_files_ext="" module="fedora_ilives"/>
+            </ingest_methods>
+        </rule>
+    </ingest_rules>
+    <datastreams>
+        <datastream dsid="MODS">
+            <display_method class="Newspaper" file="Newspaper.inc" method="showFieldSets" module="islandora_newspaper"/>
+        </datastream>
+        <datastream dsid="TN"/>
+        <datastream dsid="DC"/>
+    </datastreams>
+    <ingest_form dsid="MODS" page="2">
+        <form_builder_method class="Newspaper" file="Newspaper.inc" handler="handleIngestForm" method="buildDrupalForm" module="islandora_newspaper"/>
+        <form_elements/>
+    </ingest_form>
 </content_model>

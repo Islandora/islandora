@@ -1,5 +1,6 @@
 <?php
-// $Id$
+
+
 
 /**
  * @file
@@ -9,7 +10,6 @@
  * declare what kind of field they work with, which can be any
  * existing field as well as any new field the module creates.
  */
-
 //==========================================//
 // DEFINING A FIELD
 //==========================================//
@@ -50,7 +50,6 @@ function pidfield_field_settings($op, $field) {
         '#title' => t('Maximum length'),
         '#default_value' => is_numeric($field['max_length']) ? $field['max_length'] : 64,
         '#required' => FALSE,
-
         // Use #element_validate to validate the settings.
         '#element_validate' => array('_pidfield_length_validate'),
         '#description' => t('The maximum length of the field in characters. Must be a number between 1 and 255'),
@@ -94,7 +93,7 @@ function pidfield_field_settings($op, $field) {
       $data = content_views_field_views_data($field);
       $db_info = content_database_info($field);
       $table_alias = content_views_tablename($field);
-      $field_data = $data[$table_alias][$field['field_name'] .'_value'];
+      $field_data = $data[$table_alias][$field['field_name'] . '_value'];
       // Make changes to $data as needed here.
       return $data;
   }
@@ -107,7 +106,7 @@ function pidfield_field_settings($op, $field) {
  */
 function _pidfield_length_validate($element, &$form_state) {
   $value = $form_state['values']['max_length'];
-  if ($value && !is_numeric($value)|| $value < 1 || $value > 255) {
+  if ($value && !is_numeric($value) || $value < 1 || $value > 255) {
     form_set_error('max_length', t('"Max length" must be a number between 1 and 64.'));
   }
 }
@@ -128,7 +127,8 @@ function pidfield_field($op, &$node, $field, &$items, $teaser, $page) {
           // set an error on the right sub-element when
           // fields are deeply nested in the form.
           $error_element = isset($item['_error_element']) ? $item['_error_element'] : '';
-          if (is_array($item) && isset($item['_error_element'])) unset($item['_error_element']);
+          if (is_array($item) && isset($item['_error_element']))
+            unset($item['_error_element']);
           if (!empty($item['value'])) {
             if (!empty($field['max_length']) && drupal_strlen($item['value']) > $field['max_length']) {
               form_set_error($error_element, t('%name: the value may not be longer than %max characters.', array('%name' => $field['widget']['label'], '%max' => $field['max_length'])));
@@ -190,7 +190,7 @@ function pidfield_token_list($type = 'all') {
   if ($type == 'field' || $type == 'all') {
     $tokens = array();
 
-    $tokens['pidfield']['raw']       = t('Just the PID itself.');
+    $tokens['pidfield']['raw'] = t('Just the PID itself.');
     $tokens['pidfield']['formatted'] = t('A PID with a hyperlink');
 
     return $tokens;
@@ -201,7 +201,7 @@ function pidfield_token_values($type, $object = NULL) {
   if ($type == 'field') {
     $item = $object[0];
 
-    $tokens['raw']  = $item['value'];
+    $tokens['raw'] = $item['value'];
     $tokens['formatted'] = isset($item['view']) ? $item['view'] : '';
     return $tokens;
   }
@@ -274,7 +274,7 @@ function pidfield_field_formatter_info() {
  */
 function theme_pidfield_formatter_default($element) {
   $pid = $element['#item']['safe'];
-  if(!empty($pid)) {
+  if (!empty($pid)) {
     return fedora_repository_get_items($pid);
   }
   return null;
@@ -429,33 +429,31 @@ function get_node_references_for_fedora_item($item) {
   while ($field = db_fetch_array($result)) {
 
 
-     $db_info = content_database_info($field);
+    $db_info = content_database_info($field);
 
 
 
 
 
-     $ids = db_query("SELECT nid FROM {". $db_info['table'] ."} WHERE ". $field['field_name'] ."_value=\"". $item->pid."\"");
+    $ids = db_query("SELECT nid FROM {" . $db_info['table'] . "} WHERE " . $field['field_name'] . "_value=\"" . $item->pid . "\"");
 
-     $results = array();
-     while ($data = db_fetch_object($ids)) {
-       //$additions[] = node_load($data->vid);
+    $results = array();
+    while ($data = db_fetch_object($ids)) {
+      //$additions[] = node_load($data->vid);
 
-       $results[] = $data->nid;
+      $results[] = $data->nid;
 
-       //$referred_node = node_load(array('nid'=>$data->nid) );
-
-     }
-     return $results;
+      //$referred_node = node_load(array('nid'=>$data->nid) );
+    }
+    return $results;
   }
-
 }
 
 function fedora_pidfield_redirect_to_node($item) {
   $node_references = get_node_references_for_fedora_item($item);
   if (!empty($node_references)) {
-    if (strstr( drupal_get_destination(), urlencode('fedora/repository'))) {
-      drupal_goto(drupal_get_path_alias("node/".$node_references[0]));
+    if (strstr(drupal_get_destination(), urlencode('fedora/repository'))) {
+      drupal_goto(drupal_get_path_alias("node/" . $node_references[0]));
     }
   }
 }

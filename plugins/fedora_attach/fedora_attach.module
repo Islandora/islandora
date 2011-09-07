@@ -1,5 +1,6 @@
 <?php
-// $Id$
+
+
 
 /**
  * Implementation of hook_perm()
@@ -19,7 +20,7 @@ function fedora_attach_perm() {
  */
 function fedora_attach_nodeapi(&$node, $op, $teaser) {
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
-  module_load_include('inc','fedora_repository','api/fedora_utils.inc');
+  module_load_include('inc', 'fedora_repository', 'api/fedora_utils.inc');
   switch ($op) {
     case 'insert':
     case 'update':
@@ -35,7 +36,7 @@ function fedora_attach_nodeapi(&$node, $op, $teaser) {
             $success = FALSE;
             $filepath = $file->filepath; // Need copy if file_move fails.
             $public = file_directory_path();
-            
+
             $file_is_ingested = _fedora_attach_is_file_in_repository($filepath);
             if (!empty($file->ingested) && !$file_is_ingested) {
               // Attach flag is set, but file is not listed as being in the repository.
@@ -49,15 +50,15 @@ function fedora_attach_nodeapi(&$node, $op, $teaser) {
                     }
                   }
                 }
-  //              if (!empty($roles)) {
-                  // Generate the security policy datastream.
+                //              if (!empty($roles)) {
+                // Generate the security policy datastream.
                 $policy_stream = _fedora_attach_create_policy($roles);
-    //            }
+                //            }
               }
               try {
-                $pid_namespace = variable_get('fedora_attach_pid_namespace','default:');
+                $pid_namespace = variable_get('fedora_attach_pid_namespace', 'default:');
                 $pid_namespace = substr($pid_namespace, 0, strpos($pid_namespace, ":"));
-                $pid = fedora_item::get_next_PID_in_namespace( $pid_namespace );
+                $pid = fedora_item::get_next_PID_in_namespace($pid_namespace);
                 $new_item = fedora_item::ingest_new_item($pid, 'A', $file->description); // PID will be generated using getNextPID
                 if (empty($new_item->objectProfile)) {
                   drupal_set_message("Unable to create fedora object. Check Watchdog log for details.", "error");
@@ -68,7 +69,7 @@ function fedora_attach_nodeapi(&$node, $op, $teaser) {
                     $new_item->add_datastream_from_string($policy_stream, 'POLICY', "Security Policy", "text/xml", "X");
                   }
                   $new_item->add_datastream_from_file($file->filepath, 'OBJ', $file->filename, $file->filemime, 'M');
-                  $new_item->add_relationship("hasModel","islandora:genericCModel",FEDORA_MODEL_URI);
+                  $new_item->add_relationship("hasModel", "islandora:genericCModel", FEDORA_MODEL_URI);
                   module_load_include('inc', 'fedora_repository', 'api/dublin_core');
                   $dc = new Dublin_Core();
                   $dc->add_element('dc:title', $file->description);
@@ -78,20 +79,18 @@ function fedora_attach_nodeapi(&$node, $op, $teaser) {
 
                   $success = TRUE;
                 }
-              } 
-              catch (exception $e) {
+              } catch (exception $e) {
                 drupal_set_message(t('An error occurred ingesting the file: ') . $e, 'error');
                 $new_item->purge();
                 drupal_set_message(t('The item has been removed from the repository'));
               }
               if ($success) { // We were able to ingest the file, so update the file path.
-                $new_filepath = '/fedora/repository/'. $new_item->pid . '/OBJ/'. $file->description;
+                $new_filepath = '/fedora/repository/' . $new_item->pid . '/OBJ/' . $file->description;
                 _fedora_attach_update_filepath($new_filepath, $fid);
                 file_delete($filepath);
               }
             }
-                // Convert file to object for compatibility
-
+            // Convert file to object for compatibility
             // Remove file. Process removals first since no further processing
             // will be required.
             if (!empty($file->remove)) {
@@ -109,7 +108,6 @@ function fedora_attach_nodeapi(&$node, $op, $teaser) {
               // Move on, so the removed file won't be added to new revisions.
               continue;
             }
-
           }
         }
       }
@@ -118,7 +116,6 @@ function fedora_attach_nodeapi(&$node, $op, $teaser) {
       // ******************************************************
       // *** VIEW
       // Re-theme the file attachments table.
-      
       // Rebuild the files table and overwrite default.
       // Using the rules from upload.module.
       if (isset($node->files) && count($node->files) && user_access('view uploaded files') && !$teaser) {
@@ -129,7 +126,7 @@ function fedora_attach_nodeapi(&$node, $op, $teaser) {
 }
 
 /**
- *Implementation of hook_menu().
+ * Implementation of hook_menu().
  */
 function fedora_attach_menu() {
   $items['admin/settings/fedora_repository/attach'] = array(
@@ -142,7 +139,6 @@ function fedora_attach_menu() {
   );
   return $items;
 }
-
 
 function fedora_attach_save(&$node) {
   print ("FNARF!");
@@ -169,40 +165,40 @@ function fedora_attach_form_alter(&$form, $form_state, $form_id) {
         $form['attachments']['wrapper']['files']['#theme'] = 'fedora_attach_form';
         $form['#validate']['private_upload_form_validate'] = array();
         foreach ($node->files as $fid => $file) {
-          
+
           // Add ingest checkbox
           if (is_array($file) && isset($file['ingest'])) { // Preview
             $default_value = $file['ingest'];
-          } 
+          }
           else { // Node load
             $default_value = _fedora_attach_is_file_in_repository($file->filepath);
             $disabled = $default_value;
           }
-           
+
           $form['attachments']['wrapper']['files'][$fid]['ingested'] = array(
             '#type' => 'checkbox',
             '#default_value' => $default_value,
             '#disabled' => $disabled,
           );
-          $form['attachments']['wrapper']['files'][$fid]['description']['#description'] = $base_url.$file->filepath;
+          $form['attachments']['wrapper']['files'][$fid]['description']['#description'] = $base_url . $file->filepath;
         }
         if (user_access('select file access by role')) {
           _fedora_attach_build_roles_form($form, FALSE);
         }
       }
     }
-  } 
+  }
   elseif ($form_id == 'upload_js') {
     $form['files']['#theme'] = 'fedora_attach_form';
 
     foreach ($form['files'] as $fid => $file) {
-      
+
       if (!_fedora_attach_starts_with($fid, '#')) {// Ignore properties.
         if (!empty($_POST['files'][$fid])) {
           $ingested = (!empty($_POST['files'][$fid]['ingested']) ? $_POST['files'][$fid]['ingested'] : FALSE);
           //$form['files'][$fid]['list']['#default_value'] = (!empty($_POST['files'][$fid]['[$_POST['files'][$fid]['list'];
           //$form['files'][$fid]['remove']['#default_value'] = $_POST['files'][$fid]['remove'];
-        } 
+        }
         else {
           $ingested = (variable_get('fedora_attach_default', 'ingested') == 'ingested');
         }
@@ -210,8 +206,8 @@ function fedora_attach_form_alter(&$form, $form_state, $form_id) {
           '#type' => 'checkbox',
           '#default_value' => $ingested,
         );
-        
-        $form['attachments']['wrapper']['files'][$fid]['description']['#description'] = $base_url.$file['filepath'];
+
+        $form['attachments']['wrapper']['files'][$fid]['description']['#description'] = $base_url . $file['filepath'];
         if (user_access('select file access by role')) {
           _fedora_attach_build_roles_form($form, TRUE);
         }
@@ -232,13 +228,14 @@ function fedora_attach_form_validate($formid, $form_values) {
     if (!isset($file['ingested'])) {
       drupal_set_message(t('Fedora Attach cannot find add repository settings.'), 'error');
       // Be sure we are going after core upload module
-      $upload_weight = (int)db_result(db_query("SELECT weight FROM {system} WHERE name = 'upload'"));
-      $attach_weight = (int)db_result(db_query("SELECT weight FROM {system} WHERE name = 'fedora_attach'"));
+      $upload_weight = (int) db_result(db_query("SELECT weight FROM {system} WHERE name = 'upload'"));
+      $attach_weight = (int) db_result(db_query("SELECT weight FROM {system} WHERE name = 'fedora_attach'"));
       if ($attach_weight <= $uplaod_weight) {
         $new_weight = $upload_weight + 1;
         drupal_set_message(t('Adjusting Fedora Attach module\'s weight to') . $new_weight, 'warning');
-        db_query("UPDATE {system} SET weight = '%d' WHERE name = 'fedora_attach'", $new_weight);;
-      } 
+        db_query("UPDATE {system} SET weight = '%d' WHERE name = 'fedora_attach'", $new_weight);
+        ;
+      }
       else {
         drupal_set_message(t('Please check for modules that conflict with Fedora Attach'), 'error');
       }
@@ -259,7 +256,7 @@ function fedora_attach_form_submit($form, &$form_state) {
 
     foreach ($form_state['values']['files'] as $fid => $file) {
       if ($file['remove'] && !empty($file['ingested']) && $file['ingested']) {
-        drupal_set_message("The attachment <a href=\"$base_url/". substr($file['filepath'], 0, strpos($file['filepath'], 'OBJ'))."\">${file['filename']}</a> was removed from this node but it will remain in the repository until it is purged it directly.");
+        drupal_set_message("The attachment <a href=\"$base_url/" . substr($file['filepath'], 0, strpos($file['filepath'], 'OBJ')) . "\">${file['filename']}</a> was removed from this node but it will remain in the repository until it is purged it directly.");
       }
       if (!isset($file->ingested)) { // Newly-inserted file.
         if (isset($form['attachments']['wrapper']['files'])) {
@@ -306,11 +303,11 @@ function fedora_attach_theme() {
 function theme_fedora_attach_form(&$form) {
   $header = array(t('Delete'), t('List'), t('Add to Repository'), t('Label'), t('Weight'), t('Size'), '');
   drupal_add_tabledrag('upload-attachments', 'order', 'sibling', 'upload-weight');
-  
+
   foreach (element_children($form) as $key) {
     // Add class to group weight fields for drag and drop.
     $form[$key]['weight']['#attributes']['class'] = 'upload-weight';
-    
+
     $row = array();
     $row[] = drupal_render($form[$key]['remove']);
     $row[] = drupal_render($form[$key]['list']);
@@ -323,7 +320,7 @@ function theme_fedora_attach_form(&$form) {
   }
   $output = theme('table', $header, $rows, array('id' => 'upload-attachments'));
   $output .= drupal_render($form);
-  return $output;  
+  return $output;
 }
 
 /**
@@ -340,8 +337,8 @@ function theme_fedora_attach_attachments($files) {
       if ($file->list && empty($file->remove)) {
         $inspect_item = '';
         if (_fedora_attach_is_file_in_repository($file->filepath)) {
-          $inspect_item = ' <a href="'. $GLOBALS['base_url'] . substr($file->filepath, 0, strpos($file->filepath, 'OBJ')) .
-            '">'. theme_image(drupal_get_path('module', 'Fedora_Repository') . '/images/view.gif', '', 'View the item\'s repository page' ) . '</a>';
+          $inspect_item = ' <a href="' . $GLOBALS['base_url'] . substr($file->filepath, 0, strpos($file->filepath, 'OBJ')) .
+            '">' . theme_image(drupal_get_path('module', 'Fedora_Repository') . '/images/view.gif', '', 'View the item\'s repository page') . '</a>';
         }
         $href = _fedora_attach_create_url($file); // this is the changed line
         $text = $file->description ? $file->description : $file->filename;
@@ -351,7 +348,7 @@ function theme_fedora_attach_attachments($files) {
     if (count($rows)) {
       return theme('table', $header, $rows, array('id' => 'attachments'));
     }
-  } 
+  }
 }
 
 function _fedora_attach_build_roles_form(&$form, $inside_js = FALSE) {
@@ -384,8 +381,7 @@ function _fedora_attach_build_roles_form(&$form, $inside_js = FALSE) {
 }
 
 function _fedora_attach_create_policy($roles) {
-  $policy_filename = !empty($roles) ? drupal_get_path('module', 'fedora_repository') . '/policies/viewANDeditbyrole.xml'
-                                    : drupal_get_path('module', 'fedora_repository') . '/policies/noObjectEditPolicy.xml';
+  $policy_filename = !empty($roles) ? drupal_get_path('module', 'fedora_repository') . '/policies/viewANDeditbyrole.xml' : drupal_get_path('module', 'fedora_repository') . '/policies/noObjectEditPolicy.xml';
   $policy_document = new DOMDocument();
   $policy_document->load($policy_filename);
   $designators = $policy_document->getElementsByTagName("SubjectAttributeDesignator");
@@ -427,10 +423,10 @@ function fedora_attach_file_download($filepath) {
   if (!strstr($filepath, 'fedora/repository')) {
     return;
   }
-  $result = db_query("SELECT DISTINCT(u.nid) FROM {upload} u INNER JOIN {files} f ON u.fid = f.fid ".
-                       "WHERE f.filepath LIKE '%s'", $filepath.'%');
+  $result = db_query("SELECT DISTINCT(u.nid) FROM {upload} u INNER JOIN {files} f ON u.fid = f.fid " .
+      "WHERE f.filepath LIKE '%s'", $filepath . '%');
   $has_results = FALSE;
-  while($row = db_fetch_array($result)) {
+  while ($row = db_fetch_array($result)) {
     $has_results = TRUE;
     $node = node_load($row['nid']);
     if (node_access('view', $node)) {
@@ -452,9 +448,9 @@ function fedora_attach_file_download($filepath) {
  * @return str: the correct URL
  */
 function _fedora_attach_create_url($file) {
-  if ( _fedora_attach_is_file_in_repository( $file->filepath)) {
+  if (_fedora_attach_is_file_in_repository($file->filepath)) {
     $href = $GLOBALS['base_url'] . $file->filepath;
-  } 
+  }
   else {
     $href = file_create_url((strpos($file->fid, 'upload') === FALSE ? $file->filepath : file_create_filename($file->filename, file_create_path())));
   }
@@ -486,6 +482,6 @@ function _fedora_attach_starts_with($str, $start) {
  * @param string $filepath
  * @param int $fid
  */
-function _fedora_attach_update_filepath( $filepath, $fid ) {
+function _fedora_attach_update_filepath($filepath, $fid) {
   db_query("UPDATE {files} SET filepath = '%s' WHERE fid=%d", $filepath, $fid);
 }

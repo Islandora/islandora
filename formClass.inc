@@ -2,6 +2,14 @@
 
 // $Id$
 
+/**
+ * @file
+ * formClass class
+ */
+
+/**
+ * form Class
+ */
 class formClass {
 
   function formClass() {
@@ -74,7 +82,7 @@ class formClass {
       'page callback' => 'repository_page',
       'type' => MENU_NORMAL_ITEM,
       'access arguments' => array('view fedora collection'),
-        // 'access' => TRUE
+      // 'access' => TRUE
     );
 
     $items['fedora/repository/service'] = array(
@@ -237,7 +245,8 @@ class formClass {
     $form['fedora_repository_url'] = array(
       '#type' => 'textfield',
       '#title' => t('Fedora RISearch URL'),
-      '#default_value' => variable_get('fedora_repository_url', 'http://localhost:8080/fedora/risearch'),
+      '#default_value' => variable_get('fedora_repository_url',
+        'http://localhost:8080/fedora/risearch'),
       '#description' => t('The url of the Fedora server'), '#required' => TRUE,
       '#weight' => 0
     );
@@ -437,10 +446,14 @@ class formClass {
     try {
       $object = $client->__soapCall('ModifyDatastreamByValue', array($params));
     } catch (exception $e) {
-      drupal_set_message(t("Error updating metadata ") . $e->getMessage(), 'error');
+      drupal_set_message(t("Error updating metadata") . " " . $e->getMessage(), 'error');
     }
   }
 
+  /**
+   * queries the collection object for a childsecurity datastream and if found parses it
+   * to determine if this user is allowed to ingest in this collection
+   */ we assume if they are able to modify objects in the collection they can ingest as well.
   function can_ingest_here($collection_pid) {
     module_load_include('inc', 'fedora_repository', 'SecurityClass');
     $securityClass = new SecurityClass();

@@ -1,6 +1,9 @@
 <?php
 
-// $Id$
+/**
+ * @file 
+ * 
+ */
 
 class IslandoraBook {
 
@@ -100,7 +103,7 @@ class IslandoraBook {
     $dwc->handleForm($form_values);
     $this->item->purge_datastream('DARWIN_CORE');
     $this->item->add_datastream_from_string($dwc->darwinCoreXML, 'DARWIN_CORE',
-        'Darwin Core Metadata', 'text/xml', 'X');
+      'Darwin Core Metadata', 'text/xml', 'X');
     return TRUE;
   }
 
@@ -134,10 +137,10 @@ class IslandoraBook {
     $mimetype = new MimeClass();
 
     $new_item = Fedora_Item::ingest_new_item(!empty($form_values['custom_pid']) ? $form_values['custom_pid'] : $form_values['pid'], 'A', $title,
-            $user->name);
+        $user->name);
 
     $new_item->add_datastream_from_string($mods_text, 'MODS',
-        'MODS Metadata', 'text/xml', 'X');
+      'MODS Metadata', 'text/xml', 'X');
 
     $dc = transform_mods_to_dc($mods_text);
     if ($dc) {
@@ -193,7 +196,7 @@ class IslandoraBook {
         '#content' => $html
       );
     }
-   
+
     if (!$hasPage && user_access('ingest new fedora objects')) {
       $tabset['third_tab'] = array(
         '#type' => 'tabpage',

@@ -83,7 +83,7 @@ class Refworks {
       //$dom = dom_import_simplexml($xml);//test to see if it behaves better
       //$xml = new SimpleXMLElement(trim(file_get_contents($file)));
     } catch (Exception $e) {
-      drupal_set_message(t('Error processing Refworks file: ') . $e->getMessage());
+      drupal_set_message(t('Error processing Refworks file:') . " " . $e->getMessage());
       return FALSE;
     }
     $this->referenceList = array();
@@ -290,7 +290,7 @@ class Refworks {
 
         if ($client == NULL) {
           drupal_set_message(t('Error getting SOAP client.'), 'error');
-          watchdog(t("FEDORA_REPOSITORY"), t("Error getting SOAP client: !e", array('!e' => $e)), NULL, WATCHDOG_ERROR);
+          watchdog(t("FEDORA_REPOSITORY"), "Error getting SOAP client: !e", array('!e' => $e), NULL, WATCHDOG_ERROR);
           return;
         }
         $object = $client->__soapCall('ingest', array(

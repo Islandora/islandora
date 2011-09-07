@@ -1,3 +1,4 @@
+
 <collection_policy>
     <!---we will define allowed mimetypes and what to do with various types as part of the content model-->
     <contentmodels>
@@ -11,7 +12,7 @@
             <pid>vre:contentmodel</pid>
             <dsid>STANDARD_PDF</dsid>
         </contentmodel>
-		<contentmodel name="STANDARD_IMAGE">
+        <contentmodel name="STANDARD_IMAGE">
             <pid_namespace>ir:image</pid_namespace>
             <pid>vre:contentmodel</pid>
             <dsid>STANDARD_IMAGE</dsid>

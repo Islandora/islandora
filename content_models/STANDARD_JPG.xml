@@ -1,95 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?> 
 <content_model xmlns="http://www.islandora.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="standard_jpeg" xsi:schemaLocation="http://www.islandora.ca http://localhost/islandoracm.xsd"> 
-  <mimetypes> 
-    <type>image/jpeg</type> 
-  </mimetypes> 
-  <ingest_rules> 
-    <rule> 
-      <applies_to>image/jpeg</applies_to> 
-      <ingest_methods> 
-        <ingest_method module="" file="plugins/ImageManipulation.inc" class="ImageManipulation" method="manipulateImage" dsid="MEDIUM_SIZE" modified_files_ext="jpg"> 
-          <parameters> 
-            <parameter name="width">160</parameter> 
-            <parameter name="height">120</parameter> 
-          </parameters> 
-        </ingest_method> 
-        <ingest_method module="" file="plugins/ImageManipulation.inc" class="ImageManipulation" method="manipulateImage" dsid="TN" modified_files_ext="jpg"> 
-          <parameters> 
-            <parameter name="width">120</parameter> 
-            <parameter name="height">120</parameter> 
-          </parameters> 
-        </ingest_method> 
-      </ingest_methods> 
-    </rule> 
-  </ingest_rules> 
-  <datastreams> 
-    <datastream dsid="MEDIUM_SIZE"> 
-      <display_method module="" file="plugins/ShowDemoStreamsInFieldSets.inc" class="ShowDemoStreamsInFieldSets" method="showMediumSize"/> 
-    </datastream> 
-    <datastream dsid="QDC"> 
-      <display_method module="" file="plugins/ShowStreamsInFieldSets.inc" class="ShowStreamsInFieldSets" method="showQdc"/> 
-    </datastream> 
-    <datastream dsid="FULL_SIZE"> 
-      <add_datastream_method module="" file="plugins/ImageManipulation.inc" class="ImageManipulation" method="manipulateImage" dsid="MEDIUM_SIZE" modified_files_ext="jpg"> 
-        <parameters> 
-          <parameter name="width">120</parameter> 
-          <parameter name="height">160</parameter> 
-        </parameters> 
-      </add_datastream_method> 
-    </datastream> 
-  </datastreams> 
-  <ingest_form dsid="QDC" page="2"> 
-    <form_builder_method module="" file="plugins/DemoFormBuilder.inc" class="DemoFormBuilder" method="buildQDCForm" handler="handleQDCForm"/> 
-    <form_elements> 
-      <element label="Title/Caption/Image Name" name="dc:title" type="textfield" required="true"> 
-        <description>The name given to the resource</description> 
-      </element> 
-      <element label="Creator/Photographer" name="dc:creator" type="textfield"> 
-        <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description> 
-      </element> 
-      <element label="Subject" name="dc:subject" type="select"> 
-        <description>Subject</description> 
-        <authoritative_list> 
-          <item>image</item> 
-          <item>photograph</item> 
-          <item>presentation</item> 
-          <item>art</item> 
-        </authoritative_list> 
-      </element> 
-      <element label="Description" name="dc:description" type="textarea" required="true"> 
-        <description>Description of the Image</description> 
-      </element> 
-      <element label="Publisher" name="dc:publisher" type="textfield"> 
-        <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description> 
-      </element> 
-      <element label="Contributor" name="dc:contributor" type="textfield"> 
-        <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description> 
-      </element> 
-      <element label="Date" name="dc:date" type="textfield"> 
-        <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description> 
-      </element> 
-      <element label="Resource Type" name="dc:type" type="textfield"> 
-        <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description> 
-      </element> 
-      <element label="Source" name="dc:source" type="textfield"> 
-        <description>A reference to a resource from which the present resource is derived.</description> 
-      </element> 
-      <element label="Identifier" name="dc:identifier" type="textfield"> 
-        <description>A unique reference to the resource; In this instance, the accession number or collection number.</description> 
-      </element> 
-      <element label="Language" name="dc:language" type="select"> 
-        <description>The language of the intellectual content of the resource.</description> 
-        <authoritative_list> 
-          <item field="eng">English</item> 
-          <item field="fre">French</item> 
-        </authoritative_list> 
-      </element> 
-      <element label="Relation" name="dc:relation" type="textfield"> 
-        <description>Reference to a related resource.</description> 
-      </element> 
-      <element label="Rights Management" name="dc:rights" type="textarea"> 
-        <description>Information about intellectual property rights, copyright, and various property rights.</description> 
-      </element> 
-    </form_elements> 
-  </ingest_form> 
+    <mimetypes>
+        <type>image/jpeg</type>
+    </mimetypes>
+    <ingest_rules>
+        <rule>
+            <applies_to>image/jpeg</applies_to>
+            <ingest_methods>
+                <ingest_method module="" file="plugins/ImageManipulation.inc" class="ImageManipulation" method="manipulateImage" dsid="MEDIUM_SIZE" modified_files_ext="jpg">
+                    <parameters>
+                        <parameter name="width">160</parameter>
+                        <parameter name="height">120</parameter>
+                    </parameters>
+                </ingest_method>
+                <ingest_method module="" file="plugins/ImageManipulation.inc" class="ImageManipulation" method="manipulateImage" dsid="TN" modified_files_ext="jpg">
+                    <parameters>
+                        <parameter name="width">120</parameter>
+                        <parameter name="height">120</parameter>
+                    </parameters>
+                </ingest_method>
+            </ingest_methods>
+        </rule>
+    </ingest_rules>
+    <datastreams>
+        <datastream dsid="MEDIUM_SIZE">
+            <display_method module="" file="plugins/ShowDemoStreamsInFieldSets.inc" class="ShowDemoStreamsInFieldSets" method="showMediumSize"/>
+        </datastream>
+        <datastream dsid="QDC">
+            <display_method module="" file="plugins/ShowStreamsInFieldSets.inc" class="ShowStreamsInFieldSets" method="showQdc"/>
+        </datastream>
+        <datastream dsid="FULL_SIZE">
+            <add_datastream_method module="" file="plugins/ImageManipulation.inc" class="ImageManipulation" method="manipulateImage" dsid="MEDIUM_SIZE" modified_files_ext="jpg">
+                <parameters>
+                    <parameter name="width">120</parameter>
+                    <parameter name="height">160</parameter>
+                </parameters>
+            </add_datastream_method>
+        </datastream>
+    </datastreams>
+    <ingest_form dsid="QDC" page="2">
+        <form_builder_method module="" file="plugins/DemoFormBuilder.inc" class="DemoFormBuilder" method="buildQDCForm" handler="handleQDCForm"/>
+        <form_elements>
+            <element label="Title/Caption/Image Name" name="dc:title" type="textfield" required="true">
+                <description>The name given to the resource</description>
+            </element>
+            <element label="Creator/Photographer" name="dc:creator" type="textfield">
+                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+            </element>
+            <element label="Subject" name="dc:subject" type="select">
+                <description>Subject</description>
+                <authoritative_list>
+                    <item>image</item>
+                    <item>photograph</item>
+                    <item>presentation</item>
+                    <item>art</item>
+                </authoritative_list>
+            </element>
+            <element label="Description" name="dc:description" type="textarea" required="true">
+                <description>Description of the Image</description>
+            </element>
+            <element label="Publisher" name="dc:publisher" type="textfield">
+                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
+            </element>
+            <element label="Contributor" name="dc:contributor" type="textfield">
+                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
+            </element>
+            <element label="Date" name="dc:date" type="textfield">
+                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
+            </element>
+            <element label="Resource Type" name="dc:type" type="textfield">
+                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
+            </element>
+            <element label="Source" name="dc:source" type="textfield">
+                <description>A reference to a resource from which the present resource is derived.</description>
+            </element>
+            <element label="Identifier" name="dc:identifier" type="textfield">
+                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
+            </element>
+            <element label="Language" name="dc:language" type="select">
+                <description>The language of the intellectual content of the resource.</description>
+                <authoritative_list>
+                    <item field="eng">English</item>
+                    <item field="fre">French</item>
+                </authoritative_list>
+            </element>
+            <element label="Relation" name="dc:relation" type="textfield">
+                <description>Reference to a related resource.</description>
+            </element>
+            <element label="Rights Management" name="dc:rights" type="textarea">
+                <description>Information about intellectual property rights, copyright, and various property rights.</description>
+            </element>
+        </form_elements>
+    </ingest_form>
 </content_model>

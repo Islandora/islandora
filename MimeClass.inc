@@ -3,7 +3,7 @@
 // $Id$
 
 /**
- *
+ * @file
  * This class inspired by Chris Jean's work, here:
  * http://chrisjean.com/2009/02/14/generating-mime-type-in-php-is-not-magic/
  * 

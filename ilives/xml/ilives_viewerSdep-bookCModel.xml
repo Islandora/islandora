@@ -1,133 +1,133 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <foxml:digitalObject PID="ilives:viewerSdep-bookCModel" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
-  <foxml:objectProperties>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="ilives:viewerSdep-bookCModel"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="fedoraAdmin"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2009-05-18T19:50:00.488Z"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2009-11-12T17:09:41.797Z"/>
-  </foxml:objectProperties>
-  <foxml:datastream CONTROL_GROUP="X" ID="AUDIT" STATE="A" VERSIONABLE="false">
-    <foxml:datastreamVersion CREATED="2009-05-18T19:50:00.488Z"
+    <foxml:objectProperties>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="ilives:viewerSdep-bookCModel"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="fedoraAdmin"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2009-05-18T19:50:00.488Z"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2009-11-12T17:09:41.797Z"/>
+    </foxml:objectProperties>
+    <foxml:datastream CONTROL_GROUP="X" ID="AUDIT" STATE="A" VERSIONABLE="false">
+        <foxml:datastreamVersion CREATED="2009-05-18T19:50:00.488Z"
       FORMAT_URI="info:fedora/fedora-system:format/xml.fedora.audit" ID="AUDIT.0" LABEL="Audit Trail for this object" MIMETYPE="text/xml">
-      <foxml:xmlContent>
-        <audit:auditTrail xmlns:audit="info:fedora/fedora-system:def/audit#">
-          <audit:record ID="AUDREC1">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>ingest</audit:action>
-            <audit:componentID/>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2009-11-12T17:09:41.797Z</audit:date>
-            <audit:justification>Ingested from local file /Users/aoneill/dev/iiv/iiv/etc/fedora-objects/ilives_viewerSdep-bookCModel.xml</audit:justification>
-          </audit:record>
-        </audit:auditTrail>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="DC" STATE="A" VERSIONABLE="true">
-    <foxml:datastreamVersion CREATED="2009-05-18T19:50:00.488Z" FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/"
+            <foxml:xmlContent>
+                <audit:auditTrail xmlns:audit="info:fedora/fedora-system:def/audit#">
+                    <audit:record ID="AUDREC1">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>ingest</audit:action>
+                        <audit:componentID/>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2009-11-12T17:09:41.797Z</audit:date>
+                        <audit:justification>Ingested from local file /Users/aoneill/dev/iiv/iiv/etc/fedora-objects/ilives_viewerSdep-bookCModel.xml</audit:justification>
+                    </audit:record>
+                </audit:auditTrail>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="DC" STATE="A" VERSIONABLE="true">
+        <foxml:datastreamVersion CREATED="2009-05-18T19:50:00.488Z" FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/"
       ID="DC1.0" LABEL="Dublin Core Record for this object" MIMETYPE="text/xml" SIZE="409">
-      <foxml:xmlContent>
-        <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
+            <foxml:xmlContent>
+                <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
           xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
-          <dc:title>ilives:viewerSdep-bookCModel</dc:title>
-          <dc:identifier>ilives:viewerSdep-bookCModel</dc:identifier>
-        </oai_dc:dc>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="RELS-EXT" STATE="A" VERSIONABLE="false">
-    <foxml:datastreamVersion CREATED="2009-05-18T19:50:37.927Z" FORMAT_URI="info:fedora/fedora-system:FedoraRELSExt-1.0"
+                    <dc:title>ilives:viewerSdep-bookCModel</dc:title>
+                    <dc:identifier>ilives:viewerSdep-bookCModel</dc:identifier>
+                </oai_dc:dc>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="RELS-EXT" STATE="A" VERSIONABLE="false">
+        <foxml:datastreamVersion CREATED="2009-05-18T19:50:37.927Z" FORMAT_URI="info:fedora/fedora-system:FedoraRELSExt-1.0"
       ID="RELS-EXT.1" LABEL="RDF Statements about this object" MIMETYPE="application/rdf+xml" SIZE="610">
-      <foxml:xmlContent>
-        <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-          <rdf:Description rdf:about="info:fedora/ilives:viewerSdep-bookCModel">
-            <hasModel rdf:resource="info:fedora/fedora-system:ServiceDeployment-3.0" xmlns="info:fedora/fedora-system:def/model#"/>
-            <isDeploymentOf rdf:resource="info:fedora/ilives:viewerSdef" xmlns="info:fedora/fedora-system:def/model#"/>
-            <isContractorOf rdf:resource="info:fedora/ilives:bookCModel" xmlns="info:fedora/fedora-system:def/model#"/>
-          </rdf:Description>
-        </rdf:RDF>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="DSINPUTSPEC" STATE="A" VERSIONABLE="false">
-    <foxml:datastreamVersion CREATED="2009-05-18T19:52:55.042Z"
+            <foxml:xmlContent>
+                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                    <rdf:Description rdf:about="info:fedora/ilives:viewerSdep-bookCModel">
+                        <hasModel rdf:resource="info:fedora/fedora-system:ServiceDeployment-3.0" xmlns="info:fedora/fedora-system:def/model#"/>
+                        <isDeploymentOf rdf:resource="info:fedora/ilives:viewerSdef" xmlns="info:fedora/fedora-system:def/model#"/>
+                        <isContractorOf rdf:resource="info:fedora/ilives:bookCModel" xmlns="info:fedora/fedora-system:def/model#"/>
+                    </rdf:Description>
+                </rdf:RDF>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="DSINPUTSPEC" STATE="A" VERSIONABLE="false">
+        <foxml:datastreamVersion CREATED="2009-05-18T19:52:55.042Z"
       FORMAT_URI="info:fedora/fedora-system:FedoraDSInputSpec-1.1" ID="DSINPUTSPEC.1"
       LABEL="Datastream Input Specification" MIMETYPE="text/xml" SIZE="404">
-      <foxml:xmlContent>
-        <fbs:DSInputSpec label="viewerSdepInputSpec" xmlns:fbs="http://fedora.comm.nsdlib.org/service/bindspec">
-          <fbs:DSInput DSMax="1" DSMin="1" DSOrdinality="false" wsdlMsgPartName="DC">
-            <fbs:DSInputLabel>DC</fbs:DSInputLabel>
-            <fbs:DSMIME>text/xml</fbs:DSMIME>
-            <fbs:DSInputInstruction/>
-          </fbs:DSInput>
-        </fbs:DSInputSpec>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="METHODMAP" STATE="A" VERSIONABLE="false">
-    <foxml:datastreamVersion CREATED="2009-05-19T13:34:53.687Z"
+            <foxml:xmlContent>
+                <fbs:DSInputSpec label="viewerSdepInputSpec" xmlns:fbs="http://fedora.comm.nsdlib.org/service/bindspec">
+                    <fbs:DSInput DSMax="1" DSMin="1" DSOrdinality="false" wsdlMsgPartName="DC">
+                        <fbs:DSInputLabel>DC</fbs:DSInputLabel>
+                        <fbs:DSMIME>text/xml</fbs:DSMIME>
+                        <fbs:DSInputInstruction/>
+                    </fbs:DSInput>
+                </fbs:DSInputSpec>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="METHODMAP" STATE="A" VERSIONABLE="false">
+        <foxml:datastreamVersion CREATED="2009-05-19T13:34:53.687Z"
       FORMAT_URI="info:fedora/fedora-system:FedoraSDepMethodMap-1.1" ID="METHODMAP.2" LABEL="Deployment Method Map"
       MIMETYPE="text/xml" SIZE="955">
-      <foxml:xmlContent>
-        <fmm:MethodMap name="methodmap" xmlns:fmm="http://fedora.comm.nsdlib.org/service/methodmap">
-          <fmm:Method operationName="getViewer" wsdlMsgName="getViewerRequestMsg" wsdlMsgOutput="getViewerResponseMsg">
-            <fmm:DefaultInputParm defaultValue="$PID" label="fedora object pid" parmName="PID" passBy="VALUE" required="true"/>
-            <fmm:DefaultInputParm defaultValue="ilives:bookCModel" label="content model" parmName="CMODEL"
+            <foxml:xmlContent>
+                <fmm:MethodMap name="methodmap" xmlns:fmm="http://fedora.comm.nsdlib.org/service/methodmap">
+                    <fmm:Method operationName="getViewer" wsdlMsgName="getViewerRequestMsg" wsdlMsgOutput="getViewerResponseMsg">
+                        <fmm:DefaultInputParm defaultValue="$PID" label="fedora object pid" parmName="PID" passBy="VALUE" required="true"/>
+                        <fmm:DefaultInputParm defaultValue="ilives:bookCModel" label="content model" parmName="CMODEL"
               passBy="VALUE" required="true"/>
-            <fmm:DefaultInputParm defaultValue="JP2" label="content model" parmName="DSID" passBy="VALUE" required="true"/>
-            <fmm:UserInputParm defaultValue="" parmName="uid" passBy="VALUE" required="false"/>
-            <fmm:MethodReturnType wsdlMsgName="getViewerResponseMsg" wsdlMsgTOMIME="text/html"/>
-          </fmm:Method>
-        </fmm:MethodMap>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="WSDL" STATE="A" VERSIONABLE="false">
-    <foxml:datastreamVersion CREATED="2009-05-19T13:34:20.768Z" FORMAT_URI="http://schemas.xmlsoap.org/wsdl/"
+                        <fmm:DefaultInputParm defaultValue="JP2" label="content model" parmName="DSID" passBy="VALUE" required="true"/>
+                        <fmm:UserInputParm defaultValue="" parmName="uid" passBy="VALUE" required="false"/>
+                        <fmm:MethodReturnType wsdlMsgName="getViewerResponseMsg" wsdlMsgTOMIME="text/html"/>
+                    </fmm:Method>
+                </fmm:MethodMap>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="WSDL" STATE="A" VERSIONABLE="false">
+        <foxml:datastreamVersion CREATED="2009-05-19T13:34:20.768Z" FORMAT_URI="http://schemas.xmlsoap.org/wsdl/"
       ID="WSDL.4" LABEL="WSDL Bindings" MIMETYPE="text/xml" SIZE="2073">
-      <foxml:xmlContent>
-        <wsdl:definitions name="viewerSdep" targetNamespace="viewerSdep"
+            <foxml:xmlContent>
+                <wsdl:definitions name="viewerSdep" targetNamespace="viewerSdep"
           xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
           xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap"
           xmlns:soapenc="http://schemas.xmlsoap.org/wsdl/soap/encoding" xmlns:this="viewerSdep"
           xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-          <wsdl:message name="getViewerRequestMsg">
-            <wsdl:part name="PID" type="xsd:string"/>
-            <wsdl:part name="CMODEL" type="xsd:string"/>
-            <wsdl:part name="DSID" type="xsd:string"/>
-            <wsdl:part name="uid" type="xsd:string"/>
-          </wsdl:message>
-          <wsdl:message name="getViewerResponseMsg">
-            <wsdl:part name="RESPONSE" type="xsd:string"/>
-          </wsdl:message>
-          <wsdl:portType name="viewer_portType">
-            <wsdl:operation name="getViewer">
-              <wsdl:input message="this:getViewerRequestMsg"/>
-              <wsdl:output message="this:getViewerResponseMsg"/>
-            </wsdl:operation>
-          </wsdl:portType>
-          <wsdl:service name="viewer_service">
-            <wsdl:port binding="this:viewer_binding" name="viewer_port">
-              <http:address location="http://local.fedora.server/iiv/viewer.jsp"/>
-            </wsdl:port>
-          </wsdl:service>
-          <wsdl:binding name="viewer_binding" type="this:viewer_portType">
-            <http:binding verb="GET"/>
-            <wsdl:operation name="getViewer">
-              <http:operation location="?pid=(PID)&amp;cmodel=(CMODEL)&amp;dsid=(DSID)&amp;uid=(uid)"/>
-              <wsdl:input>
-                <http:urlReplacement/>
-              </wsdl:input>
-              <wsdl:output>
-                <mime:content type="text/html"/>
-              </wsdl:output>
-            </wsdl:operation>
-          </wsdl:binding>
-        </wsdl:definitions>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
+                    <wsdl:message name="getViewerRequestMsg">
+                        <wsdl:part name="PID" type="xsd:string"/>
+                        <wsdl:part name="CMODEL" type="xsd:string"/>
+                        <wsdl:part name="DSID" type="xsd:string"/>
+                        <wsdl:part name="uid" type="xsd:string"/>
+                    </wsdl:message>
+                    <wsdl:message name="getViewerResponseMsg">
+                        <wsdl:part name="RESPONSE" type="xsd:string"/>
+                    </wsdl:message>
+                    <wsdl:portType name="viewer_portType">
+                        <wsdl:operation name="getViewer">
+                            <wsdl:input message="this:getViewerRequestMsg"/>
+                            <wsdl:output message="this:getViewerResponseMsg"/>
+                        </wsdl:operation>
+                    </wsdl:portType>
+                    <wsdl:service name="viewer_service">
+                        <wsdl:port binding="this:viewer_binding" name="viewer_port">
+                            <http:address location="http://local.fedora.server/iiv/viewer.jsp"/>
+                        </wsdl:port>
+                    </wsdl:service>
+                    <wsdl:binding name="viewer_binding" type="this:viewer_portType">
+                        <http:binding verb="GET"/>
+                        <wsdl:operation name="getViewer">
+                            <http:operation location="?pid=(PID)&amp;cmodel=(CMODEL)&amp;dsid=(DSID)&amp;uid=(uid)"/>
+                            <wsdl:input>
+                                <http:urlReplacement/>
+                            </wsdl:input>
+                            <wsdl:output>
+                                <mime:content type="text/html"/>
+                            </wsdl:output>
+                        </wsdl:operation>
+                    </wsdl:binding>
+                </wsdl:definitions>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
 </foxml:digitalObject>

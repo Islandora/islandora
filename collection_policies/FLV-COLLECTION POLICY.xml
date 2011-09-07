@@ -7,8 +7,8 @@
             <pid>vre:contentmodel</pid>
             <dsid>STANDARD_FLV</dsid>
         </contentmodel>
-        </contentmodels>
-     <search_terms>
+    </contentmodels>
+    <search_terms>
         <!--define what fields we can query as part of the advanced search for this collection-->
         <default>dc.description</default>
         <term>
@@ -63,5 +63,5 @@
             <field>fgs.DS.first.text</field>
             <value>Full Text</value>
         </term>
-    </search_terms>    
+    </search_terms>
 </collection_policy>

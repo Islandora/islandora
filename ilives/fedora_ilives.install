@@ -1,5 +1,6 @@
 <?php
-// $Id$
+
+
 
 /*
  * @file fedora_ilives.install
@@ -9,5 +10,5 @@
  * Implementation of hook_enable()
  */
 function fedora_ilives_enable() {
- 
+
 }

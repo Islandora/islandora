@@ -1,47 +1,48 @@
+
 <xsd:schema xmlns="http://www.islandora.ca" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.islandora.ca" elementFormDefault="qualified" >
-  <xsd:annotation>
-    <xsd:documentation xml:lang="en">
+    <xsd:annotation>
+        <xsd:documentation xml:lang="en">
       Islandora Collection Policy Schema
       Islandora, Robertson Library, University of Prince Edward Island, 550 University Ave., Charlottetown, Prince Edward Island
-    </xsd:documentation>
-  </xsd:annotation>
+        </xsd:documentation>
+    </xsd:annotation>
   
-  <xsd:element name="collection_policy" type="collection_policyType"/>
-  <xsd:complexType name="collection_policyType">
-    <xsd:all>
-      <xsd:element name="content_models" type="content_modelsType"/>
-      <xsd:element name="search_terms" type="search_termsType"/>
-      <xsd:element name="relationship" type="xsd:string"/>
-      <xsd:element name="staging_area" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-    </xsd:all>
-    <xsd:attribute name="name" type="xsd:normalizedString" use="required"/>
-  </xsd:complexType>
+    <xsd:element name="collection_policy" type="collection_policyType"/>
+    <xsd:complexType name="collection_policyType">
+        <xsd:all>
+            <xsd:element name="content_models" type="content_modelsType"/>
+            <xsd:element name="search_terms" type="search_termsType"/>
+            <xsd:element name="relationship" type="xsd:string"/>
+            <xsd:element name="staging_area" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+        </xsd:all>
+        <xsd:attribute name="name" type="xsd:normalizedString" use="required"/>
+    </xsd:complexType>
   
-  <xsd:complexType name="content_modelsType">
-    <xsd:sequence>
-      <xsd:element name="content_model" type="content_modelType" minOccurs="1" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
+    <xsd:complexType name="content_modelsType">
+        <xsd:sequence>
+            <xsd:element name="content_model" type="content_modelType" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
   
-  <xsd:complexType name="content_modelType">
-    <xsd:attribute name="name" type="xsd:normalizedString" use="required"/>
-    <xsd:attribute name="dsid" type="xsd:normalizedString" use="required"/>
-    <xsd:attribute name="namespace" type="xsd:normalizedString" use="required"/>
-    <xsd:attribute name="pid" type="xsd:normalizedString" use="required"/>
-  </xsd:complexType>
+    <xsd:complexType name="content_modelType">
+        <xsd:attribute name="name" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="dsid" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="namespace" type="xsd:normalizedString" use="required"/>
+        <xsd:attribute name="pid" type="xsd:normalizedString" use="required"/>
+    </xsd:complexType>
   
-  <xsd:complexType name="search_termsType">
-    <xsd:sequence>
-      <xsd:element name="term" type="termType" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
+    <xsd:complexType name="search_termsType">
+        <xsd:sequence>
+            <xsd:element name="term" type="termType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
   
-  <xsd:complexType name="termType">
-  	<xsd:simpleContent>
-		<xsd:extension base="xsd:string">
-			<xsd:attribute name="field" type="xsd:string" use="optional"/>
-			<xsd:attribute name="default" type="xsd:boolean" default="false"/>
-		</xsd:extension>
-	</xsd:simpleContent>
-  </xsd:complexType>
+    <xsd:complexType name="termType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="field" type="xsd:string" use="optional"/>
+                <xsd:attribute name="default" type="xsd:boolean" default="false"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
 </xsd:schema>

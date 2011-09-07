@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content_model name="standard_image">
-     <mimetypes>
+    <mimetypes>
         <type>image/jpeg</type>
         <type>image/gif</type>
         <type>image/png</type>
-         <type>image/tiff</type>
-         <type>image/tif</type>
+        <type>image/tiff</type>
+        <type>image/tif</type>
     </mimetypes>
     <ingest_rules>
         <rule>
@@ -29,7 +29,7 @@
                 <method>
                     <file>plugins/ImageManipulation.inc</file>
                     <class_name>ImageManipulation</class_name>
-                     <method_name>createThumbnail</method_name>
+                    <method_name>createThumbnail</method_name>
                     <modified_files_ext>jpg</modified_files_ext>
                     <datastream_id>TN</datastream_id>
                     <parameters>
@@ -43,7 +43,7 @@
                     <method_name>createPNG</method_name>
                     <modified_files_ext>png</modified_files_ext>
                     <datastream_id>PNG</datastream_id>
-                  </method>
+                </method>
                 <method>
                     <file>plugins/ImageManipulation.inc</file>
                     <class_name>ImageManipulation</class_name>
@@ -67,7 +67,7 @@
                 </disseminator>
             </disseminators>
         </rule>
-       </ingest_rules>a868aef684fa34923d4fe697db1e785b
+    </ingest_rules>a868aef684fa34923d4fe697db1e785b
     <ingest_form dsid='QDC' page="2">
         <form_builder_method>
             <file>plugins/FormBuilder.inc</file>
@@ -75,8 +75,8 @@
             <method_name>buildQDCForm</method_name>
             <form_handler>handleQDCForm</form_handler>
             <!--need validation method as well-->
-            </form_builder_method>
-            <form_elements>
+        </form_builder_method>
+        <form_elements>
             <element>
                 <label>Title/Caption/Object Name</label>
                 <name>dc:title</name>
@@ -268,4 +268,4 @@
             </element>
         </form_elements>
     </ingest_form>
-  </content_model>
+</content_model>

@@ -102,14 +102,14 @@ class FormBuilder {
     $policyElement = $dom->createDocumentFragment();
     if (!$policyElement) {
       drupal_set_message(t('Error parsing security policy stream.'));
-      watchdog(t("Fedora_Repository"), t("Error parsing security policy stream, could not parse policy stream."), NULL, WATCHDOG_NOTICE);
+      watchdog(t("Fedora_Repository"), "Error parsing security policy stream, could not parse policy stream.", NULL, WATCHDOG_NOTICE);
       return FALSE;
     }
     $dom->importNode($policyElement, TRUE);
     $value = $policyElement->appendXML($policyStreamDoc);
     if (!$value) {
       drupal_set_message(t('Error creating security policy stream.'));
-      watchdog(t("Fedora_Repository"), t("Error creating security policy stream, could not parse collection policy template file."), NULL, WATCHDOG_NOTICE);
+      watchdog(t("Fedora_Repository"), "Error creating security policy stream, could not parse collection policy template file.", NULL, WATCHDOG_NOTICE);
       return FALSE;
     }
 
@@ -183,7 +183,7 @@ class FormBuilder {
       file_delete($form_values['ingest-file-location']);
     } catch (exception $e) {
       drupal_set_message(t('Error ingesting object: !e', array('!e' => $e->getMessage())), 'error');
-      watchdog(t("Fedora_Repository"), t("Error ingesting object: !e", array('!e' => $e->getMessage())), NULL, WATCHDOG_ERROR);
+      watchdog(t("Fedora_Repository"), "Error ingesting object: !e", array('!e' => $e->getMessage()), NULL, WATCHDOG_ERROR);
       return;
     }
   }

@@ -33,7 +33,7 @@ class SearchClass {
     try {
       $implementation = new $solrClass();
     } catch (Exception $e) {
-      watchdog(t("Fedora_Repository"), t("Error getting solr search results class: !message", array('!message' => $e->getMessage())), NULL, WATCHDOG_ERROR);
+      watchdog(t("Fedora_Repository"), "Error getting solr search results class: !message", array('!message' => $e->getMessage()), NULL, WATCHDOG_ERROR);
       return 'Error getting solr search results class.  Check watchdog for more info.';
     }
     return $implementation->$solrFunction($query, $startPage, $fq, $dismax);
@@ -55,7 +55,7 @@ class SearchClass {
 
     $andOrArray = array(
       'AND' => 'and',
-        //'OR' => 'or' //removed or for now as it would be a pain to parse
+      //'OR' => 'or' //removed or for now as it would be a pain to parse
     );
     $form = array();
 
@@ -137,7 +137,7 @@ class SearchClass {
       '#size' => '30',
       '#type' => 'textfield',
       '#title' => t(''),
-        // '#default_value' => (count($field_and_term) >= 2 ? trim($field_and_term[1]) : ''),
+      // '#default_value' => (count($field_and_term) >= 2 ? trim($field_and_term[1]) : ''),
     );
     $form['submit'] = array(
       '#type' => 'submit',
@@ -367,7 +367,7 @@ class SearchClass {
     $path = drupal_get_path('module', 'Fedora_Repository');
     $test = $xslt_file;
     $isRestricted = variable_get('fedora_namespace_restriction_enforced', TRUE);
-    if (!isRestricted && $xslt_file == null) {
+    if (!isRestricted && $xslt_file == NULL) {
       $xslt_file = '/xsl/unfilteredresults.xsl';
     }
     $proc = NULL;
@@ -431,7 +431,7 @@ class SearchClass {
     try {
       $proc = new XsltProcessor();
     } catch (Exception $e) {
-      drupal_set_message(t('Error loading results xslt! ') . $e->getMessage());
+      drupal_set_message(t('Error loading results xslt!') . " " . $e->getMessage());
       return ' ';
     }
 
@@ -507,7 +507,7 @@ class SearchClass {
 
     $andOrArray = array(
       'AND' => 'and',
-        //'OR' => 'or' //removed or for now as it would be a pain to parse
+      //'OR' => 'or' //removed or for now as it would be a pain to parse
     );
     $form = array();
 

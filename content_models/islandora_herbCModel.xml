@@ -1,187 +1,187 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <foxml:digitalObject PID="islandora:herbCModel" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
-  <foxml:objectProperties>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="Herbarium Content Model"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="fedoraAdmin"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2009-10-15T16:00:27.323Z"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2010-09-16T17:32:21.037Z"/>
-  </foxml:objectProperties>
-  <foxml:datastream CONTROL_GROUP="X" ID="AUDIT" STATE="A" VERSIONABLE="false">
-    <foxml:datastreamVersion CREATED="2009-10-15T16:00:27.323Z"
+    <foxml:objectProperties>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="Herbarium Content Model"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="fedoraAdmin"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2009-10-15T16:00:27.323Z"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2010-09-16T17:32:21.037Z"/>
+    </foxml:objectProperties>
+    <foxml:datastream CONTROL_GROUP="X" ID="AUDIT" STATE="A" VERSIONABLE="false">
+        <foxml:datastreamVersion CREATED="2009-10-15T16:00:27.323Z"
       FORMAT_URI="info:fedora/fedora-system:format/xml.fedora.audit" ID="AUDIT.0" LABEL="Audit Trail for this object" MIMETYPE="text/xml">
-      <foxml:xmlContent>
-        <audit:auditTrail xmlns:audit="info:fedora/fedora-system:def/audit#">
-          <audit:record ID="AUDREC1">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>ISLANDORACM</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-03-05T19:52:46.133Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-          <audit:record ID="AUDREC2">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>ISLANDORACM</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-05-10T06:43:54.714Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-          <audit:record ID="AUDREC3">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>ingest</audit:action>
-            <audit:componentID/>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-05-10T15:42:10.930Z</audit:date>
-            <audit:justification>Ingested from local file /Applications/MAMP/htdocs/f3/sites/default/modules/fedora_repository/content_models/islandora_herbCModel.xml</audit:justification>
-          </audit:record>
-          <audit:record ID="AUDREC4">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>ISLANDORACM</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-05-10T16:56:37.065Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-          <audit:record ID="AUDREC5">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>ISLANDORACM</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-05-10T16:58:56.685Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-          <audit:record ID="AUDREC6">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>ISLANDORACM</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-05-10T19:07:11.023Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-          <audit:record ID="AUDREC7">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>ISLANDORACM</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-05-11T19:12:28.380Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-          <audit:record ID="AUDREC8">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>ISLANDORACM</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-05-13T19:30:13.540Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-          <audit:record ID="AUDREC9">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>ISLANDORACM</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-05-17T20:10:15.478Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-          <audit:record ID="AUDREC10">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>ISLANDORACM</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-05-18T18:58:52.382Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-          <audit:record ID="AUDREC11">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>ISLANDORACM</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-05-19T18:16:39.272Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-          <audit:record ID="AUDREC12">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>ISLANDORACM</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-05-19T18:36:31.560Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-          <audit:record ID="AUDREC13">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>ISLANDORACM</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-05-19T19:52:41.316Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-          <audit:record ID="AUDREC14">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>ISLANDORACM</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-05-19T20:06:17.332Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-          <audit:record ID="AUDREC15">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>ISLANDORACM</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-05-20T19:12:33.099Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-          <audit:record ID="AUDREC16">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>ISLANDORACM</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-06-07T14:01:43.997Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-          <audit:record ID="AUDREC17">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>ingest</audit:action>
-            <audit:componentID/>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-09-16T16:15:28.762Z</audit:date>
-            <audit:justification>Ingested from local file /Applications/MAMP/htdocs/f3/sites/default/modules/fedora_repository/content_models/islandora_herbCModel.xml</audit:justification>
-          </audit:record>
-          <audit:record ID="AUDREC18">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>ISLANDORACM</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2010-09-16T17:32:21.037Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-        </audit:auditTrail>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="RELS-EXT" STATE="A" VERSIONABLE="true">
-    <foxml:datastreamVersion CREATED="2010-03-04T13:26:38.829Z" FORMAT_URI="info:fedora/fedora-system:FedoraRELSExt-1.0"
+            <foxml:xmlContent>
+                <audit:auditTrail xmlns:audit="info:fedora/fedora-system:def/audit#">
+                    <audit:record ID="AUDREC1">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>ISLANDORACM</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-03-05T19:52:46.133Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                    <audit:record ID="AUDREC2">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>ISLANDORACM</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-05-10T06:43:54.714Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                    <audit:record ID="AUDREC3">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>ingest</audit:action>
+                        <audit:componentID/>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-05-10T15:42:10.930Z</audit:date>
+                        <audit:justification>Ingested from local file /Applications/MAMP/htdocs/f3/sites/default/modules/fedora_repository/content_models/islandora_herbCModel.xml</audit:justification>
+                    </audit:record>
+                    <audit:record ID="AUDREC4">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>ISLANDORACM</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-05-10T16:56:37.065Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                    <audit:record ID="AUDREC5">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>ISLANDORACM</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-05-10T16:58:56.685Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                    <audit:record ID="AUDREC6">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>ISLANDORACM</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-05-10T19:07:11.023Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                    <audit:record ID="AUDREC7">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>ISLANDORACM</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-05-11T19:12:28.380Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                    <audit:record ID="AUDREC8">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>ISLANDORACM</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-05-13T19:30:13.540Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                    <audit:record ID="AUDREC9">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>ISLANDORACM</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-05-17T20:10:15.478Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                    <audit:record ID="AUDREC10">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>ISLANDORACM</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-05-18T18:58:52.382Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                    <audit:record ID="AUDREC11">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>ISLANDORACM</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-05-19T18:16:39.272Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                    <audit:record ID="AUDREC12">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>ISLANDORACM</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-05-19T18:36:31.560Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                    <audit:record ID="AUDREC13">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>ISLANDORACM</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-05-19T19:52:41.316Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                    <audit:record ID="AUDREC14">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>ISLANDORACM</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-05-19T20:06:17.332Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                    <audit:record ID="AUDREC15">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>ISLANDORACM</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-05-20T19:12:33.099Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                    <audit:record ID="AUDREC16">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>ISLANDORACM</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-06-07T14:01:43.997Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                    <audit:record ID="AUDREC17">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>ingest</audit:action>
+                        <audit:componentID/>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-09-16T16:15:28.762Z</audit:date>
+                        <audit:justification>Ingested from local file /Applications/MAMP/htdocs/f3/sites/default/modules/fedora_repository/content_models/islandora_herbCModel.xml</audit:justification>
+                    </audit:record>
+                    <audit:record ID="AUDREC18">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>ISLANDORACM</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2010-09-16T17:32:21.037Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                </audit:auditTrail>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="RELS-EXT" STATE="A" VERSIONABLE="true">
+        <foxml:datastreamVersion CREATED="2010-03-04T13:26:38.829Z" FORMAT_URI="info:fedora/fedora-system:FedoraRELSExt-1.0"
       ID="RELS-EXT.0" LABEL="RDF Statements about this object" MIMETYPE="application/rdf+xml" SIZE="578">
-      <foxml:xmlContent>
-        <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-          <rdf:Description rdf:about="info:fedora/islandora:herbCModel">
-            <hasModel rdf:resource="info:fedora/fedora-system:ContentModel-3.0" xmlns="info:fedora/fedora-system:def/model#"/>
-            <hasService rdf:resource="info:fedora/ilives:viewerSdef" xmlns="info:fedora/fedora-system:def/model#"/>
-            <hasService rdf:resource="info:fedora/ilives:jp2Sdef" xmlns="info:fedora/fedora-system:def/model#"/>
-          </rdf:Description>
-        </rdf:RDF>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="DS-COMPOSITE-MODEL" STATE="A" VERSIONABLE="true">
-    <foxml:datastreamVersion CREATED="2009-10-15T16:00:27.366Z"
+            <foxml:xmlContent>
+                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                    <rdf:Description rdf:about="info:fedora/islandora:herbCModel">
+                        <hasModel rdf:resource="info:fedora/fedora-system:ContentModel-3.0" xmlns="info:fedora/fedora-system:def/model#"/>
+                        <hasService rdf:resource="info:fedora/ilives:viewerSdef" xmlns="info:fedora/fedora-system:def/model#"/>
+                        <hasService rdf:resource="info:fedora/ilives:jp2Sdef" xmlns="info:fedora/fedora-system:def/model#"/>
+                    </rdf:Description>
+                </rdf:RDF>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="DS-COMPOSITE-MODEL" STATE="A" VERSIONABLE="true">
+        <foxml:datastreamVersion CREATED="2009-10-15T16:00:27.366Z"
       FORMAT_URI="info:fedora/fedora-system:FedoraDSCompositeModel-1.0" ID="DS-COMPOSITE-MODEL1.0"
       LABEL="Datastream Composite Model" MIMETYPE="text/xml" SIZE="1120">
-      <foxml:xmlContent>
-        <dsCompositeModel xmlns="info:fedora/fedora-system:def/dsCompositeModel#">
-          <comment xmlns="info:fedora/fedora-system:def/comment#">
+            <foxml:xmlContent>
+                <dsCompositeModel xmlns="info:fedora/fedora-system:def/dsCompositeModel#">
+                    <comment xmlns="info:fedora/fedora-system:def/comment#">
             This DS-COMPOSITE-MODEL datastream is included as a starting point to
               assist in the creation of a content model. The DS-COMPOSITE-MODEL
               should define the datastreams that are required for any objects
@@ -194,1658 +194,1658 @@
               demo:TEI_TO_PDFDOC, and demo:XML_TO_HTMLDOC.
             For more information about the demonstration objects, see:
               http://fedora-commons.org/confluence/x/AwFI.
-          </comment>
-          <dsTypeModel ID="DSID">
-            <form MIME="text/xml"/>
-          </dsTypeModel>
-        </dsCompositeModel>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="DC" STATE="A" VERSIONABLE="true">
-    <foxml:datastreamVersion CREATED="2009-10-15T16:00:27.323Z" FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/"
+                    </comment>
+                    <dsTypeModel ID="DSID">
+                        <form MIME="text/xml"/>
+                    </dsTypeModel>
+                </dsCompositeModel>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="DC" STATE="A" VERSIONABLE="true">
+        <foxml:datastreamVersion CREATED="2009-10-15T16:00:27.323Z" FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/"
       ID="DC1.0" LABEL="Dublin Core Record for this object" MIMETYPE="text/xml" SIZE="396">
-      <foxml:xmlContent>
-        <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
+            <foxml:xmlContent>
+                <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
           xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
-          <dc:title>Herbarium Content Model</dc:title>
-          <dc:identifier>islandora:herbCModel</dc:identifier>
-        </oai_dc:dc>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="ISLANDORACM" STATE="A" VERSIONABLE="true">
-    <foxml:datastreamVersion CREATED="2010-01-13T19:56:37.843Z" ID="ISLANDORACM.0"
+                    <dc:title>Herbarium Content Model</dc:title>
+                    <dc:identifier>islandora:herbCModel</dc:identifier>
+                </oai_dc:dc>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="ISLANDORACM" STATE="A" VERSIONABLE="true">
+        <foxml:datastreamVersion CREATED="2010-01-13T19:56:37.843Z" ID="ISLANDORACM.0"
       LABEL="Islandora Content Model Object" MIMETYPE="text/xml" SIZE="6751">
-      <foxml:xmlContent>
-        <content_model name="standard_herb">
-          <mimetypes>
-            <type>image/tiff</type>
-          </mimetypes>
-          <display_in_fieldset>
-            <datastream id="JPG">
-              <method>
-                <file>plugins/slide_viewer.php</file>
-                <class_name>ShowSlideStreamsInFieldSets</class_name>
-                <method_name>showJPG</method_name>
-              </method>
-            </datastream>
-          </display_in_fieldset>
-          <ingest_rules>
-            <rule>
-              <applies_to>
+            <foxml:xmlContent>
+                <content_model name="standard_herb">
+                    <mimetypes>
+                        <type>image/tiff</type>
+                    </mimetypes>
+                    <display_in_fieldset>
+                        <datastream id="JPG">
+                            <method>
+                                <file>plugins/slide_viewer.php</file>
+                                <class_name>ShowSlideStreamsInFieldSets</class_name>
+                                <method_name>showJPG</method_name>
+                            </method>
+                        </datastream>
+                    </display_in_fieldset>
+                    <ingest_rules>
+                        <rule>
+                            <applies_to>
               image/tiff
-            </applies_to>
-              <methods>
-                <method>
-                  <file>plugins/ImageManipulation.php</file>
-                  <class_name>ImageManipulation</class_name>
-                  <method_name>createJP2</method_name>
-                  <modified_files_ext>jp2</modified_files_ext>
-                  <datastream_id>JP2</datastream_id>
-                </method>
-              </methods>
-            </rule>
-          </ingest_rules>
-          <ingest_form dsid="QDC" page="2">
-            <form_builder_method>
-              <file>plugins/DemoFormBuilder.php</file>
-              <class_name>DemoFormBuilder</class_name>
-              <method_name>buildQDCForm</method_name>
-              <form_handler>handleQDCForm</form_handler>
-            </form_builder_method>
-            <form_elements>
-              <element>
-                <label>Title/Caption/Image Name</label>
-                <name>dc:title</name>
-                <type>textfield</type>
-                <description>The name given to the resource</description>
-                <required>true</required>
-              </element>
-              <element>
-                <label>Creator/Photographer</label>
-                <name>dc:creator</name>
-                <type>textfield</type>
-                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Subject</label>
-                <name>dc:subject</name>
-                <type>select</type>
-                <description>Subject</description>
-                <required>false</required>
-                <authoritative_list>
-                  <item>
-                    <field>image</field>
-                    <value>image</value>
-                  </item>
-                  <item>
-                    <field>photograph</field>
-                    <value>photograph</value>
-                  </item>
-                  <item>
-                    <field>presentation</field>
-                    <value>presentation</value>
-                  </item>
-                  <item>
-                    <field>art</field>
-                    <value>art</value>
-                  </item>
-                </authoritative_list>
-              </element>
-              <element>
-                <label>Description</label>
-                <name>dc:description</name>
-                <type>textarea</type>
-                <description>Description of the Image</description>
-                <required>true</required>
-              </element>
-              <element>
-                <label>Publisher</label>
-                <name>dc:publisher</name>
-                <type>textfield</type>
-                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Contributor</label>
-                <name>dc:contributor</name>
-                <type>textfield</type>
-                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Date</label>
-                <name>dc:date</name>
-                <type>textfield</type>
-                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Resource Type</label>
-                <name>dc:type</name>
-                <type>textfield</type>
-                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Source</label>
-                <name>dc:source</name>
-                <type>textfield</type>
-                <description>A reference to a resource from which the present resource is derived.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Identifier</label>
-                <name>dc:identifier</name>
-                <type>textfield</type>
-                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Language</label>
-                <name>dc:language</name>
-                <type>select</type>
-                <description>The language of the intellectual content of the resource.</description>
-                <required>false</required>
-                <authoritative_list>
-                  <item>
-                    <field>eng</field>
-                    <value>English</value>
-                  </item>
-                  <item>
-                    <field>fre</field>
-                    <value>French</value>
-                  </item>
-                </authoritative_list>
-              </element>
-              <element>
-                <label>Relation</label>
-                <name>dc:relation</name>
-                <type>textfield</type>
-                <description>Reference to a related resource.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Rights Management</label>
-                <name>dc:rights</name>
-                <type>textarea</type>
-                <description>Information about intellectual property rights, copyright, and various property rights.</description>
-                <required>false</required>
-              </element>
-            </form_elements>
-          </ingest_form>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2010-03-05T19:52:46.133Z" ID="ISLANDORACM.1"
+                            </applies_to>
+                            <methods>
+                                <method>
+                                    <file>plugins/ImageManipulation.php</file>
+                                    <class_name>ImageManipulation</class_name>
+                                    <method_name>createJP2</method_name>
+                                    <modified_files_ext>jp2</modified_files_ext>
+                                    <datastream_id>JP2</datastream_id>
+                                </method>
+                            </methods>
+                        </rule>
+                    </ingest_rules>
+                    <ingest_form dsid="QDC" page="2">
+                        <form_builder_method>
+                            <file>plugins/DemoFormBuilder.php</file>
+                            <class_name>DemoFormBuilder</class_name>
+                            <method_name>buildQDCForm</method_name>
+                            <form_handler>handleQDCForm</form_handler>
+                        </form_builder_method>
+                        <form_elements>
+                            <element>
+                                <label>Title/Caption/Image Name</label>
+                                <name>dc:title</name>
+                                <type>textfield</type>
+                                <description>The name given to the resource</description>
+                                <required>true</required>
+                            </element>
+                            <element>
+                                <label>Creator/Photographer</label>
+                                <name>dc:creator</name>
+                                <type>textfield</type>
+                                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Subject</label>
+                                <name>dc:subject</name>
+                                <type>select</type>
+                                <description>Subject</description>
+                                <required>false</required>
+                                <authoritative_list>
+                                    <item>
+                                        <field>image</field>
+                                        <value>image</value>
+                                    </item>
+                                    <item>
+                                        <field>photograph</field>
+                                        <value>photograph</value>
+                                    </item>
+                                    <item>
+                                        <field>presentation</field>
+                                        <value>presentation</value>
+                                    </item>
+                                    <item>
+                                        <field>art</field>
+                                        <value>art</value>
+                                    </item>
+                                </authoritative_list>
+                            </element>
+                            <element>
+                                <label>Description</label>
+                                <name>dc:description</name>
+                                <type>textarea</type>
+                                <description>Description of the Image</description>
+                                <required>true</required>
+                            </element>
+                            <element>
+                                <label>Publisher</label>
+                                <name>dc:publisher</name>
+                                <type>textfield</type>
+                                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Contributor</label>
+                                <name>dc:contributor</name>
+                                <type>textfield</type>
+                                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Date</label>
+                                <name>dc:date</name>
+                                <type>textfield</type>
+                                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Resource Type</label>
+                                <name>dc:type</name>
+                                <type>textfield</type>
+                                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Source</label>
+                                <name>dc:source</name>
+                                <type>textfield</type>
+                                <description>A reference to a resource from which the present resource is derived.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Identifier</label>
+                                <name>dc:identifier</name>
+                                <type>textfield</type>
+                                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Language</label>
+                                <name>dc:language</name>
+                                <type>select</type>
+                                <description>The language of the intellectual content of the resource.</description>
+                                <required>false</required>
+                                <authoritative_list>
+                                    <item>
+                                        <field>eng</field>
+                                        <value>English</value>
+                                    </item>
+                                    <item>
+                                        <field>fre</field>
+                                        <value>French</value>
+                                    </item>
+                                </authoritative_list>
+                            </element>
+                            <element>
+                                <label>Relation</label>
+                                <name>dc:relation</name>
+                                <type>textfield</type>
+                                <description>Reference to a related resource.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Rights Management</label>
+                                <name>dc:rights</name>
+                                <type>textarea</type>
+                                <description>Information about intellectual property rights, copyright, and various property rights.</description>
+                                <required>false</required>
+                            </element>
+                        </form_elements>
+                    </ingest_form>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2010-03-05T19:52:46.133Z" ID="ISLANDORACM.1"
       LABEL="Islandora Content Model Object" MIMETYPE="text/xml" SIZE="6745">
-      <foxml:xmlContent>
-        <content_model name="standard_herb">
-          <mimetypes>
-            <type>image/tiff</type>
-          </mimetypes>
-          <display_in_fieldset>
-            <datastream id="JPG">
-              <method>
-                <file>plugins/herb_viewer.php</file>
-                <class_name>HerbStreamsInFieldSets</class_name>
-                <method_name>showJPG</method_name>
-              </method>
-            </datastream>
-          </display_in_fieldset>
-          <ingest_rules>
-            <rule>
-              <applies_to>
+            <foxml:xmlContent>
+                <content_model name="standard_herb">
+                    <mimetypes>
+                        <type>image/tiff</type>
+                    </mimetypes>
+                    <display_in_fieldset>
+                        <datastream id="JPG">
+                            <method>
+                                <file>plugins/herb_viewer.php</file>
+                                <class_name>HerbStreamsInFieldSets</class_name>
+                                <method_name>showJPG</method_name>
+                            </method>
+                        </datastream>
+                    </display_in_fieldset>
+                    <ingest_rules>
+                        <rule>
+                            <applies_to>
               image/tiff
-            </applies_to>
-              <methods>
-                <method>
-                  <file>plugins/ImageManipulation.php</file>
-                  <class_name>ImageManipulation</class_name>
-                  <method_name>createJP2</method_name>
-                  <modified_files_ext>jp2</modified_files_ext>
-                  <datastream_id>JP2</datastream_id>
-                </method>
-              </methods>
-            </rule>
-          </ingest_rules>
-          <ingest_form dsid="QDC" page="2">
-            <form_builder_method>
-              <file>plugins/DemoFormBuilder.php</file>
-              <class_name>DemoFormBuilder</class_name>
-              <method_name>buildQDCForm</method_name>
-              <form_handler>handleQDCForm</form_handler>
-            </form_builder_method>
-            <form_elements>
-              <element>
-                <label>Title/Caption/Image Name</label>
-                <name>dc:title</name>
-                <type>textfield</type>
-                <description>The name given to the resource</description>
-                <required>true</required>
-              </element>
-              <element>
-                <label>Creator/Photographer</label>
-                <name>dc:creator</name>
-                <type>textfield</type>
-                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Subject</label>
-                <name>dc:subject</name>
-                <type>select</type>
-                <description>Subject</description>
-                <required>false</required>
-                <authoritative_list>
-                  <item>
-                    <field>image</field>
-                    <value>image</value>
-                  </item>
-                  <item>
-                    <field>photograph</field>
-                    <value>photograph</value>
-                  </item>
-                  <item>
-                    <field>presentation</field>
-                    <value>presentation</value>
-                  </item>
-                  <item>
-                    <field>art</field>
-                    <value>art</value>
-                  </item>
-                </authoritative_list>
-              </element>
-              <element>
-                <label>Description</label>
-                <name>dc:description</name>
-                <type>textarea</type>
-                <description>Description of the Image</description>
-                <required>true</required>
-              </element>
-              <element>
-                <label>Publisher</label>
-                <name>dc:publisher</name>
-                <type>textfield</type>
-                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Contributor</label>
-                <name>dc:contributor</name>
-                <type>textfield</type>
-                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Date</label>
-                <name>dc:date</name>
-                <type>textfield</type>
-                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Resource Type</label>
-                <name>dc:type</name>
-                <type>textfield</type>
-                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Source</label>
-                <name>dc:source</name>
-                <type>textfield</type>
-                <description>A reference to a resource from which the present resource is derived.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Identifier</label>
-                <name>dc:identifier</name>
-                <type>textfield</type>
-                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Language</label>
-                <name>dc:language</name>
-                <type>select</type>
-                <description>The language of the intellectual content of the resource.</description>
-                <required>false</required>
-                <authoritative_list>
-                  <item>
-                    <field>eng</field>
-                    <value>English</value>
-                  </item>
-                  <item>
-                    <field>fre</field>
-                    <value>French</value>
-                  </item>
-                </authoritative_list>
-              </element>
-              <element>
-                <label>Relation</label>
-                <name>dc:relation</name>
-                <type>textfield</type>
-                <description>Reference to a related resource.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Rights Management</label>
-                <name>dc:rights</name>
-                <type>textarea</type>
-                <description>Information about intellectual property rights, copyright, and various property rights.</description>
-                <required>false</required>
-              </element>
-            </form_elements>
-          </ingest_form>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2010-05-10T06:43:54.714Z" ID="ISLANDORACM.2"
+                            </applies_to>
+                            <methods>
+                                <method>
+                                    <file>plugins/ImageManipulation.php</file>
+                                    <class_name>ImageManipulation</class_name>
+                                    <method_name>createJP2</method_name>
+                                    <modified_files_ext>jp2</modified_files_ext>
+                                    <datastream_id>JP2</datastream_id>
+                                </method>
+                            </methods>
+                        </rule>
+                    </ingest_rules>
+                    <ingest_form dsid="QDC" page="2">
+                        <form_builder_method>
+                            <file>plugins/DemoFormBuilder.php</file>
+                            <class_name>DemoFormBuilder</class_name>
+                            <method_name>buildQDCForm</method_name>
+                            <form_handler>handleQDCForm</form_handler>
+                        </form_builder_method>
+                        <form_elements>
+                            <element>
+                                <label>Title/Caption/Image Name</label>
+                                <name>dc:title</name>
+                                <type>textfield</type>
+                                <description>The name given to the resource</description>
+                                <required>true</required>
+                            </element>
+                            <element>
+                                <label>Creator/Photographer</label>
+                                <name>dc:creator</name>
+                                <type>textfield</type>
+                                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Subject</label>
+                                <name>dc:subject</name>
+                                <type>select</type>
+                                <description>Subject</description>
+                                <required>false</required>
+                                <authoritative_list>
+                                    <item>
+                                        <field>image</field>
+                                        <value>image</value>
+                                    </item>
+                                    <item>
+                                        <field>photograph</field>
+                                        <value>photograph</value>
+                                    </item>
+                                    <item>
+                                        <field>presentation</field>
+                                        <value>presentation</value>
+                                    </item>
+                                    <item>
+                                        <field>art</field>
+                                        <value>art</value>
+                                    </item>
+                                </authoritative_list>
+                            </element>
+                            <element>
+                                <label>Description</label>
+                                <name>dc:description</name>
+                                <type>textarea</type>
+                                <description>Description of the Image</description>
+                                <required>true</required>
+                            </element>
+                            <element>
+                                <label>Publisher</label>
+                                <name>dc:publisher</name>
+                                <type>textfield</type>
+                                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Contributor</label>
+                                <name>dc:contributor</name>
+                                <type>textfield</type>
+                                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Date</label>
+                                <name>dc:date</name>
+                                <type>textfield</type>
+                                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Resource Type</label>
+                                <name>dc:type</name>
+                                <type>textfield</type>
+                                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Source</label>
+                                <name>dc:source</name>
+                                <type>textfield</type>
+                                <description>A reference to a resource from which the present resource is derived.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Identifier</label>
+                                <name>dc:identifier</name>
+                                <type>textfield</type>
+                                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Language</label>
+                                <name>dc:language</name>
+                                <type>select</type>
+                                <description>The language of the intellectual content of the resource.</description>
+                                <required>false</required>
+                                <authoritative_list>
+                                    <item>
+                                        <field>eng</field>
+                                        <value>English</value>
+                                    </item>
+                                    <item>
+                                        <field>fre</field>
+                                        <value>French</value>
+                                    </item>
+                                </authoritative_list>
+                            </element>
+                            <element>
+                                <label>Relation</label>
+                                <name>dc:relation</name>
+                                <type>textfield</type>
+                                <description>Reference to a related resource.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Rights Management</label>
+                                <name>dc:rights</name>
+                                <type>textarea</type>
+                                <description>Information about intellectual property rights, copyright, and various property rights.</description>
+                                <required>false</required>
+                            </element>
+                        </form_elements>
+                    </ingest_form>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2010-05-10T06:43:54.714Z" ID="ISLANDORACM.2"
       LABEL="Islandora Content Model Object" MIMETYPE="text/xml" SIZE="6745">
-      <foxml:xmlContent>
-        <content_model name="standard_herb">
-          <mimetypes>
-            <type>image/tiff</type>
-          </mimetypes>
-          <display_in_fieldset>
-            <datastream id="JPG">
-              <method>
-                <file>plugins/herb_viewer.inc</file>
-                <class_name>HerbStreamsInFieldSets</class_name>
-                <method_name>showJPG</method_name>
-              </method>
-            </datastream>
-          </display_in_fieldset>
-          <ingest_rules>
-            <rule>
-              <applies_to>
+            <foxml:xmlContent>
+                <content_model name="standard_herb">
+                    <mimetypes>
+                        <type>image/tiff</type>
+                    </mimetypes>
+                    <display_in_fieldset>
+                        <datastream id="JPG">
+                            <method>
+                                <file>plugins/herb_viewer.inc</file>
+                                <class_name>HerbStreamsInFieldSets</class_name>
+                                <method_name>showJPG</method_name>
+                            </method>
+                        </datastream>
+                    </display_in_fieldset>
+                    <ingest_rules>
+                        <rule>
+                            <applies_to>
               image/tiff
-            </applies_to>
-              <methods>
-                <method>
-                  <file>plugins/ImageManipulation.inc</file>
-                  <class_name>ImageManipulation</class_name>
-                  <method_name>createJP2</method_name>
-                  <modified_files_ext>jp2</modified_files_ext>
-                  <datastream_id>JP2</datastream_id>
-                </method>
-              </methods>
-            </rule>
-          </ingest_rules>
-          <ingest_form dsid="QDC" page="2">
-            <form_builder_method>
-              <file>plugins/DemoFormBuilder.inc</file>
-              <class_name>DemoFormBuilder</class_name>
-              <method_name>buildQDCForm</method_name>
-              <form_handler>handleQDCForm</form_handler>
-            </form_builder_method>
-            <form_elements>
-              <element>
-                <label>Title/Caption/Image Name</label>
-                <name>dc:title</name>
-                <type>textfield</type>
-                <description>The name given to the resource</description>
-                <required>true</required>
-              </element>
-              <element>
-                <label>Creator/Photographer</label>
-                <name>dc:creator</name>
-                <type>textfield</type>
-                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Subject</label>
-                <name>dc:subject</name>
-                <type>select</type>
-                <description>Subject</description>
-                <required>false</required>
-                <authoritative_list>
-                  <item>
-                    <field>image</field>
-                    <value>image</value>
-                  </item>
-                  <item>
-                    <field>photograph</field>
-                    <value>photograph</value>
-                  </item>
-                  <item>
-                    <field>presentation</field>
-                    <value>presentation</value>
-                  </item>
-                  <item>
-                    <field>art</field>
-                    <value>art</value>
-                  </item>
-                </authoritative_list>
-              </element>
-              <element>
-                <label>Description</label>
-                <name>dc:description</name>
-                <type>textarea</type>
-                <description>Description of the Image</description>
-                <required>true</required>
-              </element>
-              <element>
-                <label>Publisher</label>
-                <name>dc:publisher</name>
-                <type>textfield</type>
-                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Contributor</label>
-                <name>dc:contributor</name>
-                <type>textfield</type>
-                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Date</label>
-                <name>dc:date</name>
-                <type>textfield</type>
-                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Resource Type</label>
-                <name>dc:type</name>
-                <type>textfield</type>
-                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Source</label>
-                <name>dc:source</name>
-                <type>textfield</type>
-                <description>A reference to a resource from which the present resource is derived.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Identifier</label>
-                <name>dc:identifier</name>
-                <type>textfield</type>
-                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Language</label>
-                <name>dc:language</name>
-                <type>select</type>
-                <description>The language of the intellectual content of the resource.</description>
-                <required>false</required>
-                <authoritative_list>
-                  <item>
-                    <field>eng</field>
-                    <value>English</value>
-                  </item>
-                  <item>
-                    <field>fre</field>
-                    <value>French</value>
-                  </item>
-                </authoritative_list>
-              </element>
-              <element>
-                <label>Relation</label>
-                <name>dc:relation</name>
-                <type>textfield</type>
-                <description>Reference to a related resource.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Rights Management</label>
-                <name>dc:rights</name>
-                <type>textarea</type>
-                <description>Information about intellectual property rights, copyright, and various property rights.</description>
-                <required>false</required>
-              </element>
-            </form_elements>
-          </ingest_form>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2010-05-10T16:56:37.065Z" ID="ISLANDORACM.3"
+                            </applies_to>
+                            <methods>
+                                <method>
+                                    <file>plugins/ImageManipulation.inc</file>
+                                    <class_name>ImageManipulation</class_name>
+                                    <method_name>createJP2</method_name>
+                                    <modified_files_ext>jp2</modified_files_ext>
+                                    <datastream_id>JP2</datastream_id>
+                                </method>
+                            </methods>
+                        </rule>
+                    </ingest_rules>
+                    <ingest_form dsid="QDC" page="2">
+                        <form_builder_method>
+                            <file>plugins/DemoFormBuilder.inc</file>
+                            <class_name>DemoFormBuilder</class_name>
+                            <method_name>buildQDCForm</method_name>
+                            <form_handler>handleQDCForm</form_handler>
+                        </form_builder_method>
+                        <form_elements>
+                            <element>
+                                <label>Title/Caption/Image Name</label>
+                                <name>dc:title</name>
+                                <type>textfield</type>
+                                <description>The name given to the resource</description>
+                                <required>true</required>
+                            </element>
+                            <element>
+                                <label>Creator/Photographer</label>
+                                <name>dc:creator</name>
+                                <type>textfield</type>
+                                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Subject</label>
+                                <name>dc:subject</name>
+                                <type>select</type>
+                                <description>Subject</description>
+                                <required>false</required>
+                                <authoritative_list>
+                                    <item>
+                                        <field>image</field>
+                                        <value>image</value>
+                                    </item>
+                                    <item>
+                                        <field>photograph</field>
+                                        <value>photograph</value>
+                                    </item>
+                                    <item>
+                                        <field>presentation</field>
+                                        <value>presentation</value>
+                                    </item>
+                                    <item>
+                                        <field>art</field>
+                                        <value>art</value>
+                                    </item>
+                                </authoritative_list>
+                            </element>
+                            <element>
+                                <label>Description</label>
+                                <name>dc:description</name>
+                                <type>textarea</type>
+                                <description>Description of the Image</description>
+                                <required>true</required>
+                            </element>
+                            <element>
+                                <label>Publisher</label>
+                                <name>dc:publisher</name>
+                                <type>textfield</type>
+                                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Contributor</label>
+                                <name>dc:contributor</name>
+                                <type>textfield</type>
+                                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Date</label>
+                                <name>dc:date</name>
+                                <type>textfield</type>
+                                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Resource Type</label>
+                                <name>dc:type</name>
+                                <type>textfield</type>
+                                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Source</label>
+                                <name>dc:source</name>
+                                <type>textfield</type>
+                                <description>A reference to a resource from which the present resource is derived.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Identifier</label>
+                                <name>dc:identifier</name>
+                                <type>textfield</type>
+                                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Language</label>
+                                <name>dc:language</name>
+                                <type>select</type>
+                                <description>The language of the intellectual content of the resource.</description>
+                                <required>false</required>
+                                <authoritative_list>
+                                    <item>
+                                        <field>eng</field>
+                                        <value>English</value>
+                                    </item>
+                                    <item>
+                                        <field>fre</field>
+                                        <value>French</value>
+                                    </item>
+                                </authoritative_list>
+                            </element>
+                            <element>
+                                <label>Relation</label>
+                                <name>dc:relation</name>
+                                <type>textfield</type>
+                                <description>Reference to a related resource.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Rights Management</label>
+                                <name>dc:rights</name>
+                                <type>textarea</type>
+                                <description>Information about intellectual property rights, copyright, and various property rights.</description>
+                                <required>false</required>
+                            </element>
+                        </form_elements>
+                    </ingest_form>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2010-05-10T16:56:37.065Z" ID="ISLANDORACM.3"
       LABEL="Islandora Content Model Object" MIMETYPE="text/xml" SIZE="6902">
-      <foxml:xmlContent>
-        <content_model name="standard_herb">
-          <mimetypes>
-            <type>image/tiff</type>
-          </mimetypes>
-          <mimetypes>
-            <type>image/tif</type>
-          </mimetypes>
-          <display_in_fieldset>
-            <datastream id="JPG">
-              <method>
-                <file>plugins/herb_viewer.inc</file>
-                <class_name>HerbStreamsInFieldSets</class_name>
-                <method_name>showJPG</method_name>
-              </method>
-            </datastream>
-          </display_in_fieldset>
-          <ingest_rules>
-            <rule>
-              <applies_to>
+            <foxml:xmlContent>
+                <content_model name="standard_herb">
+                    <mimetypes>
+                        <type>image/tiff</type>
+                    </mimetypes>
+                    <mimetypes>
+                        <type>image/tif</type>
+                    </mimetypes>
+                    <display_in_fieldset>
+                        <datastream id="JPG">
+                            <method>
+                                <file>plugins/herb_viewer.inc</file>
+                                <class_name>HerbStreamsInFieldSets</class_name>
+                                <method_name>showJPG</method_name>
+                            </method>
+                        </datastream>
+                    </display_in_fieldset>
+                    <ingest_rules>
+                        <rule>
+                            <applies_to>
               image/tiff
-            </applies_to>
-              <applies_to>
+                            </applies_to>
+                            <applies_to>
               image/tif
-            </applies_to>
-              <methods>
-                <method>
-                  <file>plugins/ImageManipulation.inc</file>
-                  <class_name>ImageManipulation</class_name>
-                  <method_name>createJP2</method_name>
-                  <modified_files_ext>jp2</modified_files_ext>
-                  <datastream_id>JP2</datastream_id>
-                </method>
-              </methods>
-            </rule>
-          </ingest_rules>
-          <ingest_form dsid="QDC" page="2">
-            <form_builder_method>
-              <file>plugins/DemoFormBuilder.inc</file>
-              <class_name>DemoFormBuilder</class_name>
-              <method_name>buildQDCForm</method_name>
-              <form_handler>handleQDCForm</form_handler>
-            </form_builder_method>
-            <form_elements>
-              <element>
-                <label>Title/Caption/Image Name</label>
-                <name>dc:title</name>
-                <type>textfield</type>
-                <description>The name given to the resource</description>
-                <required>true</required>
-              </element>
-              <element>
-                <label>Creator/Photographer</label>
-                <name>dc:creator</name>
-                <type>textfield</type>
-                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Subject</label>
-                <name>dc:subject</name>
-                <type>select</type>
-                <description>Subject</description>
-                <required>false</required>
-                <authoritative_list>
-                  <item>
-                    <field>image</field>
-                    <value>image</value>
-                  </item>
-                  <item>
-                    <field>photograph</field>
-                    <value>photograph</value>
-                  </item>
-                  <item>
-                    <field>presentation</field>
-                    <value>presentation</value>
-                  </item>
-                  <item>
-                    <field>art</field>
-                    <value>art</value>
-                  </item>
-                </authoritative_list>
-              </element>
-              <element>
-                <label>Description</label>
-                <name>dc:description</name>
-                <type>textarea</type>
-                <description>Description of the Image</description>
-                <required>true</required>
-              </element>
-              <element>
-                <label>Publisher</label>
-                <name>dc:publisher</name>
-                <type>textfield</type>
-                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Contributor</label>
-                <name>dc:contributor</name>
-                <type>textfield</type>
-                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Date</label>
-                <name>dc:date</name>
-                <type>textfield</type>
-                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Resource Type</label>
-                <name>dc:type</name>
-                <type>textfield</type>
-                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Source</label>
-                <name>dc:source</name>
-                <type>textfield</type>
-                <description>A reference to a resource from which the present resource is derived.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Identifier</label>
-                <name>dc:identifier</name>
-                <type>textfield</type>
-                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Language</label>
-                <name>dc:language</name>
-                <type>select</type>
-                <description>The language of the intellectual content of the resource.</description>
-                <required>false</required>
-                <authoritative_list>
-                  <item>
-                    <field>eng</field>
-                    <value>English</value>
-                  </item>
-                  <item>
-                    <field>fre</field>
-                    <value>French</value>
-                  </item>
-                </authoritative_list>
-              </element>
-              <element>
-                <label>Relation</label>
-                <name>dc:relation</name>
-                <type>textfield</type>
-                <description>Reference to a related resource.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Rights Management</label>
-                <name>dc:rights</name>
-                <type>textarea</type>
-                <description>Information about intellectual property rights, copyright, and various property rights.</description>
-                <required>false</required>
-              </element>
-            </form_elements>
-          </ingest_form>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2010-05-10T16:58:56.685Z" ID="ISLANDORACM.4"
+                            </applies_to>
+                            <methods>
+                                <method>
+                                    <file>plugins/ImageManipulation.inc</file>
+                                    <class_name>ImageManipulation</class_name>
+                                    <method_name>createJP2</method_name>
+                                    <modified_files_ext>jp2</modified_files_ext>
+                                    <datastream_id>JP2</datastream_id>
+                                </method>
+                            </methods>
+                        </rule>
+                    </ingest_rules>
+                    <ingest_form dsid="QDC" page="2">
+                        <form_builder_method>
+                            <file>plugins/DemoFormBuilder.inc</file>
+                            <class_name>DemoFormBuilder</class_name>
+                            <method_name>buildQDCForm</method_name>
+                            <form_handler>handleQDCForm</form_handler>
+                        </form_builder_method>
+                        <form_elements>
+                            <element>
+                                <label>Title/Caption/Image Name</label>
+                                <name>dc:title</name>
+                                <type>textfield</type>
+                                <description>The name given to the resource</description>
+                                <required>true</required>
+                            </element>
+                            <element>
+                                <label>Creator/Photographer</label>
+                                <name>dc:creator</name>
+                                <type>textfield</type>
+                                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Subject</label>
+                                <name>dc:subject</name>
+                                <type>select</type>
+                                <description>Subject</description>
+                                <required>false</required>
+                                <authoritative_list>
+                                    <item>
+                                        <field>image</field>
+                                        <value>image</value>
+                                    </item>
+                                    <item>
+                                        <field>photograph</field>
+                                        <value>photograph</value>
+                                    </item>
+                                    <item>
+                                        <field>presentation</field>
+                                        <value>presentation</value>
+                                    </item>
+                                    <item>
+                                        <field>art</field>
+                                        <value>art</value>
+                                    </item>
+                                </authoritative_list>
+                            </element>
+                            <element>
+                                <label>Description</label>
+                                <name>dc:description</name>
+                                <type>textarea</type>
+                                <description>Description of the Image</description>
+                                <required>true</required>
+                            </element>
+                            <element>
+                                <label>Publisher</label>
+                                <name>dc:publisher</name>
+                                <type>textfield</type>
+                                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Contributor</label>
+                                <name>dc:contributor</name>
+                                <type>textfield</type>
+                                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Date</label>
+                                <name>dc:date</name>
+                                <type>textfield</type>
+                                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Resource Type</label>
+                                <name>dc:type</name>
+                                <type>textfield</type>
+                                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Source</label>
+                                <name>dc:source</name>
+                                <type>textfield</type>
+                                <description>A reference to a resource from which the present resource is derived.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Identifier</label>
+                                <name>dc:identifier</name>
+                                <type>textfield</type>
+                                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Language</label>
+                                <name>dc:language</name>
+                                <type>select</type>
+                                <description>The language of the intellectual content of the resource.</description>
+                                <required>false</required>
+                                <authoritative_list>
+                                    <item>
+                                        <field>eng</field>
+                                        <value>English</value>
+                                    </item>
+                                    <item>
+                                        <field>fre</field>
+                                        <value>French</value>
+                                    </item>
+                                </authoritative_list>
+                            </element>
+                            <element>
+                                <label>Relation</label>
+                                <name>dc:relation</name>
+                                <type>textfield</type>
+                                <description>Reference to a related resource.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Rights Management</label>
+                                <name>dc:rights</name>
+                                <type>textarea</type>
+                                <description>Information about intellectual property rights, copyright, and various property rights.</description>
+                                <required>false</required>
+                            </element>
+                        </form_elements>
+                    </ingest_form>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2010-05-10T16:58:56.685Z" ID="ISLANDORACM.4"
       LABEL="Islandora Content Model Object" MIMETYPE="text/xml" SIZE="6857">
-      <foxml:xmlContent>
-        <content_model name="standard_herb">
-          <mimetypes>
-            <type>image/tiff</type>
-            <type>image/tif</type>
-          </mimetypes>
-          <display_in_fieldset>
-            <datastream id="JPG">
-              <method>
-                <file>plugins/herb_viewer.inc</file>
-                <class_name>HerbStreamsInFieldSets</class_name>
-                <method_name>showJPG</method_name>
-              </method>
-            </datastream>
-          </display_in_fieldset>
-          <ingest_rules>
-            <rule>
-              <applies_to>
+            <foxml:xmlContent>
+                <content_model name="standard_herb">
+                    <mimetypes>
+                        <type>image/tiff</type>
+                        <type>image/tif</type>
+                    </mimetypes>
+                    <display_in_fieldset>
+                        <datastream id="JPG">
+                            <method>
+                                <file>plugins/herb_viewer.inc</file>
+                                <class_name>HerbStreamsInFieldSets</class_name>
+                                <method_name>showJPG</method_name>
+                            </method>
+                        </datastream>
+                    </display_in_fieldset>
+                    <ingest_rules>
+                        <rule>
+                            <applies_to>
               image/tiff
-            </applies_to>
-              <applies_to>
+                            </applies_to>
+                            <applies_to>
               image/tif
-            </applies_to>
-              <methods>
-                <method>
-                  <file>plugins/ImageManipulation.inc</file>
-                  <class_name>ImageManipulation</class_name>
-                  <method_name>createJP2</method_name>
-                  <modified_files_ext>jp2</modified_files_ext>
-                  <datastream_id>JP2</datastream_id>
-                </method>
-              </methods>
-            </rule>
-          </ingest_rules>
-          <ingest_form dsid="QDC" page="2">
-            <form_builder_method>
-              <file>plugins/DemoFormBuilder.inc</file>
-              <class_name>DemoFormBuilder</class_name>
-              <method_name>buildQDCForm</method_name>
-              <form_handler>handleQDCForm</form_handler>
-            </form_builder_method>
-            <form_elements>
-              <element>
-                <label>Title/Caption/Image Name</label>
-                <name>dc:title</name>
-                <type>textfield</type>
-                <description>The name given to the resource</description>
-                <required>true</required>
-              </element>
-              <element>
-                <label>Creator/Photographer</label>
-                <name>dc:creator</name>
-                <type>textfield</type>
-                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Subject</label>
-                <name>dc:subject</name>
-                <type>select</type>
-                <description>Subject</description>
-                <required>false</required>
-                <authoritative_list>
-                  <item>
-                    <field>image</field>
-                    <value>image</value>
-                  </item>
-                  <item>
-                    <field>photograph</field>
-                    <value>photograph</value>
-                  </item>
-                  <item>
-                    <field>presentation</field>
-                    <value>presentation</value>
-                  </item>
-                  <item>
-                    <field>art</field>
-                    <value>art</value>
-                  </item>
-                </authoritative_list>
-              </element>
-              <element>
-                <label>Description</label>
-                <name>dc:description</name>
-                <type>textarea</type>
-                <description>Description of the Image</description>
-                <required>true</required>
-              </element>
-              <element>
-                <label>Publisher</label>
-                <name>dc:publisher</name>
-                <type>textfield</type>
-                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Contributor</label>
-                <name>dc:contributor</name>
-                <type>textfield</type>
-                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Date</label>
-                <name>dc:date</name>
-                <type>textfield</type>
-                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Resource Type</label>
-                <name>dc:type</name>
-                <type>textfield</type>
-                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Source</label>
-                <name>dc:source</name>
-                <type>textfield</type>
-                <description>A reference to a resource from which the present resource is derived.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Identifier</label>
-                <name>dc:identifier</name>
-                <type>textfield</type>
-                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Language</label>
-                <name>dc:language</name>
-                <type>select</type>
-                <description>The language of the intellectual content of the resource.</description>
-                <required>false</required>
-                <authoritative_list>
-                  <item>
-                    <field>eng</field>
-                    <value>English</value>
-                  </item>
-                  <item>
-                    <field>fre</field>
-                    <value>French</value>
-                  </item>
-                </authoritative_list>
-              </element>
-              <element>
-                <label>Relation</label>
-                <name>dc:relation</name>
-                <type>textfield</type>
-                <description>Reference to a related resource.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Rights Management</label>
-                <name>dc:rights</name>
-                <type>textarea</type>
-                <description>Information about intellectual property rights, copyright, and various property rights.</description>
-                <required>false</required>
-              </element>
-            </form_elements>
-          </ingest_form>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2010-05-10T19:07:11.023Z" ID="ISLANDORACM.5"
+                            </applies_to>
+                            <methods>
+                                <method>
+                                    <file>plugins/ImageManipulation.inc</file>
+                                    <class_name>ImageManipulation</class_name>
+                                    <method_name>createJP2</method_name>
+                                    <modified_files_ext>jp2</modified_files_ext>
+                                    <datastream_id>JP2</datastream_id>
+                                </method>
+                            </methods>
+                        </rule>
+                    </ingest_rules>
+                    <ingest_form dsid="QDC" page="2">
+                        <form_builder_method>
+                            <file>plugins/DemoFormBuilder.inc</file>
+                            <class_name>DemoFormBuilder</class_name>
+                            <method_name>buildQDCForm</method_name>
+                            <form_handler>handleQDCForm</form_handler>
+                        </form_builder_method>
+                        <form_elements>
+                            <element>
+                                <label>Title/Caption/Image Name</label>
+                                <name>dc:title</name>
+                                <type>textfield</type>
+                                <description>The name given to the resource</description>
+                                <required>true</required>
+                            </element>
+                            <element>
+                                <label>Creator/Photographer</label>
+                                <name>dc:creator</name>
+                                <type>textfield</type>
+                                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Subject</label>
+                                <name>dc:subject</name>
+                                <type>select</type>
+                                <description>Subject</description>
+                                <required>false</required>
+                                <authoritative_list>
+                                    <item>
+                                        <field>image</field>
+                                        <value>image</value>
+                                    </item>
+                                    <item>
+                                        <field>photograph</field>
+                                        <value>photograph</value>
+                                    </item>
+                                    <item>
+                                        <field>presentation</field>
+                                        <value>presentation</value>
+                                    </item>
+                                    <item>
+                                        <field>art</field>
+                                        <value>art</value>
+                                    </item>
+                                </authoritative_list>
+                            </element>
+                            <element>
+                                <label>Description</label>
+                                <name>dc:description</name>
+                                <type>textarea</type>
+                                <description>Description of the Image</description>
+                                <required>true</required>
+                            </element>
+                            <element>
+                                <label>Publisher</label>
+                                <name>dc:publisher</name>
+                                <type>textfield</type>
+                                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Contributor</label>
+                                <name>dc:contributor</name>
+                                <type>textfield</type>
+                                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Date</label>
+                                <name>dc:date</name>
+                                <type>textfield</type>
+                                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Resource Type</label>
+                                <name>dc:type</name>
+                                <type>textfield</type>
+                                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Source</label>
+                                <name>dc:source</name>
+                                <type>textfield</type>
+                                <description>A reference to a resource from which the present resource is derived.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Identifier</label>
+                                <name>dc:identifier</name>
+                                <type>textfield</type>
+                                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Language</label>
+                                <name>dc:language</name>
+                                <type>select</type>
+                                <description>The language of the intellectual content of the resource.</description>
+                                <required>false</required>
+                                <authoritative_list>
+                                    <item>
+                                        <field>eng</field>
+                                        <value>English</value>
+                                    </item>
+                                    <item>
+                                        <field>fre</field>
+                                        <value>French</value>
+                                    </item>
+                                </authoritative_list>
+                            </element>
+                            <element>
+                                <label>Relation</label>
+                                <name>dc:relation</name>
+                                <type>textfield</type>
+                                <description>Reference to a related resource.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Rights Management</label>
+                                <name>dc:rights</name>
+                                <type>textarea</type>
+                                <description>Information about intellectual property rights, copyright, and various property rights.</description>
+                                <required>false</required>
+                            </element>
+                        </form_elements>
+                    </ingest_form>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2010-05-10T19:07:11.023Z" ID="ISLANDORACM.5"
       LABEL="Islandora Content Model Object" MIMETYPE="text/xml" SIZE="7154">
-      <foxml:xmlContent>
-        <content_model name="standard_herb">
-          <mimetypes>
-            <type>image/tiff</type>
-            <type>image/tif</type>
-          </mimetypes>
-          <display_in_fieldset>
-            <datastream id="JPG">
-              <method>
-                <file>plugins/herb_viewer.inc</file>
-                <class_name>HerbStreamsInFieldSets</class_name>
-                <method_name>showJPG</method_name>
-              </method>
-            </datastream>
-            <datastream id="JP2"/>
-            <datastream id="LOSSLESS_JP2"/>
-            <datastream id="JPG"/>
-            <datastream id="TN"/>
-            <datastream id="DC"/>
-            <datastream id="DARWIN_CORE"/>
-          </display_in_fieldset>
-          <ingest_rules>
-            <rule>
-              <applies_to>
+            <foxml:xmlContent>
+                <content_model name="standard_herb">
+                    <mimetypes>
+                        <type>image/tiff</type>
+                        <type>image/tif</type>
+                    </mimetypes>
+                    <display_in_fieldset>
+                        <datastream id="JPG">
+                            <method>
+                                <file>plugins/herb_viewer.inc</file>
+                                <class_name>HerbStreamsInFieldSets</class_name>
+                                <method_name>showJPG</method_name>
+                            </method>
+                        </datastream>
+                        <datastream id="JP2"/>
+                        <datastream id="LOSSLESS_JP2"/>
+                        <datastream id="JPG"/>
+                        <datastream id="TN"/>
+                        <datastream id="DC"/>
+                        <datastream id="DARWIN_CORE"/>
+                    </display_in_fieldset>
+                    <ingest_rules>
+                        <rule>
+                            <applies_to>
               image/tiff
-            </applies_to>
-              <applies_to>
+                            </applies_to>
+                            <applies_to>
               image/tif
-            </applies_to>
-              <methods>
-                <method>
-                  <file>plugins/ImageManipulation.inc</file>
-                  <class_name>ImageManipulation</class_name>
-                  <method_name>createJP2</method_name>
-                  <modified_files_ext>jp2</modified_files_ext>
-                  <datastream_id>JP2</datastream_id>
-                </method>
-              </methods>
-            </rule>
-          </ingest_rules>
-          <ingest_form dsid="QDC" page="2">
-            <form_builder_method>
-              <file>plugins/DemoFormBuilder.inc</file>
-              <class_name>DemoFormBuilder</class_name>
-              <method_name>buildQDCForm</method_name>
-              <form_handler>handleQDCForm</form_handler>
-            </form_builder_method>
-            <form_elements>
-              <element>
-                <label>Title/Caption/Image Name</label>
-                <name>dc:title</name>
-                <type>textfield</type>
-                <description>The name given to the resource</description>
-                <required>true</required>
-              </element>
-              <element>
-                <label>Creator/Photographer</label>
-                <name>dc:creator</name>
-                <type>textfield</type>
-                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Subject</label>
-                <name>dc:subject</name>
-                <type>select</type>
-                <description>Subject</description>
-                <required>false</required>
-                <authoritative_list>
-                  <item>
-                    <field>image</field>
-                    <value>image</value>
-                  </item>
-                  <item>
-                    <field>photograph</field>
-                    <value>photograph</value>
-                  </item>
-                  <item>
-                    <field>presentation</field>
-                    <value>presentation</value>
-                  </item>
-                  <item>
-                    <field>art</field>
-                    <value>art</value>
-                  </item>
-                </authoritative_list>
-              </element>
-              <element>
-                <label>Description</label>
-                <name>dc:description</name>
-                <type>textarea</type>
-                <description>Description of the Image</description>
-                <required>true</required>
-              </element>
-              <element>
-                <label>Publisher</label>
-                <name>dc:publisher</name>
-                <type>textfield</type>
-                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Contributor</label>
-                <name>dc:contributor</name>
-                <type>textfield</type>
-                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Date</label>
-                <name>dc:date</name>
-                <type>textfield</type>
-                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Resource Type</label>
-                <name>dc:type</name>
-                <type>textfield</type>
-                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Source</label>
-                <name>dc:source</name>
-                <type>textfield</type>
-                <description>A reference to a resource from which the present resource is derived.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Identifier</label>
-                <name>dc:identifier</name>
-                <type>textfield</type>
-                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Language</label>
-                <name>dc:language</name>
-                <type>select</type>
-                <description>The language of the intellectual content of the resource.</description>
-                <required>false</required>
-                <authoritative_list>
-                  <item>
-                    <field>eng</field>
-                    <value>English</value>
-                  </item>
-                  <item>
-                    <field>fre</field>
-                    <value>French</value>
-                  </item>
-                </authoritative_list>
-              </element>
-              <element>
-                <label>Relation</label>
-                <name>dc:relation</name>
-                <type>textfield</type>
-                <description>Reference to a related resource.</description>
-                <required>false</required>
-              </element>
-              <element>
-                <label>Rights Management</label>
-                <name>dc:rights</name>
-                <type>textarea</type>
-                <description>Information about intellectual property rights, copyright, and various property rights.</description>
-                <required>false</required>
-              </element>
-            </form_elements>
-          </ingest_form>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2010-05-11T19:12:28.380Z" ID="ISLANDORACM.6"
+                            </applies_to>
+                            <methods>
+                                <method>
+                                    <file>plugins/ImageManipulation.inc</file>
+                                    <class_name>ImageManipulation</class_name>
+                                    <method_name>createJP2</method_name>
+                                    <modified_files_ext>jp2</modified_files_ext>
+                                    <datastream_id>JP2</datastream_id>
+                                </method>
+                            </methods>
+                        </rule>
+                    </ingest_rules>
+                    <ingest_form dsid="QDC" page="2">
+                        <form_builder_method>
+                            <file>plugins/DemoFormBuilder.inc</file>
+                            <class_name>DemoFormBuilder</class_name>
+                            <method_name>buildQDCForm</method_name>
+                            <form_handler>handleQDCForm</form_handler>
+                        </form_builder_method>
+                        <form_elements>
+                            <element>
+                                <label>Title/Caption/Image Name</label>
+                                <name>dc:title</name>
+                                <type>textfield</type>
+                                <description>The name given to the resource</description>
+                                <required>true</required>
+                            </element>
+                            <element>
+                                <label>Creator/Photographer</label>
+                                <name>dc:creator</name>
+                                <type>textfield</type>
+                                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Subject</label>
+                                <name>dc:subject</name>
+                                <type>select</type>
+                                <description>Subject</description>
+                                <required>false</required>
+                                <authoritative_list>
+                                    <item>
+                                        <field>image</field>
+                                        <value>image</value>
+                                    </item>
+                                    <item>
+                                        <field>photograph</field>
+                                        <value>photograph</value>
+                                    </item>
+                                    <item>
+                                        <field>presentation</field>
+                                        <value>presentation</value>
+                                    </item>
+                                    <item>
+                                        <field>art</field>
+                                        <value>art</value>
+                                    </item>
+                                </authoritative_list>
+                            </element>
+                            <element>
+                                <label>Description</label>
+                                <name>dc:description</name>
+                                <type>textarea</type>
+                                <description>Description of the Image</description>
+                                <required>true</required>
+                            </element>
+                            <element>
+                                <label>Publisher</label>
+                                <name>dc:publisher</name>
+                                <type>textfield</type>
+                                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Contributor</label>
+                                <name>dc:contributor</name>
+                                <type>textfield</type>
+                                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Date</label>
+                                <name>dc:date</name>
+                                <type>textfield</type>
+                                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Resource Type</label>
+                                <name>dc:type</name>
+                                <type>textfield</type>
+                                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Source</label>
+                                <name>dc:source</name>
+                                <type>textfield</type>
+                                <description>A reference to a resource from which the present resource is derived.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Identifier</label>
+                                <name>dc:identifier</name>
+                                <type>textfield</type>
+                                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Language</label>
+                                <name>dc:language</name>
+                                <type>select</type>
+                                <description>The language of the intellectual content of the resource.</description>
+                                <required>false</required>
+                                <authoritative_list>
+                                    <item>
+                                        <field>eng</field>
+                                        <value>English</value>
+                                    </item>
+                                    <item>
+                                        <field>fre</field>
+                                        <value>French</value>
+                                    </item>
+                                </authoritative_list>
+                            </element>
+                            <element>
+                                <label>Relation</label>
+                                <name>dc:relation</name>
+                                <type>textfield</type>
+                                <description>Reference to a related resource.</description>
+                                <required>false</required>
+                            </element>
+                            <element>
+                                <label>Rights Management</label>
+                                <name>dc:rights</name>
+                                <type>textarea</type>
+                                <description>Information about intellectual property rights, copyright, and various property rights.</description>
+                                <required>false</required>
+                            </element>
+                        </form_elements>
+                    </ingest_form>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2010-05-11T19:12:28.380Z" ID="ISLANDORACM.6"
       LABEL="Islandora Content Model Object" MIMETYPE="text/xml" SIZE="1821">
-      <foxml:xmlContent>
-        <content_model name="standard_herb">
-          <mimetypes>
-            <type>image/tiff</type>
-            <type>image/tif</type>
-          </mimetypes>
-          <display_in_fieldset>
-            <datastream id="JPG">
-              <method>
-                <file>plugins/herb_viewer.inc</file>
-                <class_name>HerbStreamsInFieldSets</class_name>
-                <method_name>showJPG</method_name>
-              </method>
-            </datastream>
-            <datastream id="JP2"/>
-            <datastream id="LOSSLESS_JP2"/>
-            <datastream id="JPG"/>
-            <datastream id="TN"/>
-            <datastream id="DC"/>
-            <datastream id="DARWIN_CORE"/>
-          </display_in_fieldset>
-          <ingest_rules>
-            <rule>
-              <applies_to>
+            <foxml:xmlContent>
+                <content_model name="standard_herb">
+                    <mimetypes>
+                        <type>image/tiff</type>
+                        <type>image/tif</type>
+                    </mimetypes>
+                    <display_in_fieldset>
+                        <datastream id="JPG">
+                            <method>
+                                <file>plugins/herb_viewer.inc</file>
+                                <class_name>HerbStreamsInFieldSets</class_name>
+                                <method_name>showJPG</method_name>
+                            </method>
+                        </datastream>
+                        <datastream id="JP2"/>
+                        <datastream id="LOSSLESS_JP2"/>
+                        <datastream id="JPG"/>
+                        <datastream id="TN"/>
+                        <datastream id="DC"/>
+                        <datastream id="DARWIN_CORE"/>
+                    </display_in_fieldset>
+                    <ingest_rules>
+                        <rule>
+                            <applies_to>
               image/tiff
-            </applies_to>
-              <applies_to>
+                            </applies_to>
+                            <applies_to>
               image/tif
-            </applies_to>
-              <methods>
-                <method>
-                  <file>plugins/ImageManipulation.inc</file>
-                  <class_name>ImageManipulation</class_name>
-                  <method_name>createJP2</method_name>
-                  <modified_files_ext>jp2</modified_files_ext>
-                  <datastream_id>JP2</datastream_id>
-                </method>
-              </methods>
-            </rule>
-          </ingest_rules>
-          <ingest_form dsid="DARWIN_CORE" page="2">
-            <form_builder_method>
-              <file>plugins/DarwinCore.inc</file>
-              <class_name>DarwinCore</class_name>
-              <method_name>buildDrupalForm</method_name>
-              <form_handler>handleDarwinCoreForm</form_handler>
-            </form_builder_method>
-          </ingest_form>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2010-05-13T19:30:13.540Z" ID="ISLANDORACM.7"
+                            </applies_to>
+                            <methods>
+                                <method>
+                                    <file>plugins/ImageManipulation.inc</file>
+                                    <class_name>ImageManipulation</class_name>
+                                    <method_name>createJP2</method_name>
+                                    <modified_files_ext>jp2</modified_files_ext>
+                                    <datastream_id>JP2</datastream_id>
+                                </method>
+                            </methods>
+                        </rule>
+                    </ingest_rules>
+                    <ingest_form dsid="DARWIN_CORE" page="2">
+                        <form_builder_method>
+                            <file>plugins/DarwinCore.inc</file>
+                            <class_name>DarwinCore</class_name>
+                            <method_name>buildDrupalForm</method_name>
+                            <form_handler>handleDarwinCoreForm</form_handler>
+                        </form_builder_method>
+                    </ingest_form>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2010-05-13T19:30:13.540Z" ID="ISLANDORACM.7"
       LABEL="Islandora Content Model Object" MIMETYPE="text/xml" SIZE="1817">
-      <foxml:xmlContent>
-        <content_model name="standard_herb">
-          <mimetypes>
-            <type>image/tiff</type>
-            <type>image/tif</type>
-          </mimetypes>
-          <display_in_fieldset>
-            <datastream id="JPG">
-              <method>
-                <file>plugins/herb_viewer.inc</file>
-                <class_name>HerbStreamsInFieldSets</class_name>
-                <method_name>showJPG</method_name>
-              </method>
-            </datastream>
-            <datastream id="JP2"/>
-            <datastream id="LOSSLESS_JP2"/>
-            <datastream id="JPG"/>
-            <datastream id="TN"/>
-            <datastream id="DC"/>
-            <datastream id="DARWIN_CORE"/>
-          </display_in_fieldset>
-          <ingest_rules>
-            <rule>
-              <applies_to>
+            <foxml:xmlContent>
+                <content_model name="standard_herb">
+                    <mimetypes>
+                        <type>image/tiff</type>
+                        <type>image/tif</type>
+                    </mimetypes>
+                    <display_in_fieldset>
+                        <datastream id="JPG">
+                            <method>
+                                <file>plugins/herb_viewer.inc</file>
+                                <class_name>HerbStreamsInFieldSets</class_name>
+                                <method_name>showJPG</method_name>
+                            </method>
+                        </datastream>
+                        <datastream id="JP2"/>
+                        <datastream id="LOSSLESS_JP2"/>
+                        <datastream id="JPG"/>
+                        <datastream id="TN"/>
+                        <datastream id="DC"/>
+                        <datastream id="DARWIN_CORE"/>
+                    </display_in_fieldset>
+                    <ingest_rules>
+                        <rule>
+                            <applies_to>
               image/tiff
-            </applies_to>
-              <applies_to>
+                            </applies_to>
+                            <applies_to>
               image/tif
-            </applies_to>
-              <methods>
-                <method>
-                  <file>plugins/ImageManipulation.inc</file>
-                  <class_name>ImageManipulation</class_name>
-                  <method_name>createJP2</method_name>
-                  <modified_files_ext>jp2</modified_files_ext>
-                  <datastream_id>JP2</datastream_id>
-                </method>
-              </methods>
-            </rule>
-          </ingest_rules>
-          <ingest_form dsid="DARWIN_CORE" page="2">
-            <form_builder_method>
-              <file>plugins/DarwinCore.inc</file>
-              <class_name>DarwinCore</class_name>
-              <method_name>buildDrupalForm</method_name>
-              <form_handler>handleIngestForm</form_handler>
-            </form_builder_method>
-          </ingest_form>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2010-05-17T20:10:15.478Z" ID="ISLANDORACM.8"
+                            </applies_to>
+                            <methods>
+                                <method>
+                                    <file>plugins/ImageManipulation.inc</file>
+                                    <class_name>ImageManipulation</class_name>
+                                    <method_name>createJP2</method_name>
+                                    <modified_files_ext>jp2</modified_files_ext>
+                                    <datastream_id>JP2</datastream_id>
+                                </method>
+                            </methods>
+                        </rule>
+                    </ingest_rules>
+                    <ingest_form dsid="DARWIN_CORE" page="2">
+                        <form_builder_method>
+                            <file>plugins/DarwinCore.inc</file>
+                            <class_name>DarwinCore</class_name>
+                            <method_name>buildDrupalForm</method_name>
+                            <form_handler>handleIngestForm</form_handler>
+                        </form_builder_method>
+                    </ingest_form>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2010-05-17T20:10:15.478Z" ID="ISLANDORACM.8"
       LABEL="Islandora Content Model Object" MIMETYPE="text/xml" SIZE="1815">
-      <foxml:xmlContent>
-        <content_model name="standard_herb">
-          <mimetypes>
-            <type>image/tiff</type>
-            <type>image/tif</type>
-          </mimetypes>
-          <display_in_fieldset>
-            <datastream id="JPG">
-              <method>
-                <file>plugins/herb_viewer.inc</file>
-                <class_name>HerbStreamsInFieldSets</class_name>
-                <method_name>showJPG</method_name>
-              </method>
-            </datastream>
-            <datastream id="JP2"/>
-            <datastream id="LOSSLESS_JP2"/>
-            <datastream id="JPG"/>
-            <datastream id="TN"/>
-            <datastream id="DC"/>
-            <datastream id="DARWIN_CORE"/>
-          </display_in_fieldset>
-          <ingest_rules>
-            <rule>
-              <applies_to>
+            <foxml:xmlContent>
+                <content_model name="standard_herb">
+                    <mimetypes>
+                        <type>image/tiff</type>
+                        <type>image/tif</type>
+                    </mimetypes>
+                    <display_in_fieldset>
+                        <datastream id="JPG">
+                            <method>
+                                <file>plugins/herb_viewer.inc</file>
+                                <class_name>HerbStreamsInFieldSets</class_name>
+                                <method_name>showJPG</method_name>
+                            </method>
+                        </datastream>
+                        <datastream id="JP2"/>
+                        <datastream id="LOSSLESS_JP2"/>
+                        <datastream id="JPG"/>
+                        <datastream id="TN"/>
+                        <datastream id="DC"/>
+                        <datastream id="DARWIN_CORE"/>
+                    </display_in_fieldset>
+                    <ingest_rules>
+                        <rule>
+                            <applies_to>
               image/tiff
-            </applies_to>
-              <applies_to>
+                            </applies_to>
+                            <applies_to>
               image/tif
-            </applies_to>
-              <methods>
-                <method>
-                  <file>plugins/ImageManipulation.inc</file>
-                  <class_name>ImageManipulation</class_name>
-                  <method_name>createJP2</method_name>
-                  <modified_files_ext>jp2</modified_files_ext>
-                  <datastream_id>JP2</datastream_id>
-                </method>
-              </methods>
-            </rule>
-          </ingest_rules>
-          <ingest_form dsid="DARWIN_CORE" page="2">
-            <form_builder_method>
-              <file>plugins/Herbarium.inc</file>
-              <class_name>Herbarium</class_name>
-              <method_name>buildDrupalForm</method_name>
-              <form_handler>handleIngestForm</form_handler>
-            </form_builder_method>
-          </ingest_form>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2010-05-18T18:58:52.382Z" ID="ISLANDORACM.9"
+                            </applies_to>
+                            <methods>
+                                <method>
+                                    <file>plugins/ImageManipulation.inc</file>
+                                    <class_name>ImageManipulation</class_name>
+                                    <method_name>createJP2</method_name>
+                                    <modified_files_ext>jp2</modified_files_ext>
+                                    <datastream_id>JP2</datastream_id>
+                                </method>
+                            </methods>
+                        </rule>
+                    </ingest_rules>
+                    <ingest_form dsid="DARWIN_CORE" page="2">
+                        <form_builder_method>
+                            <file>plugins/Herbarium.inc</file>
+                            <class_name>Herbarium</class_name>
+                            <method_name>buildDrupalForm</method_name>
+                            <form_handler>handleIngestForm</form_handler>
+                        </form_builder_method>
+                    </ingest_form>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2010-05-18T18:58:52.382Z" ID="ISLANDORACM.9"
       LABEL="Islandora Content Model Object" MIMETYPE="text/xml" SIZE="1806">
-      <foxml:xmlContent>
-        <content_model name="standard_herb">
-          <mimetypes>
-            <type>image/tiff</type>
-            <type>image/tif</type>
-          </mimetypes>
-          <display_in_fieldset>
-            <datastream id="JPG">
-              <method>
-                <file>plugins/herbarium.inc</file>
-                <class_name>Herbarium</class_name>
-                <method_name>showFieldSets</method_name>
-              </method>
-            </datastream>
-            <datastream id="JP2"/>
-            <datastream id="LOSSLESS_JP2"/>
-            <datastream id="JPG"/>
-            <datastream id="TN"/>
-            <datastream id="DC"/>
-            <datastream id="DARWIN_CORE"/>
-          </display_in_fieldset>
-          <ingest_rules>
-            <rule>
-              <applies_to>
+            <foxml:xmlContent>
+                <content_model name="standard_herb">
+                    <mimetypes>
+                        <type>image/tiff</type>
+                        <type>image/tif</type>
+                    </mimetypes>
+                    <display_in_fieldset>
+                        <datastream id="JPG">
+                            <method>
+                                <file>plugins/herbarium.inc</file>
+                                <class_name>Herbarium</class_name>
+                                <method_name>showFieldSets</method_name>
+                            </method>
+                        </datastream>
+                        <datastream id="JP2"/>
+                        <datastream id="LOSSLESS_JP2"/>
+                        <datastream id="JPG"/>
+                        <datastream id="TN"/>
+                        <datastream id="DC"/>
+                        <datastream id="DARWIN_CORE"/>
+                    </display_in_fieldset>
+                    <ingest_rules>
+                        <rule>
+                            <applies_to>
               image/tiff
-            </applies_to>
-              <applies_to>
+                            </applies_to>
+                            <applies_to>
               image/tif
-            </applies_to>
-              <methods>
-                <method>
-                  <file>plugins/ImageManipulation.inc</file>
-                  <class_name>ImageManipulation</class_name>
-                  <method_name>createJP2</method_name>
-                  <modified_files_ext>jp2</modified_files_ext>
-                  <datastream_id>JP2</datastream_id>
-                </method>
-              </methods>
-            </rule>
-          </ingest_rules>
-          <ingest_form dsid="DARWIN_CORE" page="2">
-            <form_builder_method>
-              <file>plugins/Herbarium.inc</file>
-              <class_name>Herbarium</class_name>
-              <method_name>buildDrupalForm</method_name>
-              <form_handler>handleIngestForm</form_handler>
-            </form_builder_method>
-          </ingest_form>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2010-05-19T18:16:39.272Z" ID="ISLANDORACM.10"
+                            </applies_to>
+                            <methods>
+                                <method>
+                                    <file>plugins/ImageManipulation.inc</file>
+                                    <class_name>ImageManipulation</class_name>
+                                    <method_name>createJP2</method_name>
+                                    <modified_files_ext>jp2</modified_files_ext>
+                                    <datastream_id>JP2</datastream_id>
+                                </method>
+                            </methods>
+                        </rule>
+                    </ingest_rules>
+                    <ingest_form dsid="DARWIN_CORE" page="2">
+                        <form_builder_method>
+                            <file>plugins/Herbarium.inc</file>
+                            <class_name>Herbarium</class_name>
+                            <method_name>buildDrupalForm</method_name>
+                            <form_handler>handleIngestForm</form_handler>
+                        </form_builder_method>
+                    </ingest_form>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2010-05-19T18:16:39.272Z" ID="ISLANDORACM.10"
       LABEL="Islandora Content Model Object" MIMETYPE="text/xml" SIZE="2079">
-      <foxml:xmlContent>
-        <content_model name="standard_herb">
-          <mimetypes>
-            <type>image/tiff</type>
-            <type>image/tif</type>
-          </mimetypes>
-          <display_in_fieldset>
-            <datastream id="JPG">
-              <method>
-                <file>plugins/herbarium.inc</file>
-                <class_name>Herbarium</class_name>
-                <method_name>showFieldSets</method_name>
-              </method>
-            </datastream>
-            <datastream id="JP2"/>
-            <datastream id="LOSSLESS_JP2"/>
-            <datastream id="JPG"/>
-            <datastream id="TN"/>
-            <datastream id="DC"/>
-            <datastream id="DARWIN_CORE"/>
-          </display_in_fieldset>
-          <ingest_rules>
-            <rule>
-              <applies_to>
+            <foxml:xmlContent>
+                <content_model name="standard_herb">
+                    <mimetypes>
+                        <type>image/tiff</type>
+                        <type>image/tif</type>
+                    </mimetypes>
+                    <display_in_fieldset>
+                        <datastream id="JPG">
+                            <method>
+                                <file>plugins/herbarium.inc</file>
+                                <class_name>Herbarium</class_name>
+                                <method_name>showFieldSets</method_name>
+                            </method>
+                        </datastream>
+                        <datastream id="JP2"/>
+                        <datastream id="LOSSLESS_JP2"/>
+                        <datastream id="JPG"/>
+                        <datastream id="TN"/>
+                        <datastream id="DC"/>
+                        <datastream id="DARWIN_CORE"/>
+                    </display_in_fieldset>
+                    <ingest_rules>
+                        <rule>
+                            <applies_to>
               image/tiff
-            </applies_to>
-              <applies_to>
+                            </applies_to>
+                            <applies_to>
               image/tif
-            </applies_to>
-              <methods>
-                <method>
-                  <file>plugins/ImageManipulation.inc</file>
-                  <class_name>ImageManipulation</class_name>
-                  <method_name>createJP2</method_name>
-                  <modified_files_ext>jp2</modified_files_ext>
-                  <datastream_id>JP2</datastream_id>
-                </method>
-              </methods>
-            </rule>
-          </ingest_rules>
-          <ingest_form dsid="DARWIN_CORE" page="2">
-            <form_builder_method>
-              <file>plugins/Herbarium.inc</file>
-              <class_name>Herbarium</class_name>
-              <method_name>buildDrupalForm</method_name>
-              <form_handler>handleIngestForm</form_handler>
-            </form_builder_method>
-          </ingest_form>
-          <edit_metadata>
-            <build_form_method>
-              <file>plugins/Herbarium.inc</file>
-              <class_name>Herbarium</class_name>
-              <method_name>buildDrupalForm</method_name>
-            </build_form_method>
-          </edit_metadata>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2010-05-19T18:36:31.560Z" ID="ISLANDORACM.11"
+                            </applies_to>
+                            <methods>
+                                <method>
+                                    <file>plugins/ImageManipulation.inc</file>
+                                    <class_name>ImageManipulation</class_name>
+                                    <method_name>createJP2</method_name>
+                                    <modified_files_ext>jp2</modified_files_ext>
+                                    <datastream_id>JP2</datastream_id>
+                                </method>
+                            </methods>
+                        </rule>
+                    </ingest_rules>
+                    <ingest_form dsid="DARWIN_CORE" page="2">
+                        <form_builder_method>
+                            <file>plugins/Herbarium.inc</file>
+                            <class_name>Herbarium</class_name>
+                            <method_name>buildDrupalForm</method_name>
+                            <form_handler>handleIngestForm</form_handler>
+                        </form_builder_method>
+                    </ingest_form>
+                    <edit_metadata>
+                        <build_form_method>
+                            <file>plugins/Herbarium.inc</file>
+                            <class_name>Herbarium</class_name>
+                            <method_name>buildDrupalForm</method_name>
+                        </build_form_method>
+                    </edit_metadata>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2010-05-19T18:36:31.560Z" ID="ISLANDORACM.11"
       LABEL="Islandora Content Model Object" MIMETYPE="text/xml" SIZE="2098">
-      <foxml:xmlContent>
-        <content_model name="standard_herb">
-          <mimetypes>
-            <type>image/tiff</type>
-            <type>image/tif</type>
-          </mimetypes>
-          <display_in_fieldset>
-            <datastream id="JPG">
-              <method>
-                <file>plugins/herbarium.inc</file>
-                <class_name>Herbarium</class_name>
-                <method_name>showFieldSets</method_name>
-              </method>
-            </datastream>
-            <datastream id="JP2"/>
-            <datastream id="LOSSLESS_JP2"/>
-            <datastream id="JPG"/>
-            <datastream id="TN"/>
-            <datastream id="DC"/>
-            <datastream id="DARWIN_CORE"/>
-          </display_in_fieldset>
-          <ingest_rules>
-            <rule>
-              <applies_to>
+            <foxml:xmlContent>
+                <content_model name="standard_herb">
+                    <mimetypes>
+                        <type>image/tiff</type>
+                        <type>image/tif</type>
+                    </mimetypes>
+                    <display_in_fieldset>
+                        <datastream id="JPG">
+                            <method>
+                                <file>plugins/herbarium.inc</file>
+                                <class_name>Herbarium</class_name>
+                                <method_name>showFieldSets</method_name>
+                            </method>
+                        </datastream>
+                        <datastream id="JP2"/>
+                        <datastream id="LOSSLESS_JP2"/>
+                        <datastream id="JPG"/>
+                        <datastream id="TN"/>
+                        <datastream id="DC"/>
+                        <datastream id="DARWIN_CORE"/>
+                    </display_in_fieldset>
+                    <ingest_rules>
+                        <rule>
+                            <applies_to>
               image/tiff
-            </applies_to>
-              <applies_to>
+                            </applies_to>
+                            <applies_to>
               image/tif
-            </applies_to>
-              <methods>
-                <method>
-                  <file>plugins/ImageManipulation.inc</file>
-                  <class_name>ImageManipulation</class_name>
-                  <method_name>createJP2</method_name>
-                  <modified_files_ext>jp2</modified_files_ext>
-                  <datastream_id>JP2</datastream_id>
-                </method>
-              </methods>
-            </rule>
-          </ingest_rules>
-          <ingest_form dsid="DARWIN_CORE" page="2">
-            <form_builder_method>
-              <file>plugins/Herbarium.inc</file>
-              <class_name>Herbarium</class_name>
-              <method_name>buildDrupalForm</method_name>
-              <form_handler>handleIngestForm</form_handler>
-            </form_builder_method>
-          </ingest_form>
-          <edit_metadata>
-            <build_form_method dsid="DARWIN_CORE">
-              <file>plugins/Herbarium.inc</file>
-              <class_name>Herbarium</class_name>
-              <method_name>buildDrupalForm</method_name>
-            </build_form_method>
-          </edit_metadata>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2010-05-19T19:52:41.316Z" ID="ISLANDORACM.12"
+                            </applies_to>
+                            <methods>
+                                <method>
+                                    <file>plugins/ImageManipulation.inc</file>
+                                    <class_name>ImageManipulation</class_name>
+                                    <method_name>createJP2</method_name>
+                                    <modified_files_ext>jp2</modified_files_ext>
+                                    <datastream_id>JP2</datastream_id>
+                                </method>
+                            </methods>
+                        </rule>
+                    </ingest_rules>
+                    <ingest_form dsid="DARWIN_CORE" page="2">
+                        <form_builder_method>
+                            <file>plugins/Herbarium.inc</file>
+                            <class_name>Herbarium</class_name>
+                            <method_name>buildDrupalForm</method_name>
+                            <form_handler>handleIngestForm</form_handler>
+                        </form_builder_method>
+                    </ingest_form>
+                    <edit_metadata>
+                        <build_form_method dsid="DARWIN_CORE">
+                            <file>plugins/Herbarium.inc</file>
+                            <class_name>Herbarium</class_name>
+                            <method_name>buildDrupalForm</method_name>
+                        </build_form_method>
+                    </edit_metadata>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2010-05-19T19:52:41.316Z" ID="ISLANDORACM.12"
       LABEL="Islandora Content Model Object" MIMETYPE="text/xml" SIZE="2104">
-      <foxml:xmlContent>
-        <content_model name="standard_herb">
-          <mimetypes>
-            <type>image/tiff</type>
-            <type>image/tif</type>
-          </mimetypes>
-          <display_in_fieldset>
-            <datastream id="JPG">
-              <method>
-                <file>plugins/herbarium.inc</file>
-                <class_name>Herbarium</class_name>
-                <method_name>showFieldSets</method_name>
-              </method>
-            </datastream>
-            <datastream id="JP2"/>
-            <datastream id="LOSSLESS_JP2"/>
-            <datastream id="JPG"/>
-            <datastream id="TN"/>
-            <datastream id="DC"/>
-            <datastream id="DARWIN_CORE"/>
-          </display_in_fieldset>
-          <ingest_rules>
-            <rule>
-              <applies_to>
+            <foxml:xmlContent>
+                <content_model name="standard_herb">
+                    <mimetypes>
+                        <type>image/tiff</type>
+                        <type>image/tif</type>
+                    </mimetypes>
+                    <display_in_fieldset>
+                        <datastream id="JPG">
+                            <method>
+                                <file>plugins/herbarium.inc</file>
+                                <class_name>Herbarium</class_name>
+                                <method_name>showFieldSets</method_name>
+                            </method>
+                        </datastream>
+                        <datastream id="JP2"/>
+                        <datastream id="LOSSLESS_JP2"/>
+                        <datastream id="JPG"/>
+                        <datastream id="TN"/>
+                        <datastream id="DC"/>
+                        <datastream id="DARWIN_CORE"/>
+                    </display_in_fieldset>
+                    <ingest_rules>
+                        <rule>
+                            <applies_to>
               image/tiff
-            </applies_to>
-              <applies_to>
+                            </applies_to>
+                            <applies_to>
               image/tif
-            </applies_to>
-              <methods>
-                <method>
-                  <file>plugins/ImageManipulation.inc</file>
-                  <class_name>ImageManipulation</class_name>
-                  <method_name>createJP2</method_name>
-                  <modified_files_ext>jp2</modified_files_ext>
-                  <datastream_id>JP2</datastream_id>
-                </method>
-              </methods>
-            </rule>
-          </ingest_rules>
-          <ingest_form dsid="DARWIN_CORE" page="2">
-            <form_builder_method>
-              <file>plugins/Herbarium.inc</file>
-              <class_name>Herbarium</class_name>
-              <method_name>buildDrupalForm</method_name>
-              <form_handler>handleIngestForm</form_handler>
-            </form_builder_method>
-          </ingest_form>
-          <edit_metadata>
-            <build_form_method dsid="DARWIN_CORE">
-              <file>plugins/Herbarium.inc</file>
-              <class_name>Herbarium</class_name>
-              <method_name>buildEditMetadataForm</method_name>
-            </build_form_method>
-          </edit_metadata>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2010-05-19T20:06:17.332Z" ID="ISLANDORACM.13"
+                            </applies_to>
+                            <methods>
+                                <method>
+                                    <file>plugins/ImageManipulation.inc</file>
+                                    <class_name>ImageManipulation</class_name>
+                                    <method_name>createJP2</method_name>
+                                    <modified_files_ext>jp2</modified_files_ext>
+                                    <datastream_id>JP2</datastream_id>
+                                </method>
+                            </methods>
+                        </rule>
+                    </ingest_rules>
+                    <ingest_form dsid="DARWIN_CORE" page="2">
+                        <form_builder_method>
+                            <file>plugins/Herbarium.inc</file>
+                            <class_name>Herbarium</class_name>
+                            <method_name>buildDrupalForm</method_name>
+                            <form_handler>handleIngestForm</form_handler>
+                        </form_builder_method>
+                    </ingest_form>
+                    <edit_metadata>
+                        <build_form_method dsid="DARWIN_CORE">
+                            <file>plugins/Herbarium.inc</file>
+                            <class_name>Herbarium</class_name>
+                            <method_name>buildEditMetadataForm</method_name>
+                        </build_form_method>
+                    </edit_metadata>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2010-05-19T20:06:17.332Z" ID="ISLANDORACM.13"
       LABEL="Islandora Content Model Object" MIMETYPE="text/xml" SIZE="2352">
-      <foxml:xmlContent>
-        <content_model name="standard_herb">
-          <mimetypes>
-            <type>image/tiff</type>
-            <type>image/tif</type>
-          </mimetypes>
-          <display_in_fieldset>
-            <datastream id="JPG">
-              <method>
-                <file>plugins/herbarium.inc</file>
-                <class_name>Herbarium</class_name>
-                <method_name>showFieldSets</method_name>
-              </method>
-            </datastream>
-            <datastream id="JP2"/>
-            <datastream id="LOSSLESS_JP2"/>
-            <datastream id="JPG"/>
-            <datastream id="TN"/>
-            <datastream id="DC"/>
-            <datastream id="DARWIN_CORE"/>
-          </display_in_fieldset>
-          <ingest_rules>
-            <rule>
-              <applies_to>
+            <foxml:xmlContent>
+                <content_model name="standard_herb">
+                    <mimetypes>
+                        <type>image/tiff</type>
+                        <type>image/tif</type>
+                    </mimetypes>
+                    <display_in_fieldset>
+                        <datastream id="JPG">
+                            <method>
+                                <file>plugins/herbarium.inc</file>
+                                <class_name>Herbarium</class_name>
+                                <method_name>showFieldSets</method_name>
+                            </method>
+                        </datastream>
+                        <datastream id="JP2"/>
+                        <datastream id="LOSSLESS_JP2"/>
+                        <datastream id="JPG"/>
+                        <datastream id="TN"/>
+                        <datastream id="DC"/>
+                        <datastream id="DARWIN_CORE"/>
+                    </display_in_fieldset>
+                    <ingest_rules>
+                        <rule>
+                            <applies_to>
               image/tiff
-            </applies_to>
-              <applies_to>
+                            </applies_to>
+                            <applies_to>
               image/tif
-            </applies_to>
-              <methods>
-                <method>
-                  <file>plugins/ImageManipulation.inc</file>
-                  <class_name>ImageManipulation</class_name>
-                  <method_name>createJP2</method_name>
-                  <modified_files_ext>jp2</modified_files_ext>
-                  <datastream_id>JP2</datastream_id>
-                </method>
-              </methods>
-            </rule>
-          </ingest_rules>
-          <ingest_form dsid="DARWIN_CORE" page="2">
-            <form_builder_method>
-              <file>plugins/Herbarium.inc</file>
-              <class_name>Herbarium</class_name>
-              <method_name>buildDrupalForm</method_name>
-              <form_handler>handleIngestForm</form_handler>
-            </form_builder_method>
-          </ingest_form>
-          <edit_metadata>
-            <build_form_method dsid="DARWIN_CORE">
-              <file>plugins/Herbarium.inc</file>
-              <class_name>Herbarium</class_name>
-              <method_name>buildEditMetadataForm</method_name>
-            </build_form_method>
-            <submit_form_method dsid="DARWIN_CORE">
-              <file>plugins/Herbarium.inc</file>
-              <class_name>Herbarium</class_name>
-              <method_name>handleEditMetadataForm</method_name>
-            </submit_form_method>
-          </edit_metadata>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2010-05-20T19:12:33.099Z" ID="ISLANDORACM.14"
+                            </applies_to>
+                            <methods>
+                                <method>
+                                    <file>plugins/ImageManipulation.inc</file>
+                                    <class_name>ImageManipulation</class_name>
+                                    <method_name>createJP2</method_name>
+                                    <modified_files_ext>jp2</modified_files_ext>
+                                    <datastream_id>JP2</datastream_id>
+                                </method>
+                            </methods>
+                        </rule>
+                    </ingest_rules>
+                    <ingest_form dsid="DARWIN_CORE" page="2">
+                        <form_builder_method>
+                            <file>plugins/Herbarium.inc</file>
+                            <class_name>Herbarium</class_name>
+                            <method_name>buildDrupalForm</method_name>
+                            <form_handler>handleIngestForm</form_handler>
+                        </form_builder_method>
+                    </ingest_form>
+                    <edit_metadata>
+                        <build_form_method dsid="DARWIN_CORE">
+                            <file>plugins/Herbarium.inc</file>
+                            <class_name>Herbarium</class_name>
+                            <method_name>buildEditMetadataForm</method_name>
+                        </build_form_method>
+                        <submit_form_method dsid="DARWIN_CORE">
+                            <file>plugins/Herbarium.inc</file>
+                            <class_name>Herbarium</class_name>
+                            <method_name>handleEditMetadataForm</method_name>
+                        </submit_form_method>
+                    </edit_metadata>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2010-05-20T19:12:33.099Z" ID="ISLANDORACM.14"
       LABEL="Islandora Content Model Object" MIMETYPE="text/xml" SIZE="2352">
-      <foxml:xmlContent>
-        <content_model name="standard_herb">
-          <mimetypes>
-            <type>image/tiff</type>
-            <type>image/tif</type>
-          </mimetypes>
-          <display_in_fieldset>
-            <datastream id="JPG">
-              <method>
-                <file>plugins/herbarium.inc</file>
-                <class_name>Herbarium</class_name>
-                <method_name>showFieldSets</method_name>
-              </method>
-            </datastream>
-            <datastream id="JP2"/>
-            <datastream id="LOSSLESS_JP2"/>
-            <datastream id="JPG"/>
-            <datastream id="TN"/>
-            <datastream id="DC"/>
-            <datastream id="DARWIN_CORE"/>
-          </display_in_fieldset>
-          <ingest_rules>
-            <rule>
-              <applies_to>
+            <foxml:xmlContent>
+                <content_model name="standard_herb">
+                    <mimetypes>
+                        <type>image/tiff</type>
+                        <type>image/tif</type>
+                    </mimetypes>
+                    <display_in_fieldset>
+                        <datastream id="JPG">
+                            <method>
+                                <file>plugins/herbarium.inc</file>
+                                <class_name>Herbarium</class_name>
+                                <method_name>showFieldSets</method_name>
+                            </method>
+                        </datastream>
+                        <datastream id="JP2"/>
+                        <datastream id="LOSSLESS_JP2"/>
+                        <datastream id="JPG"/>
+                        <datastream id="TN"/>
+                        <datastream id="DC"/>
+                        <datastream id="DARWIN_CORE"/>
+                    </display_in_fieldset>
+                    <ingest_rules>
+                        <rule>
+                            <applies_to>
               image/tiff
-            </applies_to>
-              <applies_to>
+                            </applies_to>
+                            <applies_to>
               image/tif
-            </applies_to>
-              <methods>
-                <method>
-                  <file>plugins/ImageManipulation.inc</file>
-                  <class_name>ImageManipulation</class_name>
-                  <method_name>createJP2</method_name>
-                  <modified_files_ext>jp2</modified_files_ext>
-                  <datastream_id>JP2</datastream_id>
-                </method>
-              </methods>
-            </rule>
-          </ingest_rules>
-          <ingest_form dsid="DARWIN_CORE" page="2">
-            <form_builder_method>
-              <file>plugins/Herbarium.inc</file>
-              <class_name>Herbarium</class_name>
-              <method_name>buildDrupalForm</method_name>
-              <form_handler>handleIngestForm</form_handler>
-            </form_builder_method>
-          </ingest_form>
-          <edit_metadata>
-            <build_form_method dsid="DARWIN_CORE">
-              <file>plugins/herbarium.inc</file>
-              <class_name>Herbarium</class_name>
-              <method_name>buildEditMetadataForm</method_name>
-            </build_form_method>
-            <submit_form_method dsid="DARWIN_CORE">
-              <file>plugins/herbarium.inc</file>
-              <class_name>Herbarium</class_name>
-              <method_name>handleEditMetadataForm</method_name>
-            </submit_form_method>
-          </edit_metadata>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2010-06-07T14:01:43.997Z" ID="ISLANDORACM.15"
+                            </applies_to>
+                            <methods>
+                                <method>
+                                    <file>plugins/ImageManipulation.inc</file>
+                                    <class_name>ImageManipulation</class_name>
+                                    <method_name>createJP2</method_name>
+                                    <modified_files_ext>jp2</modified_files_ext>
+                                    <datastream_id>JP2</datastream_id>
+                                </method>
+                            </methods>
+                        </rule>
+                    </ingest_rules>
+                    <ingest_form dsid="DARWIN_CORE" page="2">
+                        <form_builder_method>
+                            <file>plugins/Herbarium.inc</file>
+                            <class_name>Herbarium</class_name>
+                            <method_name>buildDrupalForm</method_name>
+                            <form_handler>handleIngestForm</form_handler>
+                        </form_builder_method>
+                    </ingest_form>
+                    <edit_metadata>
+                        <build_form_method dsid="DARWIN_CORE">
+                            <file>plugins/herbarium.inc</file>
+                            <class_name>Herbarium</class_name>
+                            <method_name>buildEditMetadataForm</method_name>
+                        </build_form_method>
+                        <submit_form_method dsid="DARWIN_CORE">
+                            <file>plugins/herbarium.inc</file>
+                            <class_name>Herbarium</class_name>
+                            <method_name>handleEditMetadataForm</method_name>
+                        </submit_form_method>
+                    </edit_metadata>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2010-06-07T14:01:43.997Z" ID="ISLANDORACM.15"
       LABEL="Islandora Content Model Object" MIMETYPE="text/xml" SIZE="2352">
-      <foxml:xmlContent>
-        <content_model name="standard_herb">
-          <mimetypes>
-            <type>image/tiff</type>
-            <type>image/tif</type>
-          </mimetypes>
-          <display_in_fieldset>
-            <datastream id="JPG">
-              <method>
-                <file>plugins/herbarium.inc</file>
-                <class_name>Herbarium</class_name>
-                <method_name>showFieldSets</method_name>
-              </method>
-            </datastream>
-            <datastream id="JP2"/>
-            <datastream id="LOSSLESS_JP2"/>
-            <datastream id="JPG"/>
-            <datastream id="TN"/>
-            <datastream id="DC"/>
-            <datastream id="DARWIN_CORE"/>
-          </display_in_fieldset>
-          <ingest_rules>
-            <rule>
-              <applies_to>
+            <foxml:xmlContent>
+                <content_model name="standard_herb">
+                    <mimetypes>
+                        <type>image/tiff</type>
+                        <type>image/tif</type>
+                    </mimetypes>
+                    <display_in_fieldset>
+                        <datastream id="JPG">
+                            <method>
+                                <file>plugins/herbarium.inc</file>
+                                <class_name>Herbarium</class_name>
+                                <method_name>showFieldSets</method_name>
+                            </method>
+                        </datastream>
+                        <datastream id="JP2"/>
+                        <datastream id="LOSSLESS_JP2"/>
+                        <datastream id="JPG"/>
+                        <datastream id="TN"/>
+                        <datastream id="DC"/>
+                        <datastream id="DARWIN_CORE"/>
+                    </display_in_fieldset>
+                    <ingest_rules>
+                        <rule>
+                            <applies_to>
               image/tiff
-            </applies_to>
-              <applies_to>
+                            </applies_to>
+                            <applies_to>
               image/tif
-            </applies_to>
-              <methods>
-                <method>
-                  <file>plugins/ImageManipulation.inc</file>
-                  <class_name>ImageManipulation</class_name>
-                  <method_name>createJP2</method_name>
-                  <modified_files_ext>jp2</modified_files_ext>
-                  <datastream_id>JP2</datastream_id>
-                </method>
-              </methods>
-            </rule>
-          </ingest_rules>
-          <ingest_form dsid="DARWIN_CORE" page="2">
-            <form_builder_method>
-              <file>plugins/herbarium.inc</file>
-              <class_name>Herbarium</class_name>
-              <method_name>buildDrupalForm</method_name>
-              <form_handler>handleIngestForm</form_handler>
-            </form_builder_method>
-          </ingest_form>
-          <edit_metadata>
-            <build_form_method dsid="DARWIN_CORE">
-              <file>plugins/herbarium.inc</file>
-              <class_name>Herbarium</class_name>
-              <method_name>buildEditMetadataForm</method_name>
-            </build_form_method>
-            <submit_form_method dsid="DARWIN_CORE">
-              <file>plugins/herbarium.inc</file>
-              <class_name>Herbarium</class_name>
-              <method_name>handleEditMetadataForm</method_name>
-            </submit_form_method>
-          </edit_metadata>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2010-09-16T17:32:21.037Z" ID="ISLANDORACM.16"
+                            </applies_to>
+                            <methods>
+                                <method>
+                                    <file>plugins/ImageManipulation.inc</file>
+                                    <class_name>ImageManipulation</class_name>
+                                    <method_name>createJP2</method_name>
+                                    <modified_files_ext>jp2</modified_files_ext>
+                                    <datastream_id>JP2</datastream_id>
+                                </method>
+                            </methods>
+                        </rule>
+                    </ingest_rules>
+                    <ingest_form dsid="DARWIN_CORE" page="2">
+                        <form_builder_method>
+                            <file>plugins/herbarium.inc</file>
+                            <class_name>Herbarium</class_name>
+                            <method_name>buildDrupalForm</method_name>
+                            <form_handler>handleIngestForm</form_handler>
+                        </form_builder_method>
+                    </ingest_form>
+                    <edit_metadata>
+                        <build_form_method dsid="DARWIN_CORE">
+                            <file>plugins/herbarium.inc</file>
+                            <class_name>Herbarium</class_name>
+                            <method_name>buildEditMetadataForm</method_name>
+                        </build_form_method>
+                        <submit_form_method dsid="DARWIN_CORE">
+                            <file>plugins/herbarium.inc</file>
+                            <class_name>Herbarium</class_name>
+                            <method_name>handleEditMetadataForm</method_name>
+                        </submit_form_method>
+                    </edit_metadata>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2010-09-16T17:32:21.037Z" ID="ISLANDORACM.16"
       LABEL="Islandora Content Model Object" MIMETYPE="text/xml" SIZE="1561">
-      <foxml:xmlContent>
-        <content_model name="standard_herb" xmlns="http://www.islandora.ca"
+            <foxml:xmlContent>
+                <content_model name="standard_herb" xmlns="http://www.islandora.ca"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.islandora.ca http://localhost/islandoracm.xsd">
-          <mimetypes>
-            <type>image/tiff</type>
-            <type>image/tif</type>
-          </mimetypes>
-          <ingest_rules>
-            <rule>
-              <applies_to>image/tiff</applies_to>
-              <applies_to>image/tif</applies_to>
-              <ingest_methods>
-                <ingest_method class="ImageManipulation" dsid="JP2" file="plugins/ImageManipulation.inc"
+                    <mimetypes>
+                        <type>image/tiff</type>
+                        <type>image/tif</type>
+                    </mimetypes>
+                    <ingest_rules>
+                        <rule>
+                            <applies_to>image/tiff</applies_to>
+                            <applies_to>image/tif</applies_to>
+                            <ingest_methods>
+                                <ingest_method class="ImageManipulation" dsid="JP2" file="plugins/ImageManipulation.inc"
                   method="createJP2" modified_files_ext="jp2" module=""/>
-              </ingest_methods>
-            </rule>
-          </ingest_rules>
-          <datastreams>
-            <datastream dsid="JPG">
-              <display_method class="Herbarium" file="plugins/herbarium.inc" method="showFieldSets" module=""/>
-            </datastream>
-            <datastream dsid="JP2"/>
-            <datastream dsid="LOSSLESS_JP2"/>
-            <datastream dsid="JPG"/>
-            <datastream dsid="TN"/>
-            <datastream dsid="DC"/>
-            <datastream dsid="DARWIN_CORE"/>
-          </datastreams>
-          <ingest_form dsid="DARWIN_CORE" page="2">
-            <form_builder_method class="Herbarium" file="plugins/herbarium.inc" handler="handleIngestForm"
+                            </ingest_methods>
+                        </rule>
+                    </ingest_rules>
+                    <datastreams>
+                        <datastream dsid="JPG">
+                            <display_method class="Herbarium" file="plugins/herbarium.inc" method="showFieldSets" module=""/>
+                        </datastream>
+                        <datastream dsid="JP2"/>
+                        <datastream dsid="LOSSLESS_JP2"/>
+                        <datastream dsid="JPG"/>
+                        <datastream dsid="TN"/>
+                        <datastream dsid="DC"/>
+                        <datastream dsid="DARWIN_CORE"/>
+                    </datastreams>
+                    <ingest_form dsid="DARWIN_CORE" page="2">
+                        <form_builder_method class="Herbarium" file="plugins/herbarium.inc" handler="handleIngestForm"
               method="buildDrupalForm" module=""/>
-            <form_elements/>
-          </ingest_form>
-          <edit_metadata_method class="Herbarium" dsid="DARWIN_CORE" file="plugins/herbarium.inc"
+                        <form_elements/>
+                    </ingest_form>
+                    <edit_metadata_method class="Herbarium" dsid="DARWIN_CORE" file="plugins/herbarium.inc"
             handler="handleEditMetadataForm" method="buildEditMetadataForm" module=""/>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
 </foxml:digitalObject>

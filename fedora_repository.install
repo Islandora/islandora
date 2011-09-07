@@ -1,5 +1,6 @@
 <?php
-// $Id$
+
+
 
 /**
  * @file fedora_repository.install
@@ -59,7 +60,7 @@ function fedora_repository_requirements($phase) {
       $requirements['fedora-repository']['value'] = t("Not available");
       $requirements['fedora-repository']['severity'] = REQUIREMENT_ERROR;
       $requirements['fedora-repository']['description'] = t('Ensure that Fedora is running and that the <a href="@collection-settings">collection settings</a> are correct.',
-              array('@collection-settings' => $base_url.'/admin/settings/fedora_repository'));
+          array('@collection-settings' => $base_url . '/admin/settings/fedora_repository'));
     }
     else {
       $requirements['fedora-repository']['value'] = t("Available");

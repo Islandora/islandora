@@ -1,584 +1,584 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <foxml:digitalObject PID="islandora:collectionCModel" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
-  <foxml:objectProperties>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="Islandora Collection Content Model"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="fedoraAdmin"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2010-12-20T16:14:50.165Z"/>
-    <foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2011-01-21T19:41:19.709Z"/>
-  </foxml:objectProperties>
-  <foxml:datastream CONTROL_GROUP="X" ID="AUDIT" STATE="A" VERSIONABLE="false">
-    <foxml:datastreamVersion CREATED="2010-12-20T16:14:50.165Z"
+    <foxml:objectProperties>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="Islandora Collection Content Model"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="fedoraAdmin"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2010-12-20T16:14:50.165Z"/>
+        <foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2011-01-21T19:41:19.709Z"/>
+    </foxml:objectProperties>
+    <foxml:datastream CONTROL_GROUP="X" ID="AUDIT" STATE="A" VERSIONABLE="false">
+        <foxml:datastreamVersion CREATED="2010-12-20T16:14:50.165Z"
       FORMAT_URI="info:fedora/fedora-system:format/xml.fedora.audit" ID="AUDIT.0" LABEL="Audit Trail for this object" MIMETYPE="text/xml">
-      <foxml:xmlContent>
-        <audit:auditTrail xmlns:audit="info:fedora/fedora-system:def/audit#">
-          <audit:record ID="AUDREC1">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>ingest</audit:action>
-            <audit:componentID/>
-            <audit:responsibility>admin</audit:responsibility>
-            <audit:date>2010-12-20T16:14:50.165Z</audit:date>
-            <audit:justification>Fedora Object Ingested</audit:justification>
-          </audit:record>
-          <audit:record ID="AUDREC2">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>addDatastream</audit:action>
-            <audit:componentID>RELS-EXT</audit:componentID>
-            <audit:responsibility>admin</audit:responsibility>
-            <audit:date>2010-12-20T16:14:50.352Z</audit:date>
-            <audit:justification>Ingested object RELS-EXT</audit:justification>
-          </audit:record>
-          <audit:record ID="AUDREC3">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>RELS-EXT</audit:componentID>
-            <audit:responsibility>admin</audit:responsibility>
-            <audit:date>2010-12-20T16:14:50.407Z</audit:date>
-            <audit:justification>Modified by Islandora API</audit:justification>
-          </audit:record>
-          <audit:record ID="AUDREC4">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>addDatastream</audit:action>
-            <audit:componentID>ISLANDORACM</audit:componentID>
-            <audit:responsibility>admin</audit:responsibility>
-            <audit:date>2010-12-20T16:14:50.475Z</audit:date>
-            <audit:justification>Ingested object ISLANDORACM</audit:justification>
-          </audit:record>
-          <audit:record ID="AUDREC5">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>ISLANDORACM</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2011-01-17T15:04:59.169Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-          <audit:record ID="AUDREC6">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>ISLANDORACM</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2011-01-17T15:06:08.023Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-          <audit:record ID="AUDREC7">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>ISLANDORACM</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2011-01-21T19:40:39.790Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-          <audit:record ID="AUDREC8">
-            <audit:process type="Fedora API-M"/>
-            <audit:action>modifyDatastreamByValue</audit:action>
-            <audit:componentID>ISLANDORACM</audit:componentID>
-            <audit:responsibility>fedoraAdmin</audit:responsibility>
-            <audit:date>2011-01-21T19:41:19.709Z</audit:date>
-            <audit:justification/>
-          </audit:record>
-        </audit:auditTrail>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="DC" STATE="A" VERSIONABLE="true">
-    <foxml:datastreamVersion CREATED="2010-12-20T16:14:50.165Z" FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/"
+            <foxml:xmlContent>
+                <audit:auditTrail xmlns:audit="info:fedora/fedora-system:def/audit#">
+                    <audit:record ID="AUDREC1">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>ingest</audit:action>
+                        <audit:componentID/>
+                        <audit:responsibility>admin</audit:responsibility>
+                        <audit:date>2010-12-20T16:14:50.165Z</audit:date>
+                        <audit:justification>Fedora Object Ingested</audit:justification>
+                    </audit:record>
+                    <audit:record ID="AUDREC2">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>addDatastream</audit:action>
+                        <audit:componentID>RELS-EXT</audit:componentID>
+                        <audit:responsibility>admin</audit:responsibility>
+                        <audit:date>2010-12-20T16:14:50.352Z</audit:date>
+                        <audit:justification>Ingested object RELS-EXT</audit:justification>
+                    </audit:record>
+                    <audit:record ID="AUDREC3">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>RELS-EXT</audit:componentID>
+                        <audit:responsibility>admin</audit:responsibility>
+                        <audit:date>2010-12-20T16:14:50.407Z</audit:date>
+                        <audit:justification>Modified by Islandora API</audit:justification>
+                    </audit:record>
+                    <audit:record ID="AUDREC4">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>addDatastream</audit:action>
+                        <audit:componentID>ISLANDORACM</audit:componentID>
+                        <audit:responsibility>admin</audit:responsibility>
+                        <audit:date>2010-12-20T16:14:50.475Z</audit:date>
+                        <audit:justification>Ingested object ISLANDORACM</audit:justification>
+                    </audit:record>
+                    <audit:record ID="AUDREC5">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>ISLANDORACM</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2011-01-17T15:04:59.169Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                    <audit:record ID="AUDREC6">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>ISLANDORACM</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2011-01-17T15:06:08.023Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                    <audit:record ID="AUDREC7">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>ISLANDORACM</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2011-01-21T19:40:39.790Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                    <audit:record ID="AUDREC8">
+                        <audit:process type="Fedora API-M"/>
+                        <audit:action>modifyDatastreamByValue</audit:action>
+                        <audit:componentID>ISLANDORACM</audit:componentID>
+                        <audit:responsibility>fedoraAdmin</audit:responsibility>
+                        <audit:date>2011-01-21T19:41:19.709Z</audit:date>
+                        <audit:justification/>
+                    </audit:record>
+                </audit:auditTrail>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="DC" STATE="A" VERSIONABLE="true">
+        <foxml:datastreamVersion CREATED="2010-12-20T16:14:50.165Z" FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/"
       ID="DC1.0" LABEL="Dublin Core Record for this object" MIMETYPE="text/xml" SIZE="413">
-      <foxml:xmlContent>
-        <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
+            <foxml:xmlContent>
+                <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
           xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
-          <dc:title>Islandora Collection Content Model</dc:title>
-          <dc:identifier>islandora:collectionCModel</dc:identifier>
-        </oai_dc:dc>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="RELS-EXT" STATE="A" VERSIONABLE="true">
-    <foxml:datastreamVersion CREATED="2010-12-20T16:14:50.352Z" ID="RELS-EXT.0"
+                    <dc:title>Islandora Collection Content Model</dc:title>
+                    <dc:identifier>islandora:collectionCModel</dc:identifier>
+                </oai_dc:dc>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="RELS-EXT" STATE="A" VERSIONABLE="true">
+        <foxml:datastreamVersion CREATED="2010-12-20T16:14:50.352Z" ID="RELS-EXT.0"
       LABEL="Fedora object-to-object relationship metadata" MIMETYPE="text/xml" SIZE="167">
-      <foxml:xmlContent>
-        <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-          <rdf:Description rdf:about="info:fedora/islandora:collectionCModel"/>
-        </rdf:RDF>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2010-12-20T16:14:50.407Z" ID="RELS-EXT.1"
+            <foxml:xmlContent>
+                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                    <rdf:Description rdf:about="info:fedora/islandora:collectionCModel"/>
+                </rdf:RDF>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2010-12-20T16:14:50.407Z" ID="RELS-EXT.1"
       LABEL="Fedora Object-to-Object Relationship Metadata" MIMETYPE="text/xml" SIZE="299">
-      <foxml:xmlContent>
-        <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-          <rdf:Description rdf:about="info:fedora/islandora:collectionCModel">
-            <hasModel rdf:resource="info:fedora/fedora-system:ContentModel-3.0" xmlns="info:fedora/fedora-system:def/model#"/>
-          </rdf:Description>
-        </rdf:RDF>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
-  <foxml:datastream CONTROL_GROUP="X" ID="ISLANDORACM" STATE="A" VERSIONABLE="true">
-    <foxml:datastreamVersion CREATED="2010-12-20T16:14:50.475Z" ID="ISLANDORACM.0" LABEL="Islandora Content Model.xml"
+            <foxml:xmlContent>
+                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                    <rdf:Description rdf:about="info:fedora/islandora:collectionCModel">
+                        <hasModel rdf:resource="info:fedora/fedora-system:ContentModel-3.0" xmlns="info:fedora/fedora-system:def/model#"/>
+                    </rdf:Description>
+                </rdf:RDF>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
+    <foxml:datastream CONTROL_GROUP="X" ID="ISLANDORACM" STATE="A" VERSIONABLE="true">
+        <foxml:datastreamVersion CREATED="2010-12-20T16:14:50.475Z" ID="ISLANDORACM.0" LABEL="Islandora Content Model.xml"
       MIMETYPE="application/xml" SIZE="4349">
-      <foxml:xmlContent>
-        <content_model name="Collection" xmlns="http://www.islandora.ca"
+            <foxml:xmlContent>
+                <content_model name="Collection" xmlns="http://www.islandora.ca"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.islandora.ca http://localhost/islandoracm.xsd">
-          <mimetypes>
-            <type>text/xml</type>
-            <type>text/plain</type>
-            <type>application/xml</type>
-          </mimetypes>
-          <ingest_rules/>
-          <ingest_form dsid="QDC" page="2">
-            <form_builder_method class="CollectionFormBuilder" file="plugins/CollectionFormBuilder.inc"
+                    <mimetypes>
+                        <type>text/xml</type>
+                        <type>text/plain</type>
+                        <type>application/xml</type>
+                    </mimetypes>
+                    <ingest_rules/>
+                    <ingest_form dsid="QDC" page="2">
+                        <form_builder_method class="CollectionFormBuilder" file="plugins/CollectionFormBuilder.inc"
               handler="handleQDCForm" method="buildQDCForm" module=""/>
-            <form_elements>
-              <element label="Title/Caption/Object Name" name="dc:title" required="true" type="textfield">
-                <description>The name given to the resource</description>
-              </element>
-              <element label="Creator/Photographer/Author" name="dc:creator" type="textfield">
-                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
-              </element>
-              <element label="Subject" name="dc:subject" type="select">
-                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
-                <authoritative_list>
-                  <item>none</item>
-                  <item>Multi Media</item>
-                  <item>image</item>
-                  <item>meeting</item>
-                  <item>presentation</item>
-                  <item>sound</item>
-                  <item>text</item>
-                </authoritative_list>
-              </element>
-              <element label="Description" name="dc:description" required="true" type="textarea">
-                <description>Examples include an abstract, table of contents, or free-text account of the content of the resource.</description>
-              </element>
-              <element label="Publisher" name="dc:publisher" type="textfield">
-                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
-              </element>
-              <element label="Contributor" name="dc:contributor" type="textfield">
-                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
-              </element>
-              <element label="Date" name="dc:date" type="textfield">
-                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
-              </element>
-              <element label="Resource Type" name="dc:type" type="select">
-                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
-                <authoritative_list>
-                  <item>none</item>
-                  <item>collection</item>
-                  <item>dataset</item>
-                  <item>event</item>
-                  <item>image</item>
-                  <item>interactive resource</item>
-                  <item>model</item>
-                  <item>party</item>
-                  <item>physical object</item>
-                  <item>place</item>
-                  <item>service</item>
-                  <item>software</item>
-                  <item>sound</item>
-                  <item>text</item>
-                </authoritative_list>
-              </element>
-              <element label="Source" name="dc:source" type="textfield">
-                <description>A reference to a resource from which the present resource is derived.</description>
-              </element>
-              <element label="Identifier" name="dc:identifier" type="textfield">
-                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
-              </element>
-              <element label="Language" name="dc:language" type="select">
-                <description>The language of the intellectual content of the resource.</description>
-                <authoritative_list>
-                  <item field="eng">English</item>
-                  <item field="fre">French</item>
-                </authoritative_list>
-              </element>
-              <element label="Relation" name="dc:relation" type="textfield">
-                <description>Reference to a related resource.</description>
-              </element>
-              <element label="Rights Management" name="dc:rights" type="textarea">
-                <description>Information about intellectual property rights, copyright, and various property rights.</description>
-              </element>
-            </form_elements>
-          </ingest_form>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2011-01-17T15:04:59.169Z" ID="ISLANDORACM.1" LABEL="Islandora Content Model.xml"
+                        <form_elements>
+                            <element label="Title/Caption/Object Name" name="dc:title" required="true" type="textfield">
+                                <description>The name given to the resource</description>
+                            </element>
+                            <element label="Creator/Photographer/Author" name="dc:creator" type="textfield">
+                                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                            </element>
+                            <element label="Subject" name="dc:subject" type="select">
+                                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                                <authoritative_list>
+                                    <item>none</item>
+                                    <item>Multi Media</item>
+                                    <item>image</item>
+                                    <item>meeting</item>
+                                    <item>presentation</item>
+                                    <item>sound</item>
+                                    <item>text</item>
+                                </authoritative_list>
+                            </element>
+                            <element label="Description" name="dc:description" required="true" type="textarea">
+                                <description>Examples include an abstract, table of contents, or free-text account of the content of the resource.</description>
+                            </element>
+                            <element label="Publisher" name="dc:publisher" type="textfield">
+                                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
+                            </element>
+                            <element label="Contributor" name="dc:contributor" type="textfield">
+                                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
+                            </element>
+                            <element label="Date" name="dc:date" type="textfield">
+                                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
+                            </element>
+                            <element label="Resource Type" name="dc:type" type="select">
+                                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
+                                <authoritative_list>
+                                    <item>none</item>
+                                    <item>collection</item>
+                                    <item>dataset</item>
+                                    <item>event</item>
+                                    <item>image</item>
+                                    <item>interactive resource</item>
+                                    <item>model</item>
+                                    <item>party</item>
+                                    <item>physical object</item>
+                                    <item>place</item>
+                                    <item>service</item>
+                                    <item>software</item>
+                                    <item>sound</item>
+                                    <item>text</item>
+                                </authoritative_list>
+                            </element>
+                            <element label="Source" name="dc:source" type="textfield">
+                                <description>A reference to a resource from which the present resource is derived.</description>
+                            </element>
+                            <element label="Identifier" name="dc:identifier" type="textfield">
+                                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
+                            </element>
+                            <element label="Language" name="dc:language" type="select">
+                                <description>The language of the intellectual content of the resource.</description>
+                                <authoritative_list>
+                                    <item field="eng">English</item>
+                                    <item field="fre">French</item>
+                                </authoritative_list>
+                            </element>
+                            <element label="Relation" name="dc:relation" type="textfield">
+                                <description>Reference to a related resource.</description>
+                            </element>
+                            <element label="Rights Management" name="dc:rights" type="textarea">
+                                <description>Information about intellectual property rights, copyright, and various property rights.</description>
+                            </element>
+                        </form_elements>
+                    </ingest_form>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2011-01-17T15:04:59.169Z" ID="ISLANDORACM.1" LABEL="Islandora Content Model.xml"
       MIMETYPE="application/xml" SIZE="4554">
-      <foxml:xmlContent>
-        <content_model name="Collection" xmlns="http://www.islandora.ca"
+            <foxml:xmlContent>
+                <content_model name="Collection" xmlns="http://www.islandora.ca"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.islandora.ca http://localhost/islandoracm.xsd">
-          <mimetypes>
-            <type>text/xml</type>
-            <type>text/plain</type>
-            <type>application/xml</type>
-          </mimetypes>
-          <ingest_rules/>
-          <datastreams>
-            <datastream dsid="DC">
-              <display_method class="FedoraCollection" file="plugins/herbarium.inc" method="showFieldSets" module=""/>
-            </datastream>
-          </datastreams>
-          <ingest_form dsid="QDC" page="2">
-            <form_builder_method class="CollectionFormBuilder" file="plugins/CollectionFormBuilder.inc"
+                    <mimetypes>
+                        <type>text/xml</type>
+                        <type>text/plain</type>
+                        <type>application/xml</type>
+                    </mimetypes>
+                    <ingest_rules/>
+                    <datastreams>
+                        <datastream dsid="DC">
+                            <display_method class="FedoraCollection" file="plugins/herbarium.inc" method="showFieldSets" module=""/>
+                        </datastream>
+                    </datastreams>
+                    <ingest_form dsid="QDC" page="2">
+                        <form_builder_method class="CollectionFormBuilder" file="plugins/CollectionFormBuilder.inc"
               handler="handleQDCForm" method="buildQDCForm" module=""/>
-            <form_elements>
-              <element label="Title/Caption/Object Name" name="dc:title" required="true" type="textfield">
-                <description>The name given to the resource</description>
-              </element>
-              <element label="Creator/Photographer/Author" name="dc:creator" type="textfield">
-                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
-              </element>
-              <element label="Subject" name="dc:subject" type="select">
-                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
-                <authoritative_list>
-                  <item>none</item>
-                  <item>Multi Media</item>
-                  <item>image</item>
-                  <item>meeting</item>
-                  <item>presentation</item>
-                  <item>sound</item>
-                  <item>text</item>
-                </authoritative_list>
-              </element>
-              <element label="Description" name="dc:description" required="true" type="textarea">
-                <description>Examples include an abstract, table of contents, or free-text account of the content of the resource.</description>
-              </element>
-              <element label="Publisher" name="dc:publisher" type="textfield">
-                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
-              </element>
-              <element label="Contributor" name="dc:contributor" type="textfield">
-                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
-              </element>
-              <element label="Date" name="dc:date" type="textfield">
-                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
-              </element>
-              <element label="Resource Type" name="dc:type" type="select">
-                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
-                <authoritative_list>
-                  <item>none</item>
-                  <item>collection</item>
-                  <item>dataset</item>
-                  <item>event</item>
-                  <item>image</item>
-                  <item>interactive resource</item>
-                  <item>model</item>
-                  <item>party</item>
-                  <item>physical object</item>
-                  <item>place</item>
-                  <item>service</item>
-                  <item>software</item>
-                  <item>sound</item>
-                  <item>text</item>
-                </authoritative_list>
-              </element>
-              <element label="Source" name="dc:source" type="textfield">
-                <description>A reference to a resource from which the present resource is derived.</description>
-              </element>
-              <element label="Identifier" name="dc:identifier" type="textfield">
-                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
-              </element>
-              <element label="Language" name="dc:language" type="select">
-                <description>The language of the intellectual content of the resource.</description>
-                <authoritative_list>
-                  <item field="eng">English</item>
-                  <item field="fre">French</item>
-                </authoritative_list>
-              </element>
-              <element label="Relation" name="dc:relation" type="textfield">
-                <description>Reference to a related resource.</description>
-              </element>
-              <element label="Rights Management" name="dc:rights" type="textarea">
-                <description>Information about intellectual property rights, copyright, and various property rights.</description>
-              </element>
-            </form_elements>
-          </ingest_form>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2011-01-17T15:06:08.023Z" ID="ISLANDORACM.2" LABEL="Islandora Content Model.xml"
+                        <form_elements>
+                            <element label="Title/Caption/Object Name" name="dc:title" required="true" type="textfield">
+                                <description>The name given to the resource</description>
+                            </element>
+                            <element label="Creator/Photographer/Author" name="dc:creator" type="textfield">
+                                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                            </element>
+                            <element label="Subject" name="dc:subject" type="select">
+                                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                                <authoritative_list>
+                                    <item>none</item>
+                                    <item>Multi Media</item>
+                                    <item>image</item>
+                                    <item>meeting</item>
+                                    <item>presentation</item>
+                                    <item>sound</item>
+                                    <item>text</item>
+                                </authoritative_list>
+                            </element>
+                            <element label="Description" name="dc:description" required="true" type="textarea">
+                                <description>Examples include an abstract, table of contents, or free-text account of the content of the resource.</description>
+                            </element>
+                            <element label="Publisher" name="dc:publisher" type="textfield">
+                                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
+                            </element>
+                            <element label="Contributor" name="dc:contributor" type="textfield">
+                                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
+                            </element>
+                            <element label="Date" name="dc:date" type="textfield">
+                                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
+                            </element>
+                            <element label="Resource Type" name="dc:type" type="select">
+                                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
+                                <authoritative_list>
+                                    <item>none</item>
+                                    <item>collection</item>
+                                    <item>dataset</item>
+                                    <item>event</item>
+                                    <item>image</item>
+                                    <item>interactive resource</item>
+                                    <item>model</item>
+                                    <item>party</item>
+                                    <item>physical object</item>
+                                    <item>place</item>
+                                    <item>service</item>
+                                    <item>software</item>
+                                    <item>sound</item>
+                                    <item>text</item>
+                                </authoritative_list>
+                            </element>
+                            <element label="Source" name="dc:source" type="textfield">
+                                <description>A reference to a resource from which the present resource is derived.</description>
+                            </element>
+                            <element label="Identifier" name="dc:identifier" type="textfield">
+                                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
+                            </element>
+                            <element label="Language" name="dc:language" type="select">
+                                <description>The language of the intellectual content of the resource.</description>
+                                <authoritative_list>
+                                    <item field="eng">English</item>
+                                    <item field="fre">French</item>
+                                </authoritative_list>
+                            </element>
+                            <element label="Relation" name="dc:relation" type="textfield">
+                                <description>Reference to a related resource.</description>
+                            </element>
+                            <element label="Rights Management" name="dc:rights" type="textarea">
+                                <description>Information about intellectual property rights, copyright, and various property rights.</description>
+                            </element>
+                        </form_elements>
+                    </ingest_form>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2011-01-17T15:06:08.023Z" ID="ISLANDORACM.2" LABEL="Islandora Content Model.xml"
       MIMETYPE="application/xml" SIZE="4551">
-      <foxml:xmlContent>
-        <content_model name="Collection" xmlns="http://www.islandora.ca"
+            <foxml:xmlContent>
+                <content_model name="Collection" xmlns="http://www.islandora.ca"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.islandora.ca http://localhost/islandoracm.xsd">
-          <mimetypes>
-            <type>text/xml</type>
-            <type>text/plain</type>
-            <type>application/xml</type>
-          </mimetypes>
-          <ingest_rules/>
-          <datastreams>
-            <datastream dsid="DC">
-              <display_method class="CollectionClass" file="CollectionClass.inc" method="showFieldSets" module=""/>
-            </datastream>
-          </datastreams>
-          <ingest_form dsid="QDC" page="2">
-            <form_builder_method class="CollectionFormBuilder" file="plugins/CollectionFormBuilder.inc"
+                    <mimetypes>
+                        <type>text/xml</type>
+                        <type>text/plain</type>
+                        <type>application/xml</type>
+                    </mimetypes>
+                    <ingest_rules/>
+                    <datastreams>
+                        <datastream dsid="DC">
+                            <display_method class="CollectionClass" file="CollectionClass.inc" method="showFieldSets" module=""/>
+                        </datastream>
+                    </datastreams>
+                    <ingest_form dsid="QDC" page="2">
+                        <form_builder_method class="CollectionFormBuilder" file="plugins/CollectionFormBuilder.inc"
               handler="handleQDCForm" method="buildQDCForm" module=""/>
-            <form_elements>
-              <element label="Title/Caption/Object Name" name="dc:title" required="true" type="textfield">
-                <description>The name given to the resource</description>
-              </element>
-              <element label="Creator/Photographer/Author" name="dc:creator" type="textfield">
-                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
-              </element>
-              <element label="Subject" name="dc:subject" type="select">
-                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
-                <authoritative_list>
-                  <item>none</item>
-                  <item>Multi Media</item>
-                  <item>image</item>
-                  <item>meeting</item>
-                  <item>presentation</item>
-                  <item>sound</item>
-                  <item>text</item>
-                </authoritative_list>
-              </element>
-              <element label="Description" name="dc:description" required="true" type="textarea">
-                <description>Examples include an abstract, table of contents, or free-text account of the content of the resource.</description>
-              </element>
-              <element label="Publisher" name="dc:publisher" type="textfield">
-                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
-              </element>
-              <element label="Contributor" name="dc:contributor" type="textfield">
-                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
-              </element>
-              <element label="Date" name="dc:date" type="textfield">
-                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
-              </element>
-              <element label="Resource Type" name="dc:type" type="select">
-                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
-                <authoritative_list>
-                  <item>none</item>
-                  <item>collection</item>
-                  <item>dataset</item>
-                  <item>event</item>
-                  <item>image</item>
-                  <item>interactive resource</item>
-                  <item>model</item>
-                  <item>party</item>
-                  <item>physical object</item>
-                  <item>place</item>
-                  <item>service</item>
-                  <item>software</item>
-                  <item>sound</item>
-                  <item>text</item>
-                </authoritative_list>
-              </element>
-              <element label="Source" name="dc:source" type="textfield">
-                <description>A reference to a resource from which the present resource is derived.</description>
-              </element>
-              <element label="Identifier" name="dc:identifier" type="textfield">
-                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
-              </element>
-              <element label="Language" name="dc:language" type="select">
-                <description>The language of the intellectual content of the resource.</description>
-                <authoritative_list>
-                  <item field="eng">English</item>
-                  <item field="fre">French</item>
-                </authoritative_list>
-              </element>
-              <element label="Relation" name="dc:relation" type="textfield">
-                <description>Reference to a related resource.</description>
-              </element>
-              <element label="Rights Management" name="dc:rights" type="textarea">
-                <description>Information about intellectual property rights, copyright, and various property rights.</description>
-              </element>
-            </form_elements>
-          </ingest_form>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2011-01-21T19:40:39.790Z" ID="ISLANDORACM.3" LABEL="Islandora Content Model.xml"
+                        <form_elements>
+                            <element label="Title/Caption/Object Name" name="dc:title" required="true" type="textfield">
+                                <description>The name given to the resource</description>
+                            </element>
+                            <element label="Creator/Photographer/Author" name="dc:creator" type="textfield">
+                                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                            </element>
+                            <element label="Subject" name="dc:subject" type="select">
+                                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                                <authoritative_list>
+                                    <item>none</item>
+                                    <item>Multi Media</item>
+                                    <item>image</item>
+                                    <item>meeting</item>
+                                    <item>presentation</item>
+                                    <item>sound</item>
+                                    <item>text</item>
+                                </authoritative_list>
+                            </element>
+                            <element label="Description" name="dc:description" required="true" type="textarea">
+                                <description>Examples include an abstract, table of contents, or free-text account of the content of the resource.</description>
+                            </element>
+                            <element label="Publisher" name="dc:publisher" type="textfield">
+                                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
+                            </element>
+                            <element label="Contributor" name="dc:contributor" type="textfield">
+                                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
+                            </element>
+                            <element label="Date" name="dc:date" type="textfield">
+                                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
+                            </element>
+                            <element label="Resource Type" name="dc:type" type="select">
+                                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
+                                <authoritative_list>
+                                    <item>none</item>
+                                    <item>collection</item>
+                                    <item>dataset</item>
+                                    <item>event</item>
+                                    <item>image</item>
+                                    <item>interactive resource</item>
+                                    <item>model</item>
+                                    <item>party</item>
+                                    <item>physical object</item>
+                                    <item>place</item>
+                                    <item>service</item>
+                                    <item>software</item>
+                                    <item>sound</item>
+                                    <item>text</item>
+                                </authoritative_list>
+                            </element>
+                            <element label="Source" name="dc:source" type="textfield">
+                                <description>A reference to a resource from which the present resource is derived.</description>
+                            </element>
+                            <element label="Identifier" name="dc:identifier" type="textfield">
+                                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
+                            </element>
+                            <element label="Language" name="dc:language" type="select">
+                                <description>The language of the intellectual content of the resource.</description>
+                                <authoritative_list>
+                                    <item field="eng">English</item>
+                                    <item field="fre">French</item>
+                                </authoritative_list>
+                            </element>
+                            <element label="Relation" name="dc:relation" type="textfield">
+                                <description>Reference to a related resource.</description>
+                            </element>
+                            <element label="Rights Management" name="dc:rights" type="textarea">
+                                <description>Information about intellectual property rights, copyright, and various property rights.</description>
+                            </element>
+                        </form_elements>
+                    </ingest_form>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2011-01-21T19:40:39.790Z" ID="ISLANDORACM.3" LABEL="Islandora Content Model.xml"
       MIMETYPE="application/xml" SIZE="4692">
-      <foxml:xmlContent>
-        <content_model name="Collection" xmlns="http://www.islandora.ca"
+            <foxml:xmlContent>
+                <content_model name="Collection" xmlns="http://www.islandora.ca"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.islandora.ca http://localhost/islandoracm.xsd">
-          <mimetypes>
-            <type>text/xml</type>
-            <type>text/plain</type>
-            <type>application/xml</type>
-          </mimetypes>
-          <ingest_rules/>
-          <datastreams>
-            <datastream dsid="DC">
-              <display_method class="CollectionClass" file="CollectionClass.inc" method="showFieldSets" module=""/>
-            </datastream>
-            <datastream dsid="TN"/>
-            <datastream dsid="COLLECTION_POLICY"/>
-            <datastream dsid="Crumpets"/>
-          </datastreams>
-          <ingest_form dsid="QDC" page="2">
-            <form_builder_method class="CollectionFormBuilder" file="plugins/CollectionFormBuilder.inc"
+                    <mimetypes>
+                        <type>text/xml</type>
+                        <type>text/plain</type>
+                        <type>application/xml</type>
+                    </mimetypes>
+                    <ingest_rules/>
+                    <datastreams>
+                        <datastream dsid="DC">
+                            <display_method class="CollectionClass" file="CollectionClass.inc" method="showFieldSets" module=""/>
+                        </datastream>
+                        <datastream dsid="TN"/>
+                        <datastream dsid="COLLECTION_POLICY"/>
+                        <datastream dsid="Crumpets"/>
+                    </datastreams>
+                    <ingest_form dsid="QDC" page="2">
+                        <form_builder_method class="CollectionFormBuilder" file="plugins/CollectionFormBuilder.inc"
               handler="handleQDCForm" method="buildQDCForm" module=""/>
-            <form_elements>
-              <element label="Title/Caption/Object Name" name="dc:title" required="true" type="textfield">
-                <description>The name given to the resource</description>
-              </element>
-              <element label="Creator/Photographer/Author" name="dc:creator" type="textfield">
-                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
-              </element>
-              <element label="Subject" name="dc:subject" type="select">
-                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
-                <authoritative_list>
-                  <item>none</item>
-                  <item>Multi Media</item>
-                  <item>image</item>
-                  <item>meeting</item>
-                  <item>presentation</item>
-                  <item>sound</item>
-                  <item>text</item>
-                </authoritative_list>
-              </element>
-              <element label="Description" name="dc:description" required="true" type="textarea">
-                <description>Examples include an abstract, table of contents, or free-text account of the content of the resource.</description>
-              </element>
-              <element label="Publisher" name="dc:publisher" type="textfield">
-                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
-              </element>
-              <element label="Contributor" name="dc:contributor" type="textfield">
-                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
-              </element>
-              <element label="Date" name="dc:date" type="textfield">
-                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
-              </element>
-              <element label="Resource Type" name="dc:type" type="select">
-                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
-                <authoritative_list>
-                  <item>none</item>
-                  <item>collection</item>
-                  <item>dataset</item>
-                  <item>event</item>
-                  <item>image</item>
-                  <item>interactive resource</item>
-                  <item>model</item>
-                  <item>party</item>
-                  <item>physical object</item>
-                  <item>place</item>
-                  <item>service</item>
-                  <item>software</item>
-                  <item>sound</item>
-                  <item>text</item>
-                </authoritative_list>
-              </element>
-              <element label="Source" name="dc:source" type="textfield">
-                <description>A reference to a resource from which the present resource is derived.</description>
-              </element>
-              <element label="Identifier" name="dc:identifier" type="textfield">
-                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
-              </element>
-              <element label="Language" name="dc:language" type="select">
-                <description>The language of the intellectual content of the resource.</description>
-                <authoritative_list>
-                  <item field="eng">English</item>
-                  <item field="fre">French</item>
-                </authoritative_list>
-              </element>
-              <element label="Relation" name="dc:relation" type="textfield">
-                <description>Reference to a related resource.</description>
-              </element>
-              <element label="Rights Management" name="dc:rights" type="textarea">
-                <description>Information about intellectual property rights, copyright, and various property rights.</description>
-              </element>
-            </form_elements>
-          </ingest_form>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-    <foxml:datastreamVersion CREATED="2011-01-21T19:41:19.709Z" ID="ISLANDORACM.4" LABEL="Islandora Content Model.xml"
+                        <form_elements>
+                            <element label="Title/Caption/Object Name" name="dc:title" required="true" type="textfield">
+                                <description>The name given to the resource</description>
+                            </element>
+                            <element label="Creator/Photographer/Author" name="dc:creator" type="textfield">
+                                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                            </element>
+                            <element label="Subject" name="dc:subject" type="select">
+                                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                                <authoritative_list>
+                                    <item>none</item>
+                                    <item>Multi Media</item>
+                                    <item>image</item>
+                                    <item>meeting</item>
+                                    <item>presentation</item>
+                                    <item>sound</item>
+                                    <item>text</item>
+                                </authoritative_list>
+                            </element>
+                            <element label="Description" name="dc:description" required="true" type="textarea">
+                                <description>Examples include an abstract, table of contents, or free-text account of the content of the resource.</description>
+                            </element>
+                            <element label="Publisher" name="dc:publisher" type="textfield">
+                                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
+                            </element>
+                            <element label="Contributor" name="dc:contributor" type="textfield">
+                                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
+                            </element>
+                            <element label="Date" name="dc:date" type="textfield">
+                                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
+                            </element>
+                            <element label="Resource Type" name="dc:type" type="select">
+                                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
+                                <authoritative_list>
+                                    <item>none</item>
+                                    <item>collection</item>
+                                    <item>dataset</item>
+                                    <item>event</item>
+                                    <item>image</item>
+                                    <item>interactive resource</item>
+                                    <item>model</item>
+                                    <item>party</item>
+                                    <item>physical object</item>
+                                    <item>place</item>
+                                    <item>service</item>
+                                    <item>software</item>
+                                    <item>sound</item>
+                                    <item>text</item>
+                                </authoritative_list>
+                            </element>
+                            <element label="Source" name="dc:source" type="textfield">
+                                <description>A reference to a resource from which the present resource is derived.</description>
+                            </element>
+                            <element label="Identifier" name="dc:identifier" type="textfield">
+                                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
+                            </element>
+                            <element label="Language" name="dc:language" type="select">
+                                <description>The language of the intellectual content of the resource.</description>
+                                <authoritative_list>
+                                    <item field="eng">English</item>
+                                    <item field="fre">French</item>
+                                </authoritative_list>
+                            </element>
+                            <element label="Relation" name="dc:relation" type="textfield">
+                                <description>Reference to a related resource.</description>
+                            </element>
+                            <element label="Rights Management" name="dc:rights" type="textarea">
+                                <description>Information about intellectual property rights, copyright, and various property rights.</description>
+                            </element>
+                        </form_elements>
+                    </ingest_form>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+        <foxml:datastreamVersion CREATED="2011-01-21T19:41:19.709Z" ID="ISLANDORACM.4" LABEL="Islandora Content Model.xml"
       MIMETYPE="application/xml" SIZE="4646">
-      <foxml:xmlContent>
-        <content_model name="Collection" xmlns="http://www.islandora.ca"
+            <foxml:xmlContent>
+                <content_model name="Collection" xmlns="http://www.islandora.ca"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.islandora.ca http://localhost/islandoracm.xsd">
-          <mimetypes>
-            <type>text/xml</type>
-            <type>text/plain</type>
-            <type>application/xml</type>
-          </mimetypes>
-          <ingest_rules/>
-          <datastreams>
-            <datastream dsid="DC">
-              <display_method class="CollectionClass" file="CollectionClass.inc" method="showFieldSets" module=""/>
-            </datastream>
-            <datastream dsid="TN"/>
-            <datastream dsid="COLLECTION_POLICY"/>
-          </datastreams>
-          <ingest_form dsid="QDC" page="2">
-            <form_builder_method class="CollectionFormBuilder" file="plugins/CollectionFormBuilder.inc"
+                    <mimetypes>
+                        <type>text/xml</type>
+                        <type>text/plain</type>
+                        <type>application/xml</type>
+                    </mimetypes>
+                    <ingest_rules/>
+                    <datastreams>
+                        <datastream dsid="DC">
+                            <display_method class="CollectionClass" file="CollectionClass.inc" method="showFieldSets" module=""/>
+                        </datastream>
+                        <datastream dsid="TN"/>
+                        <datastream dsid="COLLECTION_POLICY"/>
+                    </datastreams>
+                    <ingest_form dsid="QDC" page="2">
+                        <form_builder_method class="CollectionFormBuilder" file="plugins/CollectionFormBuilder.inc"
               handler="handleQDCForm" method="buildQDCForm" module=""/>
-            <form_elements>
-              <element label="Title/Caption/Object Name" name="dc:title" required="true" type="textfield">
-                <description>The name given to the resource</description>
-              </element>
-              <element label="Creator/Photographer/Author" name="dc:creator" type="textfield">
-                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
-              </element>
-              <element label="Subject" name="dc:subject" type="select">
-                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
-                <authoritative_list>
-                  <item>none</item>
-                  <item>Multi Media</item>
-                  <item>image</item>
-                  <item>meeting</item>
-                  <item>presentation</item>
-                  <item>sound</item>
-                  <item>text</item>
-                </authoritative_list>
-              </element>
-              <element label="Description" name="dc:description" required="true" type="textarea">
-                <description>Examples include an abstract, table of contents, or free-text account of the content of the resource.</description>
-              </element>
-              <element label="Publisher" name="dc:publisher" type="textfield">
-                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
-              </element>
-              <element label="Contributor" name="dc:contributor" type="textfield">
-                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
-              </element>
-              <element label="Date" name="dc:date" type="textfield">
-                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
-              </element>
-              <element label="Resource Type" name="dc:type" type="select">
-                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
-                <authoritative_list>
-                  <item>none</item>
-                  <item>collection</item>
-                  <item>dataset</item>
-                  <item>event</item>
-                  <item>image</item>
-                  <item>interactive resource</item>
-                  <item>model</item>
-                  <item>party</item>
-                  <item>physical object</item>
-                  <item>place</item>
-                  <item>service</item>
-                  <item>software</item>
-                  <item>sound</item>
-                  <item>text</item>
-                </authoritative_list>
-              </element>
-              <element label="Source" name="dc:source" type="textfield">
-                <description>A reference to a resource from which the present resource is derived.</description>
-              </element>
-              <element label="Identifier" name="dc:identifier" type="textfield">
-                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
-              </element>
-              <element label="Language" name="dc:language" type="select">
-                <description>The language of the intellectual content of the resource.</description>
-                <authoritative_list>
-                  <item field="eng">English</item>
-                  <item field="fre">French</item>
-                </authoritative_list>
-              </element>
-              <element label="Relation" name="dc:relation" type="textfield">
-                <description>Reference to a related resource.</description>
-              </element>
-              <element label="Rights Management" name="dc:rights" type="textarea">
-                <description>Information about intellectual property rights, copyright, and various property rights.</description>
-              </element>
-            </form_elements>
-          </ingest_form>
-        </content_model>
-      </foxml:xmlContent>
-    </foxml:datastreamVersion>
-  </foxml:datastream>
+                        <form_elements>
+                            <element label="Title/Caption/Object Name" name="dc:title" required="true" type="textfield">
+                                <description>The name given to the resource</description>
+                            </element>
+                            <element label="Creator/Photographer/Author" name="dc:creator" type="textfield">
+                                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                            </element>
+                            <element label="Subject" name="dc:subject" type="select">
+                                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                                <authoritative_list>
+                                    <item>none</item>
+                                    <item>Multi Media</item>
+                                    <item>image</item>
+                                    <item>meeting</item>
+                                    <item>presentation</item>
+                                    <item>sound</item>
+                                    <item>text</item>
+                                </authoritative_list>
+                            </element>
+                            <element label="Description" name="dc:description" required="true" type="textarea">
+                                <description>Examples include an abstract, table of contents, or free-text account of the content of the resource.</description>
+                            </element>
+                            <element label="Publisher" name="dc:publisher" type="textfield">
+                                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
+                            </element>
+                            <element label="Contributor" name="dc:contributor" type="textfield">
+                                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
+                            </element>
+                            <element label="Date" name="dc:date" type="textfield">
+                                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
+                            </element>
+                            <element label="Resource Type" name="dc:type" type="select">
+                                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
+                                <authoritative_list>
+                                    <item>none</item>
+                                    <item>collection</item>
+                                    <item>dataset</item>
+                                    <item>event</item>
+                                    <item>image</item>
+                                    <item>interactive resource</item>
+                                    <item>model</item>
+                                    <item>party</item>
+                                    <item>physical object</item>
+                                    <item>place</item>
+                                    <item>service</item>
+                                    <item>software</item>
+                                    <item>sound</item>
+                                    <item>text</item>
+                                </authoritative_list>
+                            </element>
+                            <element label="Source" name="dc:source" type="textfield">
+                                <description>A reference to a resource from which the present resource is derived.</description>
+                            </element>
+                            <element label="Identifier" name="dc:identifier" type="textfield">
+                                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
+                            </element>
+                            <element label="Language" name="dc:language" type="select">
+                                <description>The language of the intellectual content of the resource.</description>
+                                <authoritative_list>
+                                    <item field="eng">English</item>
+                                    <item field="fre">French</item>
+                                </authoritative_list>
+                            </element>
+                            <element label="Relation" name="dc:relation" type="textfield">
+                                <description>Reference to a related resource.</description>
+                            </element>
+                            <element label="Rights Management" name="dc:rights" type="textarea">
+                                <description>Information about intellectual property rights, copyright, and various property rights.</description>
+                            </element>
+                        </form_elements>
+                    </ingest_form>
+                </content_model>
+            </foxml:xmlContent>
+        </foxml:datastreamVersion>
+    </foxml:datastream>
 </foxml:digitalObject>

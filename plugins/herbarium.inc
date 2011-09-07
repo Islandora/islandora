@@ -1,6 +1,9 @@
 <?php
 
-// $Id$
+/**
+ * @file 
+ * 
+ */
 
 /**
  * @file
@@ -78,7 +81,8 @@ class Herbarium {
     $dwc = new DarwinCore($this->item);
     $dwc->handleForm($form_values);
     $this->item->purge_datastream('DARWIN_CORE');
-    $this->item->add_datastream_from_string($dwc->darwinCoreXML, 'DARWIN_CORE', 'Darwin Core Metadata', 'text/xml', 'X');
+    $this->item->add_datastream_from_string($dwc->darwinCoreXML, 'DARWIN_CORE',
+      'Darwin Core Metadata', 'text/xml', 'X');
     return TRUE;
   }
 
@@ -101,17 +105,20 @@ class Herbarium {
     $dwc = new DarwinCore();
     $dwc->handleForm($form_values);
     $label = $form_values['dwc:institutionCode'] . ':'
-        . $form_values['dwc:collectionCode'] . ':'
-        . $form_values['dwc:catalogNumber'];
+      . $form_values['dwc:collectionCode'] . ':'
+      . $form_values['dwc:catalogNumber'];
 
-    $new_item = Fedora_Item::ingest_new_item($form_values['pid'], 'A', $label, $user->name);
+    $new_item = Fedora_Item::ingest_new_item($form_values['pid'], 'A', $label,
+        $user->name);
 
-    $new_item->add_datastream_from_string($dwc->darwinCoreXML, 'DARWIN_CORE', 'Darwin Core Metadata', 'text/xml', 'X');
+    $new_item->add_datastream_from_string($dwc->darwinCoreXML, 'DARWIN_CORE',
+      'Darwin Core Metadata', 'text/xml', 'X');
     $file = $form_values['ingest-file-location'];
 
     if (!empty($file)) {
       $dformat = $mimetype->getType($file);
-      $new_item->add_datastream_from_file($file, 'FULL_SIZE', "$label-full-size", $dformat, 'M');
+      $new_item->add_datastream_from_file($file, 'FULL_SIZE',
+        "$label-full-size", $dformat, 'M');
     }
 
     $new_item->add_relationship('hasModel', $form_values['content_model_pid'], FEDORA_MODEL_URI);
@@ -121,7 +128,8 @@ class Herbarium {
       foreach ($_SESSION['fedora_ingest_files'] as $dsid => $created_file) {
         $created_file_format = $mimetype->getType($created_file);
         $created_filename = strstr($created_file, $file);
-        $new_item->add_datastream_from_file($created_file, $dsid, $created_filename, $created_file_format, 'M');
+        $new_item->add_datastream_from_file($created_file, $dsid,
+          $created_filename, $created_file_format, 'M');
       }
     }
   }
