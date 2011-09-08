@@ -751,6 +751,10 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
     drupal_set_message(t('The Fedora repository server is currently unavailable. Please contact the site administrator.'), 'warning', FALSE);
     return '';
   }
+  
+  if ($pid == NULL) {
+    $pid = variable_get('fedora_repository_pid', 'islandora:top');
+  }
 
   $item = new fedora_item($pid);
   if (!$item->exists()) {
