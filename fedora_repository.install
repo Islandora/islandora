@@ -83,13 +83,37 @@ function fedora_repository_requirements($phase) {
     if ( ! function_exists('xslt_process') ) {
         $requirements['xslt']['value'] = t("Not installed");
         $requirements['xslt']['severity'] = REQUIREMENT_ERROR;
-        $requirements['xslt']['description'] = t("Ensure that the PHP HMAC extension is installed.");
+        $requirements['xslt']['description'] = t("Ensure that the PHP XSLT extension is installed.");
     } 
     else {
         $requirements['xslt']['value'] = t("Installed");
         $requirements['xslt']['serenity'] = REQUIREMENT_OK;
     }
     
+    // Test for Imagick
+    $requirements['imagick']['title'] = t("Image Magick library");
+    //if ( ! class_exists('Imagick') ) {
+    if ( ! file_exists('convert') ) {
+      $requirements['imagick']['value'] = t("Not installed");
+      $requirements['imagick']['severity'] = REQUIREMENT_ERROR;
+      $requirements['imagick']['description'] = t('Ensure that the Image Magick library is installed.');
+    }
+    else {
+      $requirements['imagick']['value'] = t("Installed");
+      $requirements['imagick']['severity'] = REQUIREMENT_OK;
+    }    
+
+    // Test for Kakadu  
+    $requirements['kakadu']['title'] = t("Kakadu library");
+    if ( ! file_exists('kdu_compress') ) {
+      $requirements['kakadu']['value'] = t("Not installed");
+      $requirements['kakadu']['severity'] = REQUIREMENT_ERROR;
+      $requirements['kakadu']['description'] = t('Ensure that the Kakadu library is installed.');
+    }
+    else {
+      $requirements['kakadu']['value'] = t("Installed");
+      $requirements['kakadu']['severity'] = REQUIREMENT_OK;
+    }   
   }
   elseif ($phase == 'runtime') {
     module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
