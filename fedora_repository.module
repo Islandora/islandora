@@ -757,7 +757,7 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
     drupal_not_found();
   }
 
-  if ($pid & !validPid($pid)) {
+  if ($pid & !valid_pid($pid)) {
     drupal_set_message(t("Invalid PID!"), 'error');
     return ' ';
   }
