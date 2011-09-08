@@ -18,7 +18,8 @@ class formClass {
   }
 
   /**
-   * create the paths for urls and map them to php functions
+   * Create the paths for urls and map them to php functions
+   * @return array 
    */
   function createMenu() {
     $items = array();
@@ -194,6 +195,10 @@ class formClass {
     return $items;
   }
 
+  /**
+   * Create admin form
+   * @return type 
+   */
   function createAdminForm() {
     if (!user_access('administer site configuration')) {
       drupal_set_message(t('You must be a site administrator to edit the Fedora collecitons list.'), 'error');
@@ -384,6 +389,13 @@ class formClass {
     return system_settings_form($form);
   }
 
+  /**
+   * Update Metadata
+   * @param type $form_id
+   * @param type $form_values
+   * @param type $client
+   * @return type 
+   */
   function updateMetaData($form_id, $form_values, $client) {
     // ======================================
     // = begin creation of foxml dom object =
@@ -615,7 +627,12 @@ class formClass {
     return $this->createQDCIngestForm($collection_pid, $collection_label, $form_state);
   }
 
-  // this function may not be being used
+  /**
+   * this function may not be being used
+   * @param type $pid
+   * @param type $form_state
+   * @return string 
+   */
   function createAddDataStreamForm($pid, &$form_state) {
     //dump_vars($form_state);
     // Populate the list of datastream IDs.
@@ -723,7 +740,7 @@ class formClass {
   }
 
   /**
-   * Create edit form.
+   * Create QDC Edit form.
    * 
    * @param string $pid
    * @param string $dsid
@@ -814,6 +831,11 @@ class formClass {
 
   /**
    * Creates a drupal form to edit either the QDC or DC datastream
+   * @param type $pid
+   * @param type $dsid
+   * @param type $client
+   * @param boolean $form_state
+   * @return type 
    */
   function createMetaDataForm($pid, $dsid, $client, &$form_state) {
     if (module_exists('islandora_content_model_forms')) {
@@ -830,6 +852,11 @@ class formClass {
 
   /**
    * Creates a form for replacing datastream
+   * @param type $pid
+   * @param type $dsId
+   * @param type $dsLabel
+   * @param type $form_state
+   * @return type 
    */
   function createReplaceDataStreamForm($pid, $dsId, $dsLabel, &$form_state) {
     $form = array();
