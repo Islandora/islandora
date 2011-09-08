@@ -1,11 +1,9 @@
 <?php
 
-
 /**
  * @file 
  * 
  */
-
 /**
  * @file
  * Fedora Item
@@ -314,7 +312,7 @@ class Fedora_Item {
       }
       $cursor += count($resultelements->resultList->objectFields);
       if (count($resultelements->resultList->objectFields) < $max_results
-        || count($resultelements->resultList->objectFields) == 0) {
+          || count($resultelements->resultList->objectFields) == 0) {
         $done = TRUE;
       }
       foreach ($resultelements->resultList->objectFields as $obj) {
@@ -586,7 +584,7 @@ class Fedora_Item {
     // Verify the array format and that it isn't empty.
     if (!empty($relationships)) {
       $relsextxml = '<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:fedora="info:fedora/fedora-system:def/relations-external#" xmlns:fedora-model="info:fedora/fedora-system:def/model#" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">'
-        . '<rdf:description rdf:about="' . $this->pid . '">';
+          . '<rdf:description rdf:about="' . $this->pid . '">';
 
       foreach ($relationships as $rel) {
         if (empty($rel['subject']) || empty($rel['predicate']) || empty($rel['object']) || $rel['subject'] != 'info:fedora/' . $this->pid) {
@@ -800,6 +798,19 @@ class Fedora_Item {
     return self::soap_call('modifyDatastreamByValue', $params, $quiet);
   }
 
+  function set_datastream_state($dsid, $state, $log_message = 'Modified by Islandora API', $quiet = FALSE) {
+    $valid_states = array('A', 'D', 'I');
+    if (array_search($state, $valid_states) !== FALSE) {
+      $params = array(
+        'pid' => $this->pid,
+        'dsID' => $dsid,
+        'dsState' => $state,
+        'logMessage' => $log_message,
+      );
+      return self::soap_call('setDatastreamState', $params, $quiet);
+    }
+  }
+
   /**
    * Soap call
    * @param type $function_name
@@ -826,6 +837,7 @@ class Fedora_Item {
       case 'purgeDatastream':
       case 'purgeObject':
       case 'modifyObject':
+      case 'setDatastreamState':
         $soap_client = self::$connection_helper->getSoapClient(variable_get('fedora_soap_manage_url', 'http://localhost:8080/fedora/services/management?wsdl'));
         try {
           if (!empty($soap_client)) {
