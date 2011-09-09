@@ -2,7 +2,7 @@ There are a few things to set up to get the Simpletests to run properly.
 
 Fedora Installation
 
-The test sets up the fedora_repository module with the default server settings.
+The test sets up the islandora module with the default server settings.
 This means it will expect a Fedora server to be running on localhost:8080
 with the usual defaults. The tests also expect the Islandora demo objects, i.e.,
 islandora:top, islandora:demos collections, etc. to be installed. (Go to

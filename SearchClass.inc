@@ -24,9 +24,12 @@ class SearchClass {
    */
   function solr_search($query, $startPage=1, $fq = NULL, $dismax = NULL) {
     $solrFile = trim(variable_get('islandora_solr_search_block_handler_file', 'plugins/SolrResults.inc'));
-    if (strpos($solrField, '../')) {  // Don't let us bust out of fedora_repository modules directory when looking for a handler
+
+    // Don't let us bust out of fedora_repository modules directory when looking for a handler
+    if (strpos($solrField, '../')) {  
       drupal_set_message(t('You have illegal characters in your solr handler function in the Islandora solr block config.'), 'error');
     }
+    
     $solrClass = trim(variable_get('islandora_solr_search_block_handler_class', 'SolrResults'));
     $solrFunction = trim(variable_get('islandora_solr_search_block_handler_function', 'SearchAndDisplay'));
     require_once(drupal_get_path('module', 'fedora_repository') . '/' . $solrFile);
