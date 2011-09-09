@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * @file fedora_repository.install
  */
@@ -41,7 +39,7 @@ function fedora_repository_requirements($phase) {
   $requirements = array();
 
   if ($phase == 'install') {
-      
+
     // Test for SOAP
     $requirements['fedora-soap']['title'] = t("PHP SOAP extension library");
     if (!class_exists('SoapClient')) {
@@ -53,47 +51,47 @@ function fedora_repository_requirements($phase) {
       $requirements['fedora-soap']['value'] = t("Installed");
       $requirements['fedora-soap']['severity'] = REQUIREMENT_OK;
     }
-    
+
     // Test for Curl
     $requirements['curl']['title'] = "PHP Curl extension library";
-    if ( ! function_exists('curl_init') ) {
-        $requirements['curl']['value'] = t("Not installed");
-        $requirements['curl']['severity'] = REQUIREMENT_ERROR;
-        $requirements['curl']['description'] = t("Ensure that the PHP Curl extension is installed.");
-    } 
-    else {
-        $requirements['curl']['value'] = t("Installed");
-        $requirements['curl']['serenity'] = REQUIREMENT_OK;
+    if (!function_exists('curl_init')) {
+      $requirements['curl']['value'] = t("Not installed");
+      $requirements['curl']['severity'] = REQUIREMENT_ERROR;
+      $requirements['curl']['description'] = t("Ensure that the PHP Curl extension is installed.");
     }
-    
+    else {
+      $requirements['curl']['value'] = t("Installed");
+      $requirements['curl']['serenity'] = REQUIREMENT_OK;
+    }
+
     // Test for DOM
     $requirements['dom']['title'] = "PHP DOM XML extension library";
-    if ( ! method_exists('DOMDocument', 'loadHTML') ) {
-        $requirements['dom']['value'] = t("Not installed");
-        $requirements['dom']['severity'] = REQUIREMENT_ERROR;
-        $requirements['dom']['description'] = t("Ensure that the PHP DOM XML extension is installed.");
-    } 
-    else {
-        $requirements['dom']['value'] = t("Installed");
-        $requirements['dom']['serenity'] = REQUIREMENT_OK;
+    if (!method_exists('DOMDocument', 'loadHTML')) {
+      $requirements['dom']['value'] = t("Not installed");
+      $requirements['dom']['severity'] = REQUIREMENT_ERROR;
+      $requirements['dom']['description'] = t("Ensure that the PHP DOM XML extension is installed.");
     }
-    
+    else {
+      $requirements['dom']['value'] = t("Installed");
+      $requirements['dom']['serenity'] = REQUIREMENT_OK;
+    }
+
     // Test for XSLT
-    $requirements['xslt']['title'] = "PHP XSLT extension library";
-    if ( ! function_exists('xslt_process') ) {
-        $requirements['xslt']['value'] = t("Not installed");
-        $requirements['xslt']['severity'] = REQUIREMENT_ERROR;
-        $requirements['xslt']['description'] = t("Ensure that the PHP XSLT extension is installed.");
-    } 
-    else {
-        $requirements['xslt']['value'] = t("Installed");
-        $requirements['xslt']['serenity'] = REQUIREMENT_OK;
+    $requirements['xsl']['title'] = "PHP XSL extension library";
+    if (!class_exists('XSLTProcessor')) {
+      $requirements['xslt']['value'] = t("Not installed");
+      $requirements['xslt']['severity'] = REQUIREMENT_ERROR;
+      $requirements['xslt']['description'] = t("Ensure that the PHP XSL extension is installed.");
     }
-    
+    else {
+      $requirements['xslt']['value'] = t("Installed");
+      $requirements['xslt']['serenity'] = REQUIREMENT_OK;
+    }
+
     // Test for Imagick
     $requirements['imagick']['title'] = t("Image Magick library");
     //if ( ! class_exists('Imagick') ) {
-    if ( ! file_exists('convert') ) {
+    if (!file_exists('convert')) {
       $requirements['imagick']['value'] = t("Not installed");
       $requirements['imagick']['severity'] = REQUIREMENT_ERROR;
       $requirements['imagick']['description'] = t('Ensure that the Image Magick library is installed.');
@@ -101,11 +99,11 @@ function fedora_repository_requirements($phase) {
     else {
       $requirements['imagick']['value'] = t("Installed");
       $requirements['imagick']['severity'] = REQUIREMENT_OK;
-    }    
+    }
 
     // Test for Kakadu  
     $requirements['kakadu']['title'] = t("Kakadu library");
-    if ( ! file_exists('kdu_compress') ) {
+    if (!file_exists('kdu_compress')) {
       $requirements['kakadu']['value'] = t("Not installed");
       $requirements['kakadu']['severity'] = REQUIREMENT_ERROR;
       $requirements['kakadu']['description'] = t('Ensure that the Kakadu library is installed.');
@@ -113,7 +111,7 @@ function fedora_repository_requirements($phase) {
     else {
       $requirements['kakadu']['value'] = t("Installed");
       $requirements['kakadu']['severity'] = REQUIREMENT_OK;
-    }   
+    }
   }
   elseif ($phase == 'runtime') {
     module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
@@ -122,8 +120,7 @@ function fedora_repository_requirements($phase) {
     if (!fedora_available()) {
       $requirements['fedora-repository']['value'] = t("Not available");
       $requirements['fedora-repository']['severity'] = REQUIREMENT_ERROR;
-      $requirements['fedora-repository']['description'] = t('Ensure that Fedora is running and that the <a href="@collection-settings">collection settings</a> are correct.',
-          array('@collection-settings' => $base_url . '/admin/settings/fedora_repository'));
+      $requirements['fedora-repository']['description'] = t('Ensure that Fedora is running and that the <a href="@collection-settings">collection settings</a> are correct.', array('@collection-settings' => $base_url . '/admin/settings/fedora_repository'));
     }
     else {
       $requirements['fedora-repository']['value'] = t("Available");
