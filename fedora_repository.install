@@ -89,9 +89,9 @@ function fedora_repository_requirements($phase) {
     }
 
     // Test for Imagick
+    system("hash convert 2>&-", $return_value);
     $requirements['imagick']['title'] = t("Image Magick library");
-    //if ( ! class_exists('Imagick') ) {
-    if (!file_exists('convert')) {
+    if ($return_value) {
       $requirements['imagick']['value'] = t("Not installed");
       $requirements['imagick']['severity'] = REQUIREMENT_ERROR;
       $requirements['imagick']['description'] = t('Ensure that the Image Magick library is installed.');
@@ -102,8 +102,9 @@ function fedora_repository_requirements($phase) {
     }
 
     // Test for Kakadu  
+    system("hash kdu_compress 2>&-", $return_value);
     $requirements['kakadu']['title'] = t("Kakadu library");
-    if (!file_exists('kdu_compress')) {
+    if ($return_value) {
       $requirements['kakadu']['value'] = t("Not installed");
       $requirements['kakadu']['severity'] = REQUIREMENT_ERROR;
       $requirements['kakadu']['description'] = t('Ensure that the Kakadu library is installed.');
