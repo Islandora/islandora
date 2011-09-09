@@ -61,7 +61,7 @@ function fedora_repository_requirements($phase) {
     }
     else {
       $requirements['curl']['value'] = t("Installed");
-      $requirements['curl']['serenity'] = REQUIREMENT_OK;
+      $requirements['curl']['severity'] = REQUIREMENT_OK;
     }
 
     // Test for DOM
@@ -73,7 +73,7 @@ function fedora_repository_requirements($phase) {
     }
     else {
       $requirements['dom']['value'] = t("Installed");
-      $requirements['dom']['serenity'] = REQUIREMENT_OK;
+      $requirements['dom']['severity'] = REQUIREMENT_OK;
     }
 
     // Test for XSLT
@@ -85,7 +85,7 @@ function fedora_repository_requirements($phase) {
     }
     else {
       $requirements['xslt']['value'] = t("Installed");
-      $requirements['xslt']['serenity'] = REQUIREMENT_OK;
+      $requirements['xslt']['severity'] = REQUIREMENT_OK;
     }
 
     // Test for Imagick
