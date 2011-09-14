@@ -1,16 +1,17 @@
 <?php
 
-// $Id$
-
-/*
- * Created on 18-Feb-08
- *
- * To change the template for this generated file go to
- * Window - Preferences - PHPeclipse - PHP - Code Templates
+/**
+ * @file
+ * 
+ * Collection Class Class
  */
-// module_load_include('nc', 'CollectionClass', '');
-// This CLASS caches the streams so once you call a getstream once it will always return the same stream as long as you are using the
-// instance of this class.  Cached to prevent mutiple hits to fedora.  maybe a bit confusing though if this class is used in a different context.
+
+/**
+ * This CLASS caches the streams so once you call a getstream once it will always return
+ * the same stream as long as you are using the instance of this class. Cached to
+ * prevent mutiple hits to fedora.  maybe a bit confusing though if this class is used in 
+ * a different context.
+ */
 class CollectionClass {
 
   public static $COLLECTION_CLASS_COLLECTION_POLICY_STREAM = 'COLLECTION_POLICY';
@@ -34,10 +35,15 @@ class CollectionClass {
     }
   }
 
-  /* gets objects related to this object.  must include offset and limit
+  /**
+   * gets objects related to this object.  must include offset and limit
    * calls getRelatedItems but enforces limit and offset
+   * @param type $pid
+   * @param type $limit
+   * @param type $offset
+   * @param type $itqlquery
+   * @return type 
    */
-
   function getRelatedObjects($pid, $limit, $offset, $itqlquery=NULL) {
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');
     $objectHelper = new ObjectHelper();
@@ -51,6 +57,12 @@ class CollectionClass {
   /**
    * Gets objects related to this item.  It will query the object for a Query stream and use that as a itql query
    * or if there is no query stream it will use the default.  If you pass a query to this method it will use the passed in query no matter what
+   * @global type $user
+   * @param type $pid
+   * @param type $itqlquery
+   * @param int $limit
+   * @param int $offset
+   * @return type 
    */
   function getRelatedItems($pid, $itqlquery = NULL, $limit = NULL, $offset = NULL) {
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');
@@ -96,6 +108,11 @@ class CollectionClass {
     return $content;
   }
 
+  /**
+   * get Collection Policy Stream ?
+   * @param type $collection_pid
+   * @return type 
+   */
   function getCollectionPolicyStream($collection_pid) {
     if ($this->collectionPolicyStream != NULL) {
       return $this->collectionPolicyStream;
@@ -104,6 +121,11 @@ class CollectionClass {
     return $this->collectionPolicyStream;
   }
 
+  /**
+   * get Relationship element ?
+   * @param type $collection_pid
+   * @return type 
+   */
   function getRelationshipElement($collection_pid) {
     $stream = $this->getCollectionPolicyStream($collection_pid);
     try {
@@ -116,17 +138,35 @@ class CollectionClass {
     return $relationship;
   }
 
+  /**
+   * get Collection View Stream ?
+   * @param type $collection_pid
+   * @return type 
+   */
   function getCollectionViewStream($collection_pid) {
     $this->collectionViewStream = $this->getStream($collection_pid, CollectionClass :: $COLLECTION_CLASS_COLLECTION_VIEW_STREAM, 0);
     return $this->collectionViewStream;
   }
 
+  /**
+   * get Stream ?
+   * @param type $pid
+   * @param type $dsid
+   * @param type $showError
+   * @return type 
+   */
   function getStream($pid, $dsid, $showError = 1) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
     $item = new fedora_item($pid);
     return isset($item->datastreams[$dsid]) ? $item->get_datastream_dissemination($dsid) : NULL;
   }
 
+  /**
+   * get Pid name space ?
+   * @param type $pid
+   * @param type $dsid
+   * @return type 
+   */
   function getPidNameSpace($pid, $dsid) {
     $stream = $this->getCollectionPolicyStream($pid);
     try {
@@ -148,6 +188,9 @@ class CollectionClass {
 
   /**
    * gets a list of content models from a collection policy
+   * @param type $collection_pid
+   * @param type $showError
+   * @return ContentModel 
    */
   function getContentModels($collection_pid, $showError = TRUE) {
     module_load_include('inc', 'Fedora_Repository', 'ContentModel');
@@ -218,6 +261,12 @@ class CollectionClass {
     return NULL;
   }
 
+  /**
+   * get Allowed Mime Types
+   * @param type $contentModelPid
+   * @param type $contentModel_dsid
+   * @return type 
+   */
   function getAllowedMimeTypes($contentModelPid, $contentModel_dsid) {
     $stream = $this->getContentModelStream($contentModelPid, $contentModel_dsid);
     try {
@@ -235,6 +284,12 @@ class CollectionClass {
   /**
    * Grabs the rules from the content model stream
    * file the file that has been uploaded
+   *
+   * @param type $file
+   * @param type $mimetype
+   * @param type $pid
+   * @param type $dsid
+   * @return type 
    */
   function getAndDoRules($file, $mimetype, $pid, $dsid) {
     if (!user_access('ingest new fedora objects')) {
@@ -262,6 +317,10 @@ class CollectionClass {
 
   /**
    * calls the methods defined in the content model rules .xml file stored in a Fedora object
+   *
+   * @param type $file
+   * @param type $methods
+   * @return type 
    */
   function callMethods($file, $methods) {
     foreach ($methods as $method) {
@@ -294,6 +353,12 @@ class CollectionClass {
   /**
    * grabs a xml form definition from a content model and builds
    * the form using drupals forms api
+   *
+   * @param type $form
+   * @param type $form_state
+   * @param type $contentModelPid
+   * @param type $contentModelDsid
+   * @return type 
    */
   function build_ingest_form(&$form, &$form_state, $contentModelPid, $contentModelDsid) {
     $stream = $this->getContentModelStream($contentModelPid, $contentModelDsid);
@@ -357,8 +422,13 @@ class CollectionClass {
     return $thisClass->$phpMethod($form, $ingest_form, $form_state['values'], $form_state);
   }
 
-  //this will also create a personal collection for an existing user if they don't have one
-  //not using this function currently
+  /**
+   * this will also create a personal collection for an existing user if they don't have one
+   * not using this function currently
+   * 
+   * @param type $user
+   * @return type 
+   */
   function createUserCollection(& $user) {
     if (isset($user->fedora_personal_pid)) {
       return;
@@ -403,6 +473,11 @@ class CollectionClass {
   /**
    * Queries a collection object for an xslt to format how the
    * collection of objects is displayed.
+   *
+   * @param type $pid
+   * @param type $path
+   * @param type $canUseDefault
+   * @return type 
    */
   function getXslContent($pid, $path, $canUseDefault = TRUE) {
     module_load_include('inc', 'fedora_repository', 'CollectionClass');
@@ -414,6 +489,13 @@ class CollectionClass {
     return $xslContent;
   }
 
+  /**
+   * show field sets ?
+   * @global type $base_url
+   * @global type $user
+   * @param type $page_number
+   * @return string 
+   */
   function showFieldSets($page_number) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
     global $base_url;
@@ -463,6 +545,11 @@ class CollectionClass {
     return $tabset;
   }
 
+  /**
+   * get Ingest Interface ??
+   * @global type $base_url
+   * @return string 
+   */
   function getIngestInterface() {
     global $base_url;
     $objectHelper = new ObjectHelper();
@@ -486,6 +573,16 @@ class CollectionClass {
     return $ingestObject;
   }
 
+  /**
+   * render collection
+   * @global type $base_url
+   * @param type $content
+   * @param type $pid
+   * @param type $dsId
+   * @param type $collection
+   * @param int $pageNumber
+   * @return type 
+   */
   function renderCollection($content, $pid, $dsId, $collection, $pageNumber = NULL) {
     $path = drupal_get_path('module', 'fedora_repository');
     global $base_url;
@@ -554,6 +651,12 @@ class CollectionClass {
 
 }
 
+/**
+ * collection creation form ?
+ * @param type $form_state
+ * @param type $parent_collection_pid
+ * @return type 
+ */
 function collection_creation_form(&$form_state, $parent_collection_pid) {
   module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
   $restricted = FALSE;
@@ -629,6 +732,12 @@ function collection_creation_form(&$form_state, $parent_collection_pid) {
   return($form);
 }
 
+/**
+ * collection creation form validate ?
+ * @param type $form
+ * @param type $form_state
+ * @return type 
+ */
 function collection_creation_form_validate($form, &$form_state) {
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
   $pid = $form_state['values']['collection_pid'];
@@ -639,6 +748,12 @@ function collection_creation_form_validate($form, &$form_state) {
   }
 }
 
+/**
+ * collection creation form submit
+ * @global type $user
+ * @param type $form
+ * @param type $form_state 
+ */
 function collection_creation_form_submit($form, &$form_state) {
   global $user;
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');

@@ -2,10 +2,6 @@
 
 /**
  * @file 
- * 
- */
-/**
- * @file
  * Fedora Item
  */
 define('RELS_EXT_URI', 'info:fedora/fedora-system:def/relations-external#');
