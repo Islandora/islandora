@@ -753,10 +753,11 @@ function collection_creation_form_validate($form, &$form_state) {
 function collection_creation_form_submit($form, &$form_state) {
   global $user;
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
+  module_load_include('inc', 'fedora_repository', 'api/dublin_core');
   $module_path = drupal_get_path('module', 'fedora_repository');
   $thumbnail = drupal_get_path('module', 'Fedora_Repository') . '/images/Crystal_Clear_filesystem_folder_grey.png';
   $collection_pid = $form_state['values']['collection_pid'];
-  $collection_name = $form_state['values']['collection_name'];
+  $new_collection_label = $form_state['values']['collection_name'];
   $parent_collection = $form_state['values']['parent_collection'];
   $all_cModels = get_content_models_as_option_array();
   $collection_policy = '<?xml version="1.0" encoding="UTF-8"?>
@@ -779,7 +780,7 @@ function collection_creation_form_submit($form, &$form_state) {
       $node->addAttribute('pid', $content_model);
     }
   }
-  $item = fedora_item::ingest_new_item($collection_pid, 'A', $new_collections_label, $user->name);
+  $item = fedora_item::ingest_new_item($collection_pid, 'A', $new_collection_label, $user->name);
   $item->add_relationship('isMemberOfCollection', $parent_collection, RELS_EXT_URI);
   $item->add_relationship('hasModel', 'islandora:collectionCModel', FEDORA_MODEL_URI);
   $item->add_datastream_from_string($collection_policy_xml->saveXML(), 'COLLECTION_POLICY');
