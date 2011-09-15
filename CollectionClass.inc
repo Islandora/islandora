@@ -715,6 +715,7 @@ function collection_creation_form(&$form_state, $parent_collection_pid) {
     '#title' => "Choose allowable content models for this collection",
     '#type' => 'checkboxes',
     '#options' => $content_models,
+    '#required' => true,
     '#description' => t("Content models describe the behaviours of objects with which they are associated."),
   );
 
@@ -736,11 +737,16 @@ function collection_creation_form(&$form_state, $parent_collection_pid) {
  */
 function collection_creation_form_validate($form, &$form_state) {
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
+  module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
   $pid = $form_state['values']['collection_pid'];
   $item = new fedora_item($pid);
   if ($item->exists()) {
-    drupal_set_message("$pid already exists within your repository. the PID must be unique", 'warning');
+    form_set_error('', t("$pid already exists within your repository. the PID must be unique"));
     return;
+  }
+  if (!valid_pid($pid)){
+     form_set_error('', t("$pid is not a valid identifier"));
+     return;
   }
 }
 
@@ -759,6 +765,7 @@ function collection_creation_form_submit($form, &$form_state) {
   $collection_pid = $form_state['values']['collection_pid'];
   $new_collection_label = $form_state['values']['collection_name'];
   $parent_collection = $form_state['values']['parent_collection'];
+  $pid_namespace = $form_state['values']['collection_namespace'];
   $all_cModels = get_content_models_as_option_array();
   $collection_policy = '<?xml version="1.0" encoding="UTF-8"?>
 <collection_policy xmlns="http://www.islandora.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="" xsi:schemaLocation="http://www.islandora.ca http://syn.lib.umanitoba.ca/collection_policy.xsd">
@@ -776,7 +783,7 @@ function collection_creation_form_submit($form, &$form_state) {
       $node = $collection_policy_xml->content_models->addChild('content_model');
       $node->addAttribute('dsid', 'ISLANDORACM');
       $node->addAttribute('name', $all_cModels[$content_model]);
-      $node->addAttribute('namespace', $pid_namespace . '1');
+      $node->addAttribute('namespace', $pid_namespace . ':1');
       $node->addAttribute('pid', $content_model);
     }
   }

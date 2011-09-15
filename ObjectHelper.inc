@@ -601,7 +601,7 @@ class ObjectHelper {
     if ($pid == NULL) {
       $pid = variable_get('fedora_repository_pid', 'islandora:top');
     }
-    $nameSpaceAllowed = explode(" ", variable_get('fedora_pids_allowed', 'default: demo: changeme: islandora: ilives: '));
+    $nameSpaceAllowed = explode(" ", variable_get('fedora_pids_allowed', 'default: demo: changeme: islandora: ilives: islandora-book: books: newspapers: '));
     $pos = NULL;
     foreach ($nameSpaceAllowed as $nameSpace) {
       $pos = stripos($pid, $nameSpace);
