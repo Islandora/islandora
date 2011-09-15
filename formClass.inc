@@ -97,6 +97,7 @@ class formClass {
       'type' => MENU_CALLBACK,
       'access arguments' => array('view fedora collection')
     );
+    
     $items['fedora/repository/editmetadata'] = array(
       'title' => t('Edit metadata'),
       'page callback' => 'fedora_repository_edit_qdc_page',
@@ -105,18 +106,21 @@ class formClass {
       'type' => MENU_CALLBACK,
       'access arguments' => array('edit fedora meta data')
     );
+    
     $items['fedora/repository/purgeStream'] = array(
       'title' => t('Purge data stream'),
       'page callback' => 'fedora_repository_purge_stream',
       'type' => MENU_CALLBACK,
       'access arguments' => array('purge objects and datastreams')
     );
+    
     $items['fedora/repository/replaceStream'] = array(
       'title' => t('Replace Stream'),
       'page callback' => 'fedora_repository_replace_stream',
       'type' => MENU_CALLBACK,
       'access arguments' => array('add fedora datastreams'),
     );
+    
     $items['fedora/repository/purgeObject'] = array(
       'title' => t('Purge object'),
       'page callback' => 'fedora_repository_purge_object',
@@ -124,6 +128,7 @@ class formClass {
       'type' => MENU_CALLBACK,
       'access arguments' => array('purge objects and datastreams')
     );
+    
     $items['fedora/repository/addStream'] = array(
       'title' => t('Add stream'),
       'page callback' => 'add_stream',
@@ -138,6 +143,7 @@ class formClass {
       'type' => MENU_CALLBACK,
       'access argruments' => array('view fedora collection')
     );
+    
     //new for mnpl******************************************
     $items['fedora/repository/mnpl_advanced_search'] = array(
       'title' => t('Repository advanced search'),
@@ -145,6 +151,7 @@ class formClass {
       'type' => MENU_CALLBACK,
       'access arguments' => array('view fedora collection')
     );
+    
     $items['fedora/ingestObject'] = array(
       'title' => t('Ingest object'),
       'page callback' => 'fedora_repository_ingest_object',
@@ -157,12 +164,6 @@ class formClass {
       'page callback' => 'fedora_repository_list_terms',
       'type' => MENU_CALLBACK,
       'access arguments' => array('view fedora collection')
-    );
-
-    $items['fedora/tagging/add_tag/js'] = array(
-      'page callback' => 'fedora_tagging_add_tag_js',
-      'access arguments' => array('edit tags datastream'),
-      'type' => MENU_CALLBACK,
     );
 
     /* Export functionality */
