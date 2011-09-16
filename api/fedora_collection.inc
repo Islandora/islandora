@@ -69,7 +69,6 @@ function export_collection($collection_pid, $relationship = 'isMemberOfCollectio
  */
 function get_related_items_as_xml($collection_pid, $relationship = array('isMemberOfCollection'), $limit = 10000, $offset = 0, $active_objects_only = TRUE, $cmodel = NULL, $orderby = '$title') {
   module_load_include('inc', 'fedora_repository', 'ObjectHelper');
-  $collection_item = new Fedora_Item($collection_pid);
 
   global $user;
   if (!fedora_repository_access(OBJECTHELPER :: $OBJECT_HELPER_VIEW_FEDORA, $pid, $user)) {
