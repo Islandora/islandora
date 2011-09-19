@@ -2145,7 +2145,7 @@ function fedora_repository_batch_reingest_object($object, &$context) {
 
     if (!empty($datastreams) && is_array($datastreams)) {
       $label = !empty($object['label']) ? $object['label'] : '';
-      if (empty($object['foxml_file']) && !defined($new_item)) {
+      if (empty($object['foxml_file']) && !isset($new_item)) {
         $new_item = Fedora_Item::ingest_new_item($object['pid'], 'A', $label);
       }
       if (!empty($object['cmodel'])) {
