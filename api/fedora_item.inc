@@ -146,7 +146,7 @@ class Fedora_Item {
    * @return type 
    */
   function add_datastream_from_string($str, $datastream_id, $datastream_label = NULL, $datastream_mimetype = 'text/xml', $controlGroup = 'M', $logMessage = NULL) {
-    $dir = sys_get_temp_dir();
+    $dir = file_directory_temp();
     $tmpfilename = tempnam($dir, 'fedoratmp');
     $tmpfile = fopen($tmpfilename, 'w');
     fwrite($tmpfile, $str, strlen($str));
