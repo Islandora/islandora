@@ -82,7 +82,7 @@ function fedora_repository_collection_view($pid = NULL, $collection = NULL, $pag
 
   $objectHelper = new ObjectHelper();
   if ($pid == NULL) {
-    $pid = variable_get('fedora_repository_pid', 'islandora:top');
+    $pid = variable_get('fedora_repository_pid', 'islandora:root');
   }
 
   $content = '';
@@ -908,7 +908,7 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
   }
   
   if ($pid == NULL) {
-    $pid = variable_get('fedora_repository_pid', 'islandora:top');
+    $pid = variable_get('fedora_repository_pid', 'islandora:root');
   }
 
   $item = new fedora_item($pid);
@@ -936,7 +936,7 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
 
   $objectHelper = new ObjectHelper();
   if ($pid == NULL) {
-    $pid = variable_get('fedora_repository_pid', 'islandora:top');
+    $pid = variable_get('fedora_repository_pid', 'islandora:root');
   }
   $headers = module_invoke_all('file_download', "/fedora/repository/$pid");
   if (in_array(-1, $headers)) {
@@ -1054,7 +1054,7 @@ function repository_service($pid = NULL, $servicePid = NULL, $serviceMethod = NU
     return ' ';
   }
   if ($pid == NULL) {
-    $pid = variable_get('fedora_repository_pid', 'islandora:top');
+    $pid = variable_get('fedora_repository_pid', 'islandora:root');
   }
   $headers = module_invoke_all('file_download', "/fedora/repository/$pid");
   if (in_array(-1, $headers)) {
@@ -1450,7 +1450,7 @@ function fedora_repository_demo_objects_form() {
 
   foreach (array(
   'islandora:collectionCModel' => 'Islandora default content models',
-  'islandora:top' => 'Islandora top-level collection',
+  'islandora:root' => 'Islandora top-level collection',
   'islandora:demos' => 'Islandora demos collection',
   'islandora:largeimages' => 'Sample large image content model (requires <a href="http://sourceforge.net/projects/djatoka/">Djatoka</a> and <a href="http://www.kakadusoftware.com/index.php?option=com_content&task=view&id=26&Itemid=22">Kakadu</a>.)',
   )
@@ -1557,7 +1557,7 @@ function fedora_repository_demo_objects_form_submit($form, &$form_state) {
           or $object <fedora-rels-ext:isMemberOfCollection> <info:fedora/islandora:ContentModelsCollection>)
           and $object <fedora-model:state> <info:fedora/fedora-system:def/model#Active>)
           order by $title', 'QUERY', 'Content Model Collection Query', 'text/plain');
-        $cmodel_collection->add_relationship('isMemberOfCollection', 'islandora:top');
+        $cmodel_collection->add_relationship('isMemberOfCollection', 'islandora:root');
         $cmodel_collection->add_relationship('hasModel', 'islandora:collectionCModel', FEDORA_MODEL_URI);
         $cmodel_collection->add_datastream_from_file(drupal_get_path('module', 'fedora_repository') . '/collection_views/simple_list_view.xml', 'COLLECTION_VIEW', 'Collection View', 'text/xml', 'X');
         $cmodel_collection->add_datastream_from_file(drupal_get_path('module', 'fedora_repository') . '/images/contentModel.jpg', 'TN', 'Thumbnail', 'image/jpg', 'M');
@@ -1567,13 +1567,13 @@ function fedora_repository_demo_objects_form_submit($form, &$form_state) {
       }
     }
 
-    if (!empty($form_state['values']['demo_collections']['islandora:top'])) {
-      $new_item = Fedora_Item::ingest_new_item('islandora:top', 'A', 'Islandora Top-level Collection');
+    if (!empty($form_state['values']['demo_collections']['islandora:root'])) {
+      $new_item = Fedora_Item::ingest_new_item('islandora:root', 'A', 'Islandora Top-level Collection');
       $new_item->add_relationship('hasModel', 'islandora:collectionCModel', FEDORA_MODEL_URI);
       $cp = $new_item->add_datastream_from_file(drupal_get_path('module', 'fedora_repository') . '/collection_policies/COLLECTION-COLLECTION POLICY.xml', 'COLLECTION_POLICY', 'Collection Policy', 'text/xml', 'X');
       try {
         $tn = $new_item->add_datastream_from_file(drupal_get_path('module', 'fedora_repository') . '/images/Gnome-emblem-photos.png', 'TN', 'Thumbnail.png', 'image/png', 'M');
-        drupal_set_message(t("Successfully installed <a href=\"" . $base_url . "/fedora/repository/islandora:top\">islandora:top</a>."), 'message');
+        drupal_set_message(t("Successfully installed <a href=\"" . $base_url . "/fedora/repository/islandora:root\">islandora:root</a>."), 'message');
       } catch (exception $e) {
         
       }
@@ -1581,7 +1581,7 @@ function fedora_repository_demo_objects_form_submit($form, &$form_state) {
 
     if (!empty($form_state['values']['demo_collections']['islandora:demos'])) {
       $new_item = fedora_item::ingest_new_item('islandora:demos', 'A', 'Islandora Demo Collection');
-      $new_item->add_relationship('isMemberOfCollection', 'islandora:top');
+      $new_item->add_relationship('isMemberOfCollection', 'islandora:root');
       $new_item->add_relationship('hasModel', 'islandora:collectionCModel', FEDORA_MODEL_URI);
       $cp = $new_item->add_datastream_from_file(drupal_get_path('module', 'fedora_repository') . '/collection_policies/COLLECTION-COLLECTION POLICY.xml', 'COLLECTION_POLICY', 'Collection Policy', 'text/xml', 'X');
 
