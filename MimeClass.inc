@@ -301,21 +301,23 @@ class MimeClass {
    */
   private function system_mime_type_extensions() {
     $out = array();
-    $file = fopen($this->etc_mime_types, 'r');
-    while (($line = fgets($file)) !== FALSE) {
-      $line = trim(preg_replace('/#.*/', '', $line));
-      if (!$line)
-        continue;
-      $parts = preg_split('/\s+/', $line);
-      if (count($parts) == 1)
-        continue;
-      // A single part means a mimetype without extensions, which we ignore.
-      $type = array_shift($parts);
-      if (!isset($out[$type]))
-        $out[$type] = array_shift($parts);
-      // We take the first ext from the line if many are present.
+    if (file_exists($this->etc_mime_types)) {
+      $file = fopen($this->etc_mime_types, 'r');
+      while (($line = fgets($file)) !== FALSE) {
+        $line = trim(preg_replace('/#.*/', '', $line));
+        if (!$line)
+          continue;
+        $parts = preg_split('/\s+/', $line);
+        if (count($parts) == 1)
+          continue;
+        // A single part means a mimetype without extensions, which we ignore.
+        $type = array_shift($parts);
+        if (!isset($out[$type]))
+          $out[$type] = array_shift($parts);
+        // We take the first ext from the line if many are present.
+      }
+      fclose($file);
     }
-    fclose($file);
     return $out;
   }
 
@@ -328,20 +330,22 @@ class MimeClass {
    */
   private function system_extension_mime_types() {
     $out = array();
-    $file = fopen($this->etc_mime_types, 'r');
-    while (($line = fgets($file)) !== FALSE) {
-      $line = trim(preg_replace('/#.*/', '', $line));
-      if (!$line)
-        continue;
-      $parts = preg_split('/\s+/', $line);
-      if (count($parts) == 1)
-        continue;
-      // A single part means a mimetype without extensions, which we ignore.
-      $type = array_shift($parts);
-      foreach ($parts as $part)
-        $out[$part] = $type;
+    if (file_exists($this->etc_mime_types)) {
+      $file = fopen($this->etc_mime_types, 'r');
+      while (($line = fgets($file)) !== FALSE) {
+        $line = trim(preg_replace('/#.*/', '', $line));
+        if (!$line)
+          continue;
+        $parts = preg_split('/\s+/', $line);
+        if (count($parts) == 1)
+          continue;
+        // A single part means a mimetype without extensions, which we ignore.
+        $type = array_shift($parts);
+        foreach ($parts as $part)
+          $out[$part] = $type;
+      }
+      fclose($file);
     }
-    fclose($file);
     return $out;
   }
 
