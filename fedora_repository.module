@@ -914,6 +914,7 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
   $item = new fedora_item($pid);
   if (!$item->exists()) {
     drupal_not_found();
+    exit();
   }
 
   if ($pid & !valid_pid($pid)) {
