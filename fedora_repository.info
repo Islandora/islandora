@@ -2,6 +2,7 @@
 name = Digital Repository
 dependencies[] = imageapi
 dependencies[] = tabs
+dependencies[] = islandora_content_model_forms
 description = Shows a list of items in a fedora collection.
 package = Islandora
 version = 11.2.beta1
