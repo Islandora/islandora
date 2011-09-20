@@ -674,7 +674,7 @@ function collection_creation_form(&$form_state, $parent_collection_pid) {
   $content_models = get_content_models_as_option_array();
   $form['titlebox'] = array(
     '#type' => 'item',
-    '#value' => t("Create New Child Collection within $collection_pid"),
+    '#value' => t("Create New Child Collection within $parent_collection_pid"),
   );
 
   $form['collection_name'] = array(
