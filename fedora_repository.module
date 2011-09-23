@@ -907,6 +907,11 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
     return '';
   }
   
+  if (!risearch_available()) {
+    drupal_set_message(t('The Fedora resource index search is currently unavailable. Please contact the site administrator.'), 'warning', FALSE);
+    return '';
+  }
+  
   if ($pid == NULL) {
     $pid = variable_get('fedora_repository_pid', 'islandora:root');
   }
