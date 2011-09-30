@@ -830,6 +830,9 @@ function fedora_repository_perm() {
     OBJECTHELPER::$INGEST_FEDORA_OBJECTS,
     OBJECTHELPER::$EDIT_TAGS_DATASTREAM,
     OBJECTHELPER::$VIEW_DETAILED_CONTENT_LIST,
+    OBJECTHELPER::$MANAGE_COLLECTIONS,
+    OBJECTHELPER::$DELETE_ENTIRE_COLLECTIONS,
+    OBJECTHELPER::$CREATE_BATCH_PROCESS,
   );
 }
 
@@ -987,7 +990,17 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
 // Add a 'manage object' tab for all objects, where detailed list of content is shown.
   $obj = new FedoraObjectDetailedContent($pid);
   $object_details = $obj->showFieldSets();
+  if ($object_details['fedora_object_details']['#selected'] == true){
+    foreach($cmodels_tabs as $cmodel_tab){
+      if (is_array($cmodel_tab)){
+        $cmodel_tab['#selected'] = FALSE;
+      }
+
+    }
+  }
   $cmodels_tabs = array_merge($cmodels_tabs, $object_details);
+
+
   return tabs_render($cmodels_tabs);
 }
 

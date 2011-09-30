@@ -299,7 +299,7 @@ function get_content_models_as_option_array() {
       $nameparts = explode(':', $parts[0]);
       if (!$restricted || in_array($nameparts[0], $allowed))
         if ($item->get_datastream_dissemination('ISLANDORACM')) {
-          $options[$parts[0]] = $parts[1];
+          $options[$parts[0]] = $parts[1]. ' ~ ' . $parts[0] ;
         }
     }
   }

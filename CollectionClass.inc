@@ -498,6 +498,8 @@ class CollectionClass {
    */
   function showFieldSets($page_number) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
+    module_load_include('inc', 'fedora_repository', 'CollectionManagement');
+    module_load_include('inc', 'fedora_repository', 'BatchIngest');
     global $base_url;
     $tabset = array();
     global $user;
@@ -514,32 +516,56 @@ class CollectionClass {
     // Check the form post to see if we are in the middle of an ingest operation.
     $show_ingest_tab = (!empty($_POST['form_id']) && $_POST['form_id'] == 'fedora_repository_ingest_form');
     $add_to_collection = $this->getIngestInterface();
+
+    $show_batch_tab = TRUE;
+    $policy = CollectionPolicy::loadFromCollection($this->pid, TRUE);
+    $content_models = $policy->getContentModels();
+    if (count($content_models) == 1 && $content_models[0]->pid == "islandora:collectionCModel") {
+      $show_batch_tab = FALSE;
+    }
+    if (!$show_ingest_tab) {
+      $view_selected = true;
+    }
+    if(!$collection_items){
+      $view_selected = false;
+      $add_selected = true;
+    }
     $view_selected = !$show_ingest_tab;
-    drupal_set_message();
 
 
     $tabset['view_tab'] = array(
       '#type' => 'tabpage',
       '#title' => 'View',
       '#selected' => $view_selected,
-      '#content' => $collection_items
+      '#content' => $collection_items,
+     
     );
     $tabset['add_tab'] = array(
-      // #type and #title are the minimum requirements.
       '#type' => 'tabpage',
       '#title' => t('Add'),
-      '#selected' => $show_ingest_tab,
+      '#selected' => $add_selected,
       // This will be the content of the tab.
       '#content' => $add_to_collection,
     );
-
-    $tabset['add_collection_tab'] = array(
-      // #type and #title are the minimum requirements.
-      '#type' => 'tabpage',
-      '#title' => t('Add Child Collection'),
-      // This will be the content of the tab.
-      '#content' => drupal_get_form('collection_creation_form', $this->pid),
-    );
+    if (user_access('manage collections')) {
+      $tabset['add_collection_tab'] = array(
+        // #type and #title are the minimum requirements.
+        '#type' => 'tabpage',
+        '#title' => t('Manage This Collection'),
+        // This will be the content of the tab.
+        '#content' => drupal_get_form('collection_management_form', $this->pid, $content_models),
+        '#selected' => false,
+      );
+    }
+    if ($show_batch_tab && user_access('create batch process')) {
+      $tabset['batch_ingest_tab'] = array(
+        // #type and #title are the minimum requirements.
+        '#type' => 'tabpage',
+        '#title' => t('Batch Ingest'),
+        // This will be the content of the tab.
+        '#content' => drupal_get_form('batch_creation_form', $this->pid, $content_models),
+      );
+    }
     return $tabset;
   }
 
@@ -649,146 +675,3 @@ class CollectionClass {
 
 }
 
-/**
- * collection creation form ?
- * @param type $form_state
- * @param type $parent_collection_pid
- * @return type 
- */
-function collection_creation_form(&$form_state, $parent_collection_pid) {
-  module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
-  $restricted = FALSE;
-  if (variable_get('fedora_namespace_restriction_enforced', true)) {
-    $restricted = true;
-    $allowed_string = variable_get('fedora_pids_allowed', 'default: demo: changeme: islandora:');
-    $namespaces = explode(':', $allowed_string);
-    foreach ($namespaces as $namespace) {
-      if ($namespace) {
-        $allowed[trim($namespace)] = trim($namespace);
-      }
-    }
-  }
-
-  $content_models = get_content_models_as_option_array();
-  $form['titlebox'] = array(
-    '#type' => 'item',
-    '#value' => t("Create New Child Collection within $parent_collection_pid"),
-  );
-
-  $form['collection_name'] = array(
-    '#title' => "Collection Name",
-    '#type' => 'textfield',
-    '#description' => t("Human readable name for this collection"),
-  );
-  $form['collection_pid'] = array(
-    '#title' => "Collection PID",
-    '#type' => 'textfield',
-    '#size' => 15,
-    '#description' => t("Unique PID for this collection.  <br />Pids take the general form of namespace:collection eg islandora:pamphlets"),
-  );
-  if (!$restricted) {
-    $form['collection_namespace'] = array(
-      '#title' => "Collection Namespace",
-      '#type' => 'textfield',
-      '#size' => 15,
-      '#default_value' => 'default',
-      '#description' => t("Namespace for objects in this collection."),
-    );
-  }
-  else {
-    $form['collection_namespace'] = array(
-      '#title' => "Collection Namespace",
-      '#type' => 'select',
-      '#options' => $allowed,
-      '#default_value' => 'default',
-      '#description' => t("Namespace for objects in this collection."),
-    );
-  }
-  $form['parent_collection'] = array(
-    '#type' => 'hidden',
-    '#value' => $parent_collection_pid,
-  );
-
-  $form['content_models'] = array(
-    '#title' => "Choose allowable content models for this collection",
-    '#type' => 'checkboxes',
-    '#options' => $content_models,
-    '#required' => true,
-    '#description' => t("Content models describe the behaviours of objects with which they are associated."),
-  );
-
-
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Submit')
-  );
-
-
-  return($form);
-}
-
-/**
- * collection creation form validate ?
- * @param type $form
- * @param type $form_state
- * @return type 
- */
-function collection_creation_form_validate($form, &$form_state) {
-  module_load_include('inc', 'fedora_repository', 'api/fedora_item');
-  module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
-  $pid = $form_state['values']['collection_pid'];
-  $item = new fedora_item($pid);
-  if ($item->exists()) {
-    form_set_error('', t("$pid already exists within your repository. the PID must be unique"));
-    return;
-  }
-  if (!valid_pid($pid)){
-     form_set_error('', t("$pid is not a valid identifier"));
-     return;
-  }
-}
-
-/**
- * collection creation form submit
- * @global type $user
- * @param type $form
- * @param type $form_state 
- */
-function collection_creation_form_submit($form, &$form_state) {
-  global $user;
-  module_load_include('inc', 'fedora_repository', 'api/fedora_item');
-  module_load_include('inc', 'fedora_repository', 'api/dublin_core');
-  $module_path = drupal_get_path('module', 'fedora_repository');
-  $thumbnail = drupal_get_path('module', 'Fedora_Repository') . '/images/Crystal_Clear_filesystem_folder_grey.png';
-  $collection_pid = $form_state['values']['collection_pid'];
-  $new_collection_label = $form_state['values']['collection_name'];
-  $parent_collection = $form_state['values']['parent_collection'];
-  $pid_namespace = $form_state['values']['collection_namespace'];
-  $all_cModels = get_content_models_as_option_array();
-  $collection_policy = '<?xml version="1.0" encoding="UTF-8"?>
-<collection_policy xmlns="http://www.islandora.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="" xsi:schemaLocation="http://www.islandora.ca http://syn.lib.umanitoba.ca/collection_policy.xsd">
-    <content_models>
-    </content_models>
-    <search_terms>
-    </search_terms>
-    <staging_area></staging_area>
-    <relationship>isMemberOfCollection</relationship>
-</collection_policy>';
-  $content_models = $form_state['values']['content_models'];
-  $collection_policy_xml = simplexml_load_string($collection_policy);
-  foreach ($content_models as $content_model) {
-    if ($content_model) {
-      $node = $collection_policy_xml->content_models->addChild('content_model');
-      $node->addAttribute('dsid', 'ISLANDORACM');
-      $node->addAttribute('name', $all_cModels[$content_model]);
-      $node->addAttribute('namespace', $pid_namespace . ':1');
-      $node->addAttribute('pid', $content_model);
-    }
-  }
-  $item = fedora_item::ingest_new_item($collection_pid, 'A', $new_collection_label, $user->name);
-  $item->add_relationship('isMemberOfCollection', $parent_collection, RELS_EXT_URI);
-  $item->add_relationship('hasModel', 'islandora:collectionCModel', FEDORA_MODEL_URI);
-  $item->add_datastream_from_string($collection_policy_xml->saveXML(), 'COLLECTION_POLICY');
-  $item->add_datastream_from_file($thumbnail, 'TN');
-  drupal_goto("/fedora/repository/$collection_pid");
-}

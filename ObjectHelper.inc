@@ -19,6 +19,9 @@ class ObjectHelper {
   public static $INGEST_FEDORA_OBJECTS = 'ingest new fedora objects';
   public static $EDIT_TAGS_DATASTREAM = 'edit tags datastream';
   public static $VIEW_DETAILED_CONTENT_LIST = 'view detailed list of content';
+  public static $MANAGE_COLLECTIONS = 'manage collections';
+  public static $DELETE_ENTIRE_COLLECTIONS = 'delete entire collections';
+  public static $CREATE_BATCH_PROCESS = 'create batch process';
   public static $DISPLAY_ALWAYS = 0;
   public static $DISPLAY_NEVER = 1;
   public static $DISPLAY_NO_MODEL_OUTPUT = 2;
@@ -160,7 +163,7 @@ class ObjectHelper {
         if ($asAttachment) {
           $suggestedFileName = "$label";
           $pos = strpos($suggestedFileName, '.');
-          
+
           /*
            * Here we used to take an object of, say, type application/pdf with label, say, "My Document"
            * and we assemble the output filename extension based on the post-slash portion of the mimetype.
@@ -300,8 +303,8 @@ class ObjectHelper {
       }
       if ($allow) {
         $purgeImage = '<a title="purge datastream ' . $dataStreamValue->label . '" href="' . $base_url . '/fedora/repository/purgeStream/' .
-          $pid . '/' . $dataStreamValue->ID . '/' . $dataStreamValue->label . '"><img src="' . $base_url . '/' . $path .
-          '/images/purge.gif" alt="purge datastream" /></a>';
+            $pid . '/' . $dataStreamValue->ID . '/' . $dataStreamValue->label . '"><img src="' . $base_url . '/' . $path .
+            '/images/purge.gif" alt="purge datastream" /></a>';
       }
     }
     else {
@@ -329,7 +332,7 @@ class ObjectHelper {
     $mimeType = $dataStreamValue->MIMEType;
 
     $view = '<a href="' . $base_url . '/fedora/repository/' . drupal_urlencode($pid) . '/' . $id . '/' . drupal_urlencode($label) .
-      '" target="_blank" >' . t('View') . '</a>';
+        '" target="_blank" >' . t('View') . '</a>';
     $action = "$base_url/fedora/repository/object_download/" . drupal_urlencode($pid) . '/' . $id . '/' . drupal_urlencode(preg_replace('/\//i', '${1}_', $label)); // Necessary to handle the case of Datastream labels that contain slashes. Ugh.
     $downloadVersion = '<form method="GET" action="' . $action . '"><input type="submit" value="' . t('Download') . '"></form>';
     if (user_access(ObjectHelper :: $EDIT_FEDORA_METADATA)) {
@@ -416,7 +419,7 @@ class ObjectHelper {
       if ($allow) {
 
         $output .= '<br /><a title = "' . t('Edit Meta Data') . '" href="' . $base_url . '/fedora/repository/' . 'editmetadata/' . $pid . '/' .
-          $dsid . '"><img src="' . $base_url . '/' . $path . '/images/edit.gif" alt="' . t('Edit Meta Data') . '" /></a>';
+            $dsid . '"><img src="' . $base_url . '/' . $path . '/images/edit.gif" alt="' . t('Edit Meta Data') . '" /></a>';
       }
     }
     return $output;
@@ -673,8 +676,8 @@ class ObjectHelper {
           if ($allow) {
             // $ingestObject = '<a title="'. t('Ingest a New object into ') . $collectionName . ' '. $collection_pid . '" href="'. base_path() .
             $ingestObject = '<a title="' . t('Ingest a New object into !collection_name PID !collection_pid', array('!collection_name' => $collectionName, '!collection_pid' => $collection_pid)) . '" href="' . base_path() .
-              'fedora/ingestObject/' . $collection_pid . '/' . $collectionName . '"><img src="' . $base_url . '/' . $path .
-              '/images/ingest.png" alt="' . t('Add a New Object') . '" class="icon"></a> ' . t('Add to this Collection');
+                'fedora/ingestObject/' . $collection_pid . '/' . $collectionName . '"><img src="' . $base_url . '/' . $path .
+                '/images/ingest.png" alt="' . t('Add a New Object') . '" class="icon"></a> ' . t('Add to this Collection');
           }
         }
       }
@@ -855,10 +858,10 @@ class ObjectHelper {
     // Get pid, title and description for children of object $pid
     $query_string = 'select $o $title from <#ri> ' .
 //    $query_string = 'select $o $title $desc from <#ri> '.
-      'where $s <info:fedora/fedora-system:def/relations-external#hasMember> $o ' .
-      'and $o <dc:title> $title ' .
+        'where $s <info:fedora/fedora-system:def/relations-external#hasMember> $o ' .
+        'and $o <dc:title> $title ' .
 //    'and $o <dc:description> $desc '.
-      'and ( ';
+        'and ( ';
 
     foreach ($pids as $pid) {
       $query_string .= '$s <mulgara:is> <info:fedora/' . $pid . '> or ';
