@@ -34,6 +34,10 @@ function collection_management_form(&$form_state, $this_collection_pid, $content
       $cm_options[$content_model->pid] = $cm_name;
     }
   }
+  if (!empty($cm_options)) {
+    $show_delete = true;
+  }
+
 
   $content_models = get_content_models_as_option_array();
   $form['child_creation'] = array(
@@ -53,6 +57,7 @@ function collection_management_form(&$form_state, $this_collection_pid, $content
     '#type' => 'textfield',
     '#description' => t("Human readable name for this collection"),
   );
+
   $form['child_creation']['new_collection_pid'] = array(
     '#title' => "Collection PID",
     '#type' => 'textfield',
@@ -81,6 +86,7 @@ function collection_management_form(&$form_state, $this_collection_pid, $content
     '#type' => 'hidden',
     '#value' => $this_collection_pid,
   );
+  
   $form['collection_pid'] = array(
     '#type' => 'hidden',
     '#value' => $this_collection_pid,
@@ -98,6 +104,62 @@ function collection_management_form(&$form_state, $this_collection_pid, $content
     '#value' => t('Create Collection'),
     '#id' => 'create_class'
   );
+  $form['manage_collection_policy'] = array(
+    '#title' => "Manage Collection Policies",
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+
+  $form['manage_collection_policy']['add'] = array(
+    '#title' => "Add Content Model",
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed' => $show_delete,
+  );
+
+
+  $form ['manage_collection_policy']['add']['content_model_to_add'] = array(
+    '#title' => "Choose Content Model",
+    '#type' => 'select',
+    '#options' => array_diff_key($content_models, $cm_options),
+    '#description' => t("Choose content model to add to this collection policy."),
+  );
+
+  $form ['manage_collection_policy']['add']['new_cp_namespace'] = array(
+    '#title' => "Choose Namespace",
+    '#type' => 'textfield',
+    '#size' => 15,
+    '#description' => t("Choose namespace for objects in this collection associated with this content model"),
+  );
+  $form['manage_collection_policy']['add']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Add Content Model to Collection Policy'),
+    '#id' => 'add_cm'
+  );
+
+  if ($show_delete) {
+    $form['manage_collection_policy']['remove'] = array(
+      '#title' => "Delete Content Model",
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+    );
+
+    $form ['manage_collection_policy']['remove']['content_models_to_remove'] = array(
+      '#title' => "Choose Content Model to Remove",
+      '#type' => 'checkboxes',
+      '#options' => $cm_options,
+      '#description' => t("Choose content models to remove from this collection policy."),
+    );
+
+
+    $form['manage_collection_policy']['remove']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Remove Content Collection Policy'),
+      '#id' => 'remove_cm'
+    );
+  }
   $form['change_cmodel'] = array(
     '#title' => "Change Content Models",
     '#type' => 'fieldset',
@@ -167,11 +229,17 @@ function collection_management_form_validate($form, &$form_state) {
     $pid = $form_state['values']['new_collection_pid'];
     $item = new fedora_item($pid);
     if ($item->exists()) {
-      form_set_error('', t("$pid already exists within your repository. the PID must be unique"));
+      form_set_error('new_collection_pid', t("$pid already exists within your repository. the PID must be unique"));
       return;
     }
     if (!valid_pid($pid)) {
-      form_set_error('', t("$pid is not a valid identifier"));
+      form_set_error('new_collection_pid', t("$pid is not a valid identifier"));
+      return;
+    }
+  }
+  if ($form_state['clicked_button']['#id'] == 'add_cm') {
+    if (!valid_pid($form_state['values']['new_cp_namespace'])) {
+      form_set_error('new_cp_namespace', t("Namespace must be a valid PID"));
       return;
     }
   }
@@ -189,6 +257,7 @@ function collection_management_form_submit($form, &$form_state) {
   module_load_include('inc', 'fedora_repository', 'api/dublin_core');
   global $user;
   $collection_pid = $form_state['values']['parent_collection'];
+  $policy = CollectionPolicy::loadFromCollection($collection_pid, TRUE);
   if ($form_state['clicked_button']['#id'] == 'create_class') {
     $module_path = drupal_get_path('module', 'fedora_repository');
     $thumbnail = drupal_get_path('module', 'Fedora_Repository') . '/images/Crystal_Clear_filesystem_folder_grey.png';
@@ -224,10 +293,37 @@ function collection_management_form_submit($form, &$form_state) {
     drupal_goto("/fedora/repository/$new_collection_pid");
   }
 
+  if ($form_state['clicked_button']['#id'] == 'add_cm') {
+
+    $cp_namespace = $form_state['values']['new_cp_namespace'];
+    $cp_content_model = $form_state['values']['content_model_to_add'];
+    $policy->addModel(ContentModel::loadFromModel($cp_content_model), $cp_namespace);
+    $policy->saveToFedora();
+    drupal_set_message("Collection model successfully added");
+  }
+
+  if ($form_state['clicked_button']['#id'] == 'remove_cm') {
+    $candidates = $form_state['values']['content_models_to_remove'];
+    $count = 0;
+    foreach ($candidates as $candidate) {
+      if (is_string($candidate)) {
+        $policy->removeModel(ContentModel::loadFromModel($candidate));
+        $count++;
+      }
+    }
+    if ($count > 0) {
+      $policy->saveToFedora();
+      if ($count > 1) {
+        $s = 's';
+      }
+      drupal_set_message("$count collection model$s removed");
+    }
+  }
+
   if ($form_state['clicked_button']['#id'] == 'change_model') {
     $current_content_model = $form_state['values']['current_content_model'];
     $new_content_model = $form_state['values']['new_content_model'];
-    $policy = CollectionPolicy::loadFromCollection($collection_pid, TRUE);
+
     $add_to_policy = TRUE;
     $policy_cms = $policy->getContentModels();
     foreach ($policy_cms as $policy_cm) {
@@ -287,6 +383,7 @@ function collection_management_form_submit($form, &$form_state) {
     batch_process('/fedora/repository');
   }
 }
+
 /**
  * deletes PID if pid is not collection
  * @param <type> $pid

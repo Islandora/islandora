@@ -578,7 +578,7 @@ class CollectionPolicy extends XMLDatastream {
 
   /**
    * addModel ??
-   * @param type $cm
+   * @param ContentModel $cm
    * @param type $namespace
    * @return type 
    */
