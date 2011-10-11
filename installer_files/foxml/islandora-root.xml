@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<foxml:digitalObject PID="islandora:top" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
+<foxml:digitalObject PID="islandora:root" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
     <foxml:objectProperties>
         <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
@@ -97,7 +97,7 @@
           xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
                     <dc:title>Islandora Top-Level Collection</dc:title>
-                    <dc:identifier>islandora:top</dc:identifier>
+                    <dc:identifier>islandora:root</dc:identifier>
                 </oai_dc:dc>
             </foxml:xmlContent>
         </foxml:datastreamVersion>
@@ -107,7 +107,7 @@
       ID="RELS-EXT.0" LABEL="RDF Statements about this object" MIMETYPE="application/rdf+xml" SIZE="314">
             <foxml:xmlContent>
                 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-                    <rdf:Description rdf:about="info:fedora/islandora:top">
+                    <rdf:Description rdf:about="info:fedora/islandora:root">
                         <hasModel rdf:resource="info:fedora/islandora:collectionCModel" xmlns="info:fedora/fedora-system:def/model#"/>
                     </rdf:Description>
                 </rdf:RDF>
@@ -144,7 +144,7 @@
     </foxml:datastream>
     <foxml:datastream CONTROL_GROUP="M" ID="TN" STATE="A" VERSIONABLE="true">
         <foxml:datastreamVersion CREATED="2010-10-11T23:08:15.373Z" ID="TN.0" LABEL="Thumbnail.png" MIMETYPE="image/png" SIZE="16243">
-            <foxml:contentLocation REF="http://localhost:8080/fedora/get/islandora:top/TN/2010-10-11T23:08:15.373Z" TYPE="INTERNAL_ID"/>
+            <foxml:contentLocation REF="http://localhost:8080/fedora/get/islandora:root/TN/2010-10-11T23:08:15.373Z" TYPE="INTERNAL_ID"/>
         </foxml:datastreamVersion>
     </foxml:datastream>
 </foxml:digitalObject>

@@ -5,7 +5,7 @@ Fedora Installation
 The test sets up the islandora module with the default server settings.
 This means it will expect a Fedora server to be running on localhost:8080
 with the usual defaults. The tests also expect the Islandora demo objects, i.e.,
-islandora:top, islandora:demos collections, etc. to be installed. (Go to
+islandora:root, islandora:demos collections, etc. to be installed. (Go to
 Administer -> Site Configuration -> Fedora Colleciton List and click the Install
 Demos tab and follow the instructions.)
 

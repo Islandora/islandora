@@ -45,11 +45,11 @@ class FedoraRepositoryTestCase extends DrupalWebTestCase {
 
     $pid_list = array();
     // Create a collection for ingesting PDF content model objects.
-    //$this->drupalGet('fedora/ingestObject/islandora:top/Islandora%20Top-Level%20Collection');
+    //$this->drupalGet('fedora/ingestObject/islandora:root/Islandora%20Top-Level%20Collection');
     $ingest_form = array();
     $ingest_form['models'] = 'islandora:collectionCModel/ISLANDORACM';
 
-    $this->drupalPost('fedora/ingestObject/islandora:top/Islandora%20Top-Level%20Collection', $ingest_form, 'Next');
+    $this->drupalPost('fedora/ingestObject/islandora:root/Islandora%20Top-Level%20Collection', $ingest_form, 'Next');
 
     // Add a sample PDF object via the web ingest form.
     // Required fields are file location, dc:title and dc:description
@@ -67,7 +67,7 @@ class FedoraRepositoryTestCase extends DrupalWebTestCase {
     $ingest_form = array();
     $ingest_form['models'] = 'islandora:collectionCModel/ISLANDORACM';
 
-    $this->drupalPost('fedora/ingestObject/islandora:top/Islandora%20Top-Level%20Collection', $ingest_form, 'Next');
+    $this->drupalPost('fedora/ingestObject/islandora:root/Islandora%20Top-Level%20Collection', $ingest_form, 'Next');
     // Required fields are file location, dc:title and dc:description
     $ingest_form_step_2 = array();
     $ingest_form_step_2['dc:title'] = $this->randomName(32);
