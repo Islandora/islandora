@@ -623,6 +623,7 @@ class CollectionClass {
 
 
     $collectionName = $collection;
+ 
     if (!$pageNumber) {
       $pageNumber = 1;
     }

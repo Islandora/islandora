@@ -8,7 +8,7 @@
   <xsl:value-of select="$path"/>
  </xsl:variable>
  <xsl:variable name="thisPid" select="$collectionPid"/>
- <xsl:variable name="thisTitle" select="$collectionTitle"/>
+ <xsl:variable name="thisTitle" select="Collection"/>
  <xsl:variable name="size"  select="20"/>
  <xsl:variable name="page" select="$hitPage"/>
  <xsl:variable name="start" select="((number($page) - 1) * number($size)) + 1"/>
@@ -161,6 +161,7 @@
    <xsl:with-param name="from" select="'_'"/>
    <xsl:with-param name="to" select="' '"/>
   </xsl:call-template>
+  
    </xsl:variable>
    <xsl:variable name="cleanTitle">
     <xsl:value-of select="php:functionString('fedora_repository_urlencode_string', $newTitle)"/>
@@ -168,7 +169,7 @@
   <xsl:variable name="linkUrl">
    <xsl:choose>
     <xsl:when test="($CONTENTMODEL='islandora:collectionCModel')">
-     <xsl:value-of select="$BASEURL"/>/fedora/repository/<xsl:copy-of select="$PID"/>/-/<xsl:value-of select="$cleanTitle"/>
+     <xsl:value-of select="$BASEURL"/>/fedora/repository/<xsl:copy-of select="$PID"/>/-/<xsl:value-of select="'collection'"/>
     </xsl:when>
     <xsl:otherwise>
      <!--the below is an example of going straight to a datastream instead of the details page.  

@@ -173,3 +173,30 @@ function fedora_repository_solution_pack_form_submit($form, &$form_state) {
   }
   batch_set($batch);
 }
+
+function solution_pack_add_form($form_name, $form_xml) {
+  $result = db_result(db_query('Select name from {xml_forms} where name = "%s"', $form_name));
+  if (!$result) {
+    $object = new stdClass();
+    $object->name = $form_name;
+    $object->form = $form_xml;
+    $result = drupal_write_record('xml_forms', $object);
+    drupal_set_message("Added $name");
+  }
+}
+
+function solution_pack_add_form_association($content_model, $form_name) {
+  $result = db_result(db_query('Select content_model from {islandora_content_model_forms} where  content_model = "%s" and form_name = "%s"',
+              $content_model, $form_name));
+  if (!$result) {
+    $object = new stdClass();
+    $object->content_model = $content_model;
+    $object->form_name = $form_name;
+    $object->dsid = 'MODS';
+    $object->title_field = "['titleInfo']['title']";
+    $object->transform = 'mods_to_dc.xsl';
+    $result = drupal_write_record('islandora_content_model_forms', $object);
+    drupal_set_message("Added association between $content_model$name");
+  }
+}
+

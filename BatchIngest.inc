@@ -1,13 +1,12 @@
 <?php
 
-
 /**
  * batch creation form submit
  * @global type $user
  * @param array $form
  * @param array $form_state
  * @param array $content_models
-*/
+ */
 function batch_creation_form(&$form_state, $collection_pid, $content_models) {
   module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
   module_load_include('inc', 'fedora_repository', 'CollectionPolicy');
@@ -34,13 +33,6 @@ function batch_creation_form(&$form_state, $collection_pid, $content_models) {
   $form['namespace_mappings'] = array(
     '#type' => 'hidden',
     '#value' => $mappings,
-  );
-  $form['metadata_type'] = array(
-    '#title' => "Choose Metadata Type",
-    '#type' => 'radios',
-    '#options' => array('MODS' => 'MODS', "DC" => "DUBLIN CORE"),
-    '#required' => true,
-    '#description' => t("Select primary metadata schema"),
   );
   $form['content_model'] = array(
     '#title' => "Choose content model to be associated with objects ingested",
@@ -70,8 +62,7 @@ function batch_creation_form(&$form_state, $collection_pid, $content_models) {
 /**
  * @param array $form
  * @param array $form_state
-*/
-
+ */
 function batch_creation_form_validate($form, &$form_state) {
 
   $fieldName = 'file-location';
@@ -155,9 +146,7 @@ function batch_creation_form_submit($form, &$form_state) {
 
 
   foreach ($file_list as $label => $object_files) {
-    if ($object_files['xml']) {
-      $batch['operations'][] = array('create_batch_objects', array($label, $content_model, $object_files, $collection_pid, $namespace, $metadata));
-    }
+    $batch['operations'][] = array('create_batch_objects', array($label, $content_model, $object_files, $collection_pid, $namespace, $metadata));
   }
   $batch['operations'][] = array('recursive_directory_delete', array($tmpDir));
   batch_set($batch);
@@ -173,28 +162,33 @@ function batch_creation_form_submit($form, &$form_state) {
  * @param <string> $namespace
  * @param <string> $metadata
  */
-
-
 function create_batch_objects($label, $content_model, $object_files, $collection_pid, $namespace, $metadata) {
   module_load_include('inc', 'fedora_repository', 'ContentModel');
   module_load_include('inc', 'fedora_repository', 'MimeClass');
+  module_load_include('inc', 'fedora_reppository', 'api/fedora_item');
+
   $cm = ContentModel::loadFromModel($content_model, 'ISLANDORACM');
   $allowedMimeTypes = $cm->getMimetypes();
   $mime_helper = new MimeClass();
   $pid = fedora_item::get_next_PID_in_namespace($namespace);
-  module_load_include('inc', 'fedora_reppository', 'api/fedora_item');
+
   $item = Fedora_item::ingest_new_item($pid, 'A', $label, $owner);
   $item->add_relationship('hasModel', $content_model, FEDORA_MODEL_URI);
   $item->add_relationship('isMemberOfCollection', $collection_pid);
-  if ($metadata == 'DC') {
-    $dc_xml = file_get_contents($object_files['xml']);
-    $item->modify_datastream_by_value($dc_xml, 'DC', "Dublin Core", 'text/xml');
+  if ($object_files['xml']) {
+    $data = file_get_contents($object_files['xml']);
+    $xml = simplexml_load_string($data);
+    $identifier = $xml->getName();
+    if ($identifier == 'dc') {
+      $item->modify_datastream_by_value($data, 'DC', "Dublin Core", 'text/xml');
+    }
+    if ($identifier == 'mods') {
+      $item->add_datastream_from_string($mods_xml, 'MODS');
+      $dc_xml = batch_create_dc_from_mods($mods_xml);
+      $item->modify_datastream_by_value($dc_xml, 'DC', "Dublin Core", 'text/xml');
+    }
   }
-  if ($metadata == 'MODS') {
-    $mods_xml = file_get_contents($object_files['xml']);
-    $item->add_datastream_from_string($mods_xml, 'MODS');
-    $dc_xml = batch_create_dc_from_mods($mods_xml);
-  }
+
   unset($object_files['xml']);
   $use_primary = TRUE;
   foreach ($object_files as $ext => $filename) {
@@ -206,7 +200,7 @@ function create_batch_objects($label, $content_model, $object_files, $collection
       $item->purge("$pid $label not ingested.  $file_mimetype not permitted in objects associated with $content_model");
       continue;
     }
-    $ds_label = $use_primary ? $cm->getDatastreamNameDSID():$ext;
+    $ds_label = $use_primary ? $cm->getDatastreamNameDSID() : $ext;
     $item->add_datastream_from_file($filename, $ds_label);
     $use_primary = FALSE;
 
@@ -223,9 +217,6 @@ function create_batch_objects($label, $content_model, $object_files, $collection
  * @param <string> $mods_xml
  * @return <string>
  */
-
-
-
 function batch_create_dc_from_mods($mods_xml) {
   $path = drupal_get_path('module', 'fedora_repository');
   module_load_include('inc', 'fedora_repository', 'ObjectHelper');
