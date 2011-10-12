@@ -241,7 +241,7 @@ function get_collections_as_option_array() {
                               and $object <fedora-model:state> <info:fedora/fedora-system:def/model#Active>)
                             order by $title';
   $url = variable_get('fedora_repository_url', 'http://localhost:8080/fedora/risearch');
-  $url .= "?type=tuples&flush=true&format=csv&limit=1000&lang=itql&stream=on&query=";
+  $url .= "?type=tuples&flush=TRUE&format=csv&limit=1000&lang=itql&stream=on&query=";
   $content = do_curl($url . htmlentities(urlencode($query)));
   $list = explode("\n", $content);
   array_shift($list);
@@ -267,7 +267,7 @@ function get_collections_as_option_array() {
 function get_content_models_as_option_array() {
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
   module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
-  $restricted = variable_get('fedora_namespace_restriction_enforced', true);
+  $restricted = variable_get('fedora_namespace_restriction_enforced', TRUE);
   $allowed_string = variable_get('fedora_pids_allowed', 'default: demo: changeme: islandora:');
   $namespaces = explode(':', $allowed_string);
   foreach ($namespaces as $namespace) {
@@ -283,7 +283,7 @@ function get_content_models_as_option_array() {
           order by $title';
 
   $url = variable_get('fedora_repository_url', 'http://localhost:8080/fedora/risearch');
-  $url .= "?type=tuples&flush=true&format=csv&limit=1000&lang=itql&stream=on&query=";
+  $url .= "?type=tuples&flush=TRUE&format=csv&limit=1000&lang=itql&stream=on&query=";
   $content = do_curl($url . htmlentities(urlencode($query)));
   $list = explode("\n", $content);
   array_shift($list);

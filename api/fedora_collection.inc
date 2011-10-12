@@ -41,7 +41,7 @@ function export_collection($collection_pid, $relationship = 'isMemberOfCollectio
       fwrite($file, $item_foxml);
       fclose($file);
     }
-    if (system("cd $container;zip -r $collection_pid.zip $collection_pid/* >/dev/NULL") == 0) {
+    if (system("cd $container;zip -r $collection_pid.zip $collection_pid/* >/dev/null") == 0) {
       header("Content-type: application/zip");
       header('Content-Disposition: attachment; filename="' . $collection_pid . '.zip' . '"');
       $fh = fopen($container . '/' . $collection_pid . '.zip', 'r');

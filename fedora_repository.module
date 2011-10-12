@@ -990,7 +990,7 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
 // Add a 'manage object' tab for all objects, where detailed list of content is shown.
   $obj = new FedoraObjectDetailedContent($pid);
   $object_details = $obj->showFieldSets();
-  if ($object_details['fedora_object_details']['#selected'] == true){
+  if ($object_details['fedora_object_details']['#selected'] == TRUE){
     foreach($cmodels_tabs as $cmodel_tab){
       if (is_array($cmodel_tab)){
         $cmodel_tab['#selected'] = FALSE;

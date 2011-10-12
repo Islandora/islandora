@@ -34,7 +34,7 @@ class ContentModel extends XMLDatastream {
   /**
    * Constructs a ContentModel object from a Fedora item
    * by getting the first content model from the hasModel relationship.
-   * Returns false on failure.
+   * Returns FALSE on failure.
    * @param string $pid
    * @return ContentModel $cm
    */
@@ -57,7 +57,7 @@ class ContentModel extends XMLDatastream {
 
   /**
    * Ingests a Content Model from a file to the specified pid/dsid . 
-   * Returns false on failure.
+   * Returns FALSE on failure.
    *
    * @param string $pid
    * @param string $name
@@ -84,7 +84,7 @@ class ContentModel extends XMLDatastream {
 
   /**
    * Ingests a Content Model from an existing model to the specified pid/dsid . 
-   * Returns false on failure.
+   * Returns FALSE on failure.
    *
    * @param string $pid
    * @param string $name
@@ -113,7 +113,7 @@ class ContentModel extends XMLDatastream {
 
   /**
    * Ingests a minimum Content Model to the specified pid/dsid. 
-   * Returns false on failure.
+   * Returns FALSE on failure.
    *
    * @param string $pid
    * @param string $name
@@ -153,8 +153,8 @@ class ContentModel extends XMLDatastream {
       $ingestFormEl = $newDom->createElement('ingest_form');
       $ingestFormEl->setAttribute('dsid', $ingestFormDsid);
       $ingestFormEl->setAttribute('page', $ingestFormPage);
-      if ($ingestFormHideChooser == 'true') {
-        $ingestFormEl->setAttribute('hide_file_chooser', 'true');
+      if ($ingestFormHideChooser == 'TRUE') {
+        $ingestFormEl->setAttribute('hide_file_chooser', 'TRUE');
       }
 
       $builderEl = $newDom->createElement('form_builder_method');
@@ -186,7 +186,7 @@ class ContentModel extends XMLDatastream {
    * If DSID is specified it will use that datastream as the model, otherwise it will
    * use the default (usually ISLANDORACM).  PID_NAMESPACE and name can also be initialized
    * from the collection policy.
-   * Returns false on failure.
+   * Returns FALSE on failure.
    *
    * NOTE: $name will be overwritten with the content model name found in the datastream
    * when the model is first validated.\
@@ -344,7 +344,7 @@ class ContentModel extends XMLDatastream {
     $ingest_formEl->setAttribute('dsid', $sXml->ingest_form['dsid']);
     $ingest_formEl->setAttribute('page', $sXml->ingest_form['page']);
     if (isset($sXml->ingest_form['hide_file_chooser'])) {
-      $ingest_formEl->setAttribute('hide_file_chooser', (strtolower($sXml->ingest_form['hide_file_chooser']) == 'true') ? 'true' : 'false');
+      $ingest_formEl->setAttribute('hide_file_chooser', (strtolower($sXml->ingest_form['hide_file_chooser']) == 'TRUE') ? 'TRUE' : 'FALSE');
     }
 
     $form_builderEl = $newDom->createElement('form_builder_method');
@@ -373,8 +373,8 @@ class ContentModel extends XMLDatastream {
       $elEl->setAttribute('label', $element->label);
       $elEl->setAttribute('name', $element->name);
       $elEl->setAttribute('type', $element->type);
-      if (strtolower($element->required) == 'true') {
-        $elEl->setAttribute('required', 'true');
+      if (strtolower($element->required) == 'TRUE') {
+        $elEl->setAttribute('required', 'TRUE');
       }
       if (isset($element->description) && trim($element->description) != '') {
         $descEl = $newDom->createElement('description', trim($element->description));
@@ -453,7 +453,7 @@ class ContentModel extends XMLDatastream {
 
   /**
    * Gets the name of the ContentModel
-   * Returns false on failure.
+   * Returns FALSE on failure.
    *
    * @return String $name
    */
@@ -539,7 +539,7 @@ class ContentModel extends XMLDatastream {
         $element = array('name' => $elements->item($i)->getAttribute('name'),
           'label' => $label,
           'type' => $elements->item($i)->getAttribute('type'),
-          'required' => ($elements->item($i)->getAttribute('required') == 'true') ? TRUE : FALSE,
+          'required' => ($elements->item($i)->getAttribute('required') == 'TRUE') ? TRUE : FALSE,
           'description' => $desc
         );
 
@@ -561,7 +561,7 @@ class ContentModel extends XMLDatastream {
           $items = $params->item(0)->getElementsByTagName('parameter');
           for ($j = 0; $j < $items->length; $j++) {
             $value = $items->item($j)->nodeValue;
-            $list[$items->item($j)->getAttribute('name')] = (strtolower($value) == 'true' ? TRUE : (strtolower($value) == 'false' ? FALSE : $value));
+            $list[$items->item($j)->getAttribute('name')] = (strtolower($value) == 'TRUE' ? TRUE : (strtolower($value) == 'FALSE' ? FALSE : $value));
           }
         }
         $element['parameters'] = $list;
@@ -657,7 +657,7 @@ class ContentModel extends XMLDatastream {
 
   /**
    * Sets a parameter of an ingest form element.  If the value of the element is FALSE the parameter
-   * will be removed entirely (if you want to store false as a value, then send the String "false").
+   * will be removed entirely (if you want to store FALSE as a value, then send the String "FALSE").
    * 
    * @param String $elementName
    * @param String $paramName
@@ -786,7 +786,7 @@ class ContentModel extends XMLDatastream {
 
       $found->setAttribute('name', $name);
       $found->setAttribute('type', $type);
-      $found->setAttribute('required', $required ? 'true' : 'false');
+      $found->setAttribute('required', $required ? 'TRUE' : 'FALSE');
       if (trim($label) != '' && trim($label) != trim($name)) {
         $found->setAttribute('label', $label);
       }
@@ -838,7 +838,7 @@ class ContentModel extends XMLDatastream {
       $elementEl = $this->xml->createElement('element');
       $elementEl->setAttribute('name', $name);
       $elementEl->setAttribute('type', $type);
-      $elementEl->setAttribute('required', $requiredi ? 'true' : 'false');
+      $elementEl->setAttribute('required', $requiredi ? 'TRUE' : 'FALSE');
       if (trim($label) != '' && trim($label) != trim($name)) {
         $elementEl->setAttribute('label', $label);
       }
@@ -1062,7 +1062,7 @@ class ContentModel extends XMLDatastream {
       $ingest_form = $this->xml->getElementsByTagName('ingest_form')->item(0);
 
       if (!empty($ingest_form)) {
-        if (strtolower($ingest_form->getAttribute('hide_file_chooser')) == 'true') {
+        if (strtolower($ingest_form->getAttribute('hide_file_chooser')) == 'TRUE') {
           $form['indicator']['ingest-file-location']['#type'] = 'hidden';
         }
       }
@@ -1464,7 +1464,7 @@ class ContentModel extends XMLDatastream {
         $datastreams = $datastreams->item(0)->getElementsByTagName('datastream');
         for ($i = 0; $i < $datastreams->length; $i++) {
           $ds = $datastreams->item($i);
-          if ($ds->attributes->getNamedItem('display_in_fieldset') == NULL || strtolower($ds->getAttribute('display_in_fieldset')) != 'false') {
+          if ($ds->attributes->getNamedItem('display_in_fieldset') == NULL || strtolower($ds->getAttribute('display_in_fieldset')) != 'FALSE') {
             $dispMethods = $ds->getElementsByTagName('display_method');
             for ($j = 0; $j < $dispMethods->length; $j++) {
               $method = $dispMethods->item($j);
@@ -1592,7 +1592,7 @@ class ContentModel extends XMLDatastream {
           'file' => $dispMethods->item($i)->getAttribute('file'),
           'class' => $dispMethods->item($i)->getAttribute('class'),
           'method' => $dispMethods->item($i)->getAttribute('method'),
-          'default' => ($dispMethods->item($i)->attributes->getNamedItem('default') !== NULL ? strtolower($dispMethods->item($i)->getAttribute('default')) == 'true' : FALSE));
+          'default' => ($dispMethods->item($i)->attributes->getNamedItem('default') !== NULL ? strtolower($dispMethods->item($i)->getAttribute('default')) == 'TRUE' : FALSE));
       }
     }
     return $ret;
@@ -1620,7 +1620,7 @@ class ContentModel extends XMLDatastream {
       $dsEl = $this->xml->createElement('datastream');
       $dsEl->setAttribute('dsid', $dsid);
       if ($display_in_fieldset == TRUE) {
-        $dsEl->setAttribute('display_in_fieldset', 'true');
+        $dsEl->setAttribute('display_in_fieldset', 'TRUE');
       }
       $datastreamsEl->appendChild($dsEl);
       $ret = TRUE;
@@ -1652,7 +1652,7 @@ class ContentModel extends XMLDatastream {
   public function displayInFieldset($dsid) {
     $ret = FALSE;
     if (self::valid_dsid($dsid) && ($ds = $this->getDSModel($dsid)) !== FALSE) {
-      $ret = strtolower($ds->getAttribute('display_in_fieldset')) == 'true';
+      $ret = strtolower($ds->getAttribute('display_in_fieldset')) == 'TRUE';
     }
     return $ret;
   }
@@ -1671,7 +1671,7 @@ class ContentModel extends XMLDatastream {
         $ret = TRUE;
       }
       elseif ($value == TRUE) {
-        $ds->setAttribute('display_in_fieldset', 'true');
+        $ds->setAttribute('display_in_fieldset', 'TRUE');
         $ret = TRUE;
       }
     }
@@ -1710,7 +1710,7 @@ class ContentModel extends XMLDatastream {
           }
         }
 
-        $found->setAttribute('default', 'true');
+        $found->setAttribute('default', 'TRUE');
         $ret = TRUE;
       }
     }
@@ -2112,8 +2112,8 @@ class ContentModel extends XMLDatastream {
       $ingest_formEl = $this->xml->getElementsByTagName('ingest_form')->item(0);
       $ret = array('dsid' => $ingest_formEl->getAttribute('dsid'),
         'page' => $ingest_formEl->getAttribute('page'),
-        'hide_file_chooser' => strtolower($ingest_formEl->getAttribute('hide_file_chooser')) == 'true',
-        'redirect' => strtolower($ingest_formEl->getAttribute('redirect')) == 'false' ? FALSE : TRUE);
+        'hide_file_chooser' => strtolower($ingest_formEl->getAttribute('hide_file_chooser')) == 'TRUE',
+        'redirect' => strtolower($ingest_formEl->getAttribute('redirect')) == 'FALSE' ? FALSE : TRUE);
     }
     return $ret;
   }
@@ -2133,13 +2133,13 @@ class ContentModel extends XMLDatastream {
       $ingest_formEl->setAttribute('dsid', $dsid);
       $ingest_formEl->setAttribute('page', $page);
       if (!$redirect) {
-        $ingest_formEl->setAttribute('redirect', 'false');
+        $ingest_formEl->setAttribute('redirect', 'FALSE');
       }
       else {
         $ingest_formEl->removeAttribute('redirect');
       }
       if ($hide_file_chooser) {
-        $ingest_formEl->setAttribute('hide_file_chooser', 'true');
+        $ingest_formEl->setAttribute('hide_file_chooser', 'TRUE');
       }
       else {
         $ingest_formEl->removeAttribute('hide_file_chooser');

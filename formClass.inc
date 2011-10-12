@@ -306,8 +306,8 @@ class formClass {
       '#type' => 'fieldset',
       '#title' => t('Advanced configuration options'),
       '#description' => t('Advanced configuration.  Under normal circumstances these will not be touched'),
-      '#collapsible' => true,
-      '#collapsed' => true,
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
     );
     $form['advanced']['fedora_object_display_title'] = array(
       '#type' => 'select',
@@ -587,7 +587,7 @@ class formClass {
         $form = new IngestObjectMetadataForm();
         return $form->create($collection_pid, $collection_label, $form_state);
       } catch (Exception $e) {
-        $form_state['storage']['xml'] = false; // An error occured revert back to the QDC Form.
+        $form_state['storage']['xml'] = FALSE; // An error occured revert back to the QDC Form.
       }
     }
     return $this->createQDCIngestForm($collection_pid, $collection_label, $form_state);
@@ -810,7 +810,7 @@ class formClass {
         $form = new EditObjectMetadataForm($form_state);
         return $form->create($pid, $client, $form_state);
       } catch (Exception $e) {
-        $form_state['storage']['xml'] = false; // An error occured revert back to the QDC Form.
+        $form_state['storage']['xml'] = FALSE; // An error occured revert back to the QDC Form.
       }
     }
     return $this->createQDCEditForm($pid, $dsid, $client, $form_state);

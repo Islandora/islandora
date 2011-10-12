@@ -10,8 +10,8 @@
 function collection_management_form(&$form_state, $this_collection_pid, $content_models) {
   module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
   $restricted = FALSE;
-  if (variable_get('fedora_namespace_restriction_enforced', true)) {
-    $restricted = true;
+  if (variable_get('fedora_namespace_restriction_enforced', TRUE)) {
+    $restricted = TRUE;
     $allowed_string = variable_get('fedora_pids_allowed', 'default: demo: changeme: islandora:');
     $namespaces = explode(':', $allowed_string);
     foreach ($namespaces as $namespace) {
@@ -35,7 +35,7 @@ function collection_management_form(&$form_state, $this_collection_pid, $content
     }
   }
   if (!empty($cm_options)) {
-    $show_delete = true;
+    $show_delete = TRUE;
   }
 
 

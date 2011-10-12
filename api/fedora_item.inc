@@ -297,14 +297,14 @@ class Fedora_Item {
       $i++;
       $url = variable_get('fedora_base_url', 'http://localhost:8080/fedora');
       if ($cursor == 0) {
-        $url .= "/objects?query=$field~$pattern&pid=true&title=true&resultFormat=xml&maxResults=$max_results";
+        $url .= "/objects?query=$field~$pattern&pid=TRUE&title=TRUE&resultFormat=xml&maxResults=$max_results";
       }
       else {
-        $url .= "/objects?pid=true&title=truesessionToken=$session_token&resultFormat=xml&maxResults=$max_results";
+        $url .= "/objects?pid=TRUE&title=TRUEsessionToken=$session_token&resultFormat=xml&maxResults=$max_results";
       }
 
       if (count($resultFields) > 0) {
-        $url .= '&' . join('=true&', $resultFields) . '=true';
+        $url .= '&' . join('=TRUE&', $resultFields) . '=TRUE';
       }
 
       $resultxml = do_curl($url);

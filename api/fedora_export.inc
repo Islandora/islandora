@@ -170,7 +170,7 @@ function export_foxml_for_pid($pid, $dir, $paths, &$log, $format = FOXML_11, $re
             }
 
             foreach ($xpath->('METS:FLocat[@xlink:href]', $content_node) as $floc) {
-            $floc->setAttribute('xlink:href', url($paths[$ds_id], array('absolute' => true)));
+            $floc->setAttribute('xlink:href', url($paths[$ds_id], array('absolute' => TRUE)));
             }
             `}
            */

@@ -835,7 +835,7 @@ class ObjectHelper {
       and $o <mulgara:is> <info:fedora/' . $pid . '>';
 
     $url = variable_get('fedora_repository_url', 'http://localhost:8080/fedora/risearch');
-    $url .= "?type=tuples&flush=true&format=csv&limit=1000&lang=itql&stream=on&query=";
+    $url .= "?type=tuples&flush=TRUE&format=csv&limit=1000&lang=itql&stream=on&query=";
     $content = do_curl($url . htmlentities(urlencode($query_string)));
 
     $rows = explode("\n", $content);
@@ -869,7 +869,7 @@ class ObjectHelper {
     $query_string = substr($query_string, 0, -3) . ' )';
 
     $url = variable_get('fedora_repository_url', 'http://localhost:8080/fedora/risearch');
-    $url .= "?type=tuples&flush=true&format=csv&limit=1000&lang=itql&stream=on&query=";
+    $url .= "?type=tuples&flush=TRUE&format=csv&limit=1000&lang=itql&stream=on&query=";
     $url .= htmlentities(urlencode($query_string));
     $content = $this->doCurl($url);
 

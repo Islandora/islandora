@@ -524,11 +524,11 @@ class CollectionClass {
       $show_batch_tab = FALSE;
     }
     if (!$show_ingest_tab) {
-      $view_selected = true;
+      $view_selected = TRUE;
     }
     if(!$collection_items){
-      $view_selected = false;
-      $add_selected = true;
+      $view_selected = FALSE;
+      $add_selected = TRUE;
     }
     $view_selected = !$show_ingest_tab;
 
@@ -554,7 +554,7 @@ class CollectionClass {
         '#title' => t('Manage This Collection'),
         // This will be the content of the tab.
         '#content' => drupal_get_form('collection_management_form', $this->pid, $content_models),
-        '#selected' => false,
+        '#selected' => FALSE,
       );
     }
     if ($show_batch_tab && user_access('create batch process')) {

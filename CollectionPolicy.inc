@@ -64,7 +64,7 @@ class CollectionPolicy extends XMLDatastream {
   /**
    * Ingests a new Collection Policy datastream to the specified 
    * PID with the DSID specified.  The file should be a valid collection
-   * policy XML.  Returns false on failure.
+   * policy XML.  Returns FALSE on failure.
    *
    * @param string $pid
    * @param string $name
@@ -92,7 +92,7 @@ class CollectionPolicy extends XMLDatastream {
   /**
    * Ingests a new Collection Policy datastream to the specified 
    * PID with the DSID specified.  Clones the collection policy from the 
-   * source collection pid. Returns false on failure.
+   * source collection pid. Returns FALSE on failure.
    *
    * @param string $pid
    * @param string $name
@@ -122,7 +122,7 @@ class CollectionPolicy extends XMLDatastream {
   /**
    * Ingests a new minimum  Collection Policy datastream to the specified 
    * PID with the DSID specified.  Initializes the policy with the specified values.
-   * Returns false on failure
+   * Returns FALSE on failure
    *
    * @param string $pid
    * @param string $name
@@ -234,7 +234,7 @@ class CollectionPolicy extends XMLDatastream {
       $termEl = $newDom->createElement('term', $term->value);
       $termEl->setAttribute('field', $term->field);
       if (strval($sXml->search_terms->default) == $term->field) {
-        $termEl->setAttribute('default', 'true');
+        $termEl->setAttribute('default', 'TRUE');
       }
       $search_termsEl->appendChild($termEl);
     }
@@ -321,7 +321,7 @@ class CollectionPolicy extends XMLDatastream {
 
   /**
    * Sets the path to the staging area to use for this 
-   * collection. If specified path is blank (or false) it will
+   * collection. If specified path is blank (or FALSE) it will
    * remove the staging are path element from the collection policy.
    *
    * @param string $path 
@@ -435,7 +435,7 @@ class CollectionPolicy extends XMLDatastream {
         $terms = $this->xml->getElementsByTagName('search_terms')->item(0)->getElementsByTagName('term');
         for ($i = 0; $i < $terms->length; $i++) {
           $default = $terms->item($i)->attributes->getNamedItem('default');
-          $default = ($default !== NULL) ? (strtolower($default->nodeValue) == 'true') : FALSE;
+          $default = ($default !== NULL) ? (strtolower($default->nodeValue) == 'TRUE') : FALSE;
           $ret[] = ($asArray) ? array('value' => $terms->item($i)->nodeValue,
             'field' => $terms->item($i)->getAttribute('field'),
             'default' => $default) : $terms->item($i)->nodeValue;
@@ -540,7 +540,7 @@ class CollectionPolicy extends XMLDatastream {
           if ($terms->item($i)->attributes->getNamedItem('default') !== NULL) {
             $terms->item($i)->removeAttribute('default');
           }
-        $found->setAttribute('default', 'true');
+        $found->setAttribute('default', 'TRUE');
         $ret = TRUE;
       }
     }
@@ -550,7 +550,7 @@ class CollectionPolicy extends XMLDatastream {
   /**
    * Removes the specified content model from the collection policy.  This will only 
    * prevent future ingests of the removed model to the collection.  $cm should be 
-   * a valid ContentModel object.  Returns false on failure or when the CM was not found in
+   * a valid ContentModel object.  Returns FALSE on failure or when the CM was not found in
    * the collection policy.
    *
    * @param ContentModel $cm

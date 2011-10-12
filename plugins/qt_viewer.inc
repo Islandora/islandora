@@ -99,7 +99,7 @@ class ShowQtStreamsInFieldSets {
   }
 
   /**
-   * Is download enabled. It always returns false. ??? 
+   * Is download enabled. It always returns FALSE. ??? 
    * @return FALSE 
    */
   function enableDownload() {
@@ -147,7 +147,7 @@ class ShowQtStreamsInFieldSets {
     }
     $src = base_path() . 'fedora/repository/' . $this->pid . '/' . $media->ID . '/MOV.mov';
     $qtparams = '';
-    $qtparams .= "'autostart', '" . ($pframe !== FALSE ? 'true' : 'false') . "', ";
+    $qtparams .= "'autostart', '" . ($pframe !== FALSE ? 'TRUE' : 'FALSE') . "', ";
     $init = <<<EOD
      $(function() { 
        src = "$src";
