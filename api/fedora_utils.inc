@@ -6,7 +6,6 @@
  * @file
  * Base utilities used by the Islandora fedora module.
  */
-
 if (!function_exists('str_getcsv')) {
 
   /**
@@ -96,9 +95,8 @@ function do_curl($url, $return_to_variable = 1, $number_of_post_vars = 0, $post 
  */
 function do_curl_ext($url, $return_to_variable = 1, $number_of_post_vars = 0, $post = NULL) {
   global $user;
-  
+
   // Check if we are inside Drupal and there is a valid user.
-  
   // If the user is not valid for a Fedora call curl will throw an exception.
   if ((!isset($user)) || $user->uid == 0) {
     $fedora_user = 'anonymous';
@@ -126,14 +124,13 @@ function do_curl_ext($url, $return_to_variable = 1, $number_of_post_vars = 0, $p
       curl_setopt($ch, CURLOPT_POST, $number_of_post_vars);
       curl_setopt($ch, CURLOPT_POSTFIELDS, "$post");
     }
-    
+
     $ret_val = curl_exec($ch);
-    
+
     $error_code = curl_errno($ch);
     $error_string = curl_error($ch);
-    return array ($ret_val, $error_code, $error_string);
+    return array($ret_val, $error_code, $error_string);
   }
-  
   else {
     if (function_exists(drupal_set_message)) {
       drupal_set_message(t('No curl support.'), 'error');
@@ -159,9 +156,8 @@ function fedora_available() {
 function risearch_available() {
 
   $response = do_curl_ext(variable_get('fedora_repository_url', 'http://localhost:8080/fedora/risearch'));
-  return ($response != NULL) ? ($response[1] == 0): FALSE;
+  return ($response != NULL) ? ($response[1] == 0) : FALSE;
 }
-
 
 /**
  * Returns a UTF-8-encoded transcripiton of the string given in $in_str.
@@ -264,7 +260,7 @@ function get_collections_as_option_array() {
 /**
  * Function: get_content_models_as_option_array
  *
- * Description: Returns an associative array of all collection objects in Fedora instance
+ * Description: Returns an associative array of all available content models in Fedora instance
  *
  * @return array
  */
@@ -298,9 +294,10 @@ function get_content_models_as_option_array() {
       $item = new fedora_item($parts[0]);
       $nameparts = explode(':', $parts[0]);
       if (!$restricted || in_array($nameparts[0], $allowed))
-        if ($item->get_datastream_dissemination('ISLANDORACM')) {
-          $options[$parts[0]] = $parts[1]. ' ~ ' . $parts[0] ;
-        }
+        $datastreams = array_keys($item->get_datastreams_list_as_array());
+      if (in_array('ISLANDORACM', $datastreams)) {
+        $options[$parts[0]] = $parts[1] . ' ~ ' . $parts[0];
+      }
     }
   }
 
