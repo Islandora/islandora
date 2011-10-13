@@ -261,7 +261,7 @@ class DarwinCore {
     try {
       $proc = new XsltProcessor();
     } catch (Exception $e) {
-      drupal_set_message(t("!e", array('!e' => $e->getMessage())), 'error');
+      drupal_set_message(t('@e', array('@e' => check_plain($e->getMessage()))), 'error');
       return " ";
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-// $Id$
+
 
 /**
  * @file
@@ -183,7 +183,7 @@ class ShowStreamsInFieldSets {
     try {
       $proc = new XsltProcessor();
     } catch (Exception $e) {
-      drupal_set_message(t("!e", array('!e' => $e->getMessage())), 'error');
+      drupal_set_message(t('@e', array('@e' => check_plain($e->getMessage()))), 'error');
       return " ";
     }
     $xsl = new DomDocument();
@@ -237,7 +237,7 @@ class ShowStreamsInFieldSets {
     try {
       $proc = new XsltProcessor();
     } catch (Exception $e) {
-      drupal_set_message(t("!e", array('!e' => $e->getMessage())), 'error');
+      drupal_set_message(t('@e', array('@e' => check_plain($e->getMessage()))), 'error');
       return;
     }
     $xsl = new DomDocument();

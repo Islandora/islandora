@@ -1,6 +1,6 @@
 <?php
 
-// $Id$
+
 /**
  * @file 
  * Object Helper Class
@@ -386,7 +386,7 @@ class ObjectHelper {
       $input = new DomDocument();
       $input->loadXML(trim($xmlstr));
     } catch (exception $e) {
-      watchdog(t("Fedora_Repository"), "Problem loading XSL file: !e", array('!e' => $e), NULL, WATCHDOG_ERROR);
+      watchdog(t("Fedora_Repository"), "Problem loading XSL file: @e", array('@e' => $e), NULL, WATCHDOG_ERROR);
     }
     $xsl = $proc->importStylesheet($xsl);
     $newdom = $proc->transformToDoc($input);
@@ -750,7 +750,7 @@ class ObjectHelper {
     try {
       $parent_collections = new SimpleXMLElement($parent_collections);
     } catch (exception $e) {
-      drupal_set_message(t('Error getting parent objects !e', array('!e' => $e->getMessage())));
+      drupal_set_message(t('Error getting parent objects @e', array('@e' => check_plain($e->getMessage()))));
       return;
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-// $Id$
+
 
 /**
  * @file
@@ -57,7 +57,7 @@ class PersonalCollectionClass {
           $params
         ));
     } catch (exception $e) {
-      drupal_set_message(t('Error ingesting personal collection object: !e', array('!e' => $e->getMessage())), 'error');
+      drupal_set_message(t('Error ingesting personal collection object: @e', array('@e' => check_plain($e->getMessage()))), 'error');
       return FALSE;
     }
     return TRUE;
@@ -76,7 +76,7 @@ class PersonalCollectionClass {
       $xml = new SimpleXMLElement($collectionTemplate);
     } catch (Exception $e) {
       watchdog(t("Fedora_Repository"), t("Problem creating personal collection policy, could not parse collection policy stream."), NULL, WATCHDOG_ERROR);
-      drupal_set_message(t('Problem creating personal collection policy, could not parse collection policy stream: !e', array('!e' => $e->getMessage())), 'error');
+      drupal_set_message(t('Problem creating personal collection policy, could not parse collection policy stream: @e', array('@e' => check_plain($e->getMessage()))), 'error');
       return FALSE;
     }
     $policyElement = $dom->createDocumentFragment();

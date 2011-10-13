@@ -1,6 +1,6 @@
 <?php
 
-// $Id$
+
 
 /**
  * @file 
@@ -71,7 +71,7 @@ class ConnectionHelper {
             'exceptions' => $exceptions,
           ));
       } catch (SoapFault $e) {
-        drupal_set_message(t("!e", array('!e' => $e->getMessage())));
+        drupal_set_message(t('@e', array('@e' => check_plain($e->getMessage()))));
         return NULL;
       }
     }
@@ -83,7 +83,7 @@ class ConnectionHelper {
             'exceptions' => TRUE,
           ));
       } catch (SoapFault $e) {
-        drupal_set_message(t("!e", array('!e' => $e->getMessage())));
+        drupal_set_message(t('@e', array('@e' => check_plain($e->getMessage()))));
         return NULL;
       }
     }

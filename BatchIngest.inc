@@ -65,22 +65,22 @@ function batch_creation_form(&$form_state, $collection_pid, $content_models) {
  */
 function batch_creation_form_validate($form, &$form_state) {
 
-  $fieldName = 'file-location';
-  if (isset($_FILES['files']) && is_uploaded_file($_FILES['files']['tmp_name'][$fieldName])) {
-    $file = file_save_upload($fieldName);
+  $field_name = 'file-location';
+  if (isset($_FILES['files']) && is_uploaded_file($_FILES['files']['tmp_name'][$field_name])) {
+    $file = file_save_upload($field_name);
     if ($file->filemime != 'application/zip') {
-      form_set_error($fieldName, 'Input file must be a .zip file');
+      form_set_error($field_name, 'Input file must be a .zip file');
       return;
     }
     if (!$file) {
-      form_set_error($fieldName, 'Error uploading file.');
+      form_set_error($field_name, 'Error uploading file.');
       return;
     }
     $form_state['values']['file'] = $file;
   }
   else {
     // set error
-    form_set_error($fieldName, 'Error uploading file.');
+    form_set_error($field_name, 'Error uploading file.');
     return;
   }
 }
@@ -100,27 +100,27 @@ function batch_creation_form_submit($form, &$form_state) {
   }
   $namespace = $namespace_mappings[$content_model];
   $namespace = preg_replace('/:.*/', '', $namespace);
-  $dirName = "temp" . $user->uid;
-  $tmpDir = file_directory_path() . '/' . $dirName . '/';
-  mkdir($tmpDir);
+  $dir_name = "temp" . $user->uid;
+  $tmp_dir = file_directory_path() . '/' . $dir_name . '/';
+  mkdir($tmp_dir);
   $file = $form_state['values']['file'];
   $fileName = $file->filepath;
   $file_list = array();
-  $cmdString = "unzip -q -o -d $tmpDir \"$fileName\"";
+  $cmdString = "unzip -q -o -d $tmp_dir \"$fileName\"";
   system($cmdString, $retVal);
   $dirs = array();
-  $doNotAdd = array('.', '..', '__MACOSX');
-  array_push($dirs, $tmpDir);
-  $files = scandir($tmpDir);
+  $do_not_add = array('.', '..', '__MACOSX');
+  array_push($dirs, $tmp_dir);
+  $files = scandir($tmp_dir);
   foreach ($files as $file) {
-    if (is_dir("$tmpDir/$file") & !in_array($file, $doNotAdd)) {
-      array_push($dirs, $tmpDir . $file);
+    if (is_dir("$tmp_dir/$file") & !in_array($file, $do_not_add)) {
+      array_push($dirs, $tmp_dir . $file);
     }
   }
   foreach ($dirs as $directory) {
     if ($inputs = opendir($directory)) {
       while (FALSE !== ($file_name = readdir($inputs))) {
-        if (!in_array($file_name, $doNotAdd) && is_dir($file_name) == FALSE) {
+        if (!in_array($file_name, $do_not_add) && is_dir($file_name) == FALSE) {
           $ext = strrchr($file_name, '.');
           $base = preg_replace("/$ext$/", '', $file_name);
           $ext = substr($ext, 1);
@@ -148,7 +148,7 @@ function batch_creation_form_submit($form, &$form_state) {
   foreach ($file_list as $label => $object_files) {
     $batch['operations'][] = array('create_batch_objects', array($label, $content_model, $object_files, $collection_pid, $namespace, $metadata));
   }
-  $batch['operations'][] = array('recursive_directory_delete', array($tmpDir));
+  $batch['operations'][] = array('recursive_directory_delete', array($tmp_dir));
   batch_set($batch);
   batch_process();
 }
@@ -168,7 +168,7 @@ function create_batch_objects($label, $content_model, $object_files, $collection
   module_load_include('inc', 'fedora_reppository', 'api/fedora_item');
 
   $cm = ContentModel::loadFromModel($content_model, 'ISLANDORACM');
-  $allowedMimeTypes = $cm->getMimetypes();
+  $allowed_mime_types = $cm->getMimetypes();
   $mime_helper = new MimeClass();
   $pid = fedora_item::get_next_PID_in_namespace($namespace);
 
@@ -193,7 +193,7 @@ function create_batch_objects($label, $content_model, $object_files, $collection
   $use_primary = TRUE;
   foreach ($object_files as $ext => $filename) {
     $file_mimetype = $mime_helper->get_mimetype($filename);
-    if (in_array($file_mimetype, $allowedMimeTypes)) {
+    if (in_array($file_mimetype, $allowed_mime_types)) {
       $added = $cm->execIngestRules($filename, $file_mimetype);
     }
     else {
@@ -229,7 +229,7 @@ function batch_create_dc_from_mods($mods_xml) {
   try {
     $proc = new XsltProcessor();
   } catch (Exception $e) {
-    drupal_set_message(t("!e", array('!e' => $e->getMessage())), 'error');
+    drupal_set_message(t('@e', array('@e' => check_plain($e->getMessage()))), 'error');
     return " ";
   }
 

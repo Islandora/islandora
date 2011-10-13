@@ -1,6 +1,6 @@
 <?php
 
-// $Id$
+
 
 /**
  * @file
@@ -69,7 +69,7 @@ class TagSet {
         $this->item->modify_datastream_by_value($tagdoc->saveXML(), $this->tagsDSID, 'Tags', 'text/xml', 'X');
       }
     } catch (exception $e) {
-      drupal_set_message(t('There was an error saving the tags datastream: !e'), array('!e' => $e), 'error');
+      drupal_set_message(t('There was an error saving the tags datastream: @e'), array('@e' => $e), 'error');
       return FALSE;
     }
     return TRUE;
