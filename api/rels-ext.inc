@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * @file
  * RelsExt class

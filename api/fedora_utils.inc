@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * @file
  * Base utilities used by the Islandora fedora module.
