@@ -33,7 +33,7 @@ class ObjectHelper {
    */
   function ObjectHelper() {
     drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-    module_load_include('inc', 'fedora_repository', 'ConnectionHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ConnectionHelper');
     $connectionHelper = new ConnectionHelper();
     //$this->fedoraUser = $connectionHelper->getUser();
     //$this->fedoraPass = $connectionHelper->getPassword();
@@ -360,7 +360,7 @@ class ObjectHelper {
   function getFormattedDC($item) {
     global $base_url;
     $path = drupal_get_path('module', 'fedora_repository');
-    module_load_include('inc', 'fedora_repository', 'ConnectionHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ConnectionHelper');
 
     $dsid = array_key_exists('QDC', $item->get_datastreams_list_as_array()) ? 'QDC' : 'DC';
     $xmlstr = $item->get_datastream_dissemination($dsid);
@@ -440,7 +440,7 @@ class ObjectHelper {
    */
   function get_formatted_datastream_list($object_pid, $contentModels, &$fedoraItem) {
     global $fedoraUser, $fedoraPass, $base_url, $user;
-    module_load_include('inc', 'fedora_repository', 'ConnectionHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ConnectionHelper');
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
     module_load_include('inc', 'fedora_repository', 'ContentModel');
@@ -514,7 +514,7 @@ class ObjectHelper {
    *
    */
   function getStream($pid, $dsid, $showError = FALSE) {
-    module_load_include('inc', 'fedora_repository', 'ConnectionHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ConnectionHelper');
     $soapHelper = new ConnectionHelper();
     try {
       $client = $soapHelper->getSoapClient(variable_get('fedora_soap_url', 'http://localhost:8080/fedora/services/access?wsdl'));

@@ -495,7 +495,7 @@ function fedora_repository_purge_stream($pid = NULL, $dsId = NULL, $name = NULL)
  * @return type 
  */
 function fedora_repository_purge_object_form_submit($form, &$form_state) {
-  module_load_include('inc', 'fedora_repository', 'ConnectionHelper');
+  module_load_include('inc', 'fedora_repository', 'api/ConnectionHelper');
   $pid = $form_state['values']['pid'];
   if (!isset($form_state['storage']['confirm'])) {
     $form_state['storage']['confirm'] = TRUE; // this will cause the form to be rebuilt, entering the confirm part of the form
@@ -729,7 +729,7 @@ function fedora_repository_edit_qdc_form(&$form_state, $pid, $dsId = NULL) {
   }
 
   module_load_include('inc', 'fedora_repository', 'formClass');
-  module_load_include('inc', 'fedora_repository', 'ConnectionHelper');
+  module_load_include('inc', 'fedora_repository', 'api/ConnectionHelper');
   $soapHelper = new ConnectionHelper();
   $client = $soapHelper->getSoapClient(variable_get('fedora_soap_url', 'http://localhost:8080/fedora/services/access?wsdl'));
 // Check if there is a custom edit metadata function defined in the content model.
@@ -787,7 +787,7 @@ function fedora_repository_edit_qdc_form_submit($form, &$form_state) {
     $xml_form->submit($form, $form_state);
   }
   else {
-    module_load_include('inc', 'fedora_repository', 'ConnectionHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ConnectionHelper');
     global $base_url;
     if (strstr($form_state['clicked_button']['#id'], 'edit-submit')) {
 

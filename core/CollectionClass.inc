@@ -220,7 +220,7 @@ class CollectionClass {
    * $dsid is the datastream id of the content model.
    */
   function getNextPid($pid, $dsid) {
-    module_load_include('inc', 'Fedora_Repository', 'ConnectionHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ConnectionHelper');
     $pidNameSpace = $this->getPidNameSpace($pid, $dsid);
     $pname = substr($pidNameSpace, 0, strpos($pidNameSpace, ":"));
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
@@ -437,7 +437,7 @@ class CollectionClass {
       'name' => variable_get('fedora_admin_user', 'fedoraAdmin')
     );
     $admin_user = user_load($username);
-    module_load_include('inc', 'fedora_repository', 'ConnectionHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ConnectionHelper');
     $connectionHelper = new ConnectionHelper();
     try {
       $soapClient = $connectionHelper->getSoapClient(variable_get('fedora_soap_manage_url', 'http://localhost:8080/fedora/services/management?wsdl'));

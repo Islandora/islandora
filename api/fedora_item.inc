@@ -28,7 +28,7 @@ class Fedora_Item {
    */
   function __construct($pid) {
     drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-    module_load_include('inc', 'fedora_repository', 'ConnectionHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ConnectionHelper');
     module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
 
     $this->pid = $pid;
@@ -848,7 +848,7 @@ class Fedora_Item {
    */
   static function soap_call($function_name, $params_array, $quiet = FALSE) {
     if (!self::$connection_helper) {
-      module_load_include('inc', 'fedora_repository', 'ConnectionHelper');
+      module_load_include('inc', 'fedora_repository', 'api/ConnectionHelper');
       self::$connection_helper = new ConnectionHelper();
     }
     switch ($function_name) {
