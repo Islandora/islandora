@@ -498,8 +498,8 @@ class CollectionClass {
    */
   function showFieldSets($page_number) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
-    module_load_include('inc', 'fedora_repository', 'CollectionManagement');
-    module_load_include('inc', 'fedora_repository', 'BatchIngest');
+    module_load_include('inc', 'fedora_repository', 'core/CollectionManagement');
+    module_load_include('inc', 'fedora_repository', 'core/BatchIngest');
     global $base_url;
     $tabset = array();
     global $user;

@@ -119,7 +119,7 @@ class PersonalCollectionClass {
    * @return type 
    */
   function createPolicyStream($user, $dom, $rootElement) {
-    module_load_include('inc', 'fedora_repository', 'SecurityClass');
+    module_load_include('inc', 'fedora_repository', 'core/SecurityClass');
 
     $securityClass = new SecurityClass();
     $policyStreamDoc = $securityClass->createPersonalPolicy($user);

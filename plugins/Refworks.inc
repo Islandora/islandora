@@ -7,7 +7,7 @@
  * Refworks class
  */
 
-module_load_include('inc', 'fedora_repository', 'SecurityClass');
+module_load_include('inc', 'fedora_repository', 'core/SecurityClass');
 
 /**
  * Refworks class
