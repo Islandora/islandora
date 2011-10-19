@@ -49,7 +49,7 @@ class formClass {
       'type' => MENU_LOCAL_TASK,
     );
 
-    $items['islandoracm.xsd'] = array(
+    $items['xsl/islandoracm.xsd'] = array(
       'title' => t('Islandora Content Model XML Schema Definition'),
       'page callback' => 'fedora_repository_display_schema',
       'page arguments' => array('islandoracm.xsd'),
@@ -57,7 +57,7 @@ class formClass {
       'access arguments' => array('view fedora collection'),
     );
 
-    $items['collection_policy.xsd'] = array(
+    $items['xsl/collection_policy.xsd'] = array(
       'title' => t('Islandora Content Model XML Schema Definition'),
       'page callback' => 'fedora_repository_display_schema',
       'page arguments' => array('collection_policy.xsd'),
