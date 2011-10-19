@@ -1265,7 +1265,7 @@ function fedora_repository_search_page($resultData) {
  */
 function fedora_repository_form_alter(&$form, &$form_state, $form_id) {
 // Advanced node search form
-  module_load_include('inc', 'fedora_repository', 'SearchClass');
+  module_load_include('inc', 'fedora_repository', 'core/SearchClass');
   $path = drupal_get_path('module', 'fedora_repository');
   if ($form_id == 'search_form' && arg(1) == 'fedora_repository' && user_access('use advanced search')) {
     $default_value = $form['basic']['inline']['keys']['#default_value'];
@@ -1368,7 +1368,7 @@ function fedora_repository_theme() {
  * @return type 
  */
 function fedora_repository_list_terms($field, $startTerm = NULL, $displayName = NULL) {
-  module_load_include('inc', 'fedora_repository', 'SearchClass');
+  module_load_include('inc', 'fedora_repository', 'core/SearchClass');
   $searchClass = new SearchClass();
   return $searchClass->getTerms($field, $startTerm, $displayName);
 }
@@ -1378,7 +1378,7 @@ function fedora_repository_list_terms($field, $startTerm = NULL, $displayName = 
  * @return type 
  */
 function fedora_repository_mnpl_advanced_search_form() {
-  module_load_include('inc', 'fedora_repository', 'SearchClass');
+  module_load_include('inc', 'fedora_repository', 'core/SearchClass');
   $searchClass = new SearchClass();
   return $searchClass->build_advanced_search_form();
 }
@@ -1389,7 +1389,7 @@ function fedora_repository_mnpl_advanced_search_form() {
  * @return type 
  */
 function theme_fedora_repository_mnpl_advanced_search_form($form) {
-  module_load_include('inc', 'fedora_repository', 'SearchClass');
+  module_load_include('inc', 'fedora_repository', 'core/SearchClass');
   $advanced_search_form = new SearchClass();
   return $advanced_search_form->theme_advanced_search_form($form);
 }
@@ -1401,7 +1401,7 @@ function theme_fedora_repository_mnpl_advanced_search_form($form) {
  * @return type 
  */
 function fedora_repository_mnpl_advanced_search($query, $startPage = 1) {
-  module_load_include('inc', 'fedora_repository', 'SearchClass');
+  module_load_include('inc', 'fedora_repository', 'core/SearchClass');
   $searchClass = new SearchClass();
   $retVal = $searchClass->custom_search($query, $startPage);
   return $searchClass->custom_search($query, $startPage);

@@ -432,7 +432,7 @@ class formClass {
    * @return type 
    */
   function can_ingest_here($collection_pid) {
-    module_load_include('inc', 'fedora_repository', 'SecurityClass');
+    module_load_include('inc', 'fedora_repository', 'core/SecurityClass');
     $securityClass = new SecurityClass();
     return $securityClass->canIngestHere($collection_pid);
   }
@@ -447,7 +447,7 @@ class formClass {
       drupal_set_message(t('You do not have permission to ingest.'), 'error');
       return FALSE;
     }
-    module_load_include('inc', 'fedora_repository', 'SecurityClass');
+    module_load_include('inc', 'fedora_repository', 'core/SecurityClass');
     $security_class = new SecurityClass();
     if (!$security_class->canIngestHere($collection_pid)) {
       // Queries the collection object for a child security datastream and if found parses it
