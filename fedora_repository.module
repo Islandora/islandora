@@ -8,7 +8,7 @@
  * the name and pid can also be passed as url parameters
  */
 function fedora_repository_admin() {
-  module_load_include('inc', 'fedora_repository', 'formClass');
+  module_load_include('inc', 'fedora_repository', 'core/formClass');
   $adminForm = new formClass();
   return $adminForm->createAdminForm();
 }
@@ -18,7 +18,7 @@ function fedora_repository_admin() {
  * calls the fedora_repositorys_admin form
  */
 function fedora_repository_menu() {
-  module_load_include('inc', 'fedora_repository', 'formClass');
+  module_load_include('inc', 'fedora_repository', 'core/formClass');
   $adminMenu = new formClass();
   return $adminMenu->createMenu();
 }
@@ -267,7 +267,7 @@ function fedora_repository_ingest_form_validate($form, &$form_state) {
  * @return type 
  */
 function fedora_repository_ingest_form(&$form_state, $collection_pid, $collection_label = NULL, $content_model = NULL) {
-  module_load_include('inc', 'fedora_repository', 'formClass');
+  module_load_include('inc', 'fedora_repository', 'core/formClass');
 // For the sake of easily maintaining the module in different core versions create our own form_values variable.
   if (empty($form_state['storage']['step'])) {
     $form_state['storage']['step'] = 1;
@@ -412,7 +412,7 @@ function add_stream_form_submit($form, &$form_state) {
  * @return type 
  */
 function add_stream_form(&$form_state, $pid) {
-  module_load_include('inc', 'fedora_repository', 'formClass');
+  module_load_include('inc', 'fedora_repository', 'core/formClass');
   $addDataStreamForm = new formClass();
   return $addDataStreamForm->createAddDataStreamForm($pid, $form_state);
 }
@@ -609,7 +609,7 @@ function fedora_repository_replace_stream($pid, $dsId, $dsLabel, $collectionName
  */
 function fedora_repository_replace_stream_form(&$form_state, $pid, $dsId, $dsLabel) {
 //module_load_module_load_include('hp', ''Fedora_Repository'', 'config', 'fedora_repository', '');
-  module_load_include('inc', 'Fedora_Repository', 'formClass');
+  module_load_include('inc', 'fedora_repository', 'core/formClass');
 //$client = getSoapClient(variable_get('fedora_soap_manage_url', 'http://localhost:8080/fedora/services/management?wsdl'));
   $replaceDataStreamForm = new formClass();
   return $replaceDataStreamForm->createReplaceDataStreamForm($pid, $dsId, $dsLabel, $form_state);
@@ -728,7 +728,7 @@ function fedora_repository_edit_qdc_form(&$form_state, $pid, $dsId = NULL) {
     return ' ';
   }
 
-  module_load_include('inc', 'fedora_repository', 'formClass');
+  module_load_include('inc', 'fedora_repository', 'core/formClass');
   module_load_include('inc', 'fedora_repository', 'api/ConnectionHelper');
   $soapHelper = new ConnectionHelper();
   $client = $soapHelper->getSoapClient(variable_get('fedora_soap_url', 'http://localhost:8080/fedora/services/access?wsdl'));
@@ -803,7 +803,7 @@ function fedora_repository_edit_qdc_form_submit($form, &$form_state) {
         }
       }
 
-      module_load_include('inc', 'fedora_repository', 'formClass');
+      module_load_include('inc', 'fedora_repository', 'core/formClass');
       $metaDataForm = new formClass();
       $return_value = $metaDataForm->updateMetaData($form_state['values']['form_id'], $form_state['values'], $client);
       $form_state['storage'] = NULL;

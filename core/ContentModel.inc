@@ -1177,7 +1177,7 @@ class ContentModel extends XMLDatastream {
       }
       else {
         // Assume DC form if none is specified.
-        module_load_include('inc', 'fedora_repository', 'formClass');
+        module_load_include('inc', 'fedora_repository', 'core/formClass');
         $metaDataForm = new formClass();
         $ret = $metaDataForm->updateMetaData($form_state['values']['form_id'], $form_state['values'], $soap_client);
         $form_state['storage'] = NULL;
