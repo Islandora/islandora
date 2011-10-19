@@ -21,7 +21,7 @@ function collection_management_form(&$form_state, $this_collection_pid, $content
     }
   }
   module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
-  module_load_include('inc', 'fedora_repository', 'CollectionPolicy');
+  module_load_include('inc', 'fedora_repository', 'core/CollectionPolicy');
   $item = new Fedora_Item($this_collection_pid);
   $collection_name = $item->objectProfile->objLabel;
   $new_content_models = get_content_models_as_option_array();

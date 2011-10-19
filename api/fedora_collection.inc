@@ -4,7 +4,7 @@
  * @file
  * Operations that affect a Fedora repository at a collection level.
  */
-module_load_include('inc', 'fedora_repository', 'CollectionClass');
+module_load_include('inc', 'fedora_repository', 'core/CollectionClass');
 module_load_include('inc', 'fedora_repository', 'api/fedora_item');
 module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
 module_load_include('module', 'fedora_repository');
@@ -68,7 +68,7 @@ function export_collection($collection_pid, $relationship = 'isMemberOfCollectio
  * @param <type> $query_format R
  */
 function get_related_items_as_xml($collection_pid, $relationship = array('isMemberOfCollection'), $limit = 10000, $offset = 0, $active_objects_only = TRUE, $cmodel = NULL, $orderby = '$title') {
-  module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+  module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
 
   global $user;
   if (!fedora_repository_access(OBJECTHELPER :: $OBJECT_HELPER_VIEW_FEDORA, $pid, $user)) {

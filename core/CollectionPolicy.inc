@@ -4,7 +4,7 @@
  * @file 
  * Collection Policy Class
  */
-module_load_include('inc', 'fedora_repository', 'XMLDatastream');
+module_load_include('inc', 'fedora_repository', 'core/XMLDatastream');
 
 /**
  * Collection Policy class ??
@@ -137,7 +137,7 @@ class CollectionPolicy extends XMLDatastream {
   public static function ingestBlankPolicy($pid, $name, $policyDsid, $model_pid, $model_namespace, $relationship, $searchField, $searchValue) {
     $ret = FALSE;
     if (($cp = self::loadFromCollection($pid)) === FALSE) {   //removed second, non-existant variable
-      module_load_include('inc', 'fedora_repository', 'ContentModel');
+      module_load_include('inc', 'fedora_repository', 'core/ContentModel');
       if (($cm = ContentModel::loadFromModel($model_pid)) !== FALSE && $cm->validate()) {
         $newDom = new DOMDocument('1.0', 'utf-8');
         $newDom->formatOutput = TRUE;
@@ -387,7 +387,7 @@ class CollectionPolicy extends XMLDatastream {
   function getContentModels() {
     $ret = FALSE;
     if ($this->validate()) {
-      module_load_include('inc', 'Fedora_Repository', 'ContentModel');
+      module_load_include('inc', 'fedora_repository', 'core/ContentModel');
       $ret = array();
       $content_models = $this->xml->getElementsByTagName('content_models')->item(0)->getElementsByTagName('content_model');
       for ($i = 0; $i < $content_models->length; $i++) {

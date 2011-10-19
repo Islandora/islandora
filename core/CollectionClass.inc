@@ -29,7 +29,7 @@ class CollectionClass {
    */
   function __construct($pid = NULL) {
     if (!empty($pid)) {
-      module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+      module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
       $this->collectionObject = new ObjectHelper($pid);
       $this->pid = $pid;
     }
@@ -45,7 +45,7 @@ class CollectionClass {
    * @return type 
    */
   function getRelatedObjects($pid, $limit, $offset, $itqlquery=NULL) {
-    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
     $objectHelper = new ObjectHelper();
     if (!isset($itqlquery)) {
       // $query_string = $objectHelper->getStream($pid, 'QUERY', 0);
@@ -65,7 +65,7 @@ class CollectionClass {
    * @return type 
    */
   function getRelatedItems($pid, $itqlquery = NULL, $limit = NULL, $offset = NULL) {
-    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
     module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
     if (!isset($limit)) {
       $limit = 1000;
@@ -193,7 +193,7 @@ class CollectionClass {
    * @return ContentModel 
    */
   function getContentModels($collection_pid, $showError = TRUE) {
-    module_load_include('inc', 'Fedora_Repository', 'ContentModel');
+    module_load_include('inc', 'fedora_repository', 'core/ContentModel');
     $collection_stream = $this->getCollectionPolicyStream($collection_pid);
     try {
       $xml = new SimpleXMLElement($collection_stream);
@@ -220,7 +220,7 @@ class CollectionClass {
    * $dsid is the datastream id of the content model.
    */
   function getNextPid($pid, $dsid) {
-    module_load_include('inc', 'Fedora_Repository', 'ConnectionHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ConnectionHelper');
     $pidNameSpace = $this->getPidNameSpace($pid, $dsid);
     $pname = substr($pidNameSpace, 0, strpos($pidNameSpace, ":"));
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
@@ -437,7 +437,7 @@ class CollectionClass {
       'name' => variable_get('fedora_admin_user', 'fedoraAdmin')
     );
     $admin_user = user_load($username);
-    module_load_include('inc', 'fedora_repository', 'ConnectionHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ConnectionHelper');
     $connectionHelper = new ConnectionHelper();
     try {
       $soapClient = $connectionHelper->getSoapClient(variable_get('fedora_soap_manage_url', 'http://localhost:8080/fedora/services/management?wsdl'));
@@ -480,7 +480,7 @@ class CollectionClass {
    * @return type 
    */
   function getXslContent($pid, $path, $canUseDefault = TRUE) {
-    module_load_include('inc', 'fedora_repository', 'CollectionClass');
+    module_load_include('inc', 'fedora_repository', 'core/CollectionClass');
     $collectionClass = new CollectionClass();
     $xslContent = $collectionClass->getCollectionViewStream($pid);
     if (!$xslContent && $canUseDefault) { //no xslt so we will use the default sent with the module
@@ -577,7 +577,7 @@ class CollectionClass {
   function getIngestInterface() {
     global $base_url;
     $objectHelper = new ObjectHelper();
-    module_load_include('inc', 'Fedora_Repository', 'CollectionPolicy');
+    module_load_include('inc', 'fedora_repository', 'core/CollectionPolicy');
     $collectionPolicyExists = $objectHelper->getMimeType($this->pid, CollectionPolicy::getDefaultDSID());
     if (user_access(ObjectHelper :: $INGEST_FEDORA_OBJECTS) && $collectionPolicyExists) {
       if (!empty($collectionPolicyExists)) {

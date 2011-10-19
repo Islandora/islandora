@@ -30,7 +30,7 @@ class SecurityClass {
    */
   function canIngestHere($collection_pid) {
     global $user;
-    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
     $objectHelper = new ObjectHelper();
     // get the childsecurity policy from the collection.
     $policyStream = $objectHelper->getStream($collection_pid, SECURITYCLASS :: $SECURITY_CLASS_SECURITY_STREAM, FALSE);
