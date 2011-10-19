@@ -223,7 +223,7 @@ class Refworks {
    */
   function handleForm(&$form_values) {
     $errorMessage = NULL;
-    module_load_include('inc', 'fedora_repository', 'CollectionClass');
+    module_load_include('inc', 'fedora_repository', 'core/CollectionClass');
     module_load_include('inc', 'fedora_repository', 'core/ContentModel');
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
     $contentModelPid = ContentModel::getPidFromIdentifier($form_values['models']);

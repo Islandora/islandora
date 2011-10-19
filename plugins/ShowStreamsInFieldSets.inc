@@ -227,7 +227,7 @@ class ShowStreamsInFieldSets {
    */
   function showRomeo($collapsed = FALSE) {
     $path = drupal_get_path('module', 'Fedora_Repository');
-    module_load_include('inc', 'fedora_repository', 'CollectionClass');
+    module_load_include('inc', 'fedora_repository', 'core/CollectionClass');
     $collectionHelper = new CollectionClass();
     $xmlstr = $collectionHelper->getStream($this->pid, "ROMEO", 0);
 

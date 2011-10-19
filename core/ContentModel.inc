@@ -436,7 +436,7 @@ class ContentModel extends XMLDatastream {
    and $object <fedora-model:state> <info:fedora/fedora-system:def/model#Active>)
    order by $title';
 
-    module_load_include('inc', 'fedora_repository', 'CollectionClass');
+    module_load_include('inc', 'fedora_repository', 'core/CollectionClass');
 
     $collectionHelper = new CollectionClass();
     $xml = simplexml_load_string($collectionHelper->getRelatedItems($this->pid, $query));

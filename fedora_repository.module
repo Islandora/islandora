@@ -86,7 +86,7 @@ function fedora_repository_collection_view($pid = NULL, $collection = NULL, $pag
 
   $content = '';
 
-  module_load_include('inc', 'fedora_repository', 'CollectionClass');
+  module_load_include('inc', 'fedora_repository', 'core/CollectionClass');
   $collectionClass = new CollectionClass();
   $results = $collectionClass->getRelatedItems($pid, NULL);
   $content .= $objectHelper->parseContent($results, $pid, $dsId, $collection, $pageNumber);
@@ -151,7 +151,7 @@ function fedora_repository_ingest_form_submit(array $form, array &$form_state) {
   }
   elseif ($form_state['clicked_button']['#id'] == 'edit-submit') {
     global $base_url;
-    module_load_include('inc', 'fedora_repository', 'CollectionClass');
+    module_load_include('inc', 'fedora_repository', 'core/CollectionClass');
     module_load_include('inc', 'fedora_repository', 'core/CollectionPolicy');
     module_load_include('inc', 'fedora_repository', 'core/ContentModel');
 
@@ -958,7 +958,7 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
 
   $content = '<div id="content-fedora">';
 
-  module_load_include('inc', 'fedora_repository', 'CollectionClass');
+  module_load_include('inc', 'fedora_repository', 'core/CollectionClass');
   $collectionClass = new CollectionClass();
   module_load_include('inc', 'fedora_repository', 'core/ContentModel');
   module_load_include('inc', 'fedora_repository', 'plugins/FedoraObjectDetailedContent');

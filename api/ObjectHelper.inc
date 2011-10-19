@@ -207,7 +207,7 @@ class ObjectHelper {
    * @return type 
    */
   function getCollectionInfo($pid, $query = NULL) {
-    module_load_include('inc', 'fedora_repository', 'CollectionClass');
+    module_load_include('inc', 'fedora_repository', 'core/CollectionClass');
     $collectionClass = new CollectionClass();
     $results = $collectionClass->getRelatedItems($pid, $query);
     return $results;
@@ -548,7 +548,7 @@ class ObjectHelper {
    * @return array 
    */
   function get_content_models_list($pid, $include_fedora_system_content_models = FALSE) {
-    module_load_include('inc', 'fedora_repository', 'CollectionClass');
+    module_load_include('inc', 'fedora_repository', 'core/CollectionClass');
     $collectionHelper = new CollectionClass();
     $pids = array();
     $query = 'select $object from <#ri>

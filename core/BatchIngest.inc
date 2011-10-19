@@ -220,7 +220,7 @@ function create_batch_objects($label, $content_model, $object_files, $collection
 function batch_create_dc_from_mods($mods_xml) {
   $path = drupal_get_path('module', 'fedora_repository');
   module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
-  module_load_include('inc', 'fedora_repository', 'CollectionClass');
+  module_load_include('inc', 'fedora_repository', 'core/CollectionClass');
 
   if ($xmlstr == NULL || strlen($xmlstr) < 5) {
     return " ";

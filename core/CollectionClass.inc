@@ -480,7 +480,7 @@ class CollectionClass {
    * @return type 
    */
   function getXslContent($pid, $path, $canUseDefault = TRUE) {
-    module_load_include('inc', 'fedora_repository', 'CollectionClass');
+    module_load_include('inc', 'fedora_repository', 'core/CollectionClass');
     $collectionClass = new CollectionClass();
     $xslContent = $collectionClass->getCollectionViewStream($pid);
     if (!$xslContent && $canUseDefault) { //no xslt so we will use the default sent with the module

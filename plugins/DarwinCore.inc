@@ -244,7 +244,7 @@ class DarwinCore {
   public function asHTML() {
     $path = drupal_get_path('module', 'Fedora_Repository');
     module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
-    module_load_include('inc', 'fedora_repository', 'CollectionClass');
+    module_load_include('inc', 'fedora_repository', 'core/CollectionClass');
 
     $xmlstr = $this->darwinCoreXML;
     html_entity_decode($xmlstr);

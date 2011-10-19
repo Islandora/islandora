@@ -4,7 +4,7 @@
  * @file
  * Operations that affect a Fedora repository at a collection level.
  */
-module_load_include('inc', 'fedora_repository', 'CollectionClass');
+module_load_include('inc', 'fedora_repository', 'core/CollectionClass');
 module_load_include('inc', 'fedora_repository', 'api/fedora_item');
 module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
 module_load_include('module', 'fedora_repository');
