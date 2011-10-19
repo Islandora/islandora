@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * @file
  * Fedora Export
