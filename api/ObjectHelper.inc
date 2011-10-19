@@ -441,7 +441,7 @@ class ObjectHelper {
   function get_formatted_datastream_list($object_pid, $contentModels, &$fedoraItem) {
     global $fedoraUser, $fedoraPass, $base_url, $user;
     module_load_include('inc', 'fedora_repository', 'api/ConnectionHelper');
-    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
     module_load_include('inc', 'fedora_repository', 'ContentModel');
 

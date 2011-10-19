@@ -143,7 +143,7 @@ class ShowStreamsInFieldSets {
    * @return type 
    */
   function showQdc() {
-    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
     $objectHelper = new ObjectHelper();
     $content = $objectHelper->getQDC($this->pid);
     $collection_fieldset = array(
@@ -174,7 +174,7 @@ class ShowStreamsInFieldSets {
    */
   function showRefworks() {
     $path = drupal_get_path('module', 'fedora_repository');
-    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
     $collectionHelper = new CollectionClass();
     $xmlstr = $collectionHelper->getStream($this->pid, "refworks");
     html_entity_decode($xmlstr);

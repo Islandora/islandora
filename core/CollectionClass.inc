@@ -29,7 +29,7 @@ class CollectionClass {
    */
   function __construct($pid = NULL) {
     if (!empty($pid)) {
-      module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+      module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
       $this->collectionObject = new ObjectHelper($pid);
       $this->pid = $pid;
     }
@@ -45,7 +45,7 @@ class CollectionClass {
    * @return type 
    */
   function getRelatedObjects($pid, $limit, $offset, $itqlquery=NULL) {
-    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
     $objectHelper = new ObjectHelper();
     if (!isset($itqlquery)) {
       // $query_string = $objectHelper->getStream($pid, 'QUERY', 0);
@@ -65,7 +65,7 @@ class CollectionClass {
    * @return type 
    */
   function getRelatedItems($pid, $itqlquery = NULL, $limit = NULL, $offset = NULL) {
-    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
     module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
     if (!isset($limit)) {
       $limit = 1000;

@@ -83,7 +83,7 @@ class FormBuilder {
    * @return type 
    */
   function createPolicy($collectionPid, &$dom, &$rootElement) {
-    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
     $objectHelper = new ObjectHelper();
 
     $dsid = 'CHILD_SECURITY';

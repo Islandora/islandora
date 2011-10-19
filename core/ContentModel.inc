@@ -41,7 +41,7 @@ class ContentModel extends XMLDatastream {
   public static function loadFromObject($pid) {
     $ret = FALSE;
     if (self::valid_pid($pid)) {
-      module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+      module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
       $objectHelper = new ObjectHelper();
 
       $content_models = $objectHelper->get_content_models_list($pid);

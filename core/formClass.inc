@@ -206,7 +206,7 @@ class formClass {
       return;
     }
     module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
-    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
     $form = array();
     $form['fedora_repository_name'] = array(
       '#type' => 'textfield',
@@ -603,7 +603,7 @@ class formClass {
     //dump_vars($form_state);
     // Populate the list of datastream IDs.
 
-    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
     module_load_include('inc', 'fedora_repository', 'ContentModel');
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
 
