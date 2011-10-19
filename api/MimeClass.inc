@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * @file
  * This class inspired by Chris Jean's work, here:

@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * @file
  * Implements a simple class for working with Dublin Core data and exporting it
