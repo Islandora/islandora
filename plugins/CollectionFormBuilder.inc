@@ -30,7 +30,7 @@ class CollectionFormBuilder extends FormBuilder {
    * @param type $rootElement 
    */
   function createFedoraDataStreams($form_values, &$dom, &$rootElement) {
-    module_load_include('inc', 'fedora_repository', 'MimeClass');
+    module_load_include('inc', 'fedora_repository', 'api/MimeClass');
     global $base_url;
 
     $mimetype = new MimeClass();

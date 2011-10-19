@@ -32,7 +32,7 @@ class DocumentConverter {
    * @return string 
    */
   function convert($parameterArray = NULL, $dsid, $file, $output_ext) {
-    module_load_include('inc', 'fedora_repository', 'MimeClass');
+    module_load_include('inc', 'fedora_repository', 'api/MimeClass');
 
     #debug:
     #drupal_set_message("Sending $file to ". $this->converter_service_url ." for convertsion to $output_ext", 'status');

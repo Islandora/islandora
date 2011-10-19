@@ -8,7 +8,7 @@
  * @file 
  * Content Model Class
  */
-module_load_include('inc', 'fedora_repository', 'XMLDatastream');
+module_load_include('inc', 'fedora_repository', 'core/XMLDatastream');
 
 /**
  * Conent Model ??
@@ -41,7 +41,7 @@ class ContentModel extends XMLDatastream {
   public static function loadFromObject($pid) {
     $ret = FALSE;
     if (self::valid_pid($pid)) {
-      module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+      module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
       $objectHelper = new ObjectHelper();
 
       $content_models = $objectHelper->get_content_models_list($pid);
@@ -436,7 +436,7 @@ class ContentModel extends XMLDatastream {
    and $object <fedora-model:state> <info:fedora/fedora-system:def/model#Active>)
    order by $title';
 
-    module_load_include('inc', 'fedora_repository', 'CollectionClass');
+    module_load_include('inc', 'fedora_repository', 'core/CollectionClass');
 
     $collectionHelper = new CollectionClass();
     $xml = simplexml_load_string($collectionHelper->getRelatedItems($this->pid, $query));
@@ -1177,7 +1177,7 @@ class ContentModel extends XMLDatastream {
       }
       else {
         // Assume DC form if none is specified.
-        module_load_include('inc', 'fedora_repository', 'formClass');
+        module_load_include('inc', 'fedora_repository', 'core/formClass');
         $metaDataForm = new formClass();
         $ret = $metaDataForm->updateMetaData($form_state['values']['form_id'], $form_state['values'], $soap_client);
         $form_state['storage'] = NULL;

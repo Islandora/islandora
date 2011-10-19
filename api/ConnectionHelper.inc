@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * @file 
  * Connection Helper Class

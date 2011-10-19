@@ -85,7 +85,7 @@ function export_objects_for_pid($pid, $dir, &$log) {
  * @return type 
  */
 function export_foxml_for_pid($pid, $dir, $paths, &$log, $format = FOXML_11, $remove_islandora = FALSE) {
-  module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+  module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
   $ob_helper = new ObjectHelper();
   if (!$object_xml = $ob_helper->getObject($pid, 'migrate', $format)) {
     $log[] = log_line(t("Failed to get foxml for %pid", array('%pid' => $pid)), 'error');

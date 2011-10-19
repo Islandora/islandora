@@ -223,8 +223,8 @@ class Refworks {
    */
   function handleForm(&$form_values) {
     $errorMessage = NULL;
-    module_load_include('inc', 'fedora_repository', 'CollectionClass');
-    module_load_include('inc', 'fedora_repository', 'ContentModel');
+    module_load_include('inc', 'fedora_repository', 'core/CollectionClass');
+    module_load_include('inc', 'fedora_repository', 'core/ContentModel');
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
     $contentModelPid = ContentModel::getPidFromIdentifier($form_values['models']);
     $contentModelDsid = ContentModel::getDSIDFromIdentifier($form_values['models']);
@@ -389,7 +389,7 @@ class Refworks {
    */
   function createFedoraDataStreams($form_values, &$dom, &$rootElement, $reference) {
     global $base_url;
-    module_load_include('inc', 'fedora_repository', 'MimeClass');
+    module_load_include('inc', 'fedora_repository', 'api/MimeClass');
     $mimetype = new MimeClass();
     $server = NULL;
     $this->createRomeoDataStream($dom, $rootElement);

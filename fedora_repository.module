@@ -8,7 +8,7 @@
  * the name and pid can also be passed as url parameters
  */
 function fedora_repository_admin() {
-  module_load_include('inc', 'fedora_repository', 'formClass');
+  module_load_include('inc', 'fedora_repository', 'core/formClass');
   $adminForm = new formClass();
   return $adminForm->createAdminForm();
 }
@@ -18,7 +18,7 @@ function fedora_repository_admin() {
  * calls the fedora_repositorys_admin form
  */
 function fedora_repository_menu() {
-  module_load_include('inc', 'fedora_repository', 'formClass');
+  module_load_include('inc', 'fedora_repository', 'core/formClass');
   $adminMenu = new formClass();
   return $adminMenu->createMenu();
 }
@@ -72,7 +72,7 @@ function fedora_repository_purge_object($pid = NULL, $name = NULL) {
  * @return type 
  */
 function fedora_repository_collection_view($pid = NULL, $collection = NULL, $pageNumber = NULL) {
-  module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+  module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
   global $user;
   if (!fedora_repository_access(OBJECTHELPER :: $OBJECT_HELPER_VIEW_FEDORA, $pid, $user)) {
     drupal_set_message(t("You do not have access to Fedora objects within the attempted namespace or access to Fedora denied."), 'error');
@@ -86,7 +86,7 @@ function fedora_repository_collection_view($pid = NULL, $collection = NULL, $pag
 
   $content = '';
 
-  module_load_include('inc', 'fedora_repository', 'CollectionClass');
+  module_load_include('inc', 'fedora_repository', 'core/CollectionClass');
   $collectionClass = new CollectionClass();
   $results = $collectionClass->getRelatedItems($pid, NULL);
   $content .= $objectHelper->parseContent($results, $pid, $dsId, $collection, $pageNumber);
@@ -103,7 +103,7 @@ function fedora_repository_collection_view($pid = NULL, $collection = NULL, $pag
  */
 function fedora_repository_ingest_object($collection_pid=NULL, $collection_label = NULL, $content_model = NULL) {
   module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
-  module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+  module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
   if (!user_access('ingest new fedora objects')) {
     drupal_set_message(t('You do not have permission to ingest.'), 'error');
     return '';
@@ -151,9 +151,9 @@ function fedora_repository_ingest_form_submit(array $form, array &$form_state) {
   }
   elseif ($form_state['clicked_button']['#id'] == 'edit-submit') {
     global $base_url;
-    module_load_include('inc', 'fedora_repository', 'CollectionClass');
-    module_load_include('inc', 'fedora_repository', 'CollectionPolicy');
-    module_load_include('inc', 'fedora_repository', 'ContentModel');
+    module_load_include('inc', 'fedora_repository', 'core/CollectionClass');
+    module_load_include('inc', 'fedora_repository', 'core/CollectionPolicy');
+    module_load_include('inc', 'fedora_repository', 'core/ContentModel');
 
     $contentModelPid = ContentModel::getPidFromIdentifier($form_state['values']['models']);
     $contentModelDsid = ContentModel::getDSIDFromIdentifier($form_state['values']['models']);
@@ -222,8 +222,8 @@ function fedora_repository_ingest_form_validate($form, &$form_state) {
         }
 
         if (isset($form_state['values']['ingest-file-location']) && file_exists($form_state['values']['ingest-file-location'])) {
-          module_load_include('inc', 'fedora_repository', 'ContentModel');
-          module_load_include('inc', 'fedora_repository', 'MimeClass');
+          module_load_include('inc', 'fedora_repository', 'core/ContentModel');
+          module_load_include('inc', 'fedora_repository', 'api/MimeClass');
 
           $file = $form_state['values']['ingest-file-location'];
 
@@ -267,7 +267,7 @@ function fedora_repository_ingest_form_validate($form, &$form_state) {
  * @return type 
  */
 function fedora_repository_ingest_form(&$form_state, $collection_pid, $collection_label = NULL, $content_model = NULL) {
-  module_load_include('inc', 'fedora_repository', 'formClass');
+  module_load_include('inc', 'fedora_repository', 'core/formClass');
 // For the sake of easily maintaining the module in different core versions create our own form_values variable.
   if (empty($form_state['storage']['step'])) {
     $form_state['storage']['step'] = 1;
@@ -367,8 +367,8 @@ function add_stream_form_submit($form, &$form_state) {
     $form_state['rebuild'] = TRUE;
     return;
   }
-  module_load_include('inc', 'fedora_repository', 'MimeClass');
-  module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+  module_load_include('inc', 'fedora_repository', 'api/MimeClass');
+  module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
   $pathToModule = drupal_get_path('module', 'fedora_repository');
 
@@ -412,7 +412,7 @@ function add_stream_form_submit($form, &$form_state) {
  * @return type 
  */
 function add_stream_form(&$form_state, $pid) {
-  module_load_include('inc', 'fedora_repository', 'formClass');
+  module_load_include('inc', 'fedora_repository', 'core/formClass');
   $addDataStreamForm = new formClass();
   return $addDataStreamForm->createAddDataStreamForm($pid, $form_state);
 }
@@ -470,7 +470,7 @@ function add_stream_form_validate($form, &$form_state) {
  * @return type 
  */
 function fedora_repository_purge_stream($pid = NULL, $dsId = NULL, $name = NULL) {
-  module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+  module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
   global $user;
   if ($pid == NULL || $dsId == NULL) {
     drupal_set_message(t('You must specify an object pid and DataStream ID to purge a datastream'), 'error');
@@ -495,7 +495,7 @@ function fedora_repository_purge_stream($pid = NULL, $dsId = NULL, $name = NULL)
  * @return type 
  */
 function fedora_repository_purge_object_form_submit($form, &$form_state) {
-  module_load_include('inc', 'fedora_repository', 'ConnectionHelper');
+  module_load_include('inc', 'fedora_repository', 'api/ConnectionHelper');
   $pid = $form_state['values']['pid'];
   if (!isset($form_state['storage']['confirm'])) {
     $form_state['storage']['confirm'] = TRUE; // this will cause the form to be rebuilt, entering the confirm part of the form
@@ -609,7 +609,7 @@ function fedora_repository_replace_stream($pid, $dsId, $dsLabel, $collectionName
  */
 function fedora_repository_replace_stream_form(&$form_state, $pid, $dsId, $dsLabel) {
 //module_load_module_load_include('hp', ''Fedora_Repository'', 'config', 'fedora_repository', '');
-  module_load_include('inc', 'Fedora_Repository', 'formClass');
+  module_load_include('inc', 'fedora_repository', 'core/formClass');
 //$client = getSoapClient(variable_get('fedora_soap_manage_url', 'http://localhost:8080/fedora/services/management?wsdl'));
   $replaceDataStreamForm = new formClass();
   return $replaceDataStreamForm->createReplaceDataStreamForm($pid, $dsId, $dsLabel, $form_state);
@@ -635,7 +635,7 @@ function fedora_repository_replace_stream_form_validate($form, &$form_state) {
     }
 
     $doc = new DOMDocument();
-    module_load_include('inc', 'Fedora_Repository', 'MimeClass');
+    module_load_include('inc', 'fedora_repository', 'api/MimeClass');
     $mime = new MimeClass();
     if ($mime->getType($file->filepath) == 'text/xml' && !$doc->load($file->filepath)) {
       form_set_error('file', 'Invalid XML format.');
@@ -665,7 +665,7 @@ function fedora_repository_replace_stream_form_submit($form, &$form_state) {
     $dsLabel = substr($dsLabel, 0, $indexOfDot);
     $dsLabel .= substr($file->filename, strrpos($file->filename, '.')); // Add the file extention to the end of the label.;
   }
-  module_load_include('inc', 'Fedora_Repository', 'MimeClass');
+  module_load_include('inc', 'fedora_repository', 'api/MimeClass');
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
 
   $file_basename = basename($file->filepath);
@@ -693,7 +693,7 @@ function fedora_repository_replace_stream_form_submit($form, &$form_state) {
  * @return type 
  */
 function fedora_repository_edit_qdc_page($pid = NULL, $dsId = NULL) {
-  module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+  module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
   global $user;
   if ($pid == NULL || $dsId == NULL) {
     drupal_set_message(t('You must specify an object pid and a Dublin Core DataStream ID to edit metadata'), 'error');
@@ -717,8 +717,8 @@ function fedora_repository_edit_qdc_page($pid = NULL, $dsId = NULL) {
  * @return type 
  */
 function fedora_repository_edit_qdc_form(&$form_state, $pid, $dsId = NULL) {
-  module_load_include('inc', 'fedora_repository', 'ContentModel');
-  module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+  module_load_include('inc', 'fedora_repository', 'core/ContentModel');
+  module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
   if ($pid == NULL) {
     drupal_set_message(t('You must specify an object pid!'), 'error');
   }
@@ -728,8 +728,8 @@ function fedora_repository_edit_qdc_form(&$form_state, $pid, $dsId = NULL) {
     return ' ';
   }
 
-  module_load_include('inc', 'fedora_repository', 'formClass');
-  module_load_include('inc', 'fedora_repository', 'ConnectionHelper');
+  module_load_include('inc', 'fedora_repository', 'core/formClass');
+  module_load_include('inc', 'fedora_repository', 'api/ConnectionHelper');
   $soapHelper = new ConnectionHelper();
   $client = $soapHelper->getSoapClient(variable_get('fedora_soap_url', 'http://localhost:8080/fedora/services/access?wsdl'));
 // Check if there is a custom edit metadata function defined in the content model.
@@ -787,7 +787,7 @@ function fedora_repository_edit_qdc_form_submit($form, &$form_state) {
     $xml_form->submit($form, $form_state);
   }
   else {
-    module_load_include('inc', 'fedora_repository', 'ConnectionHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ConnectionHelper');
     global $base_url;
     if (strstr($form_state['clicked_button']['#id'], 'edit-submit')) {
 
@@ -797,13 +797,13 @@ function fedora_repository_edit_qdc_form_submit($form, &$form_state) {
 
 // Check the content model for a custom edit metadata form submit function.
       if (isset($form_state['values']['pid'])) {
-        module_load_include('inc', 'fedora_repository', 'ContentModel');
+        module_load_include('inc', 'fedora_repository', 'core/ContentModel');
         if (($cm = ContentModel::loadFromObject($form_state['values']['pid'])) !== FALSE) {
           return $cm->handleEditMetadataForm($form_state['values']['form_id'], $form_state, $client);
         }
       }
 
-      module_load_include('inc', 'fedora_repository', 'formClass');
+      module_load_include('inc', 'fedora_repository', 'core/formClass');
       $metaDataForm = new formClass();
       $return_value = $metaDataForm->updateMetaData($form_state['values']['form_id'], $form_state['values'], $client);
       $form_state['storage'] = NULL;
@@ -819,7 +819,7 @@ function fedora_repository_edit_qdc_form_submit($form, &$form_state) {
  * creates a new permission than can be assigned to roles
  */
 function fedora_repository_perm() {
-  module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+  module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
   return array(
     OBJECTHELPER::$OBJECT_HELPER_VIEW_FEDORA,
     OBJECTHELPER::$EDIT_FEDORA_METADATA,
@@ -844,7 +844,7 @@ function fedora_repository_perm() {
  * @return type 
  */
 function fedora_repository_access($op, $node, $account) {
-  module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+  module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
   $objectHelper = new ObjectHelper();
   return $objectHelper->fedora_repository_access($op, $node, $account);
 }
@@ -879,7 +879,7 @@ function makeObject($pid, $dsID) {
     return ' ';
   }
 
-  module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+  module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
   $objectHelper = new ObjectHelper();
   $objectHelper->makeObject($pid, $dsID);
 }
@@ -898,7 +898,7 @@ function makeObject($pid, $dsID) {
  * @return type 
  */
 function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NULL, $page_number = NULL, $limit = NULL) {
-  module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+  module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
   module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
   global $user;
@@ -958,9 +958,9 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
 
   $content = '<div id="content-fedora">';
 
-  module_load_include('inc', 'fedora_repository', 'CollectionClass');
+  module_load_include('inc', 'fedora_repository', 'core/CollectionClass');
   $collectionClass = new CollectionClass();
-  module_load_include('inc', 'fedora_repository', 'ContentModel');
+  module_load_include('inc', 'fedora_repository', 'core/ContentModel');
   module_load_include('inc', 'fedora_repository', 'plugins/FedoraObjectDetailedContent');
   $breadcrumbs = array();
   $objectHelper->getBreadcrumbs($pid, $breadcrumbs);
@@ -1023,7 +1023,7 @@ function fedora_repository_urlencode_string($str) {
  */
 function fedora_object_as_attachment($pid, $dsId, $label=NULL, $version=NULL) {
   global $user;
-  module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+  module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
 
   if ($pid == NULL || $dsId == NULL) {
     drupal_set_message(t("no pid or dsid given to create an object with!"));
@@ -1058,7 +1058,7 @@ function repository_page($pid = NULL, $dsId = NULL, $collection = NULL, $pageNum
  */
 function repository_service($pid = NULL, $servicePid = NULL, $serviceMethod = NULL) {
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
-  module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+  module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
   global $user;
 
   if (!fedora_repository_access(OBJECTHELPER::$OBJECT_HELPER_VIEW_FEDORA, $pid, $user)) {
@@ -1103,7 +1103,7 @@ function repository_service($pid = NULL, $servicePid = NULL, $serviceMethod = NU
  * @return array 
  */
 function fedora_repository_search($op = 'search', $keys = NULL) {
-  module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+  module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
   module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
 
   switch ($op) {
@@ -1444,7 +1444,7 @@ function fedora_repository_install_demos_page() {
  * @return string 
  */
 function fedora_repository_demo_objects_form() {
-  module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+  module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
   $form = array();
   $existing_demos = array();
@@ -1786,7 +1786,7 @@ function theme_fedora_repository_time($element) {
  */
 function fedora_repository_remove_item_from_basket($pid) {
 
-  module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+  module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
   $pids = empty($_SESSION['basket']['processed']) ? array() : $_SESSION['basket']['processed'];
 
   $objectHelper = new ObjectHelper();
@@ -1996,7 +1996,7 @@ function _fedora_repository_get_basket_pids() {
 
   $pids = empty($_SESSION['basket']['processed']) ? array() : $_SESSION['basket']['processed'];
 
-  module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+  module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
   $ob = new ObjectHelper();
   foreach ($_SESSION['basket']['unprocessed'] as $pid) {
 // Check if the pid already exists in the tree
