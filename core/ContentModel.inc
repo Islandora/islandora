@@ -8,7 +8,7 @@
  * @file 
  * Content Model Class
  */
-module_load_include('inc', 'fedora_repository', 'XMLDatastream');
+module_load_include('inc', 'fedora_repository', 'core/XMLDatastream');
 
 /**
  * Conent Model ??

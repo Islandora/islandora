@@ -4,7 +4,7 @@
  * @file 
  * Collection Policy Class
  */
-module_load_include('inc', 'fedora_repository', 'XMLDatastream');
+module_load_include('inc', 'fedora_repository', 'core/XMLDatastream');
 
 /**
  * Collection Policy class ??
