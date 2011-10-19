@@ -9,7 +9,7 @@
  */
 function batch_creation_form(&$form_state, $collection_pid, $content_models) {
   module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
-  module_load_include('inc', 'fedora_repository', 'CollectionPolicy');
+  module_load_include('inc', 'fedora_repository', 'core/CollectionPolicy');
   $cm_options = array();
   $name_mappings = array();
   foreach ($content_models as $content_model) {
@@ -86,7 +86,7 @@ function batch_creation_form_validate($form, &$form_state) {
 }
 
 function batch_creation_form_submit($form, &$form_state) {
-  module_load_include('inc', 'fedora_repository', 'ContentModel');
+  module_load_include('inc', 'fedora_repository', 'core/ContentModel');
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
   global $user;
   $namespace_mappings = array();
@@ -163,8 +163,8 @@ function batch_creation_form_submit($form, &$form_state) {
  * @param <string> $metadata
  */
 function create_batch_objects($label, $content_model, $object_files, $collection_pid, $namespace, $metadata) {
-  module_load_include('inc', 'fedora_repository', 'ContentModel');
-  module_load_include('inc', 'fedora_repository', 'MimeClass');
+  module_load_include('inc', 'fedora_repository', 'core/ContentModel');
+  module_load_include('inc', 'fedora_repository', 'api/MimeClass');
   module_load_include('inc', 'fedora_reppository', 'api/fedora_item');
 
   $cm = ContentModel::loadFromModel($content_model, 'ISLANDORACM');

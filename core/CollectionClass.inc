@@ -193,7 +193,7 @@ class CollectionClass {
    * @return ContentModel 
    */
   function getContentModels($collection_pid, $showError = TRUE) {
-    module_load_include('inc', 'Fedora_Repository', 'ContentModel');
+    module_load_include('inc', 'fedora_repository', 'core/ContentModel');
     $collection_stream = $this->getCollectionPolicyStream($collection_pid);
     try {
       $xml = new SimpleXMLElement($collection_stream);
@@ -577,7 +577,7 @@ class CollectionClass {
   function getIngestInterface() {
     global $base_url;
     $objectHelper = new ObjectHelper();
-    module_load_include('inc', 'Fedora_Repository', 'CollectionPolicy');
+    module_load_include('inc', 'fedora_repository', 'core/CollectionPolicy');
     $collectionPolicyExists = $objectHelper->getMimeType($this->pid, CollectionPolicy::getDefaultDSID());
     if (user_access(ObjectHelper :: $INGEST_FEDORA_OBJECTS) && $collectionPolicyExists) {
       if (!empty($collectionPolicyExists)) {

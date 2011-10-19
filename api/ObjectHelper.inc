@@ -56,7 +56,7 @@ class ObjectHelper {
    */
   function makeObject($pid, $dsID, $asAttachment = FALSE, $label = NULL, $filePath=FALSE, $version=NULL, $forceSoap = TRUE) {
     global $user;
-    module_load_include('inc', 'fedora_repository', 'ContentModel');
+    module_load_include('inc', 'fedora_repository', 'core/ContentModel');
     if ($pid == NULL || $dsID == NULL) {
       drupal_set_message(t("no pid or dsid given to create an object with"), 'error');
       return ' ';
@@ -176,7 +176,7 @@ class ObjectHelper {
            * for the mimetype in question.
            */
           if ($pos === FALSE) {
-            module_load_include('inc', 'fedora_repository', 'MimeClass');
+            module_load_include('inc', 'fedora_repository', 'api/MimeClass');
             $mimeclass = new MimeClass();
             $ext = $mimeclass->get_extension($mimeType);
             $suggestedFileName = "$label.$ext";
@@ -443,7 +443,7 @@ class ObjectHelper {
     module_load_include('inc', 'fedora_repository', 'api/ConnectionHelper');
     module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
-    module_load_include('inc', 'fedora_repository', 'ContentModel');
+    module_load_include('inc', 'fedora_repository', 'core/ContentModel');
 
     $path = drupal_get_path('module', 'fedora_repository');
     $dataStreamBody = '';
@@ -665,7 +665,7 @@ class ObjectHelper {
     //show the collections datastreams
     if ($results->length > 0 || $isCollection == TRUE) {
       //  if(strlen($objectList)>22||$contentModel=='Collection'||$contentModel=='Community')//length of empty dom still equals 22 because of <table/> etc
-      module_load_include('inc', 'Fedora_Repository', 'CollectionPolicy');
+      module_load_include('inc', 'fedora_repository', 'core/CollectionPolicy');
       $collectionPolicyExists = $objectHelper->getMimeType($pid, CollectionPolicy::getDefaultDSID());
       if (user_access(ObjectHelper :: $INGEST_FEDORA_OBJECTS) && $collectionPolicyExists) {
         if (!empty($collectionPolicyExists)) {
@@ -790,7 +790,7 @@ class ObjectHelper {
       return NULL;
     }
     $output = '';
-    module_load_include('inc', 'fedora_repository', 'ContentModel');
+    module_load_include('inc', 'fedora_repository', 'core/ContentModel');
     if (($cm = ContentModel :: loadFromModel($contentModel)) !== FALSE && $cm->validate()) {
       $output .= $cm->displayExtraFieldset($pid, $page_number);
     }
@@ -810,7 +810,7 @@ class ObjectHelper {
       return FALSE;
     }
 
-    module_load_include('inc', 'fedora_repository', 'ContentModel');
+    module_load_include('inc', 'fedora_repository', 'core/ContentModel');
     if ($dsid != NULL && $pid != NULL && ($cm = ContentModel::loadFromObject($pid)) !== FALSE) {
       $cm->execAddDatastreamMethods($dsid, $file);
     }

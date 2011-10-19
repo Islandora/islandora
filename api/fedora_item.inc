@@ -75,7 +75,7 @@ class Fedora_Item {
    * @return type 
    */
   function add_datastream_from_file($datastream_file, $datastream_id, $datastream_label = NULL, $datastream_mimetype = '', $controlGroup = 'M', $logMessage = NULL) {
-    module_load_include('inc', 'fedora_repository', 'MimeClass');
+    module_load_include('inc', 'fedora_repository', 'api/MimeClass');
     if (!is_file($datastream_file)) {
       drupal_set_message("$datastream_file not found<br />", 'warning');
       return;

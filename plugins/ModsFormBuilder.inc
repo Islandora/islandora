@@ -24,7 +24,7 @@ class ModsFormBuilder extends FormBuilder {
   function __construct($pid=NULL) {
     parent::__construct();
     if ($pid !== NULL) {
-      module_load_include('inc', 'fedora_repository', 'ContentModel');
+      module_load_include('inc', 'fedora_repository', 'core/ContentModel');
       module_load_include('inc', 'fedora_repository', 'api/fedora_item');
 
       $this->pid = $pid;
@@ -256,7 +256,7 @@ class ModsFormBuilder extends FormBuilder {
    */
   function handleModsForm(&$form_values, &$form_state) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
-    module_load_include('inc', 'fedora_repository', 'CollectionPolicy');
+    module_load_include('inc', 'fedora_repository', 'core/CollectionPolicy');
 
     $form_state['storage']['people'] = NULL; //clears out old entities for the next run of the formbuilder.
 

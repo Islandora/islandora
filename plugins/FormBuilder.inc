@@ -135,7 +135,7 @@ class FormBuilder {
    */
   function handleQDCForm($form_values) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
-    module_load_include('inc', 'fedora_repository', 'CollectionPolicy');
+    module_load_include('inc', 'fedora_repository', 'core/CollectionPolicy');
 
     $dom = new DomDocument("1.0", "UTF-8");
     $dom->formatOutput = TRUE;
@@ -195,7 +195,7 @@ class FormBuilder {
    * @param type $rootElement 
    */
   function createFedoraDataStreams($form_values, &$dom, &$rootElement) {
-    module_load_include('inc', 'fedora_repository', 'MimeClass');
+    module_load_include('inc', 'fedora_repository', 'api/MimeClass');
     global $base_url;
     $mimetype = new MimeClass();
     $server = NULL;

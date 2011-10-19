@@ -152,8 +152,8 @@ function fedora_repository_ingest_form_submit(array $form, array &$form_state) {
   elseif ($form_state['clicked_button']['#id'] == 'edit-submit') {
     global $base_url;
     module_load_include('inc', 'fedora_repository', 'CollectionClass');
-    module_load_include('inc', 'fedora_repository', 'CollectionPolicy');
-    module_load_include('inc', 'fedora_repository', 'ContentModel');
+    module_load_include('inc', 'fedora_repository', 'core/CollectionPolicy');
+    module_load_include('inc', 'fedora_repository', 'core/ContentModel');
 
     $contentModelPid = ContentModel::getPidFromIdentifier($form_state['values']['models']);
     $contentModelDsid = ContentModel::getDSIDFromIdentifier($form_state['values']['models']);
@@ -222,8 +222,8 @@ function fedora_repository_ingest_form_validate($form, &$form_state) {
         }
 
         if (isset($form_state['values']['ingest-file-location']) && file_exists($form_state['values']['ingest-file-location'])) {
-          module_load_include('inc', 'fedora_repository', 'ContentModel');
-          module_load_include('inc', 'fedora_repository', 'MimeClass');
+          module_load_include('inc', 'fedora_repository', 'core/ContentModel');
+          module_load_include('inc', 'fedora_repository', 'api/MimeClass');
 
           $file = $form_state['values']['ingest-file-location'];
 
@@ -367,7 +367,7 @@ function add_stream_form_submit($form, &$form_state) {
     $form_state['rebuild'] = TRUE;
     return;
   }
-  module_load_include('inc', 'fedora_repository', 'MimeClass');
+  module_load_include('inc', 'fedora_repository', 'api/MimeClass');
   module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
   $pathToModule = drupal_get_path('module', 'fedora_repository');
@@ -635,7 +635,7 @@ function fedora_repository_replace_stream_form_validate($form, &$form_state) {
     }
 
     $doc = new DOMDocument();
-    module_load_include('inc', 'Fedora_Repository', 'MimeClass');
+    module_load_include('inc', 'fedora_repository', 'api/MimeClass');
     $mime = new MimeClass();
     if ($mime->getType($file->filepath) == 'text/xml' && !$doc->load($file->filepath)) {
       form_set_error('file', 'Invalid XML format.');
@@ -665,7 +665,7 @@ function fedora_repository_replace_stream_form_submit($form, &$form_state) {
     $dsLabel = substr($dsLabel, 0, $indexOfDot);
     $dsLabel .= substr($file->filename, strrpos($file->filename, '.')); // Add the file extention to the end of the label.;
   }
-  module_load_include('inc', 'Fedora_Repository', 'MimeClass');
+  module_load_include('inc', 'fedora_repository', 'api/MimeClass');
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
 
   $file_basename = basename($file->filepath);
@@ -717,7 +717,7 @@ function fedora_repository_edit_qdc_page($pid = NULL, $dsId = NULL) {
  * @return type 
  */
 function fedora_repository_edit_qdc_form(&$form_state, $pid, $dsId = NULL) {
-  module_load_include('inc', 'fedora_repository', 'ContentModel');
+  module_load_include('inc', 'fedora_repository', 'core/ContentModel');
   module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
   if ($pid == NULL) {
     drupal_set_message(t('You must specify an object pid!'), 'error');
@@ -797,7 +797,7 @@ function fedora_repository_edit_qdc_form_submit($form, &$form_state) {
 
 // Check the content model for a custom edit metadata form submit function.
       if (isset($form_state['values']['pid'])) {
-        module_load_include('inc', 'fedora_repository', 'ContentModel');
+        module_load_include('inc', 'fedora_repository', 'core/ContentModel');
         if (($cm = ContentModel::loadFromObject($form_state['values']['pid'])) !== FALSE) {
           return $cm->handleEditMetadataForm($form_state['values']['form_id'], $form_state, $client);
         }
@@ -960,7 +960,7 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
 
   module_load_include('inc', 'fedora_repository', 'CollectionClass');
   $collectionClass = new CollectionClass();
-  module_load_include('inc', 'fedora_repository', 'ContentModel');
+  module_load_include('inc', 'fedora_repository', 'core/ContentModel');
   module_load_include('inc', 'fedora_repository', 'plugins/FedoraObjectDetailedContent');
   $breadcrumbs = array();
   $objectHelper->getBreadcrumbs($pid, $breadcrumbs);

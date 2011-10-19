@@ -75,7 +75,7 @@ class Herbarium {
      */
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
     module_load_include('inc', 'fedora_repository', 'plugins/DarwinCore');
-    module_load_include('inc', 'fedora_repository', 'MimeClass');
+    module_load_include('inc', 'fedora_repository', 'api/MimeClass');
     global $user;
     $mimetype = new MimeClass();
     $dwc = new DarwinCore($this->item);
@@ -97,7 +97,7 @@ class Herbarium {
      * Create fedora object
      * Add the datastreams
      */
-    module_load_include('inc', 'fedora_repository', 'MimeClass');
+    module_load_include('inc', 'fedora_repository', 'api/MimeClass');
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
     module_load_include('inc', 'fedora_repository', 'plugins/DarwinCore');
     global $user;
