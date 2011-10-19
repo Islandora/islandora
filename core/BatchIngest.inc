@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file 
+ * Batch ingest code.
+ */
+
+/**
  * batch creation form submit
  * @global type $user
  * @param array $form
@@ -56,7 +61,7 @@ function batch_creation_form(&$form_state, $collection_pid, $content_models) {
   );
 
 
-  return($form);
+  return $form;
 }
 
 /**
@@ -104,10 +109,10 @@ function batch_creation_form_submit($form, &$form_state) {
   $tmp_dir = file_directory_path() . '/' . $dir_name . '/';
   mkdir($tmp_dir);
   $file = $form_state['values']['file'];
-  $fileName = $file->filepath;
+  $file_name = $file->filepath;
   $file_list = array();
-  $cmdString = "unzip -q -o -d $tmp_dir \"$fileName\"";
-  system($cmdString, $retVal);
+  $cmd_string = "unzip -q -o -d $tmp_dir \"$file_name\"";
+  system($cmd_string, $ret_val);
   $dirs = array();
   $do_not_add = array('.', '..', '__MACOSX');
   array_push($dirs, $tmp_dir);
@@ -191,17 +196,17 @@ function create_batch_objects($label, $content_model, $object_files, $collection
 
   unset($object_files['xml']);
   $use_primary = TRUE;
-  foreach ($object_files as $ext => $filename) {
-    $file_mimetype = $mime_helper->get_mimetype($filename);
+  foreach ($object_files as $ext => $file_name) {
+    $file_mimetype = $mime_helper->get_mimetype($file_name);
     if (in_array($file_mimetype, $allowed_mime_types)) {
-      $added = $cm->execIngestRules($filename, $file_mimetype);
+      $added = $cm->execIngestRules($file_name, $file_mimetype);
     }
     else {
       $item->purge("$pid $label not ingested.  $file_mimetype not permitted in objects associated with $content_model");
       continue;
     }
     $ds_label = $use_primary ? $cm->getDatastreamNameDSID() : $ext;
-    $item->add_datastream_from_file($filename, $ds_label);
+    $item->add_datastream_from_file($file_name, $ds_label);
     $use_primary = FALSE;
 
     if (!empty($_SESSION['fedora_ingest_files'])) {
