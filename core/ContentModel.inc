@@ -15,7 +15,7 @@ module_load_include('inc', 'fedora_repository', 'core/XMLDatastream');
  */
 class ContentModel extends XMLDatastream {
 
-  static $SCHEMA_URI = 'http://localhost/islandoracm.xsd';
+  static $SCHEMA_URI = 'http://localhost/xsl/islandoracm.xsd';
   static $DEFAULT_DSID = 'ISLANDORACM';
   private $mimes = NULL;
   public $pid_namespace;

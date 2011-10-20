@@ -1139,7 +1139,7 @@ function fedora_repository_search($op = 'search', $keys = NULL) {
 
         $path = drupal_get_path('module', 'fedora_repository');
         $xmlDoc = new DomDocument();
-        $xmlDoc->load($path . '/searchTerms.xml');
+        $xmlDoc->load($path . '/xsl/searchTerms.xml');
         $nodeList = $xmlDoc->getElementsByTagName('default');
         if (!$type) {
 //$type = 'dc.description';
@@ -1293,7 +1293,7 @@ function fedora_repository_form_alter(&$form, &$form_state, $form_id) {
       '#suffix' => '</div>',
     );
     $xmlDoc = new DomDocument();
-    $xmlDoc->load($path . '/searchTerms.xml');
+    $xmlDoc->load($path . '/xsl/searchTerms.xml');
     $nodeList = $xmlDoc->getElementsByTagName('term');
     $searchClass = new SearchClass();
     $types = $searchClass->get_search_terms_array();

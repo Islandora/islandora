@@ -686,7 +686,7 @@
       LABEL="Islandora content model datastream" MIMETYPE="text/xml" SIZE="5473">
             <foxml:xmlContent>
                 <content_model name="strict_pdf" xmlns="http://www.islandora.ca"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.islandora.ca http://localhost/islandoracm.xsd">
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.islandora.ca http://localhost/xsl/islandoracm.xsd">
                     <mimetypes>
                         <type>application/pdf</type>
                     </mimetypes>
