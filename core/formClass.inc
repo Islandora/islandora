@@ -52,7 +52,7 @@ class formClass {
     $items['xsl/islandoracm.xsd'] = array(
       'title' => t('Islandora Content Model XML Schema Definition'),
       'page callback' => 'fedora_repository_display_schema',
-      'page arguments' => array('islandoracm.xsd'),
+      'page arguments' => array('xsl/islandoracm.xsd'),
       'type' => MENU_CALLBACK,
       'access arguments' => array('view fedora collection'),
     );

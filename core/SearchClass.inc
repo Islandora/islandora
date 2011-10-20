@@ -50,7 +50,7 @@ class SearchClass {
    * @return type 
    */
   function build_solr_search_form($repeat = NULL, $pathToSearchTerms = NULL, $query = NULL) {
-    $types = $this->get_search_terms_array(NULL, 'solrSearchTerms.xml');
+    $types = $this->get_search_terms_array(NULL, 'xsl/solrSearchTerms.xml');
     $queryArray = NULL;
     if (isset($query)) {
       $queryArray = explode('AND', $query);
@@ -594,7 +594,7 @@ class SearchClass {
     }
     $xmlDoc = new DomDocument();
     if (!isset($file)) {
-      $file = 'searchTerms.xml';
+      $file = 'xsl/searchTerms.xml';
     }
     $xmlDoc->load($path . '/' . $file);
     $nodeList = $xmlDoc->getElementsByTagName('term');

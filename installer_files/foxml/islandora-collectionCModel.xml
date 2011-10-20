@@ -87,7 +87,7 @@
       MIMETYPE="application/xml" SIZE="4646">
             <foxml:xmlContent>
                 <content_model name="Collection" xmlns="http://www.islandora.ca"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.islandora.ca http://localhost/islandoracm.xsd">
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.islandora.ca http://localhost/xsl/islandoracm.xsd">
                     <mimetypes>
                         <type>text/xml</type>
                         <type>text/plain</type>
