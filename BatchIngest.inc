@@ -125,7 +125,10 @@ function batch_creation_form_submit($form, &$form_state) {
           $base = preg_replace("/$ext$/", '', $file_name);
           $ext = substr($ext, 1);
           if ($ext) {
-            $file_list[$base][$ext] = "$directory/" . $file_name;
+            if ($directory[strlen($directory)-1] != '/'){
+              $directory .= '/';
+            }
+            $file_list[$base][$ext] = "$directory" . $file_name;
           }
         }
       }
@@ -190,7 +193,6 @@ function create_batch_objects($label, $content_model, $object_files, $collection
   }
 
   unset($object_files['xml']);
-  $use_primary = TRUE;
   foreach ($object_files as $ext => $filename) {
     $file_mimetype = $mime_helper->get_mimetype($filename);
     if (in_array($file_mimetype, $allowed_mime_types)) {
@@ -200,9 +202,7 @@ function create_batch_objects($label, $content_model, $object_files, $collection
       $item->purge("$pid $label not ingested.  $file_mimetype not permitted in objects associated with $content_model");
       continue;
     }
-    $ds_label = $use_primary ? $cm->getDatastreamNameDSID() : $ext;
-    $item->add_datastream_from_file($filename, $ds_label);
-    $use_primary = FALSE;
+    $item->add_datastream_from_file($filename, "Source_File");
 
     if (!empty($_SESSION['fedora_ingest_files'])) {
       foreach ($_SESSION['fedora_ingest_files'] as $dsid => $datastream_file) {
