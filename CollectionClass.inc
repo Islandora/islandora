@@ -519,7 +519,9 @@ class CollectionClass {
 
     $show_batch_tab = TRUE;
     $policy = CollectionPolicy::loadFromCollection($this->pid, TRUE);
-    $content_models = $policy->getContentModels();
+    if(!empty($policy)){
+      $content_models = $policy->getContentModels();
+    }
     if (count($content_models) == 1 && $content_models[0]->pid == "islandora:collectionCModel") {
       $show_batch_tab = FALSE;
     }
