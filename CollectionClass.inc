@@ -517,7 +517,7 @@ class CollectionClass {
     $show_ingest_tab = (!empty($_POST['form_id']) && $_POST['form_id'] == 'fedora_repository_ingest_form');
     $add_to_collection = $this->getIngestInterface();
 
-    $show_batch_tab = TRUE;
+    $show_batch_tab = FALSE;
     $policy = CollectionPolicy::loadFromCollection($this->pid, TRUE);
     if(!empty($policy)){
       $content_models = $policy->getContentModels();
@@ -549,16 +549,7 @@ class CollectionClass {
       // This will be the content of the tab.
       '#content' => $add_to_collection,
     );
-    if (user_access('manage collections')) {
-      $tabset['add_collection_tab'] = array(
-        // #type and #title are the minimum requirements.
-        '#type' => 'tabpage',
-        '#title' => t('Manage This Collection'),
-        // This will be the content of the tab.
-        '#content' => drupal_get_form('collection_management_form', $this->pid, $content_models),
-        '#selected' => FALSE,
-      );
-    }
+
     if ($show_batch_tab && user_access('create batch process')) {
       $tabset['batch_ingest_tab'] = array(
         // #type and #title are the minimum requirements.

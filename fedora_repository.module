@@ -55,8 +55,8 @@ function fedora_repository_purge_object($pid = NULL, $name = NULL) {
     return '';
   }
   $output = t('Are you sure you wish to purge object %name %pid!<br /><b>This cannot be undone</b><br />', array(
-    '%name' => $name,
-    '%pid' => $pid)
+        '%name' => $name,
+        '%pid' => $pid)
   );
 
   $output .= drupal_get_form('fedora_repository_purge_object_form', $pid);
@@ -142,6 +142,10 @@ function fedora_repository_ingest_object($collection_pid=NULL, $collection_label
  */
 function fedora_repository_ingest_form_submit(array $form, array &$form_state) {
 //only validate the form if the submit button was pressed (other buttons may be used for AHAH
+  if ($form_state['ahah_submission']) {
+    $form_state['submitted'] = false;
+    return;
+  }
   if ($form_state['storage']['xml']) {
     if (module_exists('islandora_content_model_forms')) {
       module_load_include('inc', 'islandora_content_model_forms', 'IngestObjectMetadataForm');
@@ -197,7 +201,11 @@ function fedora_repository_ingest_form_submit(array $form, array &$form_state) {
  */
 function fedora_repository_ingest_form_validate($form, &$form_state) {
 //only validate the form if the submit button was pressed (other buttons may be used for AHAH
-  if ($form_state['clicked_button']['#id'] == 'edit-submit') {
+  if ($form_state['ahah_submission']) {
+    $form_state['submitted'] = false;
+    return;
+  }
+  if ($form_state['clicked_button']['#id'] == 'edit-submit' && $form_state['ahah_submission'] != 1) {
     switch ($form_state['storage']['step']) {
       case 1:
         $form_state['storage']['step']++;
@@ -317,7 +325,7 @@ function fedora_repository_purge_object_form(&$form_state, $pid, $referrer = NUL
     if (!empty($collectionPid)) {
       $collectionPid = $_SESSION['fedora_collection'];
     }
-//$form['#redirect'] = $referrer;
+//$form['#rebuild'] = $false;
 
     return $form;
   }
@@ -435,7 +443,7 @@ function add_stream_form_validate($form, &$form_state) {
     return FALSE;
   }
   if (!(preg_match("/^[a-zA-Z]/", $dsid))) {
-    form_set_error('', t("Data stream ID (@dsid) has to start with a letter.", array( '@dsid' => check_plain($dsid))));
+    form_set_error('', t("Data stream ID (@dsid) has to start with a letter.", array('@dsid' => check_plain($dsid))));
     return FALSE;
   }
   if (strlen($dsLabel) > 64) {
@@ -482,7 +490,7 @@ function fedora_repository_purge_stream($pid = NULL, $dsId = NULL, $name = NULL)
   }
 
   $output = t('Are you sure you wish to purge this datastream %name<br />', array(
-    '%name' => $name)
+        '%name' => $name)
   );
   $output .= drupal_get_form('fedora_repository_purge_stream_form', $pid, $dsId);
   return $output;
@@ -828,9 +836,6 @@ function fedora_repository_perm() {
     OBJECTHELPER::$INGEST_FEDORA_OBJECTS,
     OBJECTHELPER::$EDIT_TAGS_DATASTREAM,
     OBJECTHELPER::$VIEW_DETAILED_CONTENT_LIST,
-    OBJECTHELPER::$MANAGE_COLLECTIONS,
-    OBJECTHELPER::$DELETE_ENTIRE_COLLECTIONS,
-    OBJECTHELPER::$CREATE_BATCH_PROCESS,
   );
 }
 
@@ -989,14 +994,15 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
   $obj = new FedoraObjectDetailedContent($pid);
   $object_details = $obj->showFieldSets();
   if ($object_details['fedora_object_details']['#selected'] == TRUE) {
-    foreach ($cmodels_tabs as $cmodel_tab) {
+    foreach ($cmodels_tabs as &$cmodel_tab) {
       if (is_array($cmodel_tab)) {
         $cmodel_tab['#selected'] = FALSE;
       }
     }
   }
-  $cmodels_tabs = array_merge($cmodels_tabs, $object_details);
 
+  $hook_tabs = module_invoke_all('islandora_tabs', $content_models, $pid);
+  $cmodels_tabs = array_merge($cmodels_tabs, $object_details, $hook_tabs);
 
   return tabs_render($cmodels_tabs);
 }

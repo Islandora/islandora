@@ -235,6 +235,7 @@ function fix_dsid($dsid) {
  */
 function get_collections_as_option_array() {
   module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
+  $restricted = variable_get('fedora_namespace_restriction_enforced', TRUE);
   $query = 'select $object $title from <#ri>
                             where ($object <dc:title> $title
                               and $object <info:fedora/fedora-system:def/model#hasModel> <info:fedora/islandora:collectionCModel>

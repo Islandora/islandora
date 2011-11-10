@@ -19,9 +19,6 @@ class ObjectHelper {
   public static $INGEST_FEDORA_OBJECTS = 'ingest new fedora objects';
   public static $EDIT_TAGS_DATASTREAM = 'edit tags datastream';
   public static $VIEW_DETAILED_CONTENT_LIST = 'view detailed list of content';
-  public static $MANAGE_COLLECTIONS = 'manage collections';
-  public static $DELETE_ENTIRE_COLLECTIONS = 'delete entire collections';
-  public static $CREATE_BATCH_PROCESS = 'create batch process';
   public static $DISPLAY_ALWAYS = 0;
   public static $DISPLAY_NEVER = 1;
   public static $DISPLAY_NO_MODEL_OUTPUT = 2;
@@ -549,6 +546,7 @@ class ObjectHelper {
    */
   function get_content_models_list($pid, $include_fedora_system_content_models = FALSE) {
     module_load_include('inc', 'fedora_repository', 'CollectionClass');
+    module_load_include('inc', 'fedora_repository', 'ContentModel');
     $collectionHelper = new CollectionClass();
     $pids = array();
     $query = 'select $object from <#ri>

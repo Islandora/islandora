@@ -21,7 +21,7 @@
 		<xsl:value-of select="substring-after(name(),':')"/> =  <xsl:value-of select="text()"/>
 		</div>
 		</xsl:for-each>
-	</td><td><a href="{$baseUrl}/search/fedora_repository/dc.{$FIELD}:{$DATA}"><img title="Find Similar by {$FIELD}" src="{$PATH}/images/view.gif" alt="Find Similar by {$FIELD}" /></a></td></tr>
+	</td></tr>
 	</xsl:if>
 	</xsl:for-each>
 
