@@ -935,18 +935,22 @@ class ObjectHelper {
                                or <info:fedora/' . $pid . '> <fedora-rels-ext:isPartOf> $parentObject)
                                and $parentObject <fedora-model:state> <info:fedora/fedora-system:def/model#Active>)
                                minus $content <mulgara:is> <info:fedora/fedora-system:FedoraObject-3.0>
-                               order by $title';
+                               order by $title desc';
       $query_string = htmlentities(urlencode($query_string));
 
       $url = variable_get('fedora_repository_url', 'http://localhost:8080/fedora/risearch');
       $url .= "?type=tuples&flush=TRUE&format=CSV&limit=1&offset=0&lang=itql&stream=on&query=" . $query_string;
-
+      
       $result = preg_split('/[\r\n]+/', do_curl($url));
       array_shift($result); // throw away first line
       $matches = str_getcsv(join("\n", $result));
-      if ($matches !== FALSE) {
+      if (count($matches) >= 2) {
         $parent = preg_replace('/^info:fedora\//', '', $matches[0]);
 
+        if (0 == strlen($matches[1])) {
+          $matches[1] = "Unlabeled Object";
+        }
+        
         $breadcrumbs[] = l($matches[1], 'fedora/repository/' . $pid);
         if ($parent == variable_get('fedora_repository_pid', 'islandora:root')) {
           $breadcrumbs[] = l(t('Digital repository'), 'fedora/repository');
@@ -955,6 +959,10 @@ class ObjectHelper {
         elseif ($level > 0) {
           $this->getBreadcrumbs($parent, $breadcrumbs, $level - 1);
         }
+      }
+      
+      else {
+        $breadcrumbs[] = l("Path Calculation Error", 'fedora/repository/' . $pid);
       }
     }
   }
