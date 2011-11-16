@@ -34,7 +34,6 @@ class SecurityClass {
     $objectHelper = new ObjectHelper();
     // get the childsecurity policy from the collection.
     $policyStream = $objectHelper->getStream($collection_pid, SECURITYCLASS :: $SECURITY_CLASS_SECURITY_STREAM, FALSE);
-
     if ($policyStream == NULL) {
       // no child policy stream so collection is wide open to anyone to ingest, that has the permission ingest in Drupal.
       // maybe we should return FALSE here?? would be more secure.
@@ -79,34 +78,20 @@ class SecurityClass {
     }
     $xml->registerXPathNamespace('default', 'urn:oasis:names:tc:xacml:1.0:policy');
 
-    $conditions = $xml->xpath("//default:Condition");
+    $roles = $xml->xpath('//default:SubjectAttributeDesignator[@AttributeId="fedoraRole"]/../default:Apply/default:AttributeValue');
+    $users = $xml->xpath('//default:SubjectAttributeDesignator[@AttributeId="urn:fedora:names:fedora:2.1:subject:loginId"]/../default:Apply/default:AttributeValue');
 
-    foreach ($conditions as $condition) {
-      $designator = $condition->Apply->SubjectAttributeDesignator;
-      if (empty($designator)) {//$disignator may be wrapped by an or
-        $designator = $condition->Apply->Apply->SubjectAttributeDesignator;
-      }
-      $attributeId = strip_tags($designator['AttributeId']);
-
-      if ($attributeId == "fedoraRole") {
-        foreach ($condition->Apply->Apply->AttributeValue as $attributeValue) {
-          $allowedRoles[] = strip_tags($attributeValue->asXML());
-        }
-        foreach ($condition->Apply->Apply->Apply->AttributeValue as $attributeValue) {
-          $allowedRoles[] = strip_tags($attributeValue->asXML());
-        }
-      }
-      if ($attributeId == "urn:fedora:names:fedora:2.1:subject:loginId") {
-        foreach ($condition->Apply->Apply->AttributeValue as $attributeValue) {
-          $allowedUsers[] = strip_tags($attributeValue->asXML());
-        }
-        foreach ($condition->Apply->Apply->Apply->AttributeValue as $attributeValue) {
-          $allowedUsers[] = strip_tags($attributeValue->asXML());
-        }
-      }
+    foreach($roles as $role) {
+      $allowedRoles[] = (string)$role;
     }
+    foreach($users as $user) {
+      $allowedUsers[] = (string)$user;
+    }
+
     $usersAndRoles['users'] = $allowedUsers;
     $usersAndRoles['roles'] = $allowedRoles;
+
+    dd($usersAndRoles);
     return $usersAndRoles;
   }
 
