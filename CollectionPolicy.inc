@@ -360,13 +360,14 @@ class CollectionPolicy extends XMLDatastream {
    * @param string $dsid
    * @return string $nextPid
    */
-  public function getNextPid($dsid) {
+  public function getNextPid($dsid, $content_model = null) {
     $ret = FALSE;
+
     if (self::valid_dsid($dsid) && $this->validate()) {
       $content_models = $this->xml->getElementsByTagName('content_models')->item(0)->getElementsByTagName('content_model');
       $namespace = FALSE;
       for ($i = 0; $namespace === FALSE && $i < $content_models->length; $i++) {
-        if (strtolower($content_models->item($i)->getAttribute('dsid')) == strtolower($dsid)) {
+        if (strtolower($content_models->item($i)->getAttribute('dsid')) == strtolower($dsid) && (strtolower($content_models->item($i)->getAttribute('pid') == $content_model) || $content_model == null)) {
           $namespace = $content_models->item($i)->getAttribute('namespace');
         }
       }

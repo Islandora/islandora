@@ -519,6 +519,7 @@ class CollectionClass {
 
     $show_batch_tab = FALSE;
     $policy = CollectionPolicy::loadFromCollection($this->pid, TRUE);
+
     if(!empty($policy)){
       $content_models = $policy->getContentModels();
     }
@@ -528,7 +529,7 @@ class CollectionClass {
     if (!$show_ingest_tab) {
       $view_selected = TRUE;
     }
-    if(!$collection_items){
+    if (!$collection_items) {
       $view_selected = FALSE;
       $add_selected = TRUE;
     }
@@ -540,7 +541,6 @@ class CollectionClass {
       '#title' => 'View',
       '#selected' => $view_selected,
       '#content' => $collection_items,
-     
     );
     $tabset['add_tab'] = array(
       '#type' => 'tabpage',
@@ -616,7 +616,7 @@ class CollectionClass {
 
 
     $collectionName = $collection;
- 
+
     if (!$pageNumber) {
       $pageNumber = 1;
     }
