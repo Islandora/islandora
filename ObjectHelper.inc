@@ -336,11 +336,12 @@ class ObjectHelper {
       $versions = $item->get_datastream_history($id);
       if (is_array($versions)) {
         $downloadVersion = '<form method="GET" action="' . $action . '" onsubmit="this.action=\'' . $action . '\' + \'/\'+this.version.value;">';
+        $downloadVersion .= '<input type="submit" value="' . t('Download') . '">';
         $downloadVersion .= '<select name="version">';
         foreach ($versions as $version) {
           $downloadVersion .= '<option>' . $version->createDate . '</option>';
         }
-        $downloadVersion .= '</select><input type="submit" value="' . t('Download') . '"></form>';
+        $downloadVersion .= '</select></form>';
       }
     }
 
