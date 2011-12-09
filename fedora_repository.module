@@ -455,9 +455,9 @@ function add_stream_form_validate($form, &$form_state) {
     return FALSE;
   }
   $validators = array(
-      //    'file_validate_is_image' => array(),
-      //    'file_validate_image_resolution' => array('85x85'),
-      //    'file_validate_size' => array(30 * 1024),
+//    'file_validate_is_image' => array(),
+//    'file_validate_image_resolution' => array('85x85'),
+//    'file_validate_size' => array(30 * 1024),
   );
 
   $fileObject = file_save_upload('add-stream-file-location', $validators);
@@ -494,6 +494,23 @@ function fedora_repository_purge_stream($pid = NULL, $dsId = NULL, $name = NULL)
   );
   $output .= drupal_get_form('fedora_repository_purge_stream_form', $pid, $dsId);
   return $output;
+}
+
+function fedora_repository_purge_object_form_validate($form, &$form_state) {
+  module_load_include('inc', 'fedora_repository', 'api/fedora_collection');
+  $pid = $form_state['values']['pid'];
+
+  $objectHelper = new ObjectHelper();
+  $contentModels = $objectHelper->get_content_models_list($pid);
+  foreach ($contentModels as $contentModel) {
+    if ($contentModel->pid == 'islandora:collectionCModel') {
+      $member_pids = get_related_items_as_array($pid, 'isMemberOfCollection');
+      if (is_array($member_pids)){
+      form_set_error('new_collection_pid', t("Please purge all members of this collection before deleting the collection itself."));
+      return;
+      }
+    }
+  }
 }
 
 /**
@@ -667,7 +684,7 @@ function fedora_repository_replace_stream_form_submit($form, &$form_state) {
   $pid = $form_state['values']['pid'];
   $dsid = $form_state['values']['dsId'];
   $dsLabel = $form_state['values']['dsLabel'];
-  // Remove the original file extension from the label and add the new one
+// Remove the original file extension from the label and add the new one
   $indexOfDot = strrpos($dsLabel, '.'); //use strrpos to get the last dot
   if ($indexOfDot !== FALSE) {
     $dsLabel = substr($dsLabel, 0, $indexOfDot);
@@ -1554,14 +1571,14 @@ function fedora_repository_demo_objects_form_submit($form, &$form_state) {
         $collectioncm->add_relationship('hasModel', 'fedora-system:ContentModel-3.0', FEDORA_MODEL_URI);
         $collectioncm->add_datastream_from_file(drupal_get_path('module', 'fedora_repository') . '/content_models/COLLECTIONCM.xml', 'ISLANDORACM', 'Islandora Content Model.xml', 'application/xml', 'X');
       } catch (exception $e) {
-        
+
       }
       try {
         $strictpdfcm = Fedora_Item::ingest_new_item('islandora:strict_pdf', 'A', 'Strict PDF Content Model');
         $strictpdfcm->add_relationship('hasModel', 'fedora-system:ContentModel-3.0', FEDORA_MODEL_URI);
         $strictpdfcm->add_datastream_from_file(drupal_get_path('module', 'fedora_repository') . '/content_models/STRICT_PDFCM.xml', 'ISLANDORACM', 'Islandora Content Model.xml', 'application/xml', 'X');
       } catch (exception $e) {
-        
+
       }
 
 // Install a collection object that points to all content model objects
@@ -1585,7 +1602,7 @@ function fedora_repository_demo_objects_form_submit($form, &$form_state) {
         $cmodel_collection->add_datastream_from_file(drupal_get_path('module', 'fedora_repository') . '/images/contentModel.jpg', 'TN', 'Thumbnail', 'image/jpg', 'M');
         drupal_set_message(t("Successfully installed <a href=\"@base_url/fedora/repository/islandora:ContentModelCollection\">islandora:ContentModelCollection</a>.", array('@base_url' => check_plain($base_url))), 'message');
       } catch (exception $e) {
-        
+
       }
     }
 
@@ -1597,7 +1614,7 @@ function fedora_repository_demo_objects_form_submit($form, &$form_state) {
         $tn = $new_item->add_datastream_from_file(drupal_get_path('module', 'fedora_repository') . '/images/Gnome-emblem-photos.png', 'TN', 'Thumbnail.png', 'image/png', 'M');
         drupal_set_message(t("Successfully installed <a href=\"@base_url/fedora/repository/islandora:root\">islandora:root</a>.", array('@base_url' => check_plain($base_url))), 'message');
       } catch (exception $e) {
-        
+
       }
     }
 
@@ -1912,7 +1929,7 @@ function theme_fedora_repository_basket_form($form) {
  * @param type $form_state 
  */
 function fedora_repository_basket_form_validate($form, &$form_state) {
-  
+
 }
 
 /**

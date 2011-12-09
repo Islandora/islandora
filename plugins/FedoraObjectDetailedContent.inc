@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * @file
  * FedoraObjectDetailedContent class
@@ -34,12 +32,13 @@ class FedoraObjectDetailedContent {
    */
   public function showFieldSets() {
     global $user;
+    drupal_set_title($this->item->objectProfile->objLabel);
     $objectHelper = new ObjectHelper();
     $tabset = array();
     $show_purge_tab = (!empty($_POST['form_id']) && $_POST['form_id'] == 'fedora_repository_purge_object_form');
     $show_edit_tab = (!empty($_POST['form_id']) && $_POST['form_id'] == 'fedora_repository_edit_qdc_form');
     $purge_form = drupal_get_form('fedora_repository_purge_object_form', $this->pid, check_plain(substr(request_uri(), strlen(base_path()))));
-    $details_selected = ($show_purge_tab ||$show_edit_tab);
+    $details_selected = ($show_purge_tab || $show_edit_tab);
     $tabset['fedora_object_details'] = array(
       '#type' => 'tabpage',
       '#title' => t('Object Details'),

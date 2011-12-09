@@ -8,7 +8,7 @@
   <xsl:value-of select="$path"/>
  </xsl:variable>
  <xsl:variable name="thisPid" select="$collectionPid"/>
- <xsl:variable name="size"  select="20"/>
+ <xsl:variable name="size" select="20"/>
  <xsl:variable name="page" select="$hitPage"/>
  <xsl:variable name="start" select="((number($page) - 1) * number($size)) + 1"/>
  <xsl:variable name="end" select="($start - 1) + number($size)"/>
@@ -72,23 +72,23 @@
  </td></tr>
 
   <!--<xsl:for-each select="/sparql/results/result[position()>=$start and position() &lt;=$end]">
-  <xsl:variable name='OBJECTURI' select="object/@uri"/>
-  <xsl:variable name='PID' select="substring-after($OBJECTURI,'/')"/>
-   <tr>
-  <td>
-    <img>
-     <xsl:attribute name="src"><xsl:value-of select="$BASEURL"/>/fedora/repository/<xsl:value-of select="$PID"/>/TN
-     </xsl:attribute>
-    </img>
-    <a>
-     <xsl:attribute name="href"><xsl:value-of select="$BASEURL"/>/fedora/repository/<xsl:copy-of select="$PID"/>/-/<xsl:value-of select="title"/>
-     </xsl:attribute>
-    <xsl:value-of select="title"/>
-   </a>
-  </td>
-   </tr>
-  </xsl:for-each>-
- -->
+<xsl:variable name='OBJECTURI' select="object/@uri"/>
+<xsl:variable name='PID' select="substring-after($OBJECTURI,'/')"/>
+<tr>
+<td>
+<img>
+<xsl:attribute name="src"><xsl:value-of select="$BASEURL"/>/fedora/repository/<xsl:value-of select="$PID"/>/TN
+</xsl:attribute>
+</img>
+<a>
+<xsl:attribute name="href"><xsl:value-of select="$BASEURL"/>/fedora/repository/<xsl:copy-of select="$PID"/>/-/<xsl:value-of select="title"/>
+</xsl:attribute>
+<xsl:value-of select="title"/>
+</a>
+</td>
+</tr>
+</xsl:for-each>-
+-->
  <xsl:apply-templates select="s:sparql/s:results"/>
 </table><br clear="all" />
 <!-- start previous next -->
@@ -160,7 +160,7 @@
    <xsl:with-param name="from" select="'_'"/>
    <xsl:with-param name="to" select="' '"/>
   </xsl:call-template>
-  
+
    </xsl:variable>
    <xsl:variable name="cleanTitle">
     <xsl:value-of select="php:functionString('fedora_repository_urlencode_string', $newTitle)"/>
@@ -171,8 +171,8 @@
      <xsl:value-of select="$BASEURL"/>/fedora/repository/<xsl:copy-of select="$PID"/>/-/<xsl:value-of select="'collection'"/>
     </xsl:when>
     <xsl:otherwise>
-     <!--the below is an example of going straight to a datastream instead of the details page.  
-     <xsl:value-of select="$BASEURL"/>/fedora/repository/<xsl:copy-of select="$PID"/>/OBJ/<xsl:value-of select="s:title"/>-->
+     <!--the below is an example of going straight to a datastream instead of the details page.
+<xsl:value-of select="$BASEURL"/>/fedora/repository/<xsl:copy-of select="$PID"/>/OBJ/<xsl:value-of select="s:title"/>-->
      <xsl:value-of select="$BASEURL"/>/fedora/repository/<xsl:copy-of select="$PID"/>/-/<xsl:value-of select="$cleanTitle"/>
      </xsl:otherwise>
    </xsl:choose>
@@ -185,24 +185,24 @@
    <img>
     <xsl:attribute name="src"><xsl:value-of select="$BASEURL"/>/fedora/repository/<xsl:value-of select="$PID"/>/TN
     </xsl:attribute>
-	<xsl:attribute name="alt"><xsl:value-of select="$newTitle" disable-output-escaping="yes"/>
+<xsl:attribute name="alt"><xsl:value-of select="$newTitle" disable-output-escaping="yes"/>
     </xsl:attribute>
-   </img> </a>  <br clear="all" />
+   </img> </a> <br clear="all" />
    <a>
     <xsl:attribute name="href"><xsl:value-of select="$linkUrl"/>
     </xsl:attribute>
     <xsl:value-of select="$newTitle" disable-output-escaping="yes" />
    </a>
   <!-- example of a url that would drill down to the details page if the url above went directly to a datastream
-  <xsl:if test="($CONTENTMODEL!='islandora:collectionCModel')">
-       <br />[[ <a>
-     <xsl:attribute name="href">
-     <xsl:value-of select="$BASEURL"/>/fedora/repository/<xsl:copy-of select="$PID"/>/-/<xsl:value-of select="$cleanTitle"/>
-     </xsl:attribute>
-    DETAILS
-    </a> ]]
-   </xsl:if>-->
-  
+<xsl:if test="($CONTENTMODEL!='islandora:collectionCModel')">
+<br />[[ <a>
+<xsl:attribute name="href">
+<xsl:value-of select="$BASEURL"/>/fedora/repository/<xsl:copy-of select="$PID"/>/-/<xsl:value-of select="$cleanTitle"/>
+</xsl:attribute>
+DETAILS
+</a> ]]
+</xsl:if>-->
+
    </td>
   <xsl:if test="(position() = last()) and (position() &lt; $cellsPerRow)">
    <xsl:call-template name="FillerCells">
@@ -245,3 +245,4 @@
   </xsl:choose>
  </xsl:template>
 </xsl:stylesheet>
+
