@@ -81,11 +81,15 @@ class SecurityClass {
     $roles = $xml->xpath('//default:SubjectAttributeDesignator[@AttributeId="fedoraRole"]/../default:Apply/default:AttributeValue');
     $users = $xml->xpath('//default:SubjectAttributeDesignator[@AttributeId="urn:fedora:names:fedora:2.1:subject:loginId"]/../default:Apply/default:AttributeValue');
 
-    foreach($roles as $role) {
-      $allowedRoles[] = (string)$role;
+    if($roles) {
+      foreach($roles as $role) {
+        $allowedRoles[] = (string)$role;
+      }
     }
-    foreach($users as $user) {
-      $allowedUsers[] = (string)$user;
+    if($users) {
+      foreach($users as $user) {
+        $allowedUsers[] = (string)$user;
+      }
     }
 
     $usersAndRoles['users'] = $allowedUsers;
