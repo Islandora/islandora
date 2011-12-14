@@ -39,7 +39,8 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			<srw_dc:dcCollection xsi:schemaLocation="info:srw/schema/1/dc-schema http://www.loc.gov/standards/sru/dc-schema.xsd">
 				<xsl:apply-templates/>
 			<xsl:for-each select="mods:modsCollection/mods:mods">			
-				<srw_dc:dc xsi:schemaLocation="info:srw/schema/1/dc-schema http://www.loc.gov/standards/sru/dc-schema.xsd">
+	:67
+        <srw_dc:dc xsi:schemaLocation="info:srw/schema/1/dc-schema http://www.loc.gov/standards/sru/dc-schema.xsd">
 
 				<xsl:apply-templates/>
 			</srw_dc:dc>
@@ -66,8 +67,10 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			</xsl:if>
 			<xsl:value-of select="mods:title"/>
 			<xsl:if test="mods:subTitle">
+                           <xsl:if test="text() [normalize-space(.) ]">
 				<xsl:text>: </xsl:text>
 				<xsl:value-of select="mods:subTitle"/>
+                           </xsl:if>
 			</xsl:if>
 			<xsl:if test="mods:partNumber">
 
