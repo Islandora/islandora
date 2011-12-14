@@ -505,7 +505,7 @@ function fedora_repository_purge_object_form_validate($form, &$form_state) {
   foreach ($contentModels as $contentModel) {
     if ($contentModel->pid == 'islandora:collectionCModel') {
       $member_pids = get_related_items_as_array($pid, 'isMemberOfCollection');
-      if (is_array($member_pids)){
+      if (is_array($member_pids) && ! empty($member_pids)){
       form_set_error('new_collection_pid', t("Please purge all members of this collection before deleting the collection itself."));
       return;
       }
@@ -757,6 +757,7 @@ function fedora_repository_edit_qdc_form(&$form_state, $pid, $dsId = NULL) {
   module_load_include('inc', 'fedora_repository', 'ConnectionHelper');
   $soapHelper = new ConnectionHelper();
   $client = $soapHelper->getSoapClient(variable_get('fedora_soap_url', 'http://localhost:8080/fedora/services/access?wsdl'));
+ 
 // Check if there is a custom edit metadata function defined in the content model.
 
   $breadcrumbs = array();
