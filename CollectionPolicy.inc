@@ -244,8 +244,8 @@ class CollectionPolicy extends XMLDatastream {
     $rootEl->appendChild($relationshipEl);
 
     $newDom->appendChild($rootEl);
-
-    $this->xml = DOMDocument::loadXML($newDom->saveXml());
+    $this->xml = new DOMDocument();
+    $this->xml->loadXML($newDom->saveXml());
   }
 
   /**
@@ -427,7 +427,8 @@ class CollectionPolicy extends XMLDatastream {
       if ($this->xml == NULL) {
         $fedoraItem = new Fedora_Item($this->pid);
         $ds = $fedoraItem->get_datastream_dissemination($this->dsid);
-        $this->xml = DOMDocument::loadXML($ds);
+        $this->xml = new DOMDocument();
+        $this->xml->loadXML($ds);
       }
 
 
