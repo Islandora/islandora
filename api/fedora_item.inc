@@ -55,6 +55,15 @@ class Fedora_Item {
       Fedora_Item::$instantiated_pids[$pid] = &$this;
     }
   }
+  
+  /**
+   * Forget this Object, do manually when memory constraints apply.
+   * 
+   * Removes this object from the static list of $instantiated_pids
+   */
+  function forget() {
+    unset(Fedora_Item::$instantiated_pids[$this->pid]);
+  }
 
   /**
    * Exists 
