@@ -75,7 +75,7 @@ class PersonalCollectionClass {
     try {
       $xml = new SimpleXMLElement($collectionTemplate);
     } catch (Exception $e) {
-      watchdog(t("Fedora_Repository"), t("Problem creating personal collection policy, could not parse collection policy stream."), NULL, WATCHDOG_ERROR);
+      watchdog(t("Fedora_Repository"), "Problem creating personal collection policy, could not parse collection policy stream.", NULL, WATCHDOG_ERROR);
       drupal_set_message(t('Problem creating personal collection policy, could not parse collection policy stream: @e', array('@e' => check_plain($e->getMessage()))), 'error');
       return FALSE;
     }

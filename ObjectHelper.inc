@@ -963,7 +963,7 @@ class ObjectHelper {
       }
       
       else {
-        $breadcrumbs[] = l("Path Calculation Error", 'fedora/repository/' . $pid);
+        $breadcrumbs[] = l(t("Path Calculation Error"), 'fedora/repository/' . $pid);
       }
     }
   }

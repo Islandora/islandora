@@ -498,7 +498,7 @@ class formClass {
           '#title' => t('Content models available'),
           '#options' => $potential_models,
           '#default_value' => $selected_model,
-          '#description' => t('Content models define datastream composition, relationships between this and other content models, and the mandatory behaviors associated with each digital object.<br /> Additional information may be found <a href="https://wiki.duraspace.org/display/FEDORACREATE/Content+Models+Overview">here.</a> '),
+          '#description' => t('Content models define datastream composition, relationships between this and other content models, and the mandatory behaviors associated with each digital object.<br /> Additional information may be found <a href="https://wiki.duraspace.org/display/FEDORACREATE/Content+Models+Overview">here.</a>'),
         ),
       ),
       'collection_pid' => array(

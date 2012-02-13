@@ -95,7 +95,7 @@ class FormBuilder {
     try {
       $xml = new SimpleXMLElement($policyStreamDoc);
     } catch (Exception $e) {
-      watchdog(t("Fedora_Repository"), t("Problem getting security policy."), NULL, WATCHDOG_ERROR);
+      watchdog(t("Fedora_Repository"), "Problem getting security policy.", NULL, WATCHDOG_ERROR);
       drupal_set_message(t('Problem getting security policy: @e', array('@e' => check_plain($e->getMessage()))), 'error');
       return FALSE;
     }
@@ -173,7 +173,7 @@ class FormBuilder {
       $object = Fedora_Item::ingest_from_FOXML($dom);
       if (!empty($object->pid)) {
         // drupal_set_message("Item ". l($object->pid, 'fedora/repository/'. $object->pid) . " created successfully.", "status");
-        drupal_set_message(t("Item !pid created successfully.", array('!pid' => l($object->pid, 'fedora/repository/' . $object->pid))), "status");
+        drupal_set_message(t("Item !pid created successfully.", array('!pid' => l(check_plain($object->pid), 'fedora/repository/' . check_plain($object->pid)))), "status");
       }
       if (!empty($_SESSION['fedora_ingest_files'])) {
         foreach ($_SESSION['fedora_ingest_files'] as $dsid => $createdFile) {

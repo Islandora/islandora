@@ -83,7 +83,7 @@ class Refworks {
       //$dom = dom_import_simplexml($xml);//test to see if it behaves better
       //$xml = new SimpleXMLElement(trim(file_get_contents($file)));
     } catch (Exception $e) {
-      drupal_set_message(t('Error processing Refworks file:') . " " . $e->getMessage());
+      drupal_set_message(t('Error processing Refworks file: @message', array('@message' => $e->getMessage())));
       return FALSE;
     }
     $this->referenceList = array();
@@ -296,7 +296,7 @@ class Refworks {
         $object = $client->__soapCall('ingest', array(
               $params
             ));
-        watchdog(t("FEDORA_REPOSITORY"), t("Successfully added repository item !pid - !it", array('!pid' => $pid, '!it' => $item_title)), NULL, WATCHDOG_INFO);
+        watchdog(t("FEDORA_REPOSITORY"), "Successfully added repository item " . $pid . " - ". $item_title, NULL, WATCHDOG_INFO);
         $deleteFiles = $form_values['delete_file']; //remove files from drupal file system
 
         if ($deleteFiles > 0) {

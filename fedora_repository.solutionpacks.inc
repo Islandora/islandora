@@ -181,7 +181,7 @@ function solution_pack_add_form($form_name, $form_xml) {
     $object->name = $form_name;
     $object->form = $form_xml;
     $result = drupal_write_record('xml_forms', $object);
-    drupal_set_message("Added $name");
+    drupal_set_message(t("Added @name", array("@name" => $name)));
   }
 }
 
@@ -196,7 +196,7 @@ function solution_pack_add_form_association($content_model, $form_name) {
     $object->title_field = "['titleInfo']['title']";
     $object->transform = 'mods_to_dc.xsl';
     $result = drupal_write_record('islandora_content_model_forms', $object);
-    drupal_set_message("Added association between $content_model$name");
+    drupal_set_message(t("Added association between @cm@name", array("@cm" => $content_model, "@name"=>$name)));
   }
 }
 

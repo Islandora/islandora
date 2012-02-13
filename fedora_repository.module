@@ -143,7 +143,7 @@ function fedora_repository_ingest_object($collection_pid=NULL, $collection_label
 function fedora_repository_ingest_form_submit(array $form, array &$form_state) {
 //only validate the form if the submit button was pressed (other buttons may be used for AHAH
   if ($form_state['ahah_submission']) {
-    $form_state['submitted'] = false;
+    $form_state['submitted'] = FALSE;
     return;
   }
   if ($form_state['storage']['xml']) {
@@ -202,7 +202,7 @@ function fedora_repository_ingest_form_submit(array $form, array &$form_state) {
 function fedora_repository_ingest_form_validate($form, &$form_state) {
 //only validate the form if the submit button was pressed (other buttons may be used for AHAH
   if ($form_state['ahah_submission']) {
-    $form_state['submitted'] = false;
+    $form_state['submitted'] = FALSE;
     return;
   }
   if ($form_state['clicked_button']['#id'] == 'edit-submit' && $form_state['ahah_submission'] != 1) {
@@ -246,8 +246,11 @@ function fedora_repository_ingest_form_validate($form, &$form_state) {
 
             if (!empty($file)) {
               if (!in_array($dformat, $allowedMimeTypes)) {
-                form_set_error('ingest-file-location', t('The uploaded file\'s mimetype (' . $dformat . ') is not associated with this Content Model. The allowed types are ' .
-                        implode(' ', $allowedMimeTypes)));
+                form_set_error('ingest-file-location', 
+                    t('The uploaded file\'s mimetype') . 
+                    ' (' . $dformat . ') ' .
+                    t('is not associated with this Content Model. The allowed types are') . 
+                    ' ' . implode(' ', $allowedMimeTypes));
                 file_delete($file);
                 return;
               }
@@ -505,7 +508,7 @@ function fedora_repository_purge_object_form_validate($form, &$form_state) {
   foreach ($contentModels as $contentModel) {
     if ($contentModel->pid == 'islandora:collectionCModel') {
       $member_pids = get_related_items_as_array($pid, 'isMemberOfCollection');
-      if (is_array($member_pids) && ! empty($member_pids)){
+      if (is_array($member_pids) && ! empty($member_pids)) {
       form_set_error('new_collection_pid', t("Please purge all members of this collection before deleting the collection itself."));
       return;
       }
