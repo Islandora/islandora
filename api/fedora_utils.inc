@@ -236,6 +236,8 @@ function fix_dsid($dsid) {
 function get_collections_as_option_array() {
   module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
   $restricted = variable_get('fedora_namespace_restriction_enforced', TRUE);
+  $allowed_string = variable_get('fedora_pids_allowed', 'default: demo: changeme: islandora:');
+  $namespaces = explode(':', $allowed_string);
   $query = 'select $object $title from <#ri>
                             where ($object <dc:title> $title
                               and $object <info:fedora/fedora-system:def/model#hasModel> <info:fedora/islandora:collectionCModel>
@@ -247,13 +249,22 @@ function get_collections_as_option_array() {
   $list = explode("\n", $content);
   array_shift($list);
   $list = preg_replace('/info:fedora\//', '', $list);
+  foreach ($namespaces as $namespace) {
+    $trimmed_names[] = trim($namespace);
+  }
   $options = array();
   foreach ($list as $item) {   //removes  blanks
     if ($item) {
       $parts = explode(',', $item);
-      $options[$parts[0]] = $parts[1];
+      $namespace = explode(':', $parts[0]);
+      $namespace = trim($namespace[0]);
+      $bool = in_array($namespace, $trimmed_names);
+      if (!$restricted || in_array($namespace, $trimmed_names)) {
+        $options[$parts[0]] = $parts[1];
+      }
     }
   }
+
   unset($options['islandora:ContentModelCollection']);
   return $options;
 }
