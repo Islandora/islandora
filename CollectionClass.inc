@@ -68,7 +68,7 @@ class CollectionClass {
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');
     module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
     if (!isset($limit)) {
-      $limit = 10000;
+      $limit = null;
     }
     if (!isset($offset)) {
       $offset = 0;
