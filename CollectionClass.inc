@@ -67,9 +67,6 @@ class CollectionClass {
   function getRelatedItems($pid, $itqlquery = NULL, $limit = NULL, $offset = NULL) {
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');
     module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
-    if (!isset($limit)) {
-      $limit = null;
-    }
     if (!isset($offset)) {
       $offset = 0;
     }
