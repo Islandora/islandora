@@ -1011,6 +1011,7 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
       );
     }
   }
+  
 // Add a 'manage object' tab for all objects, where detailed list of content is shown.
   $obj = new FedoraObjectDetailedContent($pid);
   $object_details = $obj->showFieldSets();

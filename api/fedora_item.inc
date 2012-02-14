@@ -635,6 +635,28 @@ class Fedora_Item {
 
     return FALSE;
   }
+  
+  /**
+   * Set the object to a deleted state
+   */
+  function move_to_trash($log_message = 'Flagged deleted using Islandora API.')
+  {
+    // Loop through the datastreams and mark them deleted
+    foreach($this->get_datastreams_list_as_array() as $dsid) 
+    {
+      $this->set_datastream_state($dsid, 'D');
+    }
+    
+    // Create a message to mark the object deleted
+    $params = array(
+      'pid' => $this->pid,
+      'state' => 'D',
+      'logMessage' => $logMessage
+    );
+
+    // Send message to mark the object deleted
+    return self::soap_call('modifyObject', $params, $quiet);
+  }
 
   /**
    * Removes this object form the repository.
@@ -643,12 +665,18 @@ class Fedora_Item {
    * @return type 
    */
   function purge($log_message = 'Purged using Islandora API.', $force = FALSE) {
+    
+    // Flag the object to be deleted first
+    $this->move_to_trash($log_message);
+    
+    // Create the delete message
     $params = array(
       'pid' => $this->pid,
       'logMessage' => $log_message,
       'force' => $force
     );
 
+    // Delete the object
     return $this->soap_call('purgeObject', $params);
   }
 
