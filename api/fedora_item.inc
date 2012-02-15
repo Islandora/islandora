@@ -43,7 +43,7 @@ class Fedora_Item {
       }
 
       $raw_objprofile = $this->soap_call('getObjectProfile', array('pid' => $this->pid, 'asOfDateTime' => ""));
-      
+
       if (!empty($raw_objprofile)) {
         $this->objectProfile = $raw_objprofile->objectProfile;
         $this->datastreams = $this->get_datastreams_list_as_array();
@@ -55,7 +55,7 @@ class Fedora_Item {
       Fedora_Item::$instantiated_pids[$pid] = &$this;
     }
   }
-  
+
   /**
    * Forget this Object, do manually when memory constraints apply.
    * 
@@ -162,6 +162,30 @@ class Fedora_Item {
     $returnvalue = $this->add_datastream_from_file($tmpfilename, $datastream_id, $datastream_label, $datastream_mimetype, $controlGroup, $logMessage);
     unlink($tmpfilename);
     return $returnvalue;
+  }
+
+  
+  /**
+   * Wrapper to add new or modify existing datastream 
+   * @global url $base_url
+   * @param url $external_url
+   * @param string $dsid
+   * @param string $label
+   * @param string $mime_type
+   * @param string $controlGroup
+   * @param boolean $force
+   * @param string $logMessage
+   * @param boolean $quiet 
+   */
+  function add_or_modify_by_reference($external_url, $dsid, $label, $mime_type, $controlGroup = 'M', $force = FALSE, $logMessage = 'Modified by Islandora API', $quiet=FALSE) {
+    global $base_url;
+    if (array_key_exists($dsid, $this->datastreams)) {
+      $this->modify_datastream_by_reference($external_url, $dsid, $label, $mime_type, $force, $logMessage, $quiet);
+    }
+    else {
+      $file_location = str_replace("$base_url/", '', $external_url);
+      $this->add_datastream_from_file($file_location, $dsid, $label, $mime_type, $controlGroup = 'M', $logMessage = NULL);
+    }
   }
 
   /**
@@ -583,8 +607,7 @@ class Fedora_Item {
     return $relationships;
   }
 
-
-    function get_models() {
+  function get_models() {
     $relationships = array();
     try {
       $relsext = $this->get_datastream_dissemination('RELS-EXT');
