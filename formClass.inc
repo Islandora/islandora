@@ -379,7 +379,13 @@ class formClass {
 
     // DC elements
     $previousElement = NULL; // Used in case we have to nest elements for qualified dublin core.
+    
+    $label = null;
     foreach ($form_values as $key => $value) {
+      //echo ($key);
+      if ($key == 'dc:title-0') {
+        $label = $value;
+      } 
       $index = strrpos($key, '-');
       $key = substr($key, 0, $index);
       $test = substr($key, 0, 2);
@@ -400,6 +406,13 @@ class formClass {
       }
     }
 
+    // Save the title
+    if ( $label != null )
+    {
+      $object = new Fedora_Item($form_values['pid']);
+      $object->modify_object($label);
+    } 
+    
     $dom->appendChild($oai);
 
     if (!$client) {
