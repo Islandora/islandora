@@ -1596,7 +1596,7 @@ function fedora_repository_demo_objects_form_submit($form, &$form_state) {
         $dc->set_element('dc:title', array('Installed Content Model'));
         $dc->save();
         $cmodel_collection->add_datastream_from_string('select $object $title from <#ri>
-          where ($object <dc:title> $title
+          where ($object <fedora-model:label> $title
           and ($object <fedora-model:hasModel> <info:fedora/fedora-system:ContentModel-3.0>
           or $object <fedora-rels-ext:isMemberOfCollection> <info:fedora/islandora:ContentModelsCollection>)
           and $object <fedora-model:state> <info:fedora/fedora-system:def/model#Active>)

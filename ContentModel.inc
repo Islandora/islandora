@@ -429,12 +429,12 @@ class ContentModel extends XMLDatastream {
    */
   public function getServices() {
     $query = 'select $object $title from <#ri>
-   where ($object <dc:title> $title
-   and $object <fedora-model:isDeploymentOf> $deploymentOf
-   and $object <fedora-model:hasModel> <info:fedora/fedora-system:ServiceDeployment-3.0>
-   and $object <fedora-model:isContractorOf> <info:fedora/' . $this->pid . '>
-   and $object <fedora-model:state> <info:fedora/fedora-system:def/model#Active>)
-   order by $title';
+      where ($object <fedora-model:label> $title
+      and $object <fedora-model:isDeploymentOf> $deploymentOf
+      and $object <fedora-model:hasModel> <info:fedora/fedora-system:ServiceDeployment-3.0>
+      and $object <fedora-model:isContractorOf> <info:fedora/' . $this->pid . '>
+      and $object <fedora-model:state> <info:fedora/fedora-system:def/model#Active>)
+      order by $title';
 
     module_load_include('inc', 'fedora_repository', 'CollectionClass');
 

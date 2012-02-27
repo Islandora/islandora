@@ -77,7 +77,7 @@ function get_related_items_as_xml($collection_pid, $relationship = array('isMemb
   }
 
   $query_string = 'select $object $title $content from <#ri>
-                             where ($object <dc:title> $title
+                             where ($object <fedora-model:label> $title
                              and $object <fedora-model:hasModel> $content
                              and (';
 

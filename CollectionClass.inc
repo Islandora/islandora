@@ -81,7 +81,7 @@ class CollectionClass {
       $query_string = $objectHelper->getStream($pid, 'QUERY', 0);
       if ($query_string == NULL) {
         $query_string = 'select $object $title $content from <#ri>
-                             where ($object <dc:title> $title
+                             where ($object <fedora-model:label> $title
                              and $object <fedora-model:hasModel> $content
                              and ($object <fedora-rels-ext:isMemberOfCollection> <info:fedora/' . $pid . '>
                              or $object <fedora-rels-ext:isMemberOf> <info:fedora/' . $pid . '>)

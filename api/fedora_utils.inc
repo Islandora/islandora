@@ -239,7 +239,7 @@ function get_collections_as_option_array() {
   $allowed_string = variable_get('fedora_pids_allowed', 'default: demo: changeme: islandora:');
   $namespaces = explode(':', $allowed_string);
   $query = 'select $object $title from <#ri>
-                            where ($object <dc:title> $title
+                            where ($object <fedora-model:label> $title
                               and $object <info:fedora/fedora-system:def/model#hasModel> <info:fedora/islandora:collectionCModel>
                               and $object <fedora-model:state> <info:fedora/fedora-system:def/model#Active>)
                             order by $title';
@@ -288,7 +288,7 @@ function get_content_models_as_option_array() {
         }
     }
     $query = 'select $object $title from <#ri>
-          where ($object <dc:title> $title
+          where ($object <fedora-model:label> $title
           and ($object <fedora-model:hasModel> <info:fedora/fedora-system:ContentModel-3.0>
           or $object <fedora-rels-ext:isMemberOfCollection> <info:fedora/islandora:ContentModelsCollection>)
           and $object <fedora-model:state> <info:fedora/fedora-system:def/model#Active>)
