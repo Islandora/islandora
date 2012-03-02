@@ -173,7 +173,7 @@
     <xsl:otherwise>
      <!--the below is an example of going straight to a datastream instead of the details page.
 <xsl:value-of select="$BASEURL"/>/fedora/repository/<xsl:copy-of select="$PID"/>/OBJ/<xsl:value-of select="s:title"/>-->
-     <xsl:value-of select="$BASEURL"/>/fedora/repository/<xsl:copy-of select="$PID"/>/-/<xsl:value-of select="$cleanTitle"/>
+     <xsl:value-of select="$BASEURL"/>/fedora/repository/<xsl:copy-of select="$PID"/>
      </xsl:otherwise>
    </xsl:choose>
    <xsl:value-of select="s:content"/>
