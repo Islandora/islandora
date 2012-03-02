@@ -45,11 +45,12 @@ class CollectionClass {
    * @return type 
    */
   function getRelatedObjects($pid, $limit, $offset, $itqlquery=NULL) {
-    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
-    $objectHelper = new ObjectHelper();
     if (!isset($itqlquery)) {
-      // $query_string = $objectHelper->getStream($pid, 'QUERY', 0);
-      $itqlquery = $objectHelper->getStream($pid, 'QUERY', 0);
+      module_load_include('inc', 'fedora_repository', 'api/fedora_item');
+      $item = new Fedora_Item($pid);
+      if ($item->exists() && array_key_exists('QUERY', $item->datastreams)) {
+        $itqlquery = $item->get_datastream_dissemination('QUERY');
+      }
     }
     return $this->getRelatedItems($pid, $itqlquery, $limit, $offset);
   }
@@ -78,7 +79,11 @@ class CollectionClass {
     $objectHelper = new ObjectHelper();
     $query_string = $itqlquery;
     if (!isset($query_string)) {
-      $query_string = $objectHelper->getStream($pid, 'QUERY', 0);
+      $query_string = NULL;
+      $item = new Fedora_Item($pid);
+      if ($item->exists() && array_key_exists('QUERY', $item->datastreams)) {
+        $query_string = $item->get_datastream_dissemination('QUERY');
+      }
       if ($query_string == NULL) {
         $query_string = 'select $object $title $content from <#ri>
                              where ($object <fedora-model:label> $title
@@ -445,7 +450,7 @@ class CollectionClass {
         'pidNamespace' => $pidNameSpace
       );
       $object = $soapClient->__soapCall('getNextPID', array(
-            $params
+        $params
           ));
     } catch (exception $e) {
       drupal_set_message(t('Error getting Next PID: @e', array('@e' => check_plain($e->getMessage()))), 'error');
@@ -498,11 +503,10 @@ class CollectionClass {
     module_load_include('inc', 'fedora_repository', 'CollectionManagement');
     module_load_include('inc', 'fedora_repository', 'BatchIngest');
     global $base_url;
-    $tabset = array();
     global $user;
-    $objectHelper = new ObjectHelper();
-    $item = new Fedora_Item($this->pid);
+    $tabset = array();
     $query = NULL;
+    $item = new Fedora_Item($this->pid);
     if ($item->exists() && array_key_exists('QUERY', $item->datastreams)) {
       $query = $item->get_datastream_dissemination('QUERY');
     }
@@ -517,7 +521,7 @@ class CollectionClass {
     $show_batch_tab = FALSE;
     $policy = CollectionPolicy::loadFromCollection($this->pid, TRUE);
 
-    if(!empty($policy)){
+    if (!empty($policy)) {
       $content_models = $policy->getContentModels();
     }
     if (count($content_models) == 1 && $content_models[0]->pid == "islandora:collectionCModel") {

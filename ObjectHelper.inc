@@ -383,8 +383,8 @@ class ObjectHelper {
       $xsl->load($path . '/xsl/convertQDC.xsl');
       $input = new DomDocument();
       $input->loadXML(trim($xmlstr));
-    } catch (exception $e) {
-      watchdog(t("Fedora_Repository"), "Problem loading XSL file: @e", array('@e' => $e), NULL, WATCHDOG_ERROR);
+    } catch (Exception $e) {
+      watchdog('fedora_repository', "Problem loading XSL file: @e", array('@e' => $e->getMessage()), NULL, WATCHDOG_ERROR);
     }
     $xsl = $proc->importStylesheet($xsl);
     $newdom = $proc->transformToDoc($input);
