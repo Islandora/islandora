@@ -2150,13 +2150,16 @@ function fedora_repository_display_schema($file) {
  * @return type 
  */
 function fedora_repository_batch_reingest_object($object, &$context) {
+    
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
   module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
+  
   if (!empty($object) && is_array($object)) {
     $pid = $object['pid'];
     if (!valid_pid($pid)) {
       return NULL;
     }
+    
 // Does the object exist? If so, purge it.
     $item = new Fedora_Item($pid);
     if ($item->exists()) {
@@ -2172,6 +2175,7 @@ function fedora_repository_batch_reingest_object($object, &$context) {
         $context['message'][] = "$new_item->pid installed.";
       }
     }
+    
     if (!empty($object['dsid']) && !empty($object['datastream_file'])) {
       $datastreams = array(
         array(
@@ -2185,10 +2189,13 @@ function fedora_repository_batch_reingest_object($object, &$context) {
     }
 
     if (!empty($datastreams) && is_array($datastreams)) {
+        
       $label = !empty($object['label']) ? $object['label'] : '';
+      
       if (empty($object['foxml_file']) && !isset($new_item)) {
         $new_item = Fedora_Item::ingest_new_item($object['pid'], 'A', $label);
       }
+      
       if (!empty($object['cmodel'])) {
         $new_item->add_relationship('hasModel', $object['cmodel'], FEDORA_MODEL_URI);
       }

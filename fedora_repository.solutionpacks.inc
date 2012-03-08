@@ -46,19 +46,21 @@ function fedora_repository_solution_packs_page() {
  * @param array $solution_pack
  */
 function fedora_repository_solution_pack_form(&$form_state, $solution_pack_module, $solution_pack_name, $objects = array()) {
+    
   // Check each object to see if it is in the repository.
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
   global $base_path;
   $needs_update = FALSE;
   $needs_install = FALSE;
   $form = array();
+  
   $form['solution_pack_module'] = array(
     '#type' => 'hidden',
     '#value' => $solution_pack_module,
   );
 
   if (!$form_state['submitted']) {
-    $form['soluction_pack_name'] = array(
+    $form['solution_pack_name'] = array(
       '#type' => 'markup',
       '#value' => t($solution_pack_name),
       '#prefix' => '<h3>',
@@ -74,7 +76,6 @@ function fedora_repository_solution_pack_form(&$form_state, $solution_pack_modul
     );
     $table_header = array('PID', 'Status');
     $table_rows = array();
-
 
     foreach ($objects as $object) {
       $datastreams = NULL;
@@ -149,6 +150,12 @@ function fedora_repository_solution_pack_form(&$form_state, $solution_pack_modul
     '#type' => 'submit',
     '#name' => $solution_pack_module,
   );
+  $form['forcesubmit'] = array(
+    '#value' => t('Force Reinstall'),
+    //'#disabled' => !$needs_install && !$needs_update,
+    '#type' => 'submit',
+    '#name' => $solution_pack_module,
+  );
 
   $form['#submit'] = array(
     'fedora_repository_solution_pack_form_submit',
@@ -159,7 +166,11 @@ function fedora_repository_solution_pack_form(&$form_state, $solution_pack_modul
 function fedora_repository_solution_pack_form_submit($form, &$form_state) {
   $what = $form_state;
   $module_name = $form_state['values']['solution_pack_module'];
+
+  // This should be replaced with module_invoke
   $solution_pack_info = call_user_func($module_name . '_required_fedora_objects');
+  //$solution_pack_info = module_invoke($module_name, 'required_fedora_objects');
+  
   $batch = array(
     'title' => t('Installing / updating solution pack objects'),
     'file' => drupal_get_path('module', 'fedora_repository') . '/fedora_repository.module',
@@ -181,7 +192,7 @@ function solution_pack_add_form($form_name, $form_xml) {
     $object->name = $form_name;
     $object->form = $form_xml;
     $result = drupal_write_record('xml_forms', $object);
-    drupal_set_message(t("Added @name", array("@name" => $name)));
+    drupal_set_message(t("Added @name", array("@name" => $form_name)));
   }
 }
 
@@ -196,7 +207,6 @@ function solution_pack_add_form_association($content_model, $form_name) {
     $object->title_field = "['titleInfo']['title']";
     $object->transform = 'mods_to_dc.xsl';
     $result = drupal_write_record('islandora_content_model_forms', $object);
-    drupal_set_message(t("Added association between @cm@name", array("@cm" => $content_model, "@name"=>$name)));
+    drupal_set_message(t("Added association between @cm@name", array("@cm" => $content_model, "@name"=>$form_name)));
   }
 }
-

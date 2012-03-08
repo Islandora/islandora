@@ -48,7 +48,6 @@ class formClass {
       'file' => 'fedora_repository.solutionpacks.inc',
       'type' => MENU_LOCAL_TASK,
     );
-
     $items['islandoracm.xsd'] = array(
       'title' => t('Islandora Content Model XML Schema Definition'),
       'page callback' => 'fedora_repository_display_schema',
