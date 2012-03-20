@@ -136,8 +136,16 @@ class Fedora_Item {
    * @return type
    */
   function add_datastream_from_url($datastream_url, $datastream_id, $datastream_label = NULL, $datastream_mimetype = '', $controlGroup = 'M', $logMessage = NULL) {
+    global $base_url;
+
     if (empty($datastream_label)) {
       $datastream_label = $datastream_id;
+    }
+
+    // Fedora has some problems getting files from HTTPS connections sometimes, so if we are getting a file
+    // from the local drupal, we try to pass a HTTP url instead of a HTTPS one.
+    if(stripos($datastream_url, 'https://') !== FALSE && stripos($datastream_url, $base_url) !== FALSE) {
+      $datastream_url = str_ireplace('https://', 'http://', $datastream_url);
     }
 
     $params = array(
