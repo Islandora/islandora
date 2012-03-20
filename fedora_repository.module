@@ -882,6 +882,7 @@ function fedora_repository_access($op, $node, $account) {
  * @param $dsID String
  */
 function makeObject($pid, $dsID) {
+  module_load_include('inc', 'fedora_repository', 'ObjectHelper');
   module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
   if (!valid_pid($pid)) {
     drupal_set_message(t("Invalid PID!"), 'error');
