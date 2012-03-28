@@ -122,8 +122,7 @@ class ObjectHelper {
         $dsID = variable_get('fedora_default_display_dsid', 'TN');
         $mimeType = 'image/jpeg';
       }
-
-      $url = variable_get('fedora_base_url', 'http://localhost:8080/fedora') . '/get/' . $pid . '/' . $dsID;
+      $url = variable_get('fedora_base_url', 'http://localhost:8080/fedora') . '/objects/' . $pid . '/datastreams/' . $dsID . '/content';
       if ($version) {
         $url .= '/' . $version; //drupal_urlencode($version);
       }
