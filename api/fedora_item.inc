@@ -59,7 +59,7 @@ class Fedora_Item {
         self::$connection_helper = new ConnectionHelper();
       }
 
-      $raw_objprofile = $this->soap_call('getObjectProfile', array('pid' => $this->pid, 'asOfDateTime' => ""));
+      $raw_objprofile = $this->soap_call('getObjectProfile', array('pid' => $this->pid, 'asOfDateTime' => ""), TRUE);
 
       if (!empty($raw_objprofile)) {
         $this->objectProfile = $raw_objprofile->objectProfile;
