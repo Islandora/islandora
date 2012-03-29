@@ -617,7 +617,7 @@ function fedora_repository_purge_stream_form_submit($form, &$form_state) {
  * @param type $collectionName
  * @return type 
  */
-function fedora_repository_replace_stream($pid, $dsId, $dsLabel, $collectionName = NULL) {
+function fedora_repository_replace_stream($pid, $dsId, $dsLabel = '', $collectionName = NULL) {
   if ($pid == NULL || $dsId == NULL) {
     drupal_set_message(t('You must specify an pid and dsId to replace.'), 'error');
     return '';
@@ -707,8 +707,20 @@ function fedora_repository_replace_stream_form_submit($form, &$form_state) {
   $dformat = $mimetype->getType($file->filepath);
 
   $item = new Fedora_Item($pid);
+  $info = $item->get_datastream_info($dsid);
 
-  $item->modify_datastream_by_reference($streamUrl, $dsid, $dsLabel, $dformat);
+  if($info->datastream->controlGroup == 'M') {
+    $item->modify_datastream_by_reference($streamUrl, $dsid, $dsLabel, $dformat);
+  } elseif ($info->datastream->controlGroup == 'X') {
+    if($dformat == 'text/xml') {
+      $item->modify_datastream_by_value(file_get_contents($file->filepath), $dsid, $dsLabel, $dformat);
+    }
+    else {
+      drupal_set_message('File must be of mimetype text/xml in order to replace inline XML datastream.', 'error');
+    }
+  } else {
+    drupal_set_message('Cannot replace Redirect or Managed Datastream.', 'error');
+  }
 
   $form_state['redirect'] = 'fedora/repository/' . $pid;
 }
