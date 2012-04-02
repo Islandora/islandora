@@ -406,15 +406,18 @@ class Fedora_Item {
    * Get datastream dissemination
    * @param type $dsid
    * @param type $as_of_date_time
-   * @return string
+   * @param type $quiet
+   * @return null 
    */
-  function get_datastream_dissemination($dsid, $as_of_date_time = "") {
+  function get_datastream_dissemination($dsid, $as_of_date_time = "", $quiet=TRUE) {
     $params = array(
       'pid' => $this->pid,
       'dsID' => $dsid,
       'asOfDateTime' => $as_of_date_time,
     );
-    $object = self::soap_call('getDataStreamDissemination', $params);
+    
+    // Make soap call with quite
+    $object = self::soap_call('getDataStreamDissemination', $params, $quiet);
     if (!empty($object)) {
       $content = $object->dissemination->stream;
       $content = trim($content);

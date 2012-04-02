@@ -1374,6 +1374,7 @@ class ContentModel extends XMLDatastream {
                   else {
                     $status = $class->$methodName($param_array, $method->getAttribute('dsid'), $file, $method->getAttribute('modified_files_ext'));
                     if ($status !== TRUE) {
+                      self::$errors[] = 'Execute Ingest Rules: method \'' . $className . '->' . $methodName . '\' failed.';
                       $ret = FALSE;
                     }
                   }
