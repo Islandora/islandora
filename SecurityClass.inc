@@ -22,15 +22,17 @@ class SecurityClass {
     drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
   }
 
-  /**
-   * canIngestHere ??
-   * @global type $user
-   * @param type $collection_pid
-   * @return type 
+   /**
+   * reads the specified stream of the parent object to see if the user can ingest in this collection.
+   * 
+   * @global object $user
+   * @param string $collection_pid
+   * @return boolean 
    */
   function canIngestHere($collection_pid) {
     global $user;
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+    module_load_include('inc', 'islandora_xacml_api', 'Xacml');
     $objectHelper = new ObjectHelper();
     // get the childsecurity policy from the collection.
     $policyStream = $objectHelper->getStream($collection_pid, SECURITYCLASS :: $SECURITY_CLASS_SECURITY_STREAM, FALSE);
@@ -39,13 +41,9 @@ class SecurityClass {
       // maybe we should return FALSE here?? would be more secure.
       return TRUE;
     }
-    $allowedUsersAndRoles = $this->getAllowedUsersAndRoles($policyStream);
-    if (!$allowedUsersAndRoles) {
-      // error processing stream so don't let them ingest here.
-      return FALSE;
-    }
-    $allowedUsers = $allowedUsersAndRoles["users"];
-    $allowedRoles = $allowedUsersAndRoles["roles"];
+    $xacml = new Xacml($policyStream);
+    $allowedUsers = $xacml->managementRule->getUsers();
+    $allowedRoles = $xacml->managementRule->getRoles();
 
     foreach ($user->roles as $role) {
       if (in_array($role, $allowedRoles)) {
@@ -60,7 +58,10 @@ class SecurityClass {
   }
 
   /**
+   * Depracated should use the xacml api for this
+   * 
    * parses our simple xacml policies checking for users or roles that are allowed to ingest
+   * 
    * @param type $policyStream
    * @return type 
    */
@@ -153,6 +154,8 @@ class SecurityClass {
   }
 
   /**
+   * Depracated should use the xacml api for this
+   * 
    * Add a list of allowed users and roles to the given policy stream and return it.
    *
    * @param string $policy_stream
