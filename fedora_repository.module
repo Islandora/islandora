@@ -1027,13 +1027,20 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
   
 // Add a 'manage object' tab for all objects, where detailed list of content is shown.
   $obj = new FedoraObjectDetailedContent($pid);
-  $object_details = $obj->showFieldSets();
-  if ($object_details['fedora_object_details']['#selected'] == TRUE) {
-    foreach ($cmodels_tabs as &$cmodel_tab) {
-      if (is_array($cmodel_tab)) {
-        $cmodel_tab['#selected'] = FALSE;
-      }
-    }
+  
+  //can disable showing the object details tab in admin UI
+  if (variable_get('fedora_repository_show_object_details_tab', TRUE)) {
+   $object_details = $obj->showFieldSets();
+   if ($object_details['fedora_object_details']['#selected'] == TRUE) {
+     foreach ($cmodels_tabs as &$cmodel_tab) {
+       if (is_array($cmodel_tab)) {
+         $cmodel_tab['#selected'] = FALSE;
+       }
+     }
+   }
+  }
+  else {
+   $object_details = array();
   }
 
   $hook_tabs = module_invoke_all('islandora_tabs', $content_models, $pid);
