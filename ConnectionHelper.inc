@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * @file 
  * Connection Helper Class
@@ -66,10 +64,10 @@ class ConnectionHelper {
       //with the appropriate entry for a username of anonymous password of anonymous
       try {
         $client = new SoapClient($this->_fixURL($url, 'anonymous', 'anonymous'), array(
-            'login' => 'anonymous',
-            'password' => 'anonymous',
-            'exceptions' => $exceptions,
-          ));
+              'login' => 'anonymous',
+              'password' => 'anonymous',
+              'exceptions' => $exceptions,
+            ));
       } catch (SoapFault $e) {
         drupal_set_message(t('@e', array('@e' => check_plain($e->getMessage()))));
         return NULL;
@@ -78,15 +76,32 @@ class ConnectionHelper {
     else {
       try {
         $client = new SoapClient($this->_fixURL($url, $user->name, $user->pass), array(
-            'login' => $user->name,
-            'password' => $user->pass,
-            'exceptions' => TRUE,
-          ));
+              'login' => $user->name,
+              'password' => $user->pass,
+              'exceptions' => TRUE,
+            ));
       } catch (SoapFault $e) {
         drupal_set_message(t('@e', array('@e' => check_plain($e->getMessage()))));
         return NULL;
       }
     }
+    if (isset($_SESSION['islandora_soapcookies'])) {
+
+      // just set the cookies
+
+      $client->_cookies = ($_SESSION['islandora_soapcookies']);
+    }
+    else {
+      try {
+        //we need to make a call to set the cookie this extra call would only happen once per session
+        $client->__soapCall('describeRepository', array());
+        $_SESSION['islandora_soapcookies'] = $client->_cookies;
+      } catch (exception $e) {
+        //connection is tested elsewhere so eat this for now here we just want the cookie
+      }
+    }
+
+
     return $client;
   }
 
