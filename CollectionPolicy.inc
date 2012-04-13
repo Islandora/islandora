@@ -44,7 +44,12 @@ class CollectionPolicy extends XMLDatastream {
 
         if ($preFetch) {
           $fedoraItem = new Fedora_Item($pid);
-          $ds = $fedoraItem->get_datastream_dissemination($dsid);
+          if (array_key_exists($dsid, $fedoraItem->get_datastreams_list_as_array())) {
+            $ds = $fedoraItem->get_datastream_dissemination($dsid);
+          }
+          else { //No collection policy stream (of the default name, anyway)
+            return FALSE;
+          }
         }
         else {
           $ds = NULL;
@@ -55,7 +60,6 @@ class CollectionPolicy extends XMLDatastream {
         $ret = new CollectionPolicy($ds, $pid, $dsid);
       }
     } catch (SOAPException $e) {
-
       $ret = FALSE;
     }
     return $ret;

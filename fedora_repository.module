@@ -146,14 +146,13 @@ function fedora_repository_ingest_form_submit(array $form, array &$form_state) {
     $form_state['submitted'] = FALSE;
     return;
   }
-  if ($form_state['storage']['xml']) {
-    if (module_exists('islandora_content_model_forms')) {
-      module_load_include('inc', 'islandora_content_model_forms', 'IngestObjectMetadataForm');
-      $xml_form = new IngestObjectMetadataForm();
-      $xml_form->submit($form, $form_state);
-    }
+  //ddebug_backtrace();
+  if ($form_state['storage']['xml'] && module_exists('islandora_content_model_forms')) {
+    module_load_include('inc', 'islandora_content_model_forms', 'IngestObjectMetadataForm');
+    $xml_form = new IngestObjectMetadataForm();
+    $xml_form->submit($form, $form_state);
   }
-  elseif ($form_state['clicked_button']['#id'] == 'edit-submit') {
+  elseif (strpos($form_state['clicked_button']['#id'], 'edit-submit') === 0) {
     global $base_url;
     module_load_include('inc', 'fedora_repository', 'CollectionClass');
     module_load_include('inc', 'fedora_repository', 'CollectionPolicy');
@@ -188,7 +187,7 @@ function fedora_repository_ingest_form_submit(array $form, array &$form_state) {
     }
 
     if ($redirect) {
-      $form_state['redirect'] = ($err) ? ' ' : $base_url . "/fedora/repository/{$form_state['values']['collection_pid']}";
+      $form_state['redirect'] = ($err) ? ' ' : url("fedora/repository/{$form_state['values']['collection_pid']}");
     }
   }
 }
@@ -205,7 +204,7 @@ function fedora_repository_ingest_form_validate($form, &$form_state) {
     $form_state['submitted'] = FALSE;
     return;
   }
-  if ($form_state['clicked_button']['#id'] == 'edit-submit' && $form_state['ahah_submission'] != 1) {
+  if (strpos($form_state['clicked_button']['#id'], 'edit-submit') === 0 && $form_state['ahah_submission'] != 1) {
     switch ($form_state['storage']['step']) {
       case 1:
         $form_state['storage']['step']++;
@@ -286,7 +285,8 @@ function fedora_repository_ingest_form(&$form_state, $collection_pid, $collectio
   $ingestForm = new formClass();
   $form_state['storage']['content_model'] = $content_model;
   $form_state['storage']['collection_pid'] = $collection_pid;
-  return $ingestForm->createIngestForm($collection_pid, $collection_label, $form_state);
+  $form = $ingestForm->createIngestForm($collection_pid, $collection_label, $form_state);
+  return $form;
 }
 
 /**
@@ -774,13 +774,6 @@ function fedora_repository_edit_qdc_form(&$form_state, $pid, $dsId = NULL) {
   $client = $soapHelper->getSoapClient(variable_get('fedora_soap_url', 'http://localhost:8080/fedora/services/access?wsdl'));
  
 // Check if there is a custom edit metadata function defined in the content model.
-
-  $breadcrumbs = array();
-  $objectHelper = new ObjectHelper();
-  $objectHelper->getBreadcrumbs($pid, $breadcrumbs);
-  drupal_set_breadcrumb(array_reverse($breadcrumbs));
-
-
   $output = '';
   if (($cm = ContentModel::loadFromObject($pid)) !== FALSE) {
     $output = $cm->buildEditMetadataForm($pid, $dsId);
@@ -824,7 +817,7 @@ function fedora_repository_edit_qdc_form_validate($form, &$form_state) {
 function fedora_repository_edit_qdc_form_submit($form, &$form_state) {
   if ($form_state['storage']['xml']) {
     module_load_include('inc', 'islandora_content_model_forms', 'EditObjectMetadataForm');
-    $xml_form = new EditObjectMetadataForm($form_state);
+    $xml_form = new EditObjectMetadataForm();
     $xml_form->submit($form, $form_state);
   }
   else {
@@ -1051,6 +1044,7 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
 
 /**
  * fedora repository urlencode string
+ * FIXME:  URL-encoding is not the same as HTML/XML encoding...
  * @param type $str
  * @return type 
  */
@@ -1726,7 +1720,7 @@ function fedora_repository_required_fedora_objects() {
           'pid' => 'islandora:collectionCModel',
           'label' => 'Islandora Collection Content Model',
           'dsid' => 'ISLANDORACM',
-          'datastream_file' => "$module_path/content_models/COLLECTIONCM.xml",
+          'datastream_file' => "./$module_path/content_models/COLLECTIONCM.xml",
           'dsversion' => 2,
           'cmodel' => 'fedora-system:ContentModel-3.0',
         ),
@@ -1737,11 +1731,11 @@ function fedora_repository_required_fedora_objects() {
           'datastreams' => array(
             array(
               'dsid' => 'COLLECTION_POLICY',
-              'datastream_file' => "$module_path/collection_policies/COLLECTION-COLLECTION POLICY.xml",
+              'datastream_file' => "./$module_path/collection_policies/COLLECTION-COLLECTION POLICY.xml",
             ),
             array(
               'dsid' => 'TN',
-              'datastream_file' => "$module_path/images/Gnome-emblem-photos.png",
+              'datastream_file' => "./$module_path/images/Gnome-emblem-photos.png",
               'mimetype' => 'image/png',
             ),
           ),
@@ -2173,56 +2167,68 @@ function fedora_repository_batch_reingest_object($object, &$context) {
     
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
   module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
-  
+
   if (!empty($object) && is_array($object)) {
     $pid = $object['pid'];
     if (!valid_pid($pid)) {
       return NULL;
     }
     
-// Does the object exist? If so, purge it.
+    // Does the object exist? If so, purge it.
+    //dd("About to test existence of PID: $pid");
     $item = new Fedora_Item($pid);
     if ($item->exists()) {
+      //dd('  Found');
       $item->purge(t('Remove during re-install batch job'));
+      //dd('  Purged');
     }
+
+    $new_item = NULL; //Need to have this a couple places... (After trying from FOXML and later for individual DSs)
+    $datastreams = array(); //Seems like this might be getting messed up due to scope?
 
 // Ingest the object from the source file.
     if (!empty($object['foxml_file'])) {
       $foxml_file = $object['foxml_file'];
       $new_item = Fedora_Item::ingest_from_FOXML_file($foxml_file);
       if ($new_item->exists()) {
-// Batch operation was successful.
-        $context['message'][] = "$new_item->pid installed.";
+// Batch operation was successful; can still add additional DSs, though
+        $context['message'][] = t('%pid installed.', array('%pid' => $new_item->pid));
       }
     }
     
     if (!empty($object['dsid']) && !empty($object['datastream_file'])) {
-      $datastreams = array(
-        array(
-          'dsid' => $object['dsid'],
-          'datastream_file' => $object['datastream_file'],
-        )
+      $datastreams[] = array(
+        'dsid' => $object['dsid'],
+        'datastream_file' => $object['datastream_file'],
       );
     }
     elseif (!empty($object['datastreams'])) {
       $datastreams = $object['datastreams'];
     }
 
-    if (!empty($datastreams) && is_array($datastreams)) {
-        
-      $label = !empty($object['label']) ? $object['label'] : '';
-      
-      if (empty($object['foxml_file']) && !isset($new_item)) {
-        $new_item = Fedora_Item::ingest_new_item($object['pid'], 'A', $label);
-      }
-      
+    $label = !empty($object['label']) ? $object['label'] : '';
+    if (!isset($new_item)) {
+      //dd('  Not found, creating');
+      $new_item = Fedora_Item::ingest_new_item($pid, 'A', $label);
+      //dd('  Created');
+    }
+    elseif (!empty($label)) {
+      $new_item->modify_object($label);
+    }
+
+    if (isset($new_item)) {
       if (!empty($object['cmodel'])) {
+        //dd('  relating to cmodel');
         $new_item->add_relationship('hasModel', $object['cmodel'], FEDORA_MODEL_URI);
+        //dd('  related to cmodel');
       }
       if (!empty($object['parent'])) {
+        //dd('  adding parent');
         $new_item->add_relationship('isMemberOfCollection', $object['parent']);
+        //dd('  parent added');
       }
-      foreach ($datastreams as $ds) {
+      foreach ((array)$datastreams as $ds) {
+        //dd("trying to add ds: {$ds['dsid']}");
         if ($ds['dsid'] == 'DC') {
           $new_item->modify_datastream_by_value(file_get_contents($ds['datastream_file']), $ds['dsid'], $ds['label'], 'text/xml');
         }
@@ -2246,22 +2252,17 @@ function fedora_repository_batch_reingest_object($object, &$context) {
  */
 function fedora_repository_get_islandora_datastream_version($item = NULL, $dsid = NULL, $datastream_file = NULL) {
   $return = NULL;
-  if (isset($item)) {
+  if (!empty($item) && !empty($dsid)) {
     $doc = simplexml_load_string($item->get_datastream_dissemination($dsid));
   }
-  elseif (isset($datastream_file)) {
+  elseif (!empty($datastream_file)) {
     $doc = simplexml_load_file($datastream_file);
   }
-
-  if (!empty($doc)) {
-    $attrs = $doc->attributes();
-    foreach ($attrs as $name => $value) {
-      if ($name == 'version') {
-        $return = (int) $value;
-        break;
-      }
-    }
+  
+  if (!empty($doc) && $version = (int)$doc->attributes()->version) {
+    $return = $version;
   }
+  
   return $return;
 }
 

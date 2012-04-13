@@ -5,6 +5,11 @@
  * 
  * Collection Class Class
  */
+ 
+if (!defined('PHP_VERSION_ID')) { //XXX: This should go elsewhere
+  $version = explode('.', PHP_VERSION);
+  define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
+}
 
 /**
  * This CLASS caches the streams so once you call a getstream once it will always return
@@ -500,10 +505,11 @@ class CollectionClass {
    */
   function showFieldSets($page_number) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
-    module_load_include('inc', 'fedora_repository', 'CollectionManagement');
-    module_load_include('inc', 'fedora_repository', 'BatchIngest');
+    module_load_include('inc', 'fedora_repository', 'CollectionPolicy');
+    //module_load_include('inc', 'fedora_repository', 'BatchIngest'); //Legacy code?
     global $base_url;
     global $user;
+    
     $tabset = array();
     $query = NULL;
     $item = new Fedora_Item($this->pid);
@@ -513,10 +519,7 @@ class CollectionClass {
     $results = $this->getRelatedItems($this->pid, $query);
 
     $collection_items = $this->renderCollection($results, $this->pid, NULL, NULL, $page_number);
-    $collection_item = new Fedora_Item($this->pid);
-    // Check the form post to see if we are in the middle of an ingest operation.
-    $show_ingest_tab = (!empty($_POST['form_id']) && $_POST['form_id'] == 'fedora_repository_ingest_form');
-    $add_to_collection = $this->getIngestInterface();
+    //$collection_item = new Fedora_Item($this->pid); //XXX: This didn't seem to be used...
 
     $show_batch_tab = FALSE;
     $policy = CollectionPolicy::loadFromCollection($this->pid, TRUE);
@@ -527,39 +530,42 @@ class CollectionClass {
     if (count($content_models) == 1 && $content_models[0]->pid == "islandora:collectionCModel") {
       $show_batch_tab = FALSE;
     }
-    if (!$show_ingest_tab) {
-      $view_selected = TRUE;
-    }
-    if (!$collection_items) {
-      $view_selected = FALSE;
-      $add_selected = TRUE;
-    }
-    $view_selected = !$show_ingest_tab;
-
+    
+    // Check the form post to see if we are in the middle of an ingest operation.
+    $add_selected = ((!empty($_POST['form_id']) && $_POST['form_id'] == 'fedora_repository_ingest_form') || !$collection_items);
+    $view_selected = !$add_selected;
 
     $tabset['view_tab'] = array(
       '#type' => 'tabpage',
-      '#title' => 'View',
+      '#title' => t('View'),
       '#selected' => $view_selected,
       '#content' => $collection_items,
+      '#tab_name' => 'view-tab',
     );
-    $tabset['add_tab'] = array(
-      '#type' => 'tabpage',
-      '#title' => t('Add'),
-      '#selected' => $add_selected,
-      // This will be the content of the tab.
-      '#content' => $add_to_collection,
-    );
-
-    if ($show_batch_tab && user_access('create batch process')) {
+    
+    $add_to_collection = $this->getIngestInterface();
+    if (!empty($add_to_collection)) {
+      $tabset['add_tab'] = array(
+        '#type' => 'tabpage',
+        '#title' => t('Add'),
+        '#selected' => $add_selected,
+        // This will be the content of the tab.
+        '#content' => $add_to_collection,
+        '#tab_name' => 'add-tab',
+      );
+    }
+    
+    if ($show_batch_tab && user_access('create batch process')) { //XXX: Is this not put in by the batch module?
       $tabset['batch_ingest_tab'] = array(
         // #type and #title are the minimum requirements.
         '#type' => 'tabpage',
         '#title' => t('Batch Ingest'),
         // This will be the content of the tab.
         '#content' => drupal_get_form('batch_creation_form', $this->pid, $content_models),
+        '#tab_name' => 'batch-ingest-tab',
       );
     }
+
     return $tabset;
   }
 
@@ -622,7 +628,7 @@ class CollectionClass {
       $pageNumber = 1;
     }
 
-    if (!isset($collectionName)) {
+    if (empty($collectionName)) {
       $collectionName = variable_get('fedora_repository_name', 'Collection');
     }
     $xslContent = $this->getXslContent($pid, $path);
@@ -636,11 +642,23 @@ class CollectionClass {
       if ($results->length > 0) {
         try {
           $proc = new XsltProcessor();
-          $proc->setParameter('', 'collectionPid', $collection_pid);
-          $proc->setParameter('', 'collectionTitle', $collectionName);
-          $proc->setParameter('', 'baseUrl', $base_url);
-          $proc->setParameter('', 'path', $base_url . '/' . $path);
-          $proc->setParameter('', 'hitPage', $pageNumber);
+          $options = array( //Could make this the return of a hook?  
+            'collectionPid' => $collection_pid,
+            'collectionTitle' => $collectionName,
+            'baseUrl' => $base_url,
+            'path' => "$base_url/$path",
+            'hitPage' => $pageNumber,
+          );
+          
+          if (defined('PHP_VERSION_ID') && PHP_VERSION_ID >= 50100) {
+            $proc->setParameter('', $options);
+          }
+          else {
+            foreach ($options as $name => $value) {
+              $proc->setParameter('', $name, $value);
+            }
+          }
+
           $proc->registerPHPFunctions();
           $xsl = new DomDocument();
           $xsl->loadXML($xslContent);
@@ -657,13 +675,13 @@ class CollectionClass {
             throw new Exception("Invalid XML.");
           }
         } catch (Exception $e) {
-          drupal_set_message(t('@e', array('@e' => check_plain($e->getMessage()))), 'error');
+          drupal_set_message(check_plain($e->getMessage()), 'error');
           return '';
         }
       }
     }
     else {
-      drupal_set_message(t("No Objects in this collection or bad query."));
+      drupal_set_message(t("No objects in this collection (or bad query)."));
     }
     return $objectList;
   }

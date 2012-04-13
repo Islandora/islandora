@@ -110,10 +110,11 @@ function fedora_repository_solution_pack_form(&$form_state, $solution_pack_modul
                 $object_status = 'Missing datastream';
                 break;
               }
-              if (isset($ds['dsversion'])) {
+              elseif (isset($ds['dsversion'])) {
                 // Check if the datastream is versioned and needs updating.
                 $installed_version = fedora_repository_get_islandora_datastream_version($item, $ds['dsid']);
                 $available_version = fedora_repository_get_islandora_datastream_version(NULL, NULL, $ds['datastream_file']);
+
                 if ($available_version > $installed_version) {
                   $needs_update = TRUE;
                   $object_status = 'Out of date';
@@ -165,8 +166,8 @@ function fedora_repository_solution_pack_form_submit($form, &$form_state) {
   $module_name = $form_state['values']['solution_pack_module'];
 
   // This should be replaced with module_invoke
-  $solution_pack_info = call_user_func($module_name . '_required_fedora_objects');
-  //$solution_pack_info = module_invoke($module_name, 'required_fedora_objects');
+  //$solution_pack_info = call_user_func($module_name . '_required_fedora_objects');
+  $solution_pack_info = module_invoke($module_name, 'required_fedora_objects');
   
   $batch = array(
     'title' => t('Installing / updating solution pack objects'),

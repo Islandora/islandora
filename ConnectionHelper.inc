@@ -65,10 +65,11 @@ class ConnectionHelper {
       //anonymous user.  We will need an entry in the fedora users.xml file
       //with the appropriate entry for a username of anonymous password of anonymous
       try {
-        $client = new SoapClient($this->_fixURL($url, 'anonymous', 'anonymous'), array(
+        $client = new SoapClient($url, array(
             'login' => 'anonymous',
             'password' => 'anonymous',
             'exceptions' => $exceptions,
+            'authentication' => SOAP_AUTHENTICATION_BASIC
           ));
       } catch (SoapFault $e) {
         drupal_set_message(t('@e', array('@e' => check_plain($e->getMessage()))));
@@ -77,10 +78,12 @@ class ConnectionHelper {
     }
     else {
       try {
-        $client = new SoapClient($this->_fixURL($url, $user->name, $user->pass), array(
+        $client = new SoapClient($url, array(
             'login' => $user->name,
             'password' => $user->pass,
             'exceptions' => TRUE,
+            'authentication' => SOAP_AUTHENTICATION_BASIC,
+            'cache_wsdl' => WSDL_CACHE_MEMORY
           ));
       } catch (SoapFault $e) {
         drupal_set_message(t('@e', array('@e' => check_plain($e->getMessage()))));

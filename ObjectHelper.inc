@@ -138,7 +138,7 @@ class ObjectHelper {
       curl_setopt($ch, CURLOPT_USERPWD, "$fedoraUser:$fedoraPass");
       // There seems to be a bug in Fedora 3.1's REST authentication, removing this line fixes the authorization denied error.
       // curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 0); // return into a variable
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); // return into a variable
 
       curl_setopt($ch, CURLOPT_URL, $url);
 
@@ -150,7 +150,6 @@ class ObjectHelper {
         fclose($fp);
       }
       else {
-
         header("Content-type: $mimeType");
         if ($contentSize > 0) {
           header("Content-length: $contentSize");
@@ -181,12 +180,38 @@ class ObjectHelper {
           header('Content-Disposition: attachment; filename="' . $suggestedFileName . '"');
         }
 
-        if ((isset($user) && $user->uid != 0) || $forceSoap || isset($_SERVER['HTTPS'])) {
-          curl_exec($ch);
+        curl_setopt($ch, CURLOPT_NOBODY, TRUE);
+        $curl_out = curl_exec($ch);
+        if ($curl_out !== FALSE) {
+          $info = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+          //dd($info, 'effective URL');
+          if ($url !== $info) { //Handle redirect streams (the final URL is not the same as the Fedora URL)
+          
+            //Add the parameters passed to Drupal, leaving out the 'q'
+            $query = array();
+            parse_str($_SERVER['QUERY_STRING'], $query);
+            if (isset($query['q'])) {
+              unset($query['q']);
+            }
+            
+            header('HTTP/1.1 307 Moved Temporarily');
+            header('Location: ' . $info . '?' . http_build_query($query)); //Fedora seems to discard the query portion.
+          }
+          elseif ((isset($user) && $user->uid != 0) || $forceSoap || isset($_SERVER['HTTPS'])) { //If not anonymous, soap is force or we're using HTTPS
+            //Have the webserver mediate the transfer (download and restream)
+            
+            curl_setopt($ch, CURLOPT_NOBODY, FALSE);
+            curl_setopt($ch, CURLOPT_HTTPGET, TRUE); //CURLOPT_NOBODY sets it to 'HEAD'
+            $toReturn = curl_exec($ch);
+            echo $toReturn;
+          }
+          else {
+            header('Location: ' . $url);
+          }
         }
         else {
-          header('Location: ' . $url);
-        }
+          //Curl error...
+        }   
       }
       curl_close($ch);
     }
@@ -929,14 +954,14 @@ class ObjectHelper {
     }
     else {
       $query_string = 'select $parentObject $title $content from <#ri>
-                               where (<info:fedora/' . $pid . '> <fedora-model:label> $title
-                               and $parentObject <fedora-model:hasModel> $content
-                               and (<info:fedora/' . $pid . '> <fedora-rels-ext:isMemberOfCollection> $parentObject
-                               or <info:fedora/' . $pid . '> <fedora-rels-ext:isMemberOf> $parentObject
-                               or <info:fedora/' . $pid . '> <fedora-rels-ext:isPartOf> $parentObject)
-                               and $parentObject <fedora-model:state> <info:fedora/fedora-system:def/model#Active>)
-                               minus $content <mulgara:is> <info:fedora/fedora-system:FedoraObject-3.0>
-                               order by $title desc';
+                       where (<info:fedora/' . $pid . '> <fedora-model:label> $title
+                       and $parentObject <fedora-model:hasModel> $content
+                       and (<info:fedora/' . $pid . '> <fedora-rels-ext:isMemberOfCollection> $parentObject
+                       or <info:fedora/' . $pid . '> <fedora-rels-ext:isMemberOf> $parentObject
+                       or <info:fedora/' . $pid . '> <fedora-rels-ext:isPartOf> $parentObject)
+                       and $parentObject <fedora-model:state> <info:fedora/fedora-system:def/model#Active>)
+                       minus $content <mulgara:is> <info:fedora/fedora-system:FedoraObject-3.0>
+                       order by $title desc';
       $query_string = htmlentities(urlencode($query_string));
 
       $url = variable_get('fedora_repository_url', 'http://localhost:8080/fedora/risearch');

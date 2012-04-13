@@ -43,6 +43,7 @@ class FedoraObjectDetailedContent {
       '#type' => 'tabpage',
       '#title' => t('Object Details'),
       '#selected' => $details_selected,
+      '#weight' => 100, //XXX: Make the weight configurable?
     );
     $tabset['fedora_object_details']['tabset'] = array(
       '#type' => 'tabset',
@@ -51,12 +52,28 @@ class FedoraObjectDetailedContent {
 
     $ds_list = $objectHelper->get_formatted_datastream_list($this->pid, NULL, $this->item);
 
-
-    $tabset['fedora_object_details']['tabset']['view'] = array(
-      '#type' => 'tabpage',
-      '#title' => t('View'),
-      '#content' => $dc_html . $ds_list . $purge_form,
-    );
+    $i = 0;
+    if (fedora_repository_access(OBJECTHELPER :: $VIEW_DETAILED_CONTENT_LIST, $this->pid, $user)) {
+      $tabset['fedora_object_details']['tabset']['view'] = array(
+        '#type' => 'tabpage',
+        '#title' => t('View'),
+        'dc' => array(
+          '#type' => 'markup',
+          '#value' => $dc_html, //XXX:  This could easily be done in Drupal, instead of using an XSL
+          '#weight' => $i++
+        ),
+        'list' => array(
+          '#type' => 'markup',
+          '#value' => $ds_list, //XXX:  The function called here could be cleaned up a fair bit as well...
+          '#weight' => $i++
+        ),
+        'purge' => array(
+          '#type' => 'markup',
+          '#value' => $purge_form,
+          '#weight' => $i++
+        )
+      );
+    }
 
     if (fedora_repository_access(OBJECTHELPER :: $EDIT_FEDORA_METADATA, $this->pid, $user)) {
       $editform = drupal_get_form('fedora_repository_edit_qdc_form', $this->pid, 'DC');
@@ -68,7 +85,13 @@ class FedoraObjectDetailedContent {
       );
     }
 
-    return $tabset;
+    $ts = $tabset['fedora_object_details']['tabset'];
+    if (array_key_exists('view', $ts) || array_key_exists('edit', $ts)) {
+      return $tabset;
+    }
+    else {
+      return array();
+    }
   }
 
 }
