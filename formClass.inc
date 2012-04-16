@@ -288,7 +288,7 @@ class formClass {
     $form['fedora_repository_title'] = array(
       '#type' => 'textfield',
       '#title' => t('Digital Repository Title'),
-      '#default_value' => variable_get('fedora_repository_title', 'Digital Repository'),
+      '#default_value' => variable_get('fedora_repository_name', 'Digital Repository'),
       '#description' => t('The title displayed when viewing collections and objects in  /fedora/repository. Leave blank to display no title. Note that the menus must be rebuilt after changing this variable.'),
     );
     //have tabs options (like disable)
