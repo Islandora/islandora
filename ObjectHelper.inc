@@ -938,58 +938,62 @@ class ObjectHelper {
   /**
    * Builds an array of drupal links for use in breadcrumbs. 
    *
+   * @todo Make fully recursive...
+   *
    * @global type $base_url
    * @param type $pid
    * @param type $breadcrumbs
    * @param type $level 
    */
-  function getBreadcrumbs($pid, &$breadcrumbs, $level=10) {
+  function getBreadcrumbs($pid, &$breadcrumbs) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
     // Before executing the query, we hve a base case of accessing the top-level collection
     global $base_url;
-    if ($pid == variable_get('fedora_repository_pid', 'islandora:root')) {
-      //$breadcrumbs[] = l(t('Digital repository'), 'fedora/repository');
-      $breadcrumbs[] = l(variable_get('fedora_repository_title', 'Digital repository'), 'fedora/repository');
-      $breadcrumbs[] = l(t('Home'), $base_url);
+    static $max_level = 10;
+    static $level = -1;
+    
+    if (count($breadcrumbs) === 0) {
+      $level = $max_level;
+    }
+    
+    $root = variable_get('fedora_repository_pid', 'islandora:root');
+    
+    if ($pid == $root) {
+      $breadcrumbs[] = l(menu_get_active_title(), 'fedora/repository');
+      $breadcrumbs[] = l(t('Home'), '<front>');
     }
     else {
       $query_string = 'select $parentObject $title $content from <#ri>
-                       where (<info:fedora/' . $pid . '> <fedora-model:label> $title
-                       and $parentObject <fedora-model:hasModel> $content
-                       and (<info:fedora/' . $pid . '> <fedora-rels-ext:isMemberOfCollection> $parentObject
-                       or <info:fedora/' . $pid . '> <fedora-rels-ext:isMemberOf> $parentObject
-                       or <info:fedora/' . $pid . '> <fedora-rels-ext:isPartOf> $parentObject)
-                       and $parentObject <fedora-model:state> <info:fedora/fedora-system:def/model#Active>)
-                       minus $content <mulgara:is> <info:fedora/fedora-system:FedoraObject-3.0>
-                       order by $title desc';
-      $query_string = htmlentities(urlencode($query_string));
+                        where (
+                          <info:fedora/' . $pid . '> <fedora-model:label> $title
+                          and $parentObject <fedora-model:hasModel> $content
+                          and (
+                            <info:fedora/' . $pid . '> <fedora-rels-ext:isMemberOfCollection> $parentObject
+                            or <info:fedora/' . $pid . '> <fedora-rels-ext:isMemberOf> $parentObject
+                            or <info:fedora/' . $pid . '> <fedora-rels-ext:isPartOf> $parentObject
+                          )
+                          and $parentObject <fedora-model:state> <info:fedora/fedora-system:def/model#Active>
+                        )
+                        minus $content <mulgara:is> <info:fedora/fedora-system:FedoraObject-3.0>
+                        order by $title desc';
 
-      $url = variable_get('fedora_repository_url', 'http://localhost:8080/fedora/risearch');
-      $url .= "?type=tuples&flush=TRUE&format=CSV&limit=1&offset=0&lang=itql&stream=on&query=" . $query_string;
-      
-      $result = preg_split('/[\r\n]+/', do_curl($url));
-      array_shift($result); // throw away first line
-      $matches = str_getcsv(join("\n", $result));
-      if (count($matches) >= 2) {
-        $parent = preg_replace('/^info:fedora\//', '', $matches[0]);
+      if (count($results = self::_perform_itql_query($query_string)) > 0  && $level > 0) {
+        $parent = $results[0]['parentObject'];
+        $this_title = $results[0]['title'];
 
-        if (0 == strlen($matches[1])) {
-          $matches[1] = "Unlabeled Object";
+        if (empty($this_title)) {
+          $this_title = t('Unlabeled Object');
         }
         
-        $breadcrumbs[] = l($matches[1], 'fedora/repository/' . $pid);
-        if ($parent == variable_get('fedora_repository_pid', 'islandora:root')) {
-          //$breadcrumbs[] = l(t('Digital repository'), 'fedora/repository');
-          $breadcrumbs[] = l(variable_get('fedora_repository_name', 'Digital repository'), 'fedora/repository');
-          $breadcrumbs[] = l(t('Home'), $base_url);
-        }
-        elseif ($level > 0) {
-          $this->getBreadcrumbs($parent, $breadcrumbs, $level - 1);
-        }
+        $breadcrumbs[] = l($this_title, "fedora/repository/$pid");
+        
+        $level--;
+        $this->getBreadcrumbs($parent, $breadcrumbs);
       }
-      
       else {
-        $breadcrumbs[] = l(t("Path Calculation Error"), 'fedora/repository/' . $pid);
+        watchdog('fedora_repository', 'Error generating breadcrumbs for %pid.  Verify there exists relationships back up to %root. (May also be due to a hierarchy deeper than %max_depth).', array('%pid' => $pid, '%root' => $root, '%max_depth' => $max_depth), WATCHDOG_WARNING);
+        $breadcrumbs[] = '...';
+        $this->getBreadcrumbs($root, $breadcrumbs);
       }
     }
   }
@@ -1012,5 +1016,103 @@ class ObjectHelper {
     drupal_set_message(t($configMess . "<br />" . $messMap[$app] . "<hr  width='40%' align = 'left'/>", array('%app' => $app)), 'warning', FALSE);
   }
 
+  /**
+   * Performs the given RI query.
+   *
+   * FIXME: Could probably made more fail-safe (avoid loading directly with SimpleXML.)
+   *
+   * @param string $query
+   * @param int $limit
+   * @param int $offset
+   * @return array
+   *   Indexed (numerical) array, containing a number of associative arrays,
+   *   with keys being the same as the variable names in the query.
+   *   URIs beginning with 'info:fedora/' will have this beginning stripped
+   *   off, to facilitate their use as PIDs.
+   */
+  protected static function _perform_ri_query($query, $type = 'itql', $limit = -1, $offset = 0) {
+    //Setup the query options...
+    $options = array(
+      'type' => 'tuples',
+      'flush' => TRUE,
+      'format' => 'Sparql',
+      'lang' => $type,
+      'query' => $query
+    );
+    if ($limit > 0) {
+      $options['limit'] = $limit;
+    }
+    if ($offset > 0) {
+      $options['offset'] = $offset;
+    }
+    
+    //Actually construct the query URL.
+    $queryUrl = url(variable_get('fedora_repository_url', 'http://localhost:8080/fedora/risearch'), array('query' => $options));
+    
+    $curl_result = do_curl_ext($queryUrl);
+    
+    if (!$curl_result[0]) {
+      watchdog('fedora_repository', 'Failed to perform %type resource index query: %query', array('%type' => $type, '%query' => $query), WATCHDOG_ERROR);
+      return FALSE;
+    }
+    
+    $doc = new SimpleXMLElement($curl_result[0], 0, FALSE, 'http://www.w3.org/2001/sw/DataAccess/rf1/result');
+    
+    $results = array(); //Storage.
+    
+    //Build the results.
+    foreach ($doc->results->children() as $result) {
+      $r = array();
+      foreach ($result->children() as $element) {
+        $val = NULL;
+        
+        $attrs = $element->attributes();
+        
+        if (!empty($attrs['uri'])) {
+          $val = $attrs['uri'];
+        }
+        else {
+          $val = $element;
+        }
+        
+        $r[$element->getName()] = self::_pid_uri_to_bare_pid((string)$val);
+      }
+      $results[] = $r;
+    }
+    return $results;
+  }
+  /**
+   * Thin wrapper for self::_perform_ri_query().
+   */
+  public static function _perform_itql_query($query, $limit = -1, $offset = 0) {
+    return self::_perform_ri_query($query, 'itql', $limit, $offset);
+  }
+  /**
+   * Thin wrapper for self::_perform_ri_query().
+   */
+  public static function _perform_sparql_query($query, $limit = -1, $offset = 0) {
+    return self::_perform_ri_query($query, 'sparql', $limit, $offset);
+  }
+  /**
+   * Utility function used in self::_perform_ri_query().
+   *
+   * Strips off the 'info:fedora/' prefix from the passed in string.
+   *
+   * @param $uri string
+   *   A string containing a URI.
+   * @return string
+   *   The input string less the 'info:fedora/' prefix (if it has it).
+   *   The original string otherwise.
+   */
+  protected static function _pid_uri_to_bare_pid($uri) {
+    $chunk = 'info:fedora/';
+    $pos = strrpos($uri, $chunk);
+    if ($pos !== FALSE) { //Remove info:fedora/ chunk
+      return substr($uri, strlen($chunk));
+    }
+    else { //Doesn't start with info:fedora/ chunk...
+      return $uri;
+    }
+  }
 }
 

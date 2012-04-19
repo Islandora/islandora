@@ -70,9 +70,7 @@ class formClass {
       'access arguments' => array('view fedora collection'),
     );
     $items['fedora/repository'] = array(
-      'title' => '',
-      'title callback' => 'variable_get',
-      'title arguments' => array('fedora_repository_name', 'Digital Repository'),
+      'title' => 'Digital Repository',
       'page callback' => 'repository_page',
       'type' => MENU_NORMAL_ITEM,
       'access arguments' => array('view fedora collection'),
@@ -187,24 +185,16 @@ class formClass {
 
   /**
    * Create admin form
-   * @return type 
+   * @return array 
    */
   function createAdminForm() {
     if (!user_access('administer site configuration')) {
-      drupal_set_message(t('You must be a site administrator to edit the Fedora collecitons list.'), 'error');
+      drupal_set_message(t('You must be a site administrator to edit the Fedora collections list.'), 'error');
       return;
     }
     module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');
     $form = array();
-    $form['fedora_repository_name'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Root Collection Name'),
-      '#default_value' => variable_get('fedora_repository_name', 'Islandora demos collection'),
-      '#description' => t('The Name of the Root Collection Object'),
-      '#required' => TRUE,
-      '#weight' => -20
-    );
     $form['fedora_repository_pid'] = array(
       '#type' => 'textfield',
       '#title' => t('Root Collection PID'),
@@ -285,12 +275,7 @@ class formClass {
         '#weight' => 0
       );
     }
-    $form['fedora_repository_title'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Digital Repository Title'),
-      '#default_value' => variable_get('fedora_repository_title', 'Digital Repository'),
-      '#description' => t('The title displayed when viewing collections and objects in  /fedora/repository. Leave blank to display no title. Note that the menus must be rebuilt after changing this variable.'),
-    );
+
     //have tabs options (like disable)
     $form['tabs'] = array(
       '#type' => 'fieldset',

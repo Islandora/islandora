@@ -85,7 +85,7 @@ function do_curl($url, $return_to_variable = 1, $number_of_post_vars = 0, $post 
  *   an array that consists of three value or NULL if curl is not suported:
  *   - element 0:
  *     The value returned from the curl_exec function call.
- *     This is either a TRUE or FALSE value or the actual data returned from
+ *     This is either a boolean value or the actual data returned from
  *     accessing the URL.
  *   - element 1:
  *     The error code reslting from attempting to access the URL with curl_exec
@@ -93,7 +93,7 @@ function do_curl($url, $return_to_variable = 1, $number_of_post_vars = 0, $post 
  *     A string representing a textual representation of the error code that
  *     resulted from attempting to access the URL with curl_exec
  */
-function do_curl_ext($url, $return_to_variable = 1, $number_of_post_vars = 0, $post = NULL) {
+function do_curl_ext($url, $return_to_variable = TRUE, $number_of_post_vars = 0, $post = NULL) {
   global $user;
 
   // Check if we are inside Drupal and there is a valid user.
@@ -113,7 +113,7 @@ function do_curl_ext($url, $return_to_variable = 1, $number_of_post_vars = 0, $p
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
     curl_setopt($ch, CURLOPT_FAILONERROR, TRUE); // Fail on errors
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1); // allow redirects
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE); // allow redirects
     curl_setopt($ch, CURLOPT_TIMEOUT, 90); // times out after 90s
     curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, $return_to_variable); // return into a variable
