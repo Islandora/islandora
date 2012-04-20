@@ -977,7 +977,7 @@ class ObjectHelper {
                         minus $content <mulgara:is> <info:fedora/fedora-system:FedoraObject-3.0>
                         order by $title desc';
 
-      if (count($results = self::_perform_itql_query($query_string)) > 0  && $level > 0) {
+      if (count($results = self::perform_itql_query($query_string)) > 0  && $level > 0) {
         $parent = $results[0]['parentObject'];
         $this_title = $results[0]['title'];
 
@@ -1017,13 +1017,17 @@ class ObjectHelper {
   }
 
   /**
-   * Performs the given RI query.
+   * Performs the given Resource Index query and return the results.
    *
-   * FIXME: Could probably made more fail-safe (avoid loading directly with SimpleXML.)
-   *
-   * @param string $query
-   * @param int $limit
-   * @param int $offset
+   * @param $query string
+   *   A string containing the RI query to perform.
+   * @param $type string
+   *   The type of query to perform, as used by the risearch interface.
+   * @param $limit int
+   *   An integer, used to limit the number of results to return.
+   * @param $offset int
+   *   An integer, used to offset the results (results should be ordered, to
+   *   maintain consistency.
    * @return array
    *   Indexed (numerical) array, containing a number of associative arrays,
    *   with keys being the same as the variable names in the query.
@@ -1035,62 +1039,74 @@ class ObjectHelper {
     $options = array(
       'type' => 'tuples',
       'flush' => TRUE,
-      'format' => 'Sparql',
+      'format' => 'Sparql', //Sparql XML is processed into the array below.
       'lang' => $type,
       'query' => $query
     );
+    //Add limit if provided.
     if ($limit > 0) {
       $options['limit'] = $limit;
     }
+    //Add offset if provided.
     if ($offset > 0) {
       $options['offset'] = $offset;
     }
     
-    //Actually construct the query URL.
+    //Construct the query URL.
     $queryUrl = url(variable_get('fedora_repository_url', 'http://localhost:8080/fedora/risearch'), array('query' => $options));
     
+    //Perform the query.
     $curl_result = do_curl_ext($queryUrl);
     
+    //If the query failed, write message to the logs and return.
     if (!$curl_result[0]) {
       watchdog('fedora_repository', 'Failed to perform %type resource index query: %query', array('%type' => $type, '%query' => $query), WATCHDOG_ERROR);
       return FALSE;
     }
     
+    //Load the results into a SimpleXMLElement
     $doc = new SimpleXMLElement($curl_result[0], 0, FALSE, 'http://www.w3.org/2001/sw/DataAccess/rf1/result');
     
     $results = array(); //Storage.
     
     //Build the results.
     foreach ($doc->results->children() as $result) {
+      //Built a single result.
       $r = array();
       foreach ($result->children() as $element) {
         $val = NULL;
         
         $attrs = $element->attributes();
-        
         if (!empty($attrs['uri'])) {
-          $val = $attrs['uri'];
+          $val = self::_pid_uri_to_bare_pid((string)$attrs['uri']);
         }
         else {
-          $val = $element;
+          $val = (string)$element;
         }
         
-        $r[$element->getName()] = self::_pid_uri_to_bare_pid((string)$val);
+        //Map the name to the value in the array.
+        $r[$element->getName()] = $val;
       }
+      
+      //Add the single result to the set to return.
       $results[] = $r;
     }
     return $results;
   }
   /**
    * Thin wrapper for self::_perform_ri_query().
+   *
+   * @see self::_perform_ri_query()
    */
-  public static function _perform_itql_query($query, $limit = -1, $offset = 0) {
+  public static function perform_itql_query($query, $limit = -1, $offset = 0) {
     return self::_perform_ri_query($query, 'itql', $limit, $offset);
   }
   /**
    * Thin wrapper for self::_perform_ri_query().
+   *
+   * @see self::_perform_ri_query()
    */
-  public static function _perform_sparql_query($query, $limit = -1, $offset = 0) {
+  public static function perform_sparql_query($query, $limit = -1, $offset = 0) {
     return self::_perform_ri_query($query, 'sparql', $limit, $offset);
   }
   /**
@@ -1106,8 +1122,8 @@ class ObjectHelper {
    */
   protected static function _pid_uri_to_bare_pid($uri) {
     $chunk = 'info:fedora/';
-    $pos = strrpos($uri, $chunk);
-    if ($pos !== FALSE) { //Remove info:fedora/ chunk
+    $pos = strpos($uri, $chunk);
+    if ($pos === 0) { //Remove info:fedora/ chunk
       return substr($uri, strlen($chunk));
     }
     else { //Doesn't start with info:fedora/ chunk...
