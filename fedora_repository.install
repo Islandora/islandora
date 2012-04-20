@@ -34,71 +34,70 @@ function fedora_collections_enable() {
  * @see _update_cron_notify()
  */
 function fedora_repository_requirements($phase) {
-  global $base_url;
-
   $requirements = array();
+  $t = get_t(); //May not have access to the regular t() function; and so Drupal provides...
 
   if ($phase == 'install') {
 
     // Test for SOAP
-    $requirements['fedora-soap']['title'] = t("PHP SOAP extension library");
+    $requirements['fedora-soap']['title'] = $t("PHP SOAP extension library");
     if (!class_exists('SoapClient')) {
-      $requirements['fedora-soap']['value'] = t("Not installed");
+      $requirements['fedora-soap']['value'] = $t("Not installed");
       $requirements['fedora-soap']['severity'] = REQUIREMENT_ERROR;
-      $requirements['fedora-soap']['description'] = t('Ensure that the PHP SOAP extension is installed.');
+      $requirements['fedora-soap']['description'] = $t('Ensure that the PHP SOAP extension is installed.');
     }
     else {
-      $requirements['fedora-soap']['value'] = t("Installed");
+      $requirements['fedora-soap']['value'] = $t("Installed");
       $requirements['fedora-soap']['severity'] = REQUIREMENT_OK;
     }
 
     // Test for Curl
-    $requirements['curl']['title'] = "PHP Curl extension library";
+    $requirements['curl']['title'] = $t('PHP Curl extension library');
     if (!function_exists('curl_init')) {
-      $requirements['curl']['value'] = t("Not installed");
+      $requirements['curl']['value'] = $t("Not installed");
       $requirements['curl']['severity'] = REQUIREMENT_ERROR;
-      $requirements['curl']['description'] = t("Ensure that the PHP Curl extension is installed.");
+      $requirements['curl']['description'] = $t("Ensure that the PHP Curl extension is installed.");
     }
     else {
-      $requirements['curl']['value'] = t("Installed");
+      $requirements['curl']['value'] = $t("Installed");
       $requirements['curl']['severity'] = REQUIREMENT_OK;
     }
 
     // Test for DOM
-    $requirements['dom']['title'] = "PHP DOM XML extension library";
+    $requirements['dom']['title'] = $t("PHP DOM XML extension library";
     if (!method_exists('DOMDocument', 'loadHTML')) {
-      $requirements['dom']['value'] = t("Not installed");
+      $requirements['dom']['value'] = $t("Not installed");
       $requirements['dom']['severity'] = REQUIREMENT_ERROR;
-      $requirements['dom']['description'] = t("Ensure that the PHP DOM XML extension is installed.");
+      $requirements['dom']['description'] = $t("Ensure that the PHP DOM XML extension is installed.");
     }
     else {
-      $requirements['dom']['value'] = t("Installed");
+      $requirements['dom']['value'] = $t("Installed");
       $requirements['dom']['severity'] = REQUIREMENT_OK;
     }
 
     // Test for XSLT
-    $requirements['xsl']['title'] = "PHP XSL extension library";
+    $requirements['xsl']['title'] = $t("PHP XSL extension library");
     if (!class_exists('XSLTProcessor')) {
-      $requirements['xslt']['value'] = t("Not installed");
+      $requirements['xslt']['value'] = $t("Not installed");
       $requirements['xslt']['severity'] = REQUIREMENT_ERROR;
-      $requirements['xslt']['description'] = t("Ensure that the PHP XSL extension is installed.");
+      $requirements['xslt']['description'] = $t("Ensure that the PHP XSL extension is installed.");
     }
     else {
-      $requirements['xslt']['value'] = t("Installed");
+      $requirements['xslt']['value'] = $t("Installed");
       $requirements['xslt']['severity'] = REQUIREMENT_OK;
     }
   }
   elseif ($phase == 'runtime') {
     module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
 
-    $requirements['fedora-repository']['title'] = t("Fedora server");
+    $requirements['fedora-repository']['title'] = $t("Fedora server");
     if (!fedora_available()) {
-      $requirements['fedora-repository']['value'] = t("Not available");
+      $requirements['fedora-repository']['value'] = $t("Not available");
       $requirements['fedora-repository']['severity'] = REQUIREMENT_ERROR;
-      $requirements['fedora-repository']['description'] = t('Ensure that Fedora is running and that the <a href="@collection-settings">collection settings</a> are correct.', array('@collection-settings' => $base_url . '/admin/settings/fedora_repository'));
+      $requirements['fedora-repository']['description'] = $t('Ensure that Fedora is running and that the <a href="@collection-settings">collection settings</a> are correct.', array('@collection-settings' => url('admin/settings/fedora_repository')));
     }
     else {
-      $requirements['fedora-repository']['value'] = t("Available");
+      $requirements['fedora-repository']['value'] = $t("Available");
       $requirements['fedora-repository']['severity'] = REQUIREMENT_OK;
     }
   }
