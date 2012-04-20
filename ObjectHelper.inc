@@ -992,8 +992,8 @@ class ObjectHelper {
       }
       else {
         watchdog('fedora_repository', 'Error generating breadcrumbs for %pid.  Verify there exists relationships back up to %root. (May also be due to a hierarchy deeper than %max_depth).', array('%pid' => $pid, '%root' => $root, '%max_depth' => $max_depth), WATCHDOG_WARNING);
-        $breadcrumbs[] = '...';
-        $this->getBreadcrumbs($root, $breadcrumbs);
+        $breadcrumbs[] = '...'; //Add an non-link, as we don't know how to get back to the root.
+        $this->getBreadcrumbs($root, $breadcrumbs); //And render the last two links and break (on the next pass).
       }
     }
   }
