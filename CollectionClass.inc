@@ -607,7 +607,7 @@ class CollectionClass {
    * @param int $pageNumber
    * @return type 
    */
-  function renderCollection($content, $pid, $dsId, $collection, $pageNumber = NULL) {
+  function renderCollection($content, $pid, $dsId, $collectionName, $pageNumber = NULL) {
     $path = drupal_get_path('module', 'fedora_repository');
     global $base_url;
     $collection_pid = $pid; //we will be changing the pid later maybe
@@ -620,17 +620,14 @@ class CollectionClass {
 
     $fedoraItem = NULL;
 
-
-
-    $collectionName = $collection;
-
     if (!$pageNumber) {
       $pageNumber = 1;
     }
 
     if (empty($collectionName)) {
-      $collectionName = variable_get('fedora_repository_name', 'Collection');
+      $collectionName = menu_get_active_title();
     }
+    
     $xslContent = $this->getXslContent($pid, $path);
 
     //get collection list and display using xslt-------------------------------------------

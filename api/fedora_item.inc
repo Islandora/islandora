@@ -276,7 +276,7 @@ RDF;
 
     $description->appendChild($newrel);
     
-    $this->modify_datastream($relsextxml->saveXML(), 'RELS-EXT', "Fedora Object-to-Object Relationship Metadata", 'application/rdf+xml');
+    return $this->modify_datastream($relsextxml->saveXML(), 'RELS-EXT', "Fedora Object-to-Object Relationship Metadata", 'application/rdf+xml');
     //print ($description->dump_node());
     /*
       $params = array( 'pid' => $this->pid,
@@ -969,6 +969,8 @@ RDF;
    *   Error suppression?  Refer to soap_call for usage (just passed along here).
    */
   function modify_datastream($filename_or_content, $dsid, $label, $mime_type, $force = FALSE, $logMessage='Modified by Islandora API', $quiet=FALSE) {
+    $toReturn = NULL;
+    
     //Determine if it's inline xml; if it is, modify by value
     if ($this->get_datastream($dsid)->controlGroup === 'X') {
       $content = '<null/>';
@@ -979,7 +981,7 @@ RDF;
         $content = $filename_or_content;
       }
       
-      $this->modify_datastream_by_value($content, $dsid, $label, $mime_type, $force, $logMessage);
+      $toReturn = $this->modify_datastream_by_value($content, $dsid, $label, $mime_type, $force, $logMessage);
     }
     //Otherwise, write to web-accessible temp file and modify by reference.
     else {
@@ -1000,12 +1002,14 @@ RDF;
       
       $file_url = file_create_url($file);
       
-      $this->modify_datastream_by_reference($file_url, $dsid, $label, $mime_type, $force, $logMessage);
+      $toReturn = $this->modify_datastream_by_reference($file_url, $dsid, $label, $mime_type, $force, $logMessage);
       
       if ($created_temp && is_file($file) && is_writable($file)) {
         file_delete($file);
       }
     }
+    
+    return $toReturn;
   }
   
   /**

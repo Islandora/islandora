@@ -2,8 +2,7 @@
 
 /**
  * Drupal hook for admin form
- * fedora_repository_name is the name of the top level collection this module will query
- * fedora_repository_pid is the name of the top level pid.
+ *
  * Stores this info in the drupal variables table.
  * the name and pid can also be passed as url parameters
  */
