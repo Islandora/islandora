@@ -125,59 +125,76 @@ class ShowQtStreamsInFieldSets {
     if ($media === FALSE) {
       return '';
     }
-    global $base_url;
+
     $path = drupal_get_path('module', 'Fedora_Repository');
-    $fullPath = base_path() . $path;
-    $content = '';
-    $pathTojs = drupal_get_path('module', 'Fedora_Repository') . '/js/AC_Quicktime.js';
-    drupal_add_js($pathTojs);
+
+    drupal_add_js("$path/js/AC_Quicktime.js");
 
     $divid = 'player' . md5($this->pid) . 'MOV';
-    $content .= '<div  class="player"  id="' . $divid . '">';
-    if ($pframe !== FALSE) {
-      $content .= '<div class="poster" style="cursor: pointer; position: relative; width: ' . $width . 'px; min-height: ' . ($height) . 'px;">';
-      $content .= '<img src="' . base_path() . 'fedora/repository/' . $this->pid . '/' . $pframe->ID . '/poster.jpg' . '" />';
-      $content .= '<div class="play" style="font-size: 128px; color: white; position: absolute; top: 50%; left: 50%; margin-top: -0.085em; margin-left: -0.33em; opacity: 0.9; ">▶</div>';
-      $content .= '</div>';
-    }
-    $content .= '</div>';
-    if ($this->enableDownload()) {
-      $url = base_path() . 'fedora/repository/' . $this->pid . '/OBJ/MOV.mov';
-      $content .= '<a class="download" href="' . $url . '">Download Media File</a>';
-    }
-    $src = base_path() . 'fedora/repository/' . $this->pid . '/' . $media->ID . '/MOV.mov';
-    $qtparams = '';
-    $qtparams .= "'autostart', '" . ($pframe !== FALSE ? 'TRUE' : 'FALSE') . "', ";
-    $init = <<<EOD
-     $(function() { 
-       src = "$src";
-       if(src.substring(0,4) != 'http') {
-       src = 'http://' + location.host + src;
-       }
-     	str = QT_GenerateOBJECTText_XHTML(src, "$width", ($height+15), '', 
-		$qtparams
-       		'postdomevents', 'TRUE',
-      		'EnableJavaScript', 'TRUE',
-       		'bgcolor', 'black',
-       		'controller', 'TRUE',
-       		'SCALE', 'aspect',
-       		'LOOP', 'FALSE'
-       	);		
-	if($('.poster', '#$divid').length ==0) {
-      	$('#$divid').append(str);
-        } else {
-         $('#$divid .poster').one('click', function() { $(this).hide(); $('#$divid').append(str); });
-        }
-    });
-EOD;
-
-    drupal_add_js($init, 'inline', 'footer');
-
+    
     $collection_fieldset = array(
       '#title' => t('Quicktime'),
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
-      '#value' => $content);
+      'player' => array(
+        '#type' => 'markup',
+        '#prefix' => '<div class="player"  id="' . $divid . '">',
+        '#suffix' => '</div>',
+      ),
+    );
+
+    if ($pframe !== FALSE) {
+      $collection_fieldset['player']['poster_container'] = array(
+        '#type' => 'markup',
+        '#prefix' => '<div class="poster" style="cursor: pointer; position: relative; width: ' . $width . 'px; min-height: ' . ($height) . 'px;">',
+        '#suffix' => '</div>',
+        'poster' => array(
+          '#type' => 'markup',
+          '#value' => theme('image', "fedora/repository/{$this->pid}/{$pframe->ID}/poster.jpg", '', '', NULL, FALSE)
+        )
+        'play' => array(
+          '#type' => 'markup',
+          '#prefix' => '<div class="play" style="font-size: 128px; color: white; position: absolute; top: 50%; left: 50%; margin-top: -0.085em; margin-left: -0.33em; opacity: 0.9;">',
+          '#suffix' => '</div>',
+          '#value' => '&nbsp;',
+        ),
+      );
+    }
+    if ($this->enableDownload()) {
+      //$url = url();
+      $collection_fieldset['download_link'] = array(
+        '#type' => 'markup',
+        '#value' => l(t('Download Media File'), "fedora/repository/{$this->pid}/OBJ/MOV.mov", array('attributes' => array('class' => 'download'))),
+      );
+    }
+    $src = url("fedora/repository/{$this->pid}/{$media->ID}/MOV.mov";
+    
+    $qtparams = "'autostart', '" . ($pframe !== FALSE ? 'TRUE' : 'FALSE') . "', ";
+    $init = <<<EOD
+$(function() { 
+  src = "$src";
+  if(src.substring(0,4) != 'http') {
+    src = 'http://' + location.host + src;
+  }
+  str = QT_GenerateOBJECTText_XHTML(src, "$width", ($height+15), '', 
+    $qtparams
+    'postdomevents', 'TRUE',
+    'EnableJavaScript', 'TRUE',
+    'bgcolor', 'black',
+    'controller', 'TRUE',
+    'SCALE', 'aspect',
+    'LOOP', 'FALSE'
+  );		
+  if($('.poster', '#$divid').length == 0) {
+    $('#$divid').append(str);
+  } else {
+    $('#$divid .poster').one('click', function() { $(this).hide(); $('#$divid').append(str); });
+  }
+});
+EOD;
+
+    drupal_add_js($init, 'inline', 'footer');
+
     return theme('fieldset', $collection_fieldset);
   }
 

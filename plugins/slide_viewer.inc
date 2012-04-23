@@ -30,14 +30,13 @@ class ShowSlideStreamsInFieldSets {
   function showJPG() {
     module_load_include('inc', 'fedora_repository', 'plugins/tagging_form');
     module_load_include('inc', 'fedora_repository', 'plugins/ShowStreamsInFieldSets');
-    global $base_url;
     global $user;
 
     $tabset = array();
 
     $qs = '';
     if ($user->uid != 0) {
-      $qs = '?uid=' . base64_encode($user->name . ':' . $user->pass);
+      $qs = '?uid=' . base64_encode($user->name . ':' . $user->pass); //XXX: Base64 encoding is not encryption; SSL would be nice...
     }
 
     $viewer_url = variable_get('fedora_base_url', 'http://localhost:8080/fedora') . '/get/' . $this->pid . '/ilives:viewerSdef/getViewer' . $qs;
@@ -55,8 +54,7 @@ class ShowSlideStreamsInFieldSets {
       '#type' => 'tabpage',
       '#title' => t('View'),
       // This will be the content of the tab.
-      '#content' => '<img src="' . $base_url .
-      '/fedora/imageapi/' . $this->pid . '/JPG/JPG.jpg' . '" />' . '<p>' . drupal_get_form('fedora_repository_image_tagging_form', $this->pid) . '</p>',
+      '#content' => theme('image', "fedora/imageapi/{$this->pid}/JPG/JPG.jpg", '', '', NULL, FALSE) . '<p>' . drupal_get_form('fedora_repository_image_tagging_form', $this->pid) . '</p>',
     );
 
     return $tabset;

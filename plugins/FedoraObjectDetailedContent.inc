@@ -48,9 +48,8 @@ class FedoraObjectDetailedContent {
     $tabset['fedora_object_details']['tabset'] = array(
       '#type' => 'tabset',
     );
+    
     $dc_html = $objectHelper->getFormattedDC($this->item);
-
-    $ds_list = $objectHelper->get_formatted_datastream_list($this->pid, NULL, $this->item);
 
     $i = 0;
     if (fedora_repository_access(OBJECTHELPER :: $VIEW_DETAILED_CONTENT_LIST, $this->pid, $user)) {
@@ -63,9 +62,24 @@ class FedoraObjectDetailedContent {
           '#weight' => $i++
         ),
         'list' => array(
-          '#type' => 'markup',
-          '#value' => $ds_list, //XXX:  The function called here could be cleaned up a fair bit as well...
-          '#weight' => $i++
+          '#type' => 'fieldset',
+          '#title' => t('Detailed List of Content'),
+          '#attributes' => array(
+            'class' => 'fedora_detailed_list',
+          ),
+          '#collapsible' => TRUE,
+          '#collapsed' => TRUE,
+          '#weight' => $i++,
+          'parents' => array(
+            '#type' => 'markup',
+            '#value' => $objectHelper->get_parent_objects_asHTML($this->pid),
+            '#weight' => $i++,
+          ),
+          'datastreams' => array(
+            '#type' => 'markup',
+            '#value' => $objectHelper->get_formatted_datastream_list($this->pid, NULL, $this->item), //XXX:  The function called here could be cleaned up a fair bit as well...
+            '#weight' => $i++,
+          ),
         ),
         'purge' => array(
           '#type' => 'markup',

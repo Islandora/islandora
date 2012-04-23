@@ -64,7 +64,7 @@ function fedora_repository_requirements($phase) {
     }
 
     // Test for DOM
-    $requirements['dom']['title'] = $t("PHP DOM XML extension library";
+    $requirements['dom']['title'] = $t("PHP DOM XML extension library");
     if (!method_exists('DOMDocument', 'loadHTML')) {
       $requirements['dom']['value'] = $t("Not installed");
       $requirements['dom']['severity'] = REQUIREMENT_ERROR;

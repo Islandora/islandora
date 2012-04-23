@@ -13,7 +13,6 @@
 class formClass {
 
   function formClass() {
-    module_load_include('inc', 'formClass', '');
     drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
   }
 
@@ -128,7 +127,7 @@ class formClass {
       'title' => t('Collection view'),
       'page callback' => 'fedora_collection_view',
       'type' => MENU_CALLBACK,
-      'access argruments' => array('view fedora collection')
+      'access argruments' => array('view fedora collection'),
     );
     
     //new for mnpl******************************************
@@ -229,7 +228,10 @@ class formClass {
       '#description' => t('The URL to use for SOAP connections'),
       '#required' => TRUE,
       '#weight' => -12,
-      '#suffix' => '<p>' . (fedora_available() ? '<img src="' . url('misc/watchdog-ok.png') . '"/>' . t('Successfully connected to Fedora server at !fedora_soap_url', array('!fedora_soap_url' => variable_get('fedora_soap_url', ''))) : '<img src="' . url('misc/watchdog-error.png') . '"/> ' . t('Unable to connect to Fedora server at !fedora_soap_url</p>', array('!fedora_soap_url' => variable_get('fedora_soap_url', '')))),
+      '#suffix' => '<p>' . (
+        fedora_available() ? 
+          theme('image', 'misc/watchdog-ok.png') . t('Successfully connected to Fedora server at @fedora_soap_url', array('@fedora_soap_url' => variable_get('fedora_soap_url', ''))) :
+          theme('image', 'misc/watchdog-error.png') . t('Unable to connect to Fedora server at @fedora_soap_url', array('@fedora_soap_url' => variable_get('fedora_soap_url', '')))) . '</p>',
     );
     
     $form['fedora_soap_manage_url'] = array(

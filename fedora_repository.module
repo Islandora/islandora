@@ -869,7 +869,7 @@ function fedora_repository_perm() {
  * @param type $account
  * @return type 
  */
-function fedora_repository_access($op, $node, $account) {
+function fedora_repository_access($op, $node = NULL, $account = NULL) {
   module_load_include('inc', 'fedora_repository', 'ObjectHelper');
   $objectHelper = new ObjectHelper();
   return $objectHelper->fedora_repository_access($op, $node, $account);

@@ -29,11 +29,10 @@ class ShowDemoStreamsInFieldSets {
    * @return type 
    */
   function showMediumSize() {
-    global $base_url;
+    $path = "fedora/repository/{$this->pid}/MEDIUM_SIZE";
     $collection_fieldset = array(
       '#collapsible' => FALSE,
-      '#value' => '<a href="' . $base_url . '/fedora/repository/' . $this->pid . '/MEDIUM_SIZE/"><img src="' .
-      $base_url . '/fedora/repository/' . $this->pid . '/MEDIUM_SIZE/MEDIUM_SIZE' . '" /></a>',
+      '#value' => l(theme('image', $path), $path, array('html' => TRUE)),
     );
     return theme('fieldset', $collection_fieldset);
   }

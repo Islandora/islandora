@@ -19,13 +19,15 @@ function _show_subject_tags($pid) {
   $obj = new Fedora_Item($pid);
   $tags = new TagSet($obj);
   if (!empty($tags->tags)) {
-    $output = "<ul>";
+    $items = array();
     foreach ($tags->tags as $tag) {
-      $output .= "<li title=" . $tag['creator'] . '>' . $tag['name'] . '</li> ';
+      $items[] = array(
+        'data' => $tag['name'],
+        'title' => $tag['creator'],
+      );
     }
-    $output .= "</ul>";
+    return theme('item_list', $items);
   }
-  return $output;
 }
 
 /**
@@ -57,21 +59,27 @@ function fedora_repository_image_tagging_form($form_state, $pid) {
 
   // Add the current tags to the form.
   $tagset = new TagSet($obj);
+  $tags = array();
   foreach ($tagset->tags as $tag) {
-    $form['tags-wrapper']['tags'][$tag['name']] = array(
+    $form_tag =& $form['tags-wrapper']['tags'][$tag['name']] = array(
       '#prefix' => '<li>',
       '#suffix' => '</li>',
     );
-    $form['tags-wrapper']['tags'][$tag['name']]['tag'] = array(
-      '#prefix' => '<a title="Added by ' . $tag['creator'] . '" href="' . $base_url . '/fedora/repository/mnpl_advanced_search/tag:' . $tag['name'] . '">',
-      '#value' => $tag['name'],
-      '#suffix' => '</a>',
+    
+    $tag_title_text = t('Added by @creator.', array(
+      '@creator' => $tag['creator'],
+    ));
+    $tag_mnpl_search_path = "fedora/repository/mnpl_advanced_search/tag:{$tag['name']}"
+    $form_tag['tag'] = array(
+      '#value' => l($tag['name'], $tag_mnpl_search_path, array('attributes' => array(
+        'title' => $tag_title_text
+      ))),
     );
     if (user_access('modify fedora datastreams') || user_access('add fedora tags')) {
       // Delete button for each existing tag.
-      $form['tags-wrapper']['tags'][$tag['name']]['delete'] = array(
+      $form_tag['delete'] = array(
         '#type' => 'imagebutton',
-        '#image' => $base_url . '/' . drupal_get_path('module', 'fedora_repository') . '/images/remove_icon.png',
+        '#image' => drupal_get_path('module', 'fedora_repository') . '/images/remove_icon.png',
         '#default_value' => $tag['name'],
         '#title' => t('Delete this tag'),
       );

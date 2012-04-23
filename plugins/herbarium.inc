@@ -161,13 +161,13 @@ class Herbarium {
       '#title' => t('Full-size'),
       '#content' => $html
     );
+    $image = theme('image', "fedora/imageapi/{$this->pid}/JPG/JPG.jpg", '', '', NULL, FALSE);
     $tabset['first_tab'] = array(
       // #type and #title are the minimum requirements.
       '#type' => 'tabpage',
       '#title' => t('View'),
       // This will be the content of the tab.
-      '#content' => '<a href="' . $base_url . '/fedora/repository/' . $this->pid . '/FULL_JPG/"><img src="' . $base_url . '/fedora/imageapi/' .
-      $this->pid . '/JPG/JPG.jpg' . '" /></a>' . '<p>' . drupal_get_form('fedora_repository_image_tagging_form', $this->pid) . '</p>',
+      '#content' => l($image, "fedora/repository/{$this->pid}/FULL_JPG", array('html' => TRUE)), '<p>' . drupal_get_form('fedora_repository_image_tagging_form', $this->pid) . '</p>',
     );
 
     $dwc = new DarwinCore($this->item);
