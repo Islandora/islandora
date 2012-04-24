@@ -359,7 +359,7 @@ class ObjectHelper {
     $label_deslashed = preg_replace('/\//i', '${1}_', $label); // Necessary to handle the case of Datastream labels that contain slashes. Ugh.
     $mimeType = $dataStreamValue->MIMEType;
 
-    $view = l(t('View'), "'fedora/repository/$pid/$id/$label_deslashed", array(
+    $view = l(t('View'), "fedora/repository/$pid/$id/$label_deslashed", array(
       'attributes' => array(
         'target' => '_blank',
       ),
