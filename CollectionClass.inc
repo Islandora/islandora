@@ -28,11 +28,9 @@ class CollectionClass {
    * @return CollectionClass
    */
   function __construct($pid = NULL) {
-    if (!empty($pid)) {
-      module_load_include('inc', 'fedora_repository', 'ObjectHelper');
-      $this->collectionObject = new ObjectHelper($pid);
-      $this->pid = $pid;
-    }
+    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+    $this->collectionObject = new ObjectHelper();
+    $this->pid = $pid;
   }
   
   public static function getCollectionQuery($pid) {
@@ -673,6 +671,79 @@ class CollectionClass {
   }
   
   /**
+   * Assemble results in a somewhat more logical manner...
+   * 
+   * ...  Compared to generating a table in XSLT to contain a list (as
+   * renderCollection() used to do/does by default).
+   * 
+   * @param $sparql_results array
+   *   The array of results as yielded by ObjectHelper::parseSparqlResults()
+   *   (and those associated functions which make use of it)
+   * @return
+   *   An array to be passed to drupal_render, containing a pager, an unordered
+   *   list of items, and another pager.
+   */
+  public static function assembleCollectionView($sparql_results) {
+    $per_page = 20; //XXX:  Make this configurable.
+    $pager_name = 0;
+    $total = count($sparql_results);
+    $pager_page = self::hackPager($pager_name, $per_page, $total);
+    $max_title_length = 60;
+    
+    $results = array();
+    foreach (array_slice($sparql_results, $per_page * $pager_page, $per_page) as $result) {
+      $title = $result['title'];
+      $truncated_title = truncate_utf8($title, $max_title_length, TRUE, TRUE, 5);
+      $obj_path = "fedora/repository/{$result['object']}";
+      $tn_path = ($result['thumbnail'] ?
+        "fedora/repository/{$result['thumbnail']}":
+        "$obj_path/TN");
+      
+      $thumbnail = theme('image', $tn_path, $truncated_title, $title, array(), FALSE);
+      
+      $results[] = array(
+          'data' => l($thumbnail, $obj_path, array(
+              'html' => TRUE,
+              'attributes' => array(
+                  'class' => 'results-image',
+              ),
+          )) . l($truncated_title, $obj_path, array('attributes' => array('class' => 'results-text'))),
+      );
+    }
+    if (!$results) {
+      drupal_set_message(t("No objects in this collection (or bad query)."));
+    }
+    else {
+      $first = $per_page * $pager_page;
+      $last = (($total - $first) > $per_page)?
+      ($first + $per_page):
+      $total;
+      $results_range_text = t('Results @first to @last of @total', array(
+          '@first' => $first + 1,
+          '@last' => $last,
+          '@total' => $total,
+      ));
+      
+      return array(
+        array(
+          '#type' => 'markup',
+          '#value' => theme('pager', array(), $per_page, $pager_name),
+        ),
+        array(
+          '#type' => 'markup',
+          '#value' => theme('item_list', $results, $result_range_text, 'ul', array(
+            'class' => 'islandora-collection-results-list',
+          ))
+        ),
+        array(
+          '#type' => 'markup',
+          '#value' => theme('pager', array(), $per_page, $pager_name)
+        ),
+      );
+    }
+  }
+  
+  /**
    * render collection
    * @global type $base_url
    * @param type $content
@@ -703,48 +774,13 @@ class CollectionClass {
     $objectList = '';
     if (isset($content) && $content != FALSE) {
       if (!$xslContent) { //Didn't find an XSLT.
-        $intermediate_results = ObjectHelper::parse_sparql_results($content);
-        unset($content);
-        
-        $per_page = 20; //XXX:  Make this configurable.
-        $pager_name = 0;
-        $total = count($intermediate_results);
-        $pager_page = self::hackPager($pager_name, $per_page, $total);
-
-        $results = array();
-        foreach (array_slice($intermediate_results, $per_page * $pager_page, $per_page) as $result) {
-          $title = $result['title'];
-          $obj_path = "fedora/repository/{$result['object']}";
-          $thumbnail = theme('image', "$obj_path/TN", $title, $title, array(), FALSE);
-          $results[] = array(
-            'data' => l($thumbnail, $obj_path, array(
-              'html' => TRUE,
-              'attributes' => array(
-                'class' => 'results-image',
-              ),
-            )) . l($title, $obj_path, array('attributes' => array('class' => 'results-text'))),
-          );
-        }
-        if (!$results) {
-          drupal_set_message(t("No objects in this collection (or bad query)."));
-        }
-        else {
-          $first = $per_page * $pager_page;
-          $last = (($total - $first) > $per_page)?
-            ($first + $per_page):
-            $total;
-          $results_range_text = t('Results @first to @last of @total', array(
-            '@first' => $first + 1,
-            '@last' => $last,
-            '@total' => $total,
-          ));
-          //$objectList = '<h3>' . $results_range_text . '</h3>'; 
-          $objectList .= theme('pager', array(), $per_page, $pager_name);
-          $objectList .= theme('item_list', $results, $result_range_text, 'ul', array(
-            'class' => 'islandora-collection-results-list',
-          ));
-          $objectList .= theme('pager', array(), $per_page, $pager_name);
-        }
+        return drupal_render(
+          self::assembleCollectionView(
+            $this->collectionObject->parseSparqlResults(
+              $content
+            )
+          )
+        );
       }
       else {
         if (!$pageNumber) {

@@ -231,9 +231,7 @@ class MimeClass {
    * @return type 
    */
   public function get_mimetype($filename, $debug = FALSE) {
-
-    $file_name_and_extension = explode('.', $filename);
-    $ext = strtolower(array_pop($file_name_and_extension));
+    $ext = strtolower(substr($filename, strrpos($filename, '.') + 1));
 
     if (!empty($this->private_mime_types[$ext])) {
       if (TRUE === $debug)

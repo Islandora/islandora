@@ -331,6 +331,13 @@ class formClass {
       '#options' => array(ObjectHelper::$DISPLAY_ALWAYS => t('Always'), ObjectHelper::$DISPLAY_NEVER => t('Never'), ObjectHelper::$DISPLAY_NO_MODEL_OUTPUT => t('Only if no Content Model display output.')),
       '#description' => t('Determines when to display the list of objects when viewing a collection page.'),
     );
+    
+    $form['advanced']['fedora_control_group_control_during_ingest'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Allow control groups select in datastream ingest'),
+      '#description' => t('Whether or not we should allow the user to select which control group to ingest a stream as, or to follow the old paradigm--to add stream IDed as XML as inline, and everything else as managed.'),
+      '#default_value' => variable_get('fedora_control_group_control_during_ingest', FALSE),
+    );
 
     //Export functionality
     $form['advanced']['module']['export_area'] = array(
@@ -656,17 +663,21 @@ class formClass {
       }
     }
 
-    $form['add_datastream_label'] = array(
-      '#value' => t('<br /><h3>Add Datastream:</h3>'),
-      '#weight' => -10,
+    $form['fieldset'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Add datastream'),
     );
+    //$form['add_datastream_label'] = array(
+    //  '#value' => t('<br /><h3>Add Datastream:</h3>'),
+    //  '#weight' => -10,
+    //);
 
-    $form['pid'] = array(
+    $form['fieldset']['pid'] = array(
       '#type' => 'hidden',
       '#value' => "$pid"
     );
 
-    $form['stream_label'] = array(
+    $form['fieldset']['stream_label'] = array(
       '#title' => 'Datastream Label',
       '#required' => 'TRUE',
       '#description' => t('A Human readable label'),
@@ -674,40 +685,61 @@ class formClass {
     );
 
     $form['#attributes']['enctype'] = 'multipart/form-data';
-    $form['add-stream-file-location'] = array(
+    $form['fieldset']['add-stream-file-location'] = array(
       '#type' => 'file',
       '#title' => t('Upload Document'),
       '#size' => 48,
       // '#required'=>'TRUE',
-      '#description' => t('The file to upload.')
+      '#description' => t('The file to upload. (Only for Managed and Inline)')
     );
+    
+    if (variable_get('fedora_control_group_control_during_ingest', FALSE)) {
+      $form['fieldset']['ds_reference'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Datastream reference'),
+        '#size' => 48,
+        '#description' => t('A URL reference to resolve for the contents of the datastream.  (Required for External and Redirect, but will still work for Managed and Inline.)'),
+      );
+    }
+    
     $form['#redirect'] = "fedora/repository/$pid/";
-    $form['submit'] = array(
+    $form['fieldset']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Add Datastream')
     );
 
     if (!empty($unused_dsids)) {
-      $dsidsForForm = array();
-      foreach ($unused_dsids as $dsid) {
-        $dsidsForForm[$dsid] = $dsid;
-      }
-      $form['stream_id'] = array(
+      $form['fieldset']['stream_id'] = array(
         '#type' => 'select',
         '#title' => t('Datastream ID'),
         '#default_value' => variable_get('feed_item_length', 'teaser'),
-        '#weight' => '-1',
+        '#weight' => -1,
         '#description' => t('Datastream IDs defined by the content model.'),
+        '#options' => array_combine($unused_dsids, $unused_dsids),
       );
-      $form['stream_id']['#options'] = array_combine($unused_dsids, $unused_dsids);
     }
     else {
-      $form['stream_id'] = array(
+      $form['fieldset']['stream_id'] = array(
         '#title' => 'Datastream ID',
         '#required' => 'TRUE',
         '#description' => t('An ID for this stream that is unique to this object. Must start with a letter and contain only alphanumeric characters and dashes and underscores.'),
         '#type' => 'textfield',
         '#weight' => -1,
+      );
+    }
+    
+    if (variable_get('fedora_control_group_control_during_ingest', FALSE)) {
+      $form['fieldset']['control_group'] = array(
+        '#type' => 'select',
+        '#title' => t('Control group'),
+        '#options' => array(
+          'X' => t('Inline XML'),
+          'M' => t('Managed datastream'),
+          'E' => t('Externally Referenced/managed datastream'),
+          'R' => t('Redirect datastream'),
+        ),
+        '#description' => t('The manner in which the datastream will be stored.  "Inline XML" must be XML and will be placed directly into the FOXML for the object.  "Managed" datastreams are made to live on the filesystem as discrete files in the Fedora data directory.  Both "Redirect" and "External" streams are URL references; the difference being the redirect stream instruct clients to perform an HTTP redirect, such that the data does not pass though Fedora (useful for streaming). External streams are mediated (by which I mean loaded and streamed from) the Fedora server.'),
+        '#weight' => 0,
       );
     }
     return $form;
@@ -836,12 +868,33 @@ class formClass {
     $form = array();
 
     $form['#attributes']['enctype'] = 'multipart/form-data';
-    $form['file'] = array(
-      '#type' => 'file',
-      '#title' => t('Upload Document'),
-      '#description' => t('The file to upload.')
-    );
-
+    
+    module_load_include('inc', 'fedora_repository', 'api/fedora_item');
+    $item = new Fedora_Item($pid);
+    $info = $item->get_datastream_info($dsId);
+    $control_group = $info->datastream->controlGroup;
+    if (in_array($control_group, array('M', 'X'))) {
+      $form['file'] = array(
+        '#type' => 'file',
+        '#title' => t('Upload Document'),
+        '#description' => t('A file with which to replace the contents of this datastream.'),
+      );
+    }
+    if ($control_group != 'X') {
+      $form['reference'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Reference to object'),
+        '#description' => t('A URL the datastream will be updated to reference.'),
+      );
+    }
+    if ($control_group == 'M') {
+      $form['note'] = array(
+        '#type' => 'item',
+        '#title' => t('NOTE'),
+        '#value' => t('If both a file and a reference are given, the file will be given preference.'),
+      );
+    }
+    
     $form['pid'] = array(
       '#type' => 'value',
       '#value' => $pid,
