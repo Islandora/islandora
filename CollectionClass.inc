@@ -687,6 +687,9 @@ class CollectionClass {
     global $base_url;
     $collection_pid = $pid; //we will be changing the pid later maybe
     $parsedContent = NULL;
+    if(!isset($this->collectionObject)){
+      $this->collectionObject = new ObjectHelper($pid);
+    } 
     $contentModels = $this->collectionObject->get_content_models_list($pid);
     $isCollection = FALSE;
     //if this is a collection object store the $pid in the session as it will come in handy
