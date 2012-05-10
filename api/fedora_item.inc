@@ -7,6 +7,8 @@
 define('RELS_EXT_URI', 'info:fedora/fedora-system:def/relations-external#');
 define("FEDORA_MODEL_URI", 'info:fedora/fedora-system:def/model#');
 define("ISLANDORA_PAGE_URI", 'info:islandora/islandora-system:def/pageinfo#');
+define("ISLANDORA_RELS_EXT_URI", 'http://islandora.ca/ontology/relsext#');
+define("ISLANDORA_RELS_INT_URI", "http://islandora.ca/ontology/relsint#");
 
 /**
  * Fedora Item Class
