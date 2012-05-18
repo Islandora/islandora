@@ -37,30 +37,30 @@ define('FEDORA_MODIFY_STATE', 'modify fedora state');
 function islandora_menu() {
   $items = array();
 
-  $items['admin/settings/islandora'] = array(
+  $items['admin/islandora'] = array(
     'title' => 'Islandora Configuration',
     'description' => "Configure Islandora's interaction with Fedora",
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/islandora/configure'] = array(
+    'title' => 'Islandora Configuration',
+    'description' => 'Enter the Islandora collection information here.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('islandora_repository_admin'),
     'file' => 'admin/islandora.admin.inc',
     'access arguments' => array('administer site configuration'),
     'type' => MENU_NORMAL_ITEM,
-  );
-  $items['admin/settings/islandora/collection'] = array(
-    'title' => 'Islandora Configuration',
-    'description' => 'Enter the Islandora collection information here.',
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => 0,
   );
 
-  $items['admin/settings/islandora/demoobjects'] = array(
+  $items['admin/islandora/solution_packs'] = array(
     'title' => 'Solution Packs',
     'description' => 'Install content models and collections required by installed solution packs.',
     'page callback' => 'islandora_solution_packs_page',
     'access arguments' => array(FEDORA_ADD_DS),
     'file' => 'admin/islandora.solutionpacks.inc',
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_NORMAL_ITEM,
   );
   
   $items['islandoracm.xsd'] = array(
@@ -79,10 +79,11 @@ function islandora_menu() {
     'access arguments' => array(FEDORA_VIEW),
   );
 
-  $items['islandora/ingest'] = array(
+  $items['islandora/ingest/%'] = array(
     'title' => 'Ingest object',
     'page callback' => 'islandora_ingest_object',
-    'type' => MENU_CALLBACK,
+    'page arguments' => array(2),
+    'type' => MENU_NORMAL_ITEM,
     'access arguments' => array(FEDORA_INGEST)
   );
   
@@ -92,6 +93,13 @@ function islandora_menu() {
     'page arguments' => array(2),
     'type' => MENU_NORMAL_ITEM,
     'access arguments' => array(FEDORA_VIEW),
+  );
+
+  $items['islandora/object/%/add'] = array(
+    'title' => 'Add stream',
+    'page callback' => 'islandora_add_stream',
+    'type' => MENU_NORMAL_ITEM,
+    'access arguments' => array(FEDORA_ADD_DS)
   );
   
   $items['islandora/object/%/view'] = array(
@@ -110,29 +118,30 @@ function islandora_menu() {
     'access arguments' => array(FEDORA_MODIFY_STATE),
   );
     
-  $items['islandora/object/%/purge'] = array(
+  $items['islandora/object/%/delete'] = array(
     'title' => 'Purge object',
     'page callback' => 'islandora_purge_object',
     'type' => MENU_CALLBACK,
     'access arguments' => array(FEDORA_PURGE),
   );
-
-  $items['islandora/object/%/datastream/%/add'] = array(
-    'title' => 'Add stream',
-    'page callback' => 'islandora_add_stream',
-    'type' => MENU_CALLBACK,
-    'access arguments' => array(FEDORA_ADD_DS)
-  );
   
-  $items['islandora/object/%/datastream/%/download'] = array(
-    'title' => 'Download datastream',
+  $items['islandora/object/%/datastream/%'] = array(
+    'title' => 'View datastream',
     'page callback' => 'islandora_datastream_as_attachment',
     'page arguments' => array(2, 4),
     'type' => MENU_CALLBACK,
     'access arguments' => array(FEDORA_VIEW),
   );
-
+  
   $items['islandora/object/%/datastream/%/view'] = array(
+    'title' => 'View datastream',
+    'page callback' => 'islandora_datastream_as_attachment',
+    'page arguments' => array(2, 4),
+    'type' => MENU_CALLBACK,
+    'access arguments' => array(FEDORA_VIEW),
+  );
+  
+  $items['islandora/object/%/datastream/%/download'] = array(
     'title' => 'Download datastream',
     'page callback' => 'islandora_datastream_as_attachment',
     'page arguments' => array(2, 4),
@@ -148,7 +157,7 @@ function islandora_menu() {
     'access arguments' => array(FEDORA_METADATA_EDIT),
   );
     
-  $items['islandora/object/%/datastream/%/purge'] = array(
+  $items['islandora/object/%/datastream/%/delete'] = array(
     'title' => 'Purge data stream',
     'page callback' => 'islandora_purge_stream',
     'page arguments' => array(2, 4),
