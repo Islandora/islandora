@@ -1,5 +1,5 @@
-name = Islandora Core
-description = Show the core islandora module.
+name = Islandora Repository
+description = "View and manage Fedora objects"
 package = Islandora
-version = 7.x-$Format:%h-$dev
+version = 7.x-dev
 core = 7.x

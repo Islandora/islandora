@@ -1,0 +1,4 @@
+name = "Fedora Repository"
+description = "A default Fedora Repository module"
+dependencies[] = islandora
+core = 7.x
