@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<foxml:digitalObject PID="islandora:collection-18" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
+  <foxml:objectProperties>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="PDF Collection"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="admin"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2009-04-02T14:39:19.525Z"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2010-10-11T23:08:16.169Z"/>
+  </foxml:objectProperties>
+  <foxml:datastream CONTROL_GROUP="X" ID="AUDIT" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2009-04-02T14:39:19.525Z"
+      FORMAT_URI="info:fedora/fedora-system:format/xml.fedora.audit" ID="AUDIT.0" LABEL="Audit Trail for this object" MIMETYPE="text/xml">
+      <foxml:xmlContent>
+        <audit:auditTrail xmlns:audit="info:fedora/fedora-system:def/audit#">
+          <audit:record ID="AUDREC1">
+            <audit:process type="Fedora API-M"/>
+            <audit:action>ingest</audit:action>
+            <audit:componentID/>
+            <audit:responsibility>admin</audit:responsibility>
+            <audit:date>2009-04-02T14:39:19.525Z</audit:date>
+            <audit:justification>Fedora Object Ingested</audit:justification>
+          </audit:record>
+          <audit:record ID="AUDREC2">
+            <audit:process type="Fedora API-M"/>
+            <audit:action>addDatastream</audit:action>
+            <audit:componentID>TN</audit:componentID>
+            <audit:responsibility>fedoraAdmin</audit:responsibility>
+            <audit:date>2009-04-02T17:06:32.540Z</audit:date>
+            <audit:justification>DatastreamsPane generated this logMessage.</audit:justification>
+          </audit:record>
+          <audit:record ID="AUDREC3">
+            <audit:process type="Fedora API-M"/>
+            <audit:action>purgeDatastream</audit:action>
+            <audit:componentID>COLLECTION_POLICY</audit:componentID>
+            <audit:responsibility>fedoraAdmin</audit:responsibility>
+            <audit:date>2009-04-02T17:10:50.929Z</audit:date>
+            <audit:justification>DatastreamPane generated this logMessage. . . . Purged datastream (ID=COLLECTION_POLICY), versions ranging from 2009-04-02T11:39:19.554Z to 2009-04-02T11:39:19.554Z.  This resulted in the permanent removal of 1 datastream version(s) (2009-04-02T11:39:19.554Z) and all associated audit records.</audit:justification>
+          </audit:record>
+          <audit:record ID="AUDREC4">
+            <audit:process type="Fedora API-M"/>
+            <audit:action>addDatastream</audit:action>
+            <audit:componentID>COLLECTION_POLICY</audit:componentID>
+            <audit:responsibility>fedoraAdmin</audit:responsibility>
+            <audit:date>2009-04-02T17:11:49.698Z</audit:date>
+            <audit:justification>DatastreamsPane generated this logMessage.</audit:justification>
+          </audit:record>
+          <audit:record ID="AUDREC5">
+            <audit:process type="Fedora API-M"/>
+            <audit:action>ingest</audit:action>
+            <audit:componentID/>
+            <audit:responsibility>aoneill</audit:responsibility>
+            <audit:date>2010-10-11T23:08:16.035Z</audit:date>
+            <audit:justification>Fedora Object Ingested</audit:justification>
+          </audit:record>
+          <audit:record ID="AUDREC6">
+            <audit:process type="Fedora API-M"/>
+            <audit:action>addDatastream</audit:action>
+            <audit:componentID>TN</audit:componentID>
+            <audit:responsibility>aoneill</audit:responsibility>
+            <audit:date>2010-10-11T23:08:16.169Z</audit:date>
+            <audit:justification>Ingested object TN</audit:justification>
+          </audit:record>
+        </audit:auditTrail>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="RELS-EXT" STATE="A" VERSIONABLE="true">
+    <foxml:datastreamVersion CREATED="2009-04-02T14:39:19.554Z" FORMAT_URI="info:fedora/fedora-system:FedoraRELSExt-1.0"
+      ID="RELS-EXT.0" LABEL="RDF Statements about this Object" MIMETYPE="application/rdf+xml" SIZE="697">
+      <foxml:xmlContent>
+        <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/"
+          xmlns:fedora="info:fedora/fedora-system:def/relations-external#"
+          xmlns:fedora-model="info:fedora/fedora-system:def/model#"
+          xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
+          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+          <rdf:description rdf:about="info:fedora/islandora:collection-18">
+            <fedora:isMemberOfCollection rdf:resource="info:fedora/islandora:demos"/>
+            <fedora-model:hasModel rdf:resource="info:fedora/islandora:collectionCModel"/>
+          </rdf:description>
+        </rdf:RDF>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="DC" STATE="A" VERSIONABLE="true">
+    <foxml:datastreamVersion CREATED="2009-04-02T14:39:19.554Z" ID="DC.0" LABEL="Dublin Core Record" MIMETYPE="text/xml" SIZE="766">
+      <foxml:xmlContent>
+        <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
+          xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+          <dc:title>PDF COllection</dc:title>
+          <dc:creator/>
+          <dc:subject>none</dc:subject>
+          <dc:description>A bunch of PDFs</dc:description>
+          <dc:publisher/>
+          <dc:contributor/>
+          <dc:date/>
+          <dc:type>none</dc:type>
+          <dc:identifier/>
+          <dc:identifier>islandora:collection-18</dc:identifier>
+          <dc:source/>
+          <dc:language>eng</dc:language>
+          <dc:relation/>
+          <dc:rights/>
+        </oai_dc:dc>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="COLLECTION_POLICY" STATE="A" VERSIONABLE="true">
+    <foxml:datastreamVersion CREATED="2009-04-02T17:11:49.698Z" ID="COLLECTION_POLICY.0" LABEL="Collection Policy"
+      MIMETYPE="text/xml" SIZE="2069">
+      <foxml:xmlContent>
+        <collection_policy>
+          <contentmodels>
+            <contentmodel name="STRICT_PDF">
+              <pid_namespace>islandora:strictpdf</pid_namespace>
+              <pid>islandora:strict_pdf</pid>
+              <dsid>ISLANDORACM</dsid>
+            </contentmodel>
+          </contentmodels>
+          <relationship>isMemberOfCollection</relationship>
+          <search_terms>
+            <default>dc.description</default>
+            <term>
+              <field>dc.title</field>
+              <value>dc.title</value>
+            </term>
+            <term>
+              <field>dc.creator</field>
+              <value>dc.creator</value>
+            </term>
+            <term>
+              <field>dc.description</field>
+              <value>dc.description</value>
+            </term>
+            <term>
+              <field>dc.date</field>
+              <value>dc.date</value>
+            </term>
+            <term>
+              <field>dc.identifier</field>
+              <value>dc.identifier</value>
+            </term>
+            <term>
+              <field>dc.language</field>
+              <value>dc.language</value>
+            </term>
+            <term>
+              <field>dc.publisher</field>
+              <value>dc.publisher</value>
+            </term>
+            <term>
+              <field>dc.rights</field>
+              <value>dc.rights</value>
+            </term>
+            <term>
+              <field>dc.subject</field>
+              <value>dc.subject</value>
+            </term>
+            <term>
+              <field>dc.relation</field>
+              <value>dc.relation</value>
+            </term>
+            <term>
+              <field>dcterms.temporal</field>
+              <value>dcterms.temporal</value>
+            </term>
+            <term>
+              <field>dcterms.spatial</field>
+              <value>dcterms.spatial</value>
+            </term>
+            <term>
+              <field>fgs.DS.first.text</field>
+              <value>Full Text</value>
+            </term>
+          </search_terms>
+        </collection_policy>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="M" ID="TN" STATE="A" VERSIONABLE="true">
+    <foxml:datastreamVersion CREATED="2010-10-11T23:08:16.169Z" ID="TN.0" LABEL="Thumbnail.png" MIMETYPE="image/png" SIZE="6427">
+      <foxml:contentLocation REF="http://localhost:8080/fedora/get/islandora:collection-18/TN/2010-10-11T23:08:16.169Z" TYPE="INTERNAL_ID"/>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+</foxml:digitalObject>

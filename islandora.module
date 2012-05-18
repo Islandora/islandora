@@ -37,33 +37,34 @@ define('FEDORA_MODIFY_STATE', 'modify fedora state');
 function islandora_menu() {
   $items = array();
 
-  $items['admin/settings/islandora'] = array(
-    'title' => t('Islandora Configuration'),
-    'description' => t("Configure Islandora's interaction with Fedora"),
+  $items['admin/islandora'] = array(
+    'title' => 'Islandora Configuration',
+    'description' => "Configure Islandora's interaction with Fedora",
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/islandora/configure'] = array(
+    'title' => 'Islandora Configuration',
+    'description' => 'Enter the Islandora collection information here.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('islandora_repository_admin'),
     'file' => 'admin/islandora.admin.inc',
     'access arguments' => array('administer site configuration'),
     'type' => MENU_NORMAL_ITEM,
-  );
-  $items['admin/settings/islandora/collection'] = array(
-    'title' => t('Islandora Configuration'),
-    'description' => t('Enter the Islandora collection information here.'),
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => 0,
   );
 
-  $items['admin/settings/islandora/demoobjects'] = array(
-    'title' => t('Solution Packs'),
-    'description' => t('Install content models and collections required by installed solution packs.'),
+  $items['admin/islandora/solution_packs'] = array(
+    'title' => 'Solution Packs',
+    'description' => 'Install content models and collections required by installed solution packs.',
     'page callback' => 'islandora_solution_packs_page',
     'access arguments' => array(FEDORA_ADD_DS),
     'file' => 'admin/islandora.solutionpacks.inc',
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_NORMAL_ITEM,
   );
+  
   $items['islandoracm.xsd'] = array(
-    'title' => t('Islandora Content Model XML Schema Definition'),
+    'title' => 'Islandora Content Model XML Schema Definition',
     'page callback' => 'islandora_display_schema',
     'page arguments' => array('islandoracm.xsd'),
     'type' => MENU_CALLBACK,
@@ -71,13 +72,21 @@ function islandora_menu() {
   );
 
   $items['collection_policy.xsd'] = array(
-    'title' => t('Islandora Content Model XML Schema Definition'),
+    'title' => 'Islandora Content Model XML Schema Definition',
     'page callback' => 'islandora_display_schema',
     'page arguments' => array('collection_policy.xsd'),
     'type' => MENU_CALLBACK,
     'access arguments' => array(FEDORA_VIEW),
   );
 
+  $items['islandora/ingest/%'] = array(
+    'title' => 'Ingest object',
+    'page callback' => 'islandora_ingest_object',
+    'page arguments' => array(2),
+    'type' => MENU_NORMAL_ITEM,
+    'access arguments' => array(FEDORA_INGEST)
+  );
+  
   $items['islandora/object/%'] = array(
     'title' => 'Repository',
     'page callback' => 'islandora_view_object',
@@ -86,71 +95,74 @@ function islandora_menu() {
     'access arguments' => array(FEDORA_VIEW),
   );
 
-  /* $items['fedora/repository/service'] = array(
-    'page callback' => 'repository_service',
-    'type' => MENU_CALLBACK,
+  $items['islandora/object/%/add'] = array(
+    'title' => 'Add stream',
+    'page callback' => 'islandora_add_stream',
+    'type' => MENU_NORMAL_ITEM,
+    'access arguments' => array(FEDORA_ADD_DS)
+  );
+  
+  $items['islandora/object/%/view'] = array(
+    'title' => 'Repository',
+    'page callback' => 'islandora_view_object',
+    'page arguments' => array(2),
+    'type' => MENU_NORMAL_ITEM,
     'access arguments' => array(FEDORA_VIEW),
-    ); */
-
-  $items['islandora/object/%/datastream/%/download'] = array(
-    'title' => t('Download object'),
-    'page callback' => 'islandora_object_as_attachment',
+  );
+ 
+  $items['islandora/object/%/edit'] = array(
+    'title' => 'Repository',
+    'page callback' => 'islandora_edit_object',
+    'page arguments' => array(2),
+    'type' => MENU_NORMAL_ITEM,
+    'access arguments' => array(FEDORA_MODIFY_STATE),
+  );
+    
+  $items['islandora/object/%/delete'] = array(
+    'title' => 'Purge object',
+    'page callback' => 'islandora_purge_object',
+    'type' => MENU_CALLBACK,
+    'access arguments' => array(FEDORA_PURGE),
+  );
+  
+  $items['islandora/object/%/datastream/%'] = array(
+    'title' => 'View datastream',
+    'page callback' => 'islandora_datastream_as_attachment',
     'page arguments' => array(2, 4),
     'type' => MENU_CALLBACK,
-    'access arguments' => array(FEDORA_VIEW)
+    'access arguments' => array(FEDORA_VIEW),
   );
-
-  /* $items['fedora/repository/editmetadata'] = array(
-    'title' => t('Edit metadata'),
-    'page callback' => 'fedora_repository_edit_qdc_page',
+  
+  $items['islandora/object/%/datastream/%/view'] = array(
+    'title' => 'View datastream',
+    'page callback' => 'islandora_datastream_as_attachment',
+    'page arguments' => array(2, 4),
     'type' => MENU_CALLBACK,
-    'access arguments' => array('edit fedora meta data')
-    ); */
-
-  $items['islandora/object/%/datastream/%/purge'] = array(
-    'title' => t('Purge data stream'),
+    'access arguments' => array(FEDORA_VIEW),
+  );
+  
+  $items['islandora/object/%/datastream/%/download'] = array(
+    'title' => 'Download datastream',
+    'page callback' => 'islandora_datastream_as_attachment',
+    'page arguments' => array(2, 4),
+    'type' => MENU_CALLBACK,
+    'access arguments' => array(FEDORA_VIEW),
+  );
+  
+  $items['islandora/object/%/datastream/%/edit'] = array(
+    'title' => 'Edit datastream',
+    'page callback' => 'islandora_edit_stream',
+    'page arguments' => array(2, 4),
+    'type' => MENU_CALLBACK,
+    'access arguments' => array(FEDORA_METADATA_EDIT),
+  );
+    
+  $items['islandora/object/%/datastream/%/delete'] = array(
+    'title' => 'Purge data stream',
     'page callback' => 'islandora_purge_stream',
     'page arguments' => array(2, 4),
     'type' => MENU_CALLBACK,
-    'access arguments' => array(FEDORA_PURGE)
-  );
-
-  /* $items['fedora/repository/replaceStream'] = array(
-    'title' => t('Replace Stream'),
-    'page callback' => 'fedora_repository_replace_stream',
-    'type' => MENU_CALLBACK,
-    'access arguments' => array('add fedora datastreams'),
-    ); */
-
-  $items['islandora/object/%/purge'] = array(
-    'title' => t('Purge object'),
-    'page callback' => 'islandora_purge_object',
-    'type' => MENU_CALLBACK,
-    'access arguments' => array(FEDORA_PURGE)
-  );
-
-  $items['islandora/object/%/datastream/%/add'] = array(
-    'title' => t('Add stream'),
-    'page callback' => 'islandora_add_stream',
-    'type' => MENU_CALLBACK,
-    'access arguments' => array(FEDORA_ADD_DS)
-  );
-
-  /* $items['fedora/repository/collection'] = array(
-    'title' => t('Collection view'),
-    'page callback' => 'fedora_collection_view',
-    'type' => MENU_CALLBACK,
-    'access argruments' => array('view fedora collection'),
-    ); */
-
-  //new for mnpl******************************************
-
-
-  $items['islandora/object/ingest'] = array(
-    'title' => t('Ingest object'),
-    'page callback' => 'islandora_ingest_object',
-    'type' => MENU_CALLBACK,
-    'access arguments' => array(FEDORA_INGEST)
+    'access arguments' => array(FEDORA_PURGE),
   );
 
   return $items;
@@ -194,12 +206,12 @@ function islandora_node_access($op, $pid = NULL, $as_user = NULL) {
  */
 function islandora_purge_object($object_id) {
   if (!isset($object_id)) {
-    drupal_set_message('Cannot remove object, object id not set');
+    drupal_set_message(t('Cannot remove object, object id not set'));
     return;
   }
   $object = new Object($object_id);
   if (!isset($object)) {
-    drupal_set_message('Could not remove object, object not found');
+    drupal_set_message(t('Could not remove object, object not found'));
     return;
   }
   module_invoke_all('islandora_purge_object', $object); //notify modules of pending deletion
@@ -221,12 +233,12 @@ function islandora_get_types() {
  */
 function islandora_purge_datastream($object_id, $datastream_id) {
   if (!isset($datastream_id)) {
-    drupal_set_message('Cannot remove datastream, datastream id not set');
+    drupal_set_message(t('Cannot remove datastream, datastream id not set'));
     return;
   }
   $object = new Object($object_id);
   if (!isset($object)) {
-    drupal_set_message('Could not remove object, object not found');
+    drupal_set_message(t('Could not remove object, object not found'));
     return;
   }
   module_invoke_all('islandora_purge_datastream', $datastream); //notify modules of pending deletion so we can update rels etc
@@ -243,7 +255,7 @@ function islandora_purge_datastream($object_id, $datastream_id) {
 function islandora_view_object($object_id) {
   //return $object_id;
   if (!isset($object_id)) {
-    drupal_set_message('Cannot view object, object id not set');
+    drupal_set_message(t('Cannot view object, object id not set'));
     return;
   }
 
@@ -257,7 +269,7 @@ function islandora_view_object($object_id) {
     $restConnection = new RestConnection($user);
     $fedora_object = new FedoraObject($object_id, $restConnection->repository);
   } catch (Exception $e) {
-    drupal_set_message(t('Error getting Islandora object %s',array('%s' => $object_id)), 'error');
+    drupal_set_message(t('Error getting Islandora object %s', array('%s' => $object_id)), 'error');
     return"";
   }
   drupal_alter('islandora_view_object', $fedora_object); //modify object if required before it is passed along
@@ -311,17 +323,15 @@ function islandora_permission() {
  */
 function islandora_add_datastream($object_id) {
   if (!isset($object_id)) {
-    drupal_set_message('Cannot add datastream to object, object id not set');
+    drupal_set_message(t('Cannot add datastream to object, object id not set'));
     return;
   }
   //send message to synapse
   $object = new IslandoraObject($object_id);
 
   if (!isset($object)) {
-    drupal_set_message('Could not remove object, object not found');
+    drupal_set_message(t('Could not remove object, object not found'));
     return;
   }
   module_invoke_all('islandora_add_datastream', $object); //allow submodules to handle add datastream based on object type
 }
-
-?>

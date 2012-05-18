@@ -1,0 +1,186 @@
+<?php
+
+// $Id$
+
+/*
+ * Tests the functions of the Fedora Repository module.
+ */
+
+class FedoraRepositoryTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Fedora Repository',
+      'description' => t('The Fedora repository content models.'),
+      'group' => t('fedora repository'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp('tabs', 'fedora_repository');
+
+    module_load_include('inc', 'fedora_repository', 'api/fedora_item');
+
+    // Create and login user.
+    $repository_user = $this->drupalCreateFedoraUser(array('add fedora datastreams',
+          'edit fedora meta data',
+          'edit tags datastream',
+          'ingest new fedora objects',
+          'purge objects and datastreams',
+          'view fedora collection',
+          'view detailed list of content'));
+
+    $this->repository_user = $repository_user;
+    $this->drupalLogin($repository_user);
+  }
+ 
+  /**
+   * Add an item based on a content model.  Initially we will assume that the repository
+   * will be populated with the default content models and collections that are
+   * created from the admin settings -> Install Demos page.
+   *
+   */
+  public function testIngest() {
+    // Check that the 'Strict PDF' content model exists in the repository.
+    //$pdf_cm = new Fedora_Item('islandora:strict_pdf');
+
+    $pid_list = array();
+    // Create a collection for ingesting PDF content model objects.
+    //$this->drupalGet('fedora/ingestObject/islandora:top/Islandora%20Top-Level%20Collection');
+    $ingest_form = array();
+    $ingest_form['models'] = 'islandora:collectionCModel/ISLANDORACM';
+
+    $this->drupalPost('fedora/ingestObject/islandora:top/Islandora%20Top-Level%20Collection', $ingest_form, 'Next');
+
+    // Add a sample PDF object via the web ingest form.
+    // Required fields are file location, dc:title and dc:description
+    $ingest_form_step_2 = array();
+    $ingest_form_step_2['dc:title'] = $this->randomName(32);
+    $ingest_form_step_2['dc:description'] = $this->randomName(256);
+
+    $ingest_form_step_2['files[ingest-file-location]'] = realpath(drupal_get_path('module', 'fedora_repository') . '/tests/test_files/lorem_ipsum.pdf');
+    $this->drupalPost(NULL, $ingest_form_step_2, 'Ingest');
+    $this->assertText('mimetype (application/pdf) is not associated with this Content Model', 'PDF mime type not accepted in collection content model.', 'message');
+
+    $this->outputScreenContents('Initial ingest form submit step 2', 'fedora_repository');
+
+    // Now try ingesting a proper collection policy.
+    $ingest_form = array();
+    $ingest_form['models'] = 'islandora:collectionCModel/ISLANDORACM';
+
+    $this->drupalPost('fedora/ingestObject/islandora:top/Islandora%20Top-Level%20Collection', $ingest_form, 'Next');
+    // Required fields are file location, dc:title and dc:description
+    $ingest_form_step_2 = array();
+    $ingest_form_step_2['dc:title'] = $this->randomName(32);
+    $ingest_form_step_2['dc:description'] = $this->randomName(256);
+    $ingest_form_step_2['files[ingest-file-location]'] = realpath(drupal_get_path('module', 'fedora_repository') . '/collection_policies/PDF-COLLECTION POLICY.xml');
+    $this->drupalPost(NULL, $ingest_form_step_2, 'Ingest');
+    //$this->outputScreenContents('Initial ingest form submit step 2 - PDF collection', 'fedora_repository');
+    $this->assertPattern('/Item .* created successfully./', "Verified item created.");
+
+    $pid = $this->getIngestedPid();
+    $pid_list[] = $pid;
+    $this->pass('Now attempting to ingest a PDF into the new collection.');
+    // Now try ingesting a PDF
+    $ingest_form = array();
+    $ingest_form['models'] = 'islandora:strict_pdf/ISLANDORACM';
+    $this->drupalPost("fedora/ingestObject/$pid/", $ingest_form, 'Next');
+    // Required fields are file location, dc:title and dc:description
+    $ingest_form_step_2 = array();
+    $ingest_form_step_2['dc:title'] = "Lorem Ipsum";
+    $ingest_form_step_2['dc:description'] = $this->randomName(256);
+    $ingest_form_step_2['files[ingest-file-location]'] = realpath(drupal_get_path('module', 'fedora_repository') . '/tests/test_files/lorem_ipsum.pdf');
+    $this->drupalPost(NULL, $ingest_form_step_2, 'Ingest');
+    $pid = $this->getIngestedPid();
+    $pid_list[] = $pid;
+    if (!empty($pid)) {
+      $this->pass("Successfully ingested PDF object $pid.");
+    }
+    $this->cleanUpRepository($pid_list);
+  }
+
+  public function testPidSpaceRestriction() {
+
+    // give user full permissions
+
+    $admin_tester = $this->drupalCreateUser(array('administer site configuration', 'view fedora collection'));
+    $this->drupalLogin($admin_tester);
+    $pageContent = $this->drupalGet('admin/settings/fedora_repository');
+    $hasOption = preg_match('/Enforce namespace restrictions/', $pageContent);
+
+    
+    if (!$hasOption) {
+      $this->pass('Removal of namespace restrictions is disabled');
+    }
+    else {
+      $this->pass('Removal of namespace restrictions is enabled');
+      $inVal['fedora_namespace_restriction_enforced'] = TRUE;
+      $inVal['fedora_pids_allowed'] = 'simpletest:';
+      $this->drupalPost('admin/settings/fedora_repository', $inVal, 'Save configuration');
+      $this->assertPattern('/The configuration options have been saved./', 'The configuration options have been saved.');
+
+      $this->drupalGet('fedora/repository/islandora:largeimages/');
+      $this->assertPattern('/Access denied/', 'No access to Large image Collection Collection');
+      $inVal['fedora_namespace_restriction_enforced'] = 0;
+      $this->drupalPost('admin/settings/fedora_repository', $inVal, 'Save configuration');
+      $this->assertPattern('/The configuration options have been saved./', 'The configuration options have been saved.');
+      $this->drupalLogin($this->repository_user);
+      $this->drupalGet('fedora/repository/islandora:largeimages/');
+      $this->assertPattern('/Large Images Collection/', 'Access to Large Images Collection');
+    }
+  }
+
+  private function cleanUpRepository($pid_list = array()) {
+    $this->pass("This is the PID list to purge: " . implode(", ", $pid_list));
+    foreach ($pid_list as $pid) {
+      $this->drupalPost("fedora/repository/purgeObject/$pid", array(), 'Purge');
+    }
+  }
+
+  private function getIngestedPid() {
+    $subject = $this->drupalGetContent();
+    $pattern = '/">(.*)<\/a> created successfully./';
+    $matches = array();
+    $res = preg_match($pattern, $subject, $matches);
+    return $matches[1];
+  }
+
+  private function outputScreenContents($description = "Screen contents", $basename = 'Fedora Repository') {
+    // This is a hack to get a directory that won't be cleaned up by SimpleTest.
+    $file_dir = file_directory_path() . '../simpletest_output_pages';
+    if (!is_dir($file_dir)) {
+      mkdir($file_dir, 0777, TRUE);
+    }
+    $output_path = "$file_dir/$basename." . $this->randomName(10) . '.html';
+    $rv = file_put_contents($output_path, $this->drupalGetContent());
+    $this->pass("$description: Contents of result page are " . l('here', $output_path));
+  }
+
+  protected function drupalCreateFedoraUser($permissions = array('access comments', 'access content', 'post comments', 'post comments without approval')) {
+    // Create a role with the given permission set.
+    if (!($rid = $this->drupalCreateRole($permissions))) {
+      return FALSE;
+    }
+
+    // Create a user assigned to that role.
+    $edit = array();
+    $edit['name'] = 'simpletestuser';
+    $edit['mail'] = $edit['name'] . '@example.com';
+    $edit['roles'] = array($rid => $rid);
+    $edit['pass'] = 'simpletestpass';
+    $edit['status'] = 1;
+
+    $account = user_save('', $edit);
+
+    $this->assertTrue(!empty($account->uid), t('User created with name %name and pass %pass', array('%name' => $edit['name'], '%pass' => $edit['pass'])), t('User login'));
+    if (empty($account->uid)) {
+      return FALSE;
+    }
+
+    // Add the raw password so that we can log in as this user.
+    $account->pass_raw = $edit['pass'];
+    return $account;
+  }
+
+}
+

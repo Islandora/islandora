@@ -1,9 +1,11 @@
 <?php
 
 /**
-   * Create admin form
-   * @return array 
-   */
+ * @file islandora.admin.inc
+ * Create admin form
+ * @return array 
+ */
+
   function islandora_repository_admin() {
     if (!user_access('administer site configuration')) {
       drupal_set_message(t('You must be a site administrator to edit the Fedora collections list.'), 'error');
@@ -140,5 +142,3 @@
 
     return system_settings_form($form);
   }
-
-?>

@@ -1,0 +1,808 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<foxml:digitalObject PID="islandora:strict_pdf" VERSION="1.1" xmlns:foxml="info:fedora/fedora-system:def/foxml#"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
+  <foxml:objectProperties>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="Strict PDF"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="fedoraAdmin"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2009-02-26T14:50:44.411Z"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2010-10-06T16:04:03.630Z"/>
+  </foxml:objectProperties>
+  <foxml:datastream CONTROL_GROUP="X" ID="AUDIT" STATE="A" VERSIONABLE="false">
+    <foxml:datastreamVersion CREATED="2009-02-26T14:50:44.411Z"
+      FORMAT_URI="info:fedora/fedora-system:format/xml.fedora.audit" ID="AUDIT.0" LABEL="Audit Trail for this object" MIMETYPE="text/xml">
+      <foxml:xmlContent>
+        <audit:auditTrail xmlns:audit="info:fedora/fedora-system:def/audit#">
+          <audit:record ID="AUDREC1">
+            <audit:process type="Fedora API-M"/>
+            <audit:action>ingest</audit:action>
+            <audit:componentID/>
+            <audit:responsibility>fedoraAdmin</audit:responsibility>
+            <audit:date>2009-02-26T14:50:44.411Z</audit:date>
+            <audit:justification>Created with Admin GUI "New Object" command</audit:justification>
+          </audit:record>
+          <audit:record ID="AUDREC2">
+            <audit:process type="Fedora API-M"/>
+            <audit:action>addDatastream</audit:action>
+            <audit:componentID>ISLANDORACM</audit:componentID>
+            <audit:responsibility>fedoraAdmin</audit:responsibility>
+            <audit:date>2009-02-26T14:52:58.161Z</audit:date>
+            <audit:justification>DatastreamsPane generated this logMessage.</audit:justification>
+          </audit:record>
+          <audit:record ID="AUDREC3">
+            <audit:process type="Fedora API-M"/>
+            <audit:action>purgeDatastream</audit:action>
+            <audit:componentID>ISLANDORACM</audit:componentID>
+            <audit:responsibility>fedoraAdmin</audit:responsibility>
+            <audit:date>2009-03-31T18:33:27.172Z</audit:date>
+            <audit:justification>DatastreamPane generated this logMessage. . . . Purged datastream (ID=ISLANDORACM), versions ranging from 2009-02-26T10:52:58.161Z to 2009-02-26T10:52:58.161Z.  This resulted in the permanent removal of 1 datastream version(s) (2009-02-26T10:52:58.161Z) and all associated audit records.</audit:justification>
+          </audit:record>
+          <audit:record ID="AUDREC4">
+            <audit:process type="Fedora API-M"/>
+            <audit:action>ingest</audit:action>
+            <audit:componentID/>
+            <audit:responsibility>admin</audit:responsibility>
+            <audit:date>2009-09-14T14:09:06.847Z</audit:date>
+            <audit:justification>Fedora Object Ingested</audit:justification>
+          </audit:record>
+          <audit:record ID="AUDREC5">
+            <audit:process type="Fedora API-M"/>
+            <audit:action>addDatastream</audit:action>
+            <audit:componentID>ISLANDORACM</audit:componentID>
+            <audit:responsibility>fedoraAdmin</audit:responsibility>
+            <audit:date>2010-03-08T20:08:32.004Z</audit:date>
+            <audit:justification>DatastreamsPane generated this logMessage.</audit:justification>
+          </audit:record>
+          <audit:record ID="AUDREC6">
+            <audit:process type="Fedora API-M"/>
+            <audit:action>modifyDatastreamByValue</audit:action>
+            <audit:componentID>ISLANDORACM</audit:componentID>
+            <audit:responsibility>fedoraAdmin</audit:responsibility>
+            <audit:date>2010-09-30T17:11:42.958Z</audit:date>
+            <audit:justification/>
+          </audit:record>
+          <audit:record ID="AUDREC7">
+            <audit:process type="Fedora API-M"/>
+            <audit:action>modifyDatastreamByValue</audit:action>
+            <audit:componentID>ISLANDORACM</audit:componentID>
+            <audit:responsibility>fedoraAdmin</audit:responsibility>
+            <audit:date>2010-09-30T17:12:24.421Z</audit:date>
+            <audit:justification/>
+          </audit:record>
+          <audit:record ID="AUDREC8">
+            <audit:process type="Fedora API-M"/>
+            <audit:action>addDatastream</audit:action>
+            <audit:componentID>pdf_test</audit:componentID>
+            <audit:responsibility>avc_db</audit:responsibility>
+            <audit:date>2010-10-06T16:04:03.630Z</audit:date>
+            <audit:justification>Ingested object pdf_test</audit:justification>
+          </audit:record>
+        </audit:auditTrail>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="RELS-EXT" STATE="A" VERSIONABLE="true">
+    <foxml:datastreamVersion CREATED="2009-02-26T14:50:44.446Z" FORMAT_URI="info:fedora/fedora-system:FedoraRELSExt-1.0"
+      ID="RELS-EXT1.0" LABEL="RDF Statements about this object" MIMETYPE="application/rdf+xml" SIZE="364">
+      <foxml:xmlContent>
+        <rdf:RDF xmlns:fedora-model="info:fedora/fedora-system:def/model#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+          <rdf:Description rdf:about="info:fedora/islandora:strict_pdf">
+            <fedora-model:hasModel rdf:resource="info:fedora/fedora-system:ContentModel-3.0"/>
+          </rdf:Description>
+        </rdf:RDF>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="DS-COMPOSITE-MODEL" STATE="A" VERSIONABLE="true">
+    <foxml:datastreamVersion CREATED="2009-02-26T14:50:44.446Z"
+      FORMAT_URI="info:fedora/fedora-system:FedoraDSCompositeModel-1.0" ID="DS-COMPOSITE-MODEL1.0"
+      LABEL="Datastream Composite Model" MIMETYPE="text/xml" SIZE="1120">
+      <foxml:xmlContent>
+        <dsCompositeModel xmlns="info:fedora/fedora-system:def/dsCompositeModel#">
+          <comment xmlns="info:fedora/fedora-system:def/comment#">
+            This DS-COMPOSITE-MODEL datastream is included as a starting point to
+              assist in the creation of a content model. The DS-COMPOSITE-MODEL
+              should define the datastreams that are required for any objects
+              conforming to this content model.
+            For more information about content models, see:
+              http://fedora-commons.org/confluence/x/dgBI.
+            For examples of completed content model objects, see the demonstration
+              objects included with your Fedora distribution, such as:
+              demo:CMImage, demo:UVA_STD_IMAGE, demo:DualResImageCollection,
+              demo:TEI_TO_PDFDOC, and demo:XML_TO_HTMLDOC.
+            For more information about the demonstration objects, see:
+              http://fedora-commons.org/confluence/x/AwFI.
+          </comment>
+          <dsTypeModel ID="DSID">
+            <form MIME="text/xml"/>
+          </dsTypeModel>
+        </dsCompositeModel>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="DC" STATE="A" VERSIONABLE="true">
+    <foxml:datastreamVersion CREATED="2009-02-26T14:50:44.411Z" FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/"
+      ID="DC1.0" LABEL="Dublin Core Record for this object" MIMETYPE="text/xml" SIZE="383">
+      <foxml:xmlContent>
+        <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/"
+          xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+          <dc:title>Strict PDF</dc:title>
+          <dc:identifier>islandora:strict_pdf</dc:identifier>
+        </oai_dc:dc>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="X" ID="ISLANDORACM" STATE="A" VERSIONABLE="true">
+    <foxml:datastreamVersion CREATED="2010-03-08T20:08:32.004Z" ID="ISLANDORACM.0"
+      LABEL="Islandora content model datastream" MIMETYPE="text/xml" SIZE="8901">
+      <foxml:xmlContent>
+        <content_model name="strict_pdf">
+          <display_in_fieldset>
+            <datastream id="TN">
+              <method>
+                <file>plugins/ShowStreamsInFieldSets.php</file>
+                <class_name>ShowStreamsInFieldSets</class_name>
+                <method_name>showPDFPreview</method_name>
+              </method>
+            </datastream>
+            <datastream id="OBJ">
+              <allowed_mime_type>application/pdf</allowed_mime_type>
+              <add_datastream_method>
+                <file>plugins/ImageManipulation.php</file>
+                <class_name>ImageManipulation</class_name>
+                <method_name>createThumbnailFromPDF</method_name>
+                <modified_files_ext>jpg</modified_files_ext>
+                <datastream_id>TN</datastream_id>
+                <parameters>
+                  <parameter name="width">100</parameter>
+                  <parameter name="height">120</parameter>
+                </parameters>
+              </add_datastream_method>
+            </datastream>
+          </display_in_fieldset>
+          <mimetypes>
+            <type>application/pdf</type>
+          </mimetypes>
+          <ingest_rules>
+            <rule>
+              <applies_to>
+                application/pdf
+            </applies_to>
+              <methods>
+                <method>
+                  <file>plugins/ImageManipulation.php</file>
+                  <class_name>ImageManipulation</class_name>
+                  <method_name>createThumbnailFromPDF</method_name>
+                  <modified_files_ext>jpg</modified_files_ext>
+                  <datastream_id>TN</datastream_id>
+                  <parameters>
+                    <parameter name="width">100</parameter>
+                    <parameter name="height">120</parameter>
+                  </parameters>
+                </method>
+              </methods>
+              <disseminators>
+                <disseminator>
+                  <name>dis1</name>
+                  <parameters>
+                    <parameter name="param1">
+                            200
+                        </parameter>
+                  </parameters>
+                </disseminator>
+              </disseminators>
+            </rule>
+          </ingest_rules>
+          <edit_metadata>
+            <build_form_method>
+              <file/>
+              <class_name/>
+              <method_name/>
+            </build_form_method>
+            <submit_form_method>
+              <file/>
+              <class_name/>
+              <method_name/>
+            </submit_form_method>
+          </edit_metadata>
+          <ingest_form dsid="QDC" page="2">
+            <form_builder_method>
+              <file>plugins/FormBuilder.php</file>
+              <class_name>FormBuilder</class_name>
+              <method_name>buildQDCForm</method_name>
+              <form_handler>handleQDCForm</form_handler>
+            </form_builder_method>
+            <form_elements>
+              <element>
+                <label>Title/Caption/Object Name</label>
+                <name>dc:title</name>
+                <type>textfield</type>
+                <description>The name given to the resource</description>
+                <required>true</required>
+              </element>
+              <element>
+                <label>Creator/Photographer/Author</label>
+                <name>dc:creator</name>
+                <type>textfield</type>
+                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                <required>false</required>
+              </element>
+              <element>
+                <label>Subject</label>
+                <name>dc:subject</name>
+                <type>select</type>
+                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                <required>false</required>
+                <authoritative_list>
+                  <item>
+                    <field>experiment session</field>
+                    <value>experiment session</value>
+                  </item>
+                  <item>
+                    <field>home recording</field>
+                    <value>home recording</value>
+                  </item>
+                  <item>
+                    <field>image</field>
+                    <value>image</value>
+                  </item>
+                  <item>
+                    <field>meeting</field>
+                    <value>meeting</value>
+                  </item>
+                  <item>
+                    <field>presentation</field>
+                    <value>presentation</value>
+                  </item>
+                  <item>
+                    <field>sound</field>
+                    <value>sound</value>
+                  </item>
+                  <item>
+                    <field>text</field>
+                    <value>text</value>
+                  </item>
+                </authoritative_list>
+              </element>
+              <element>
+                <label>Description</label>
+                <name>dc:description</name>
+                <type>textarea</type>
+                <description>Examples include an abstract, table of contents, or free-text account of the content of the resource.</description>
+                <required>true</required>
+              </element>
+              <element>
+                <label>Publisher</label>
+                <name>dc:publisher</name>
+                <type>textfield</type>
+                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
+                <required>false</required>
+              </element>
+              <element>
+                <label>Contributor</label>
+                <name>dc:contributor</name>
+                <type>textfield</type>
+                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
+                <required>false</required>
+              </element>
+              <element>
+                <label>Date</label>
+                <name>dc:date</name>
+                <type>textfield</type>
+                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
+                <required>false</required>
+              </element>
+              <element>
+                <label>Resource Type</label>
+                <name>dc:type</name>
+                <type>select</type>
+                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
+                <required>false</required>
+                <authoritative_list>
+                  <item>
+                    <field>none</field>
+                    <value>none</value>
+                  </item>
+                  <item>
+                    <field>collection</field>
+                    <value>collection</value>
+                  </item>
+                  <item>
+                    <field>dataset</field>
+                    <value>dataset</value>
+                  </item>
+                  <item>
+                    <field>event</field>
+                    <value>event</value>
+                  </item>
+                  <item>
+                    <field>image</field>
+                    <value>image</value>
+                  </item>
+                  <item>
+                    <field>interactive resource</field>
+                    <value>interactive resource</value>
+                  </item>
+                  <item>
+                    <field>model</field>
+                    <value>model</value>
+                  </item>
+                  <item>
+                    <field>party</field>
+                    <value>party</value>
+                  </item>
+                  <item>
+                    <field>physical object</field>
+                    <value>physical object</value>
+                  </item>
+                  <item>
+                    <field>place</field>
+                    <value>place</value>
+                  </item>
+                  <item>
+                    <field>service</field>
+                    <value>service</value>
+                  </item>
+                  <item>
+                    <field>software</field>
+                    <value>software</value>
+                  </item>
+                  <item>
+                    <field>sound</field>
+                    <value>sound</value>
+                  </item>
+                  <item>
+                    <field>text</field>
+                    <value>text</value>
+                  </item>
+                </authoritative_list>
+              </element>
+              <element>
+                <label>Source</label>
+                <name>dc:source</name>
+                <type>textfield</type>
+                <description>A reference to a resource from which the present resource is derived.</description>
+                <required>false</required>
+              </element>
+              <element>
+                <label>Identifier</label>
+                <name>dc:identifier</name>
+                <type>textfield</type>
+                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
+                <required>false</required>
+              </element>
+              <element>
+                <label>Language</label>
+                <name>dc:language</name>
+                <type>select</type>
+                <description>The language of the intellectual content of the resource.</description>
+                <required>false</required>
+                <authoritative_list>
+                  <item>
+                    <field>eng</field>
+                    <value>English</value>
+                  </item>
+                  <item>
+                    <field>fre</field>
+                    <value>French</value>
+                  </item>
+                </authoritative_list>
+              </element>
+              <element>
+                <label>Relation</label>
+                <name>dc:relation</name>
+                <type>textfield</type>
+                <description>Reference to a related resource.</description>
+                <required>false</required>
+              </element>
+              <element>
+                <label>Rights Management</label>
+                <name>dc:rights</name>
+                <type>textarea</type>
+                <description>Information about intellectual property rights, copyright, and various property rights.</description>
+                <required>false</required>
+              </element>
+            </form_elements>
+          </ingest_form>
+        </content_model>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+    <foxml:datastreamVersion CREATED="2010-09-30T17:11:42.958Z" ID="ISLANDORACM.1"
+      LABEL="Islandora content model datastream" MIMETYPE="text/xml" SIZE="8901">
+      <foxml:xmlContent>
+        <content_model name="strict_pdf">
+          <display_in_fieldset>
+            <datastream id="TN">
+              <method>
+                <file>plugins/ShowStreamsInFieldSets.inc</file>
+                <class_name>ShowStreamsInFieldSets</class_name>
+                <method_name>showPDFPreview</method_name>
+              </method>
+            </datastream>
+            <datastream id="OBJ">
+              <allowed_mime_type>application/pdf</allowed_mime_type>
+              <add_datastream_method>
+                <file>plugins/ImageManipulation.inc</file>
+                <class_name>ImageManipulation</class_name>
+                <method_name>createThumbnailFromPDF</method_name>
+                <modified_files_ext>jpg</modified_files_ext>
+                <datastream_id>TN</datastream_id>
+                <parameters>
+                  <parameter name="width">100</parameter>
+                  <parameter name="height">120</parameter>
+                </parameters>
+              </add_datastream_method>
+            </datastream>
+          </display_in_fieldset>
+          <mimetypes>
+            <type>application/pdf</type>
+          </mimetypes>
+          <ingest_rules>
+            <rule>
+              <applies_to>
+                application/pdf
+            </applies_to>
+              <methods>
+                <method>
+                  <file>plugins/ImageManipulation.inc</file>
+                  <class_name>ImageManipulation</class_name>
+                  <method_name>createThumbnailFromPDF</method_name>
+                  <modified_files_ext>jpg</modified_files_ext>
+                  <datastream_id>TN</datastream_id>
+                  <parameters>
+                    <parameter name="width">100</parameter>
+                    <parameter name="height">120</parameter>
+                  </parameters>
+                </method>
+              </methods>
+              <disseminators>
+                <disseminator>
+                  <name>dis1</name>
+                  <parameters>
+                    <parameter name="param1">
+                            200
+                        </parameter>
+                  </parameters>
+                </disseminator>
+              </disseminators>
+            </rule>
+          </ingest_rules>
+          <edit_metadata>
+            <build_form_method>
+              <file/>
+              <class_name/>
+              <method_name/>
+            </build_form_method>
+            <submit_form_method>
+              <file/>
+              <class_name/>
+              <method_name/>
+            </submit_form_method>
+          </edit_metadata>
+          <ingest_form dsid="QDC" page="2">
+            <form_builder_method>
+              <file>plugins/FormBuilder.inc</file>
+              <class_name>FormBuilder</class_name>
+              <method_name>buildQDCForm</method_name>
+              <form_handler>handleQDCForm</form_handler>
+            </form_builder_method>
+            <form_elements>
+              <element>
+                <label>Title/Caption/Object Name</label>
+                <name>dc:title</name>
+                <type>textfield</type>
+                <description>The name given to the resource</description>
+                <required>true</required>
+              </element>
+              <element>
+                <label>Creator/Photographer/Author</label>
+                <name>dc:creator</name>
+                <type>textfield</type>
+                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                <required>false</required>
+              </element>
+              <element>
+                <label>Subject</label>
+                <name>dc:subject</name>
+                <type>select</type>
+                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                <required>false</required>
+                <authoritative_list>
+                  <item>
+                    <field>experiment session</field>
+                    <value>experiment session</value>
+                  </item>
+                  <item>
+                    <field>home recording</field>
+                    <value>home recording</value>
+                  </item>
+                  <item>
+                    <field>image</field>
+                    <value>image</value>
+                  </item>
+                  <item>
+                    <field>meeting</field>
+                    <value>meeting</value>
+                  </item>
+                  <item>
+                    <field>presentation</field>
+                    <value>presentation</value>
+                  </item>
+                  <item>
+                    <field>sound</field>
+                    <value>sound</value>
+                  </item>
+                  <item>
+                    <field>text</field>
+                    <value>text</value>
+                  </item>
+                </authoritative_list>
+              </element>
+              <element>
+                <label>Description</label>
+                <name>dc:description</name>
+                <type>textarea</type>
+                <description>Examples include an abstract, table of contents, or free-text account of the content of the resource.</description>
+                <required>true</required>
+              </element>
+              <element>
+                <label>Publisher</label>
+                <name>dc:publisher</name>
+                <type>textfield</type>
+                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
+                <required>false</required>
+              </element>
+              <element>
+                <label>Contributor</label>
+                <name>dc:contributor</name>
+                <type>textfield</type>
+                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
+                <required>false</required>
+              </element>
+              <element>
+                <label>Date</label>
+                <name>dc:date</name>
+                <type>textfield</type>
+                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
+                <required>false</required>
+              </element>
+              <element>
+                <label>Resource Type</label>
+                <name>dc:type</name>
+                <type>select</type>
+                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
+                <required>false</required>
+                <authoritative_list>
+                  <item>
+                    <field>none</field>
+                    <value>none</value>
+                  </item>
+                  <item>
+                    <field>collection</field>
+                    <value>collection</value>
+                  </item>
+                  <item>
+                    <field>dataset</field>
+                    <value>dataset</value>
+                  </item>
+                  <item>
+                    <field>event</field>
+                    <value>event</value>
+                  </item>
+                  <item>
+                    <field>image</field>
+                    <value>image</value>
+                  </item>
+                  <item>
+                    <field>interactive resource</field>
+                    <value>interactive resource</value>
+                  </item>
+                  <item>
+                    <field>model</field>
+                    <value>model</value>
+                  </item>
+                  <item>
+                    <field>party</field>
+                    <value>party</value>
+                  </item>
+                  <item>
+                    <field>physical object</field>
+                    <value>physical object</value>
+                  </item>
+                  <item>
+                    <field>place</field>
+                    <value>place</value>
+                  </item>
+                  <item>
+                    <field>service</field>
+                    <value>service</value>
+                  </item>
+                  <item>
+                    <field>software</field>
+                    <value>software</value>
+                  </item>
+                  <item>
+                    <field>sound</field>
+                    <value>sound</value>
+                  </item>
+                  <item>
+                    <field>text</field>
+                    <value>text</value>
+                  </item>
+                </authoritative_list>
+              </element>
+              <element>
+                <label>Source</label>
+                <name>dc:source</name>
+                <type>textfield</type>
+                <description>A reference to a resource from which the present resource is derived.</description>
+                <required>false</required>
+              </element>
+              <element>
+                <label>Identifier</label>
+                <name>dc:identifier</name>
+                <type>textfield</type>
+                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
+                <required>false</required>
+              </element>
+              <element>
+                <label>Language</label>
+                <name>dc:language</name>
+                <type>select</type>
+                <description>The language of the intellectual content of the resource.</description>
+                <required>false</required>
+                <authoritative_list>
+                  <item>
+                    <field>eng</field>
+                    <value>English</value>
+                  </item>
+                  <item>
+                    <field>fre</field>
+                    <value>French</value>
+                  </item>
+                </authoritative_list>
+              </element>
+              <element>
+                <label>Relation</label>
+                <name>dc:relation</name>
+                <type>textfield</type>
+                <description>Reference to a related resource.</description>
+                <required>false</required>
+              </element>
+              <element>
+                <label>Rights Management</label>
+                <name>dc:rights</name>
+                <type>textarea</type>
+                <description>Information about intellectual property rights, copyright, and various property rights.</description>
+                <required>false</required>
+              </element>
+            </form_elements>
+          </ingest_form>
+        </content_model>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+    <foxml:datastreamVersion CREATED="2010-09-30T17:12:24.421Z" ID="ISLANDORACM.2"
+      LABEL="Islandora content model datastream" MIMETYPE="text/xml" SIZE="5473">
+      <foxml:xmlContent>
+        <content_model name="strict_pdf" xmlns="http://www.islandora.ca"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.islandora.ca http://localhost/islandoracm.xsd">
+          <mimetypes>
+            <type>application/pdf</type>
+          </mimetypes>
+          <ingest_rules>
+            <rule>
+              <applies_to>application/pdf</applies_to>
+              <ingest_methods>
+                <ingest_method class="ImageManipulation" dsid="TN" file="plugins/ImageManipulation.inc"
+                  method="createThumbnailFromPDF" modified_files_ext="jpg" module="">
+                  <parameters>
+                    <parameter name="width">100</parameter>
+                    <parameter name="height">120</parameter>
+                  </parameters>
+                </ingest_method>
+              </ingest_methods>
+            </rule>
+          </ingest_rules>
+          <datastreams>
+            <datastream dsid="TN">
+              <display_method class="ShowStreamsInFieldSets" file="plugins/ShowStreamsInFieldSets.inc"
+                method="showPDFPreview" module=""/>
+            </datastream>
+            <datastream dsid="OBJ">
+              <add_datastream_method class="ImageManipulation" dsid="TN" file="plugins/ImageManipulation.inc"
+                method="createThumbnailFromPDF" modified_files_ext="jpg" module="">
+                <parameters>
+                  <parameter name="width">100</parameter>
+                  <parameter name="height">120</parameter>
+                </parameters>
+              </add_datastream_method>
+            </datastream>
+          </datastreams>
+          <ingest_form dsid="QDC" page="2">
+            <form_builder_method class="FormBuilder" file="plugins/FormBuilder.inc" handler="handleQDCForm"
+              method="buildQDCForm" module=""/>
+            <form_elements>
+              <element label="Title/Caption/Object Name" name="dc:title" required="true" type="textfield">
+                <description>The name given to the resource</description>
+              </element>
+              <element label="Creator/Photographer/Author" name="dc:creator" type="textfield">
+                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+              </element>
+              <element label="Subject" name="dc:subject" type="select">
+                <description>An entity primarily responsible for making the content of the resource such as a person, organization or service.</description>
+                <authoritative_list>
+                  <item>experiment session</item>
+                  <item>home recording</item>
+                  <item>image</item>
+                  <item>meeting</item>
+                  <item>presentation</item>
+                  <item>sound</item>
+                  <item>text</item>
+                </authoritative_list>
+              </element>
+              <element label="Description" name="dc:description" required="true" type="textarea">
+                <description>Examples include an abstract, table of contents, or free-text account of the content of the resource.</description>
+              </element>
+              <element label="Publisher" name="dc:publisher" type="textfield">
+                <description>An entity, (including persons, organizations, or services), responsible for making the resource available.</description>
+              </element>
+              <element label="Contributor" name="dc:contributor" type="textfield">
+                <description>An entity responsible for contributing to the content of the resource such as a person, organization or service.</description>
+              </element>
+              <element label="Date" name="dc:date" type="textfield">
+                <description>Temporal scope of the content if known. Date format is YYYY-MM-DD (e.g. 1890,1910-10,or 2007-10-23)</description>
+              </element>
+              <element label="Resource Type" name="dc:type" type="select">
+                <description>Genre of the content of the resource. Examples include: home page, novel, poem, working paper, technical report, essay, dictionary.</description>
+                <authoritative_list>
+                  <item>none</item>
+                  <item>collection</item>
+                  <item>dataset</item>
+                  <item>event</item>
+                  <item>image</item>
+                  <item>interactive resource</item>
+                  <item>model</item>
+                  <item>party</item>
+                  <item>physical object</item>
+                  <item>place</item>
+                  <item>service</item>
+                  <item>software</item>
+                  <item>sound</item>
+                  <item>text</item>
+                </authoritative_list>
+              </element>
+              <element label="Source" name="dc:source" type="textfield">
+                <description>A reference to a resource from which the present resource is derived.</description>
+              </element>
+              <element label="Identifier" name="dc:identifier" type="textfield">
+                <description>A unique reference to the resource; In this instance, the accession number or collection number.</description>
+              </element>
+              <element label="Language" name="dc:language" type="select">
+                <description>The language of the intellectual content of the resource.</description>
+                <authoritative_list>
+                  <item field="eng">English</item>
+                  <item field="fre">French</item>
+                </authoritative_list>
+              </element>
+              <element label="Relation" name="dc:relation" type="textfield">
+                <description>Reference to a related resource.</description>
+              </element>
+              <element label="Rights Management" name="dc:rights" type="textarea">
+                <description>Information about intellectual property rights, copyright, and various property rights.</description>
+              </element>
+            </form_elements>
+          </ingest_form>
+          <edit_metadata_method class="" dsid="" file="" handler="" method="" module=""/>
+        </content_model>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream CONTROL_GROUP="M" ID="pdf_test" STATE="A" VERSIONABLE="true">
+    <foxml:datastreamVersion CREATED="2010-10-06T16:04:03.630Z" ID="pdf_test.0"
+      LABEL="Image testing from pdf to image.pdf" MIMETYPE="application/pdf">
+      <foxml:contentLocation
+        REF="http://137.149.200.4:8080/fedora/get/islandora:strict_pdf/pdf_test/2010-10-06T16:04:03.630Z" TYPE="INTERNAL_ID"/>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+</foxml:digitalObject>
