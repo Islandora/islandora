@@ -18,3 +18,11 @@ function hook_islandora_preingest_alter(){}
 function hook_islandora_postingest($object){}
 
 function hook_islandora_datastream_edit($object, $dsid){}
+
+/**
+ * Register potential ingest routes. Implementations should return an array containing possible routes.
+ * Ex. array(
+ *       array('name' => t('Ingest Route Name'), 'url' => 'ingest_route/url', 'weight' => 0),
+ *     );
+ */
+function hook_islandora_ingest_registry($collection_pid) {}
