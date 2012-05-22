@@ -290,13 +290,13 @@ class Refworks {
 
         if ($client == NULL) {
           drupal_set_message(t('Error getting SOAP client.'), 'error');
-          watchdog(t("FEDORA_REPOSITORY"), "Error getting SOAP client: @e", array('@e' => $e), NULL, WATCHDOG_ERROR);
+          watchdog(t("fedora_repository"), "Error getting SOAP client: @e", array('@e' => $e), NULL, WATCHDOG_ERROR);
           return;
         }
         $object = $client->__soapCall('ingest', array(
               $params
             ));
-        watchdog(t("FEDORA_REPOSITORY"), "Successfully added repository item " . $pid . " - ". $item_title, NULL, WATCHDOG_INFO);
+        watchdog(t("fedora_repository"), "Successfully added repository item " . $pid . " - ". $item_title, NULL, WATCHDOG_INFO);
         $deleteFiles = $form_values['delete_file']; //remove files from drupal file system
 
         if ($deleteFiles > 0) {
@@ -305,7 +305,7 @@ class Refworks {
       } catch (exception $e) {
         $errors++;
         $errorMessage = 'yes';
-        watchdog(t("FEDORA_REPOSITORY"), t("Error during ingest !it @e", array('!it' => $item_title, '@e' => $e)), NULL, WATCHDOG_ERROR);
+        watchdog(t("fedora_repository"), t("Error during ingest !it @e", array('!it' => $item_title, '@e' => $e)), NULL, WATCHDOG_ERROR);
       }
       $success++;
     }

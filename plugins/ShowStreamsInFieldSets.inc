@@ -28,10 +28,10 @@ class ShowStreamsInFieldSets {
    */
   function showFlv() {
     //FLV is the datastream id
-    $path = drupal_get_path('module', 'Fedora_Repository');
+    $path = drupal_get_path('module', 'fedora_repository');
     $fullPath = url($path);
     $content = "";
-    $pathTojs = drupal_get_path('module', 'Fedora_Repository') . '/js/swfobject.js';
+    $pathTojs = drupal_get_path('module', 'fedora_repository') . '/js/swfobject.js';
     drupal_add_js("$pathTojs");
     $div_id = "player' . $this->pid . 'FLV";
     $content .= <<<EOH
@@ -231,7 +231,7 @@ EOM
    * @return type 
    */
   function showRomeo($collapsed = FALSE) {
-    $path = drupal_get_path('module', 'Fedora_Repository');
+    $path = drupal_get_path('module', 'fedora_repository');
     module_load_include('inc', 'fedora_repository', 'CollectionClass');
     $collectionHelper = new CollectionClass();
     $xmlstr = $collectionHelper->getStream($this->pid, "ROMEO", 0);

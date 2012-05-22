@@ -22,7 +22,7 @@ function fedora_imageapi_menu() {
  * @param string $params
  */
 function fedora_repository_image_manip($pid = '', $dsid = '', $op = '', $params = '') {
-  module_load_include('inc', 'Fedora_Repository', 'ObjectHelper');
+  module_load_include('inc', 'fedora_repository', 'ObjectHelper');
   module_load_include('module', 'imageapi');
   $obj = new ObjectHelper();
   $mimetype = $obj->getMimeType($pid, $dsid);

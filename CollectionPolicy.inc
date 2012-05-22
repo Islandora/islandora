@@ -392,7 +392,7 @@ class CollectionPolicy extends XMLDatastream {
   function getContentModels() {
     $ret = FALSE;
     if ($this->validate()) {
-      module_load_include('inc', 'Fedora_Repository', 'ContentModel');
+      module_load_include('inc', 'fedora_repository', 'ContentModel');
       $ret = array();
       $content_models = $this->xml->getElementsByTagName('content_models')->item(0)->getElementsByTagName('content_model');
       for ($i = 0; $i < $content_models->length; $i++) {

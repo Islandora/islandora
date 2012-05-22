@@ -126,7 +126,7 @@ class ShowQtStreamsInFieldSets {
       return '';
     }
 
-    $path = drupal_get_path('module', 'Fedora_Repository');
+    $path = drupal_get_path('module', 'fedora_repository');
 
     drupal_add_js("$path/js/AC_Quicktime.js");
 

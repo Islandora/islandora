@@ -634,7 +634,7 @@ function fedora_repository_replace_stream($pid, $dsId, $dsLabel = '', $collectio
  * @return type 
  */
 function fedora_repository_replace_stream_form(&$form_state, $pid, $dsId, $dsLabel) {
-  module_load_include('inc', 'Fedora_Repository', 'formClass');
+  module_load_include('inc', 'fedora_repository', 'formClass');
   $replaceDataStreamForm = new formClass();
   return $replaceDataStreamForm->createReplaceDataStreamForm($pid, $dsId, $dsLabel, $form_state);
 }
@@ -659,7 +659,7 @@ function fedora_repository_replace_stream_form_validate($form, &$form_state) {
     }
 
     $doc = new DOMDocument();
-    module_load_include('inc', 'Fedora_Repository', 'MimeClass');
+    module_load_include('inc', 'fedora_repository', 'MimeClass');
     $mime = new MimeClass();
     if ($mime->getType($file->filepath) == 'text/xml' && !$doc->load($file->filepath)) {
       form_set_error('file', 'Invalid XML format.');
@@ -689,7 +689,7 @@ function fedora_repository_replace_stream_form_submit($form, &$form_state) {
     $dsLabel = substr($dsLabel, 0, $indexOfDot);
     $dsLabel .= substr($file->filename, strrpos($file->filename, '.')); // Add the file extention to the end of the label.;
   }
-  module_load_include('inc', 'Fedora_Repository', 'MimeClass');
+  module_load_include('inc', 'fedora_repository', 'MimeClass');
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
 
   $file_basename = basename($file->filepath);
@@ -2110,19 +2110,19 @@ function theme_add_to_basket_link($pid, $type = 'object') {
 
   $save = "export_big.png";
   $saved = "exported_big.png";
-//  $path = drupal_get_path('module', 'Fedora_Repository').'/images/'.$save ;
+//  $path = drupal_get_path('module', 'fedora_repository').'/images/'.$save ;
   /*
     var_dump($path);
-    var_dump(theme('image',drupal_get_path('module', 'Fedora_Repository').'/images/'.$save));
+    var_dump(theme('image',drupal_get_path('module', 'fedora_repository').'/images/'.$save));
     die();
    */
   if (!_is_added_to_basket($pid)) {
     return l(
-        theme('image', drupal_get_path('module', 'Fedora_Repository') . '/images/' . $save, t("Add to basket"), t("Add this @object to my basket", array('@object' => $object))), "fedora/repository/addToBasket/" . $path, array('html' => TRUE)
+        theme('image', drupal_get_path('module', 'fedora_repository') . '/images/' . $save, t("Add to basket"), t("Add this @object to my basket", array('@object' => $object))), "fedora/repository/addToBasket/" . $path, array('html' => TRUE)
     );
   }
 
-  return theme('image', drupal_get_path('module', 'Fedora_Repository') . '/images/' . $saved, t("In basket"), t("This @object is already in your basket", array('@object' => $object)));
+  return theme('image', drupal_get_path('module', 'fedora_repository') . '/images/' . $saved, t("In basket"), t("This @object is already in your basket", array('@object' => $object)));
 }
 
 /**

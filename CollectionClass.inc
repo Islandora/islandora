@@ -226,7 +226,7 @@ class CollectionClass {
    * @return ContentModel 
    */
   function getContentModels($collection_pid, $showError = TRUE) {
-    module_load_include('inc', 'Fedora_Repository', 'ContentModel');
+    module_load_include('inc', 'fedora_repository', 'ContentModel');
     $collection_stream = $this->getCollectionPolicyStream($collection_pid);
     try {
       $xml = new SimpleXMLElement($collection_stream);
@@ -253,7 +253,7 @@ class CollectionClass {
    * $dsid is the datastream id of the content model.
    */
   function getNextPid($pid, $dsid) {
-    module_load_include('inc', 'Fedora_Repository', 'ConnectionHelper');
+    module_load_include('inc', 'fedora_repository', 'ConnectionHelper');
     $pidNameSpace = $this->getPidNameSpace($pid, $dsid);
     $pname = substr($pidNameSpace, 0, strpos($pidNameSpace, ":"));
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
@@ -371,7 +371,7 @@ class CollectionClass {
           $parametersArray["$name"] = $value;
         }
       }
-      // module_load_include( $phpFile, 'Fedora_Repository', ' ');
+      // module_load_include( $phpFile, 'fedora_repository', ' ');
       require_once(drupal_get_path('module', 'fedora_repository') . '/' . $phpFile);
       $thisClass = new $phpClass ();
       $returnValue = $thisClass->$phpMethod($parametersArray, $dsid, $file, $file_ext);
@@ -448,7 +448,7 @@ class CollectionClass {
     $phpClass = strip_tags($ingest_form->form_builder_method->class_name->asXML());
     $phpMethod = strip_tags($ingest_form->form_builder_method->method_name->asXML());
     $dsid = strip_tags($ingest_form['dsid']);
-    // module_load_include('php', 'Fedora_Repository', $phpFile);
+    // module_load_include('php', 'fedora_repository', $phpFile);
     require_once(drupal_get_path('module', $drupal_module) . '/' . $phpFile);
     $thisClass = new $phpClass ();
 
@@ -592,7 +592,7 @@ class CollectionClass {
    * @return string 
    */
   function getIngestInterface() {
-    module_load_include('inc', 'Fedora_Repository', 'CollectionPolicy');
+    module_load_include('inc', 'fedora_repository', 'CollectionPolicy');
     $collectionPolicyExists = $this->collectionObject->getMimeType($this->pid, CollectionPolicy::getDefaultDSID());
     if (user_access(ObjectHelper :: $INGEST_FEDORA_OBJECTS) && $collectionPolicyExists) {
       if (!empty($collectionPolicyExists)) {

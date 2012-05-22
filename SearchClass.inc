@@ -36,7 +36,7 @@ class SearchClass {
     try {
       $implementation = new $solrClass();
     } catch (Exception $e) {
-      watchdog(t("Fedora_Repository"), "Error getting solr search results class: !message", array('!message' => $e->getMessage()), NULL, WATCHDOG_ERROR);
+      watchdog(t("fedora_repository"), "Error getting solr search results class: !message", array('!message' => $e->getMessage()), NULL, WATCHDOG_ERROR);
       return 'Error getting solr search results class.  Check watchdog for more info.';
     }
     return $implementation->$solrFunction($query, $startPage, $fq, $dismax);
@@ -253,7 +253,7 @@ class SearchClass {
     $objectHelper = new ObjectHelper();
 
     $resultData = do_curl($searchString, 1);
-    $path = drupal_get_path('module', 'Fedora_Repository');
+    $path = drupal_get_path('module', 'fedora_repository');
 
     $output .= $this->applySpecifiedXSLT($resultData, $path . '/xsl/browseIndexToResultPage.xslt', $displayName);
     //$output .= '<br />'.$alpha_out;
@@ -367,7 +367,7 @@ class SearchClass {
    * @param <type> $query the query that was executed.  May want to pass this on.
    */
   function applyLuceneXSLT($resultData, $startPage = 1, $xslt_file = '/xsl/results.xsl', $query=NULL) {
-    $path = drupal_get_path('module', 'Fedora_Repository');
+    $path = drupal_get_path('module', 'fedora_repository');
     $test = $xslt_file;
     $isRestricted = variable_get('fedora_namespace_restriction_enforced', TRUE);
     if (!isRestricted && $xslt_file == NULL) {
@@ -425,7 +425,7 @@ class SearchClass {
    * @return type 
    */
   function applyXSLT($resultData, $orderBy = 0) {
-    $path = drupal_get_path('module', 'Fedora_Repository');
+    $path = drupal_get_path('module', 'fedora_repository');
     $proc = NULL;
     if (!$resultData) {
       //drupal_set_message(t('No Results!'));
@@ -590,7 +590,7 @@ class SearchClass {
    */
   function get_search_terms_array($path = NULL, $file = NULL) {
     if (!isset($path)) {
-      $path = drupal_get_path('module', 'Fedora_Repository');
+      $path = drupal_get_path('module', 'fedora_repository');
     }
     $xmlDoc = new DomDocument();
     if (!isset($file)) {

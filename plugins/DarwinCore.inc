@@ -247,7 +247,7 @@ class DarwinCore {
    * @return type 
    */
   public function asHTML() {
-    $path = drupal_get_path('module', 'Fedora_Repository');
+    $path = drupal_get_path('module', 'fedora_repository');
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');
     module_load_include('inc', 'fedora_repository', 'CollectionClass');
 

@@ -18,7 +18,7 @@ class QtFormBuilder extends FormBuilder {
    * Constructor
    */
   function QtFormBuilder() {
-    module_load_include('php', 'Fedora_Repository', 'plugins/FormBuilder');
+    module_load_include('php', 'fedora_repository', 'plugins/FormBuilder');
     drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
   }
 
@@ -57,7 +57,7 @@ class QtFormBuilder extends FormBuilder {
     $rootElement->appendChild($ds1);
 
     if (empty($_SESSION['fedora_ingest_files']) || !isset($_SESSION['fedora_ingest_files']['TN'])) {
-      $createdFile = drupal_get_path('module', 'Fedora_Repository') . '/images/qtThumb.jpg';
+      $createdFile = drupal_get_path('module', 'fedora_repository') . '/images/qtThumb.jpg';
       $fileUrl = $base_url . '/' . drupal_urlencode($createdFile); //'http://'.$_SERVER['HTTP_HOST'].'/'.$createdFile;
       $ds1 = $dom->createElement("foxml:datastream");
       $ds1->setAttribute("ID", "TN");

@@ -598,7 +598,7 @@ class ObjectHelper {
     try {
       $sxml = new SimpleXMLElement($content_models);
     } catch (exception $e) {
-      watchdog(t("Fedora_Repository"), "Could not find a parent object for %s", $pid, NULL, WATCHDOG_ERROR);
+      watchdog(t("fedora_repository"), "Could not find a parent object for %s", $pid, NULL, WATCHDOG_ERROR);
       return $pids;
     }
 
@@ -692,7 +692,7 @@ class ObjectHelper {
     //show the collections datastreams
     if ($results->length > 0 || $isCollection == TRUE) {
       //  if(strlen($objectList)>22||$contentModel=='Collection'||$contentModel=='Community')//length of empty dom still equals 22 because of <table/> etc
-      module_load_include('inc', 'Fedora_Repository', 'CollectionPolicy');
+      module_load_include('inc', 'fedora_repository', 'CollectionPolicy');
       $collectionPolicyExists = $this->getMimeType($pid, CollectionPolicy::getDefaultDSID());
       if (user_access(ObjectHelper::$INGEST_FEDORA_OBJECTS) && $collectionPolicyExists) {
         if (!empty($collectionPolicyExists)) {

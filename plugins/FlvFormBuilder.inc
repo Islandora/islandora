@@ -58,7 +58,7 @@ class FlvFormBuilder extends FormBuilder {
     $ds1v->appendChild($ds1content);
     $rootElement->appendChild($ds1);
 
-    $createdFile = drupal_get_path('module', 'Fedora_Repository') . '/images/flashThumb.jpg';
+    $createdFile = drupal_get_path('module', 'fedora_repository') . '/images/flashThumb.jpg';
     $fileUrl = $base_url . '/' . drupal_urlencode($createdFile); //'http://'.$_SERVER['HTTP_HOST'].'/'.$createdFile;
     $ds1 = $dom->createElement("foxml:datastream");
     $ds1->setAttribute("ID", "TN");
