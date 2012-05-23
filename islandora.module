@@ -98,9 +98,12 @@ function islandora_menu() {
     'access arguments' => array(FEDORA_VIEW),
   );
 
+
   $items['islandora/object/%/add'] = array(
-    'title' => 'Add stream',
-    'page callback' => 'islandora_add_stream',
+    'title' => 'Add to an object',
+    'file' => 'includes/add-menu.inc',
+    'page callback' => 'islandora_add_callback',
+    'page arguments' => array(2),
     'type' => MENU_NORMAL_ITEM,
     'access arguments' => array(FEDORA_ADD_DS)
   );
@@ -435,105 +438,104 @@ function islandora_islandora_view_object($object) {
       }
     }
   }
+}
 
-  /**
-   * Theme registry function
-   * @return array
-   */
-  function islandora_theme() {
-    return array(
-      'islandora_default' => array(
-        'template' => 'islandora-object',
-        'variables' => array('islandora_object' => NULL),
-      ),
-      'islandora_default_edit' => array(
-        'template' => 'islandora-object-edit',
-        'variables' => array('islandora_object' => NULL),
-      ),
-    );
+/**
+ * Theme registry function
+ * @return array
+ */
+function islandora_theme() {
+  return array(
+    'islandora_default' => array(
+      'template' => 'islandora-object',
+      'variables' => array('islandora_object' => NULL),
+    ),
+    'islandora_default_edit' => array(
+      'template' => 'islandora-object-edit',
+      'variables' => array('islandora_object' => NULL),
+    ),
+  );
+}
+
+/**
+ * drupal hook_permissions function
+ * @return array
+ */
+function islandora_permission() {
+  return array(
+    FEDORA_VIEW => array(
+      'title' => t('View Fedora Repository objects and datastreams'),
+      'description' => t('Users with this permission will be allowed to view Fedora objects and datastreams.  Unless Fedora XACML security policies limits this functionality to certain objects.')
+    ),
+    FEDORA_ADD_DS => array(
+      'title' => t('Add Fedora streams to Fedora objects'),
+      'description' => t('Users with this permission will be allowed to add datastreams to Fedora objects.  Unless Fedora XACML security policies limits this functionality to certain objects.')
+    ),
+    FEDORA_METADATA_EDIT => array(
+      'title' => t('Edit Fedora Metadata'),
+      'description' => t('Users with this permission will be allowed to edit Fedora Metadata streams')
+    ),
+    FEDORA_INGEST => array(
+      'title' => t('Create new Fedora objects'),
+      'description' => t('Users with this permission will be allowed to create new objects in the Fedora repository')
+    ),
+    FEDORA_PURGE => array(
+      'title' => t('Permanently remove objects from the Fedora repository'),
+      'description' => t('Users with this permission will be allowed to Permantly remove objects from the Fedora repository.')
+    ),
+    FEDORA_MODIFY_STATE => array(
+      'title' => t('Change a Fedora objects state'),
+      'description' => t('Users with this permission will be allowed to change a Fedora objects state.')
+    ),
+  );
+}
+
+/**
+ * 
+ * @param string $object_id
+ * @return type 
+ */
+function islandora_add_datastream($object_id) {
+  if (!isset($object_id)) {
+    drupal_set_message(t('Cannot add datastream to object, object id not set'));
+    return;
   }
+  //send message to synapse
+  $object = new IslandoraObject($object_id);
 
-  /**
-   * drupal hook_permissions function
-   * @return array
-   */
-  function islandora_permission() {
-    return array(
-      FEDORA_VIEW => array(
-        'title' => t('View Fedora Repository objects and datastreams'),
-        'description' => t('Users with this permission will be allowed to view Fedora objects and datastreams.  Unless Fedora XACML security policies limits this functionality to certain objects.')
-      ),
-      FEDORA_ADD_DS => array(
-        'title' => t('Add Fedora streams to Fedora objects'),
-        'description' => t('Users with this permission will be allowed to add datastreams to Fedora objects.  Unless Fedora XACML security policies limits this functionality to certain objects.')
-      ),
-      FEDORA_METADATA_EDIT => array(
-        'title' => t('Edit Fedora Metadata'),
-        'description' => t('Users with this permission will be allowed to edit Fedora Metadata streams')
-      ),
-      FEDORA_INGEST => array(
-        'title' => t('Create new Fedora objects'),
-        'description' => t('Users with this permission will be allowed to create new objects in the Fedora repository')
-      ),
-      FEDORA_PURGE => array(
-        'title' => t('Permanently remove objects from the Fedora repository'),
-        'description' => t('Users with this permission will be allowed to Permantly remove objects from the Fedora repository.')
-      ),
-      FEDORA_MODIFY_STATE => array(
-        'title' => t('Change a Fedora objects state'),
-        'description' => t('Users with this permission will be allowed to change a Fedora objects state.')
-      ),
-    );
+  if (!isset($object)) {
+    drupal_set_message(t('Could not remove object, object not found'));
+    return;
   }
+  module_invoke_all('islandora_add_datastream', $object); //allow submodules to handle add datastream based on object type
+}
 
-  /**
-   * 
-   * @param string $object_id
-   * @return type 
-   */
-  function islandora_add_datastream($object_id) {
-    if (!isset($object_id)) {
-      drupal_set_message(t('Cannot add datastream to object, object id not set'));
-      return;
-    }
-    //send message to synapse
-    $object = new IslandoraObject($object_id);
-
-    if (!isset($object)) {
-      drupal_set_message(t('Could not remove object, object not found'));
-      return;
-    }
-    module_invoke_all('islandora_add_datastream', $object); //allow submodules to handle add datastream based on object type
+function islandora_preprocess_islandora_default(&$variables) {
+  $islandora_object = $variables['islandora_object'];
+  module_load_include('inc', 'islandora', 'utils/islandora_dublin_core');
+  try {
+    $dc = $islandora_object['DC']->content;
+    //$dc_xml = simplexml_load_string($dc);
+    $dc_object = Dublin_Core::import_from_xml_string($dc);
+  } catch (Exception $e) {
+    drupal_set_message(t('Error retrieving object %s %t', array('%s' => $islandora_object->id, '%t' => $e->getMessage())), 'error');
   }
-
-  function islandora_preprocess_islandora_default(&$variables) {
-    $islandora_object = $variables['islandora_object'];
-    module_load_include('inc', 'islandora', 'utils/islandora_dublin_core');
-    try {
-      $dc = $islandora_object['DC']->content;
-      //$dc_xml = simplexml_load_string($dc);
-      $dc_object = Dublin_Core::import_from_xml_string($dc);
-    } catch (Exception $e) {
-      drupal_set_message(t('Error retrieving object %s %t', array('%s' => $islandora_object->id, '%t' => $e->getMessage())), 'error');
-    }
-    $variables['islandora_dublin_core'] = $dc_object;
-    $variables['islandora_object_label'] = $islandora_object->label;
-    global $base_url;
-    if (isset($islandora_object['TN'])) {
-      $variables['islandora_thumbnail_url'] = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/TN/view';
-    }
+  $variables['islandora_dublin_core'] = $dc_object;
+  $variables['islandora_object_label'] = $islandora_object->label;
+  global $base_url;
+  if (isset($islandora_object['TN'])) {
+    $variables['islandora_thumbnail_url'] = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/TN/view';
   }
+}
 
-  function islandora_preprocess_islandora_default_edit(&$variables) {
-    $islandora_object = $variables['islandora_object'];
-    global $base_url;
-    $datastreams = array();
-    foreach ($islandora_object as $ds) {
-      $datastreams['download_url'] = $base_url . '/islandora/object/' . $islandora_object->id . 'datastream/' . $ds->id . '/download';
-      $datastreams['view_url'] = $base_url . '/islandora/object/' . $islandora_object->id . 'datastream/' . $ds->id . '/view';
-      $datastreams['delete_url'] = $base_url . '/islandora/object/' . $islandora_object->id . 'datastream/' . $ds->id . '/delete';
-      $variables['islandora_datastreams'][$ds->id] = $datastreams;
-    }
+function islandora_preprocess_islandora_default_edit(&$variables) {
+  $islandora_object = $variables['islandora_object'];
+  global $base_url;
+  $datastreams = array();
+  foreach ($islandora_object as $ds) {
+    $datastreams['download_url'] = $base_url . '/islandora/object/' . $islandora_object->id . 'datastream/' . $ds->id . '/download';
+    $datastreams['view_url'] = $base_url . '/islandora/object/' . $islandora_object->id . 'datastream/' . $ds->id . '/view';
+    $datastreams['delete_url'] = $base_url . '/islandora/object/' . $islandora_object->id . 'datastream/' . $ds->id . '/delete';
+    $variables['islandora_datastreams'][$ds->id] = $datastreams;
   }
-
 }

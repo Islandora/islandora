@@ -22,7 +22,7 @@ function islandora_ingest_callback($collection_pid) {
   }
   elseif ($registry_count == 1) {
     // One registry implementation, go there
-    drupal_goto($ingest_registry[0]['url']);
+    drupal_goto($ingest_registry[0]['url'] . "/$collection_pid");
   }
   else {
     // Multiple ingest routes registered
@@ -37,7 +37,7 @@ function islandora_ingest_registry_render($ingest_registry) {
     '#markup' => '',
   );
   foreach ($ingest_registry AS $ingest_route) {
-    $output['#markup'] .= l($ingest_route['name'], $ingest_route['url']) . '<br/>';
+    $output['#markup'] .= l($ingest_route['name'], $ingest_route['url']. "/$collection_pid") . '<br/>';
   }
   return $output;
 }

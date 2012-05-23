@@ -13,9 +13,32 @@ require_once 'sites/all/libraries/tuque/FedoraRelationships.php';
 
 class RestConnection {
 
+  /**
+   * Connection to the repository
+   *
+   * @var RepositoryConnection
+   */
   public $connection = NULL;
+
+  /**
+   * The Fedora API we are using
+   *
+   * @var FedoraAPI
+   */
   public $api = NULL;
+
+  /**
+   * The cache we use to connect.
+   *
+   * @var SimpleCache
+   */
   public $cache = NULL;
+
+  /**
+   * The repository object.
+   *
+   * @var FedoraRepository
+   */
   public $repository = NULL;
 
   function RestConnection($user) {

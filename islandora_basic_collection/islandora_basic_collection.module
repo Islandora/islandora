@@ -137,3 +137,24 @@ function islandora_basic_collection_get_objects($object) {
   return $results;
 }
 
+function islandora_basic_collection_islandora_ingest_get_information($models, $object) {
+  if(in_array('islandora:collectionCModel', $models) && isset($object['COLLECTION_POLICY'])) {
+    try {
+      $return = array();
+      $xml = new SimpleXMLElement($object['COLLECTION_POLICY']);
+      $cms = $xml->getElementsByTagName('content_models')->item(0)->getElementsByTagName('content_model');
+      $return['contentsmodels'] = array();
+      foreach($cms as $cm) {
+        $contentmodel = array();
+        $contentmodel['name'] = (string) $cm['name'];
+        $contentmodel['namespace'] = (string) $cm['namespace'];
+        $contentmodel['pid'] = (string) $cm['pid'];
+        $return['contentsmodels'] = (string) $contentmodel;
+      }
+      $return['relationship'] = trim($xml->getElementsByTagName('relationship')->item(0)->nodeValue);
+
+      return $return;
+    }
+    catch (Exception $e) { }
+  }
+}
