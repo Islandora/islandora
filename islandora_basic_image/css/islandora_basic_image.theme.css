@@ -5,4 +5,101 @@
         Purpose of the stylesheet follows.
 */
 
+.islandora-basic-image-object img {
+  height: auto;
+  max-width: 100%;
+  *width: 100%;
+}
 
+.islandora-basic-image-content,
+.islandora-basic-image-sidebar {
+  display: inline;
+  position: relative;
+}
+
+.islandora-basic-image-metadata {
+  clear: both;
+  padding-top: 1.5em;
+}
+
+dl.islandora-basic-image-fields {
+  width:100%;
+  margin: 0 auto;
+  letter-spacing:-0.31em;
+  *letter-spacing:normal;
+  word-spacing:-0.43em;
+} 
+
+/*
+ * The width + left/right padding of DTs/DDs equals 88% when compensating for an image
+ */
+.islandora-basic-image-metadata dt {
+  margin-right:-1px;
+  width:12.5%;
+  font-weight: bold;
+  text-align: right;
+}
+
+.islandora-basic-image-metadata dd {
+  width:77%;
+}
+
+/* 
+ * In this rule, we reset the white-space (see hack above)
+ */
+.islandora-basic-image-metadata dt,
+.islandora-basic-image-metadata dd {
+  display:inline-block;
+  *display:inline;
+  zoom:1;
+  letter-spacing:normal;
+  word-spacing:normal;
+  vertical-align:top;
+  padding:5px 0 3px 3%;
+  margin:0;
+  border-top:1px solid #ddd;
+ -ms-word-break: break-all;
+     word-break: break-all;
+     word-break: break-word; /* webkit */
+-webkit-hyphens: auto;
+   -moz-hyphens: auto;
+        hyphens: auto;
+}
+
+.islandora-basic-image-sidebar,
+.islandora-basic-image-sidebar,
+body.one-sidebar .islandora-basic-image-sidebar,
+body.two-sidebars .islandora-basic-image-sidebar {
+    clear: both;
+    width: 100%;
+}
+
+.islandora-basic-image-sidebar,
+.islandora-basic-image-sidebar,
+body.one-sidebar .islandora-basic-image-sidebar,
+body.two-sidebars .islandora-basic-image-sidebar {
+    width: 100%;
+}
+
+@media all and (min-width: 768px) {
+
+  body.no-sidebars .islandora-basic-image-content,
+  body.no-sidebars .islandora-basic-image-sidebar {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  body.no-sidebars .islandora-basic-image-content {
+    width: 60%;
+    padding: 0 20px 0 0;
+    float: left; /* LTR */
+  }
+
+  body.no-sidebars .islandora-basic-image-sidebar {
+    float: right; /* LTR */
+    width: 40%;
+    clear: none;
+  }
+  
+}

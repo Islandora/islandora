@@ -77,7 +77,7 @@ function islandora_basic_image_islandora_view_object($object, $user, $page_numbe
   foreach ($object->models as $model) {
     if (isset($cmodel_list[$model][ISLANDORA_VIEW_HOOK]) && $cmodel_list[$model][ISLANDORA_VIEW_HOOK] == TRUE) {
       $output = theme('islandora_basic_image', array('islandora_object' => $object));
-      return array('Basic Image Output' => $output);
+      return array('' => $output);
     }
   }
   return NULL;
@@ -101,15 +101,20 @@ function islandora_basic_image_preprocess_islandora_basic_image(&$variables) {
   $variables['islandora_dublin_core'] = $dc_object;
   //create a nicer array for themers
   //TODO: give this a better home
+
   $dc_array = array();
-   foreach ($dc_object as $element) {
+  foreach ($dc_object as $element) {
     if (!empty($element)) {
-      foreach ($element as $key => $value) {
-        foreach ($value as $v) {
-          if (!empty($v)) {
-            $dc_array[] = array($key => $v);
+      foreach ($element as $field => $value) {
+          // split value if the result value is an array
+          if (is_array($value)) {
+            $value = implode(", ", $value);
           }
-        }
+      $dc_label = explode(':', $field);
+      $element_label = ucfirst($dc_label[1]);
+      $dc_array[$field]['label'] = $element_label;
+      $dc_array[$field]['value'] = strip_tags($value);
+      $dc_array[$field]['class'] = strtolower( preg_replace('/[^A-Za-z0-9]/', '-', $field));
       }
     }
   }
@@ -124,7 +129,8 @@ function islandora_basic_image_preprocess_islandora_basic_image(&$variables) {
     $variables['islandora_thumbnail_url'] = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/TN/view';
   }
   if (isset($islandora_object['MEDIUM_SIZE'])) {
-    $variables['islandora_medium_size_url'] = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/MEDIUM_SIZE/view';
+    $medium_size = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/MEDIUM_SIZE/view';
+    $variables['islandora_medium_size_url'] = '<img src="' . $medium_size . '"/>';
   }
 }
 

@@ -21,23 +21,35 @@
  * along with the program.  If not, see <http ://www.gnu.org/licenses/>.
  */
 ?>
-<?php
+<?php drupal_set_title(""); ?>
 
-  $object = $variables['islandora_object'];
-  $image_url = $variables['islandora_image_url'];
-  drupal_set_title($object->label);
-  foreach ($variables['islandora_dublin_core'] as $element) {
-    if (!empty($element)) {
-      foreach ($element as $key => $value) {
-        foreach ($value as $v) {
-          if (!empty($v)) {
-            print '<strong>' . ($key) . '</strong>: ';
-            print($v) . '<br />';
-          }
-        }
-      }
-    }
-  }
-  print('<img src = "' . $image_url . '"/>');
-?>
+<div class="islandora-basic-image-object">
+  <div class="islandora-basic-image-content clearfix">
+    <?php print $islandora_medium_size_url; ?> 
+  </div>
+  <div class="islandora-basic-image-sidebar">
+    <h1 class="title"><?php print $islandora_object_label; ?></h1>
+    <h3><?php print $dc_array['dc:description']['label']; ?></h3>
+    <p><?php print $dc_array['dc:description']['value']; ?></p>
+  </div>
+  <div class="islandora-basic-image-metadata">
+    <h4>Details</h4>
+    <dl class="islandora-basic-image-fields">
+      <?php $row_field = 0; ?>
+      <?php foreach($dc_array as $key => $value): ?>
+        <dt class="solr-label <?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
+          <?php print $value['label']; ?>
+        </dt>
+        <?php if ($key == 'PID'): ?>
+          <?php $value['value'] = l($value['value'], 'fedora/repository/' . htmlspecialchars($value['value'], ENT_QUOTES, 'utf-8')); ?>
+        <?php endif; ?>
+        <dd class="solr-value <?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
+          <?php print $value['value']; ?>
+        </dd>
+        <?php $row_field++; ?>
+      <?php endforeach; ?>
+    </dl>
+  </div>
 
+
+</div>

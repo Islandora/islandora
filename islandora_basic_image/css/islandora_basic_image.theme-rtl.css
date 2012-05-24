@@ -1,0 +1,19 @@
+/* 
+    Document   : islandora_basic_collection.theme-rtl
+    Created on : May 23, 2012, 11:23:56 AM
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+@media all and (min-width: 768px) {
+
+  body.no-sidebars .islandora-basic-image-content {
+    float: right; /* LTR */
+    padding: 0 0 0 20px;
+  }
+
+  body.no-sidebars .islandora-basic-image-sidebar {
+    float: left; /* LTR */
+  }
+  
+}
