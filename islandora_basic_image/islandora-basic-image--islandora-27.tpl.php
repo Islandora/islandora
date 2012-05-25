@@ -1,7 +1,6 @@
 <?php
-
 /*
- * fedora-repository-view-object.tpl.php
+ * islandora-basic-image--islandora-27.tpl.php
  * 
  *
  * 
@@ -21,35 +20,33 @@
  * along with the program.  If not, see <http ://www.gnu.org/licenses/>.
  */
 ?>
-<?php
-/**
- * This template is an example of overiding a template by pid
- * 
- * This template must be placed in your themes template directory and 
- * allows you to override a template file for a specific object
- * an example use case would be for theming a collection object differently
- * based on the actual collection object.  
- * 
- * Best practice would be to create a new cmodel if you have many objects that
- * need to be themed differently but if you only have a few objects that need different
- * templates this method would work. 
- */
-  $object = $variables['islandora_object'];
-  $image_url = $variables['islandora_image_url'];
-  drupal_set_title($object->label);
-  print ('This template has been overridden by a theme suggestion');
-  foreach ($variables['islandora_dublin_core'] as $element) {
-    if (!empty($element)) {
-      foreach ($element as $key => $value) {
-        foreach ($value as $v) {
-          if (!empty($v)) {
-            print '<strong>' . ($key) . '</strong>: ';
-            print($v) . '<br />';
-          }
-        }
-      }
-    }
-  }
-  print('<img src = "' . $image_url . '"/>');
-?>
+<?php drupal_set_title(""); ?>
 
+<div class="islandora-basic-image-object">
+  <div class="islandora-basic-image-content clearfix">
+    <?php print $islandora_medium_img; ?> 
+  </div>
+  <div class="islandora-basic-image-sidebar">
+    <h1 class="title"><?php print $islandora_object_label; ?></h1>
+    <h3><?php print $dc_array['dc:description']['label']; ?></h3>
+    <p><?php print $dc_array['dc:description']['value']; ?></p>
+  </div>
+  <div class="islandora-basic-image-metadata">
+    <h4>Details</h4>
+    <dl class="islandora-basic-image-fields">
+      <?php $row_field = 0; ?>
+      <?php foreach($dc_array as $key => $value): ?>
+        <dt class="solr-label <?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
+          <?php print $value['label']; ?>
+        </dt>
+        <?php if ($key == 'PID'): ?>
+          <?php $value['value'] = l($value['value'], 'fedora/repository/' . htmlspecialchars($value['value'], ENT_QUOTES, 'utf-8')); ?>
+        <?php endif; ?>
+        <dd class="solr-value <?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
+          <?php print $value['value']; ?>
+        </dd>
+        <?php $row_field++; ?>
+      <?php endforeach; ?>
+    </dl>
+  </div>
+</div>

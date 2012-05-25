@@ -223,7 +223,7 @@ function islandora_basic_image_preprocess_islandora_basic_image(&$variables) {
   //    $dc_label = explode(':', $field);
   //    $element_label = ucfirst($dc_label[1]);
   //    $dc_array[$field]['label'] = $element_label;
-  //   $dc_array[$field]['value'] = strip_tags($value);
+  //    $dc_array[$field]['value'] = strip_tags($value);
   //    $dc_array[$field]['class'] = strtolower( preg_replace('/[^A-Za-z0-9]/', '-', $field));
   //    }
   //  }
@@ -234,14 +234,16 @@ function islandora_basic_image_preprocess_islandora_basic_image(&$variables) {
   $variables['theme_hook_suggestions'][] = 'islandora_basic_image__' . str_replace(':', '_', $islandora_object->id);
   global $base_url;
   if (isset($islandora_object['OBJ'])) {
-    $variables['islandora_image_url'] = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/OBJ/view';
+    $full_size_url = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/OBJ/view';
+    $variables['islandora_full_img'] = '<img src="' . $full_size_url . '"/>';
   }
   if (isset($islandora_object['TN'])) {
-    $variables['islandora_thumbnail_url'] = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/TN/view';
+    $thumbnail_size_url = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/TN/view';
+    $variables['islandora_thumbnail_img'] = '<img src="' . $thumbnail_size_url . '"/>';
   }
   if (isset($islandora_object['MEDIUM_SIZE'])) {
-    $medium_size = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/MEDIUM_SIZE/view';
-    $variables['islandora_medium_size_url'] = '<img src="' . $medium_size . '"/>';
+    $medium_size_url = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/MEDIUM_SIZE/view';
+    $variables['islandora_medium_img'] = '<img src="' . $medium_size_url . '"/>';
   }
 }
 

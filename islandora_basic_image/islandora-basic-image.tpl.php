@@ -1,7 +1,7 @@
 <?php
 
 /*
- * fedora-repository-view-object.tpl.php
+ * islandora-basic-image.tpl.php
  * 
  *
  * 
@@ -25,7 +25,7 @@
 
 <div class="islandora-basic-image-object">
   <div class="islandora-basic-image-content clearfix">
-    <?php print $islandora_medium_size_url; ?> 
+    <?php print $islandora_medium_img; ?> 
   </div>
   <div class="islandora-basic-image-sidebar">
     <h1 class="title"><?php print $islandora_object_label; ?></h1>
@@ -37,19 +37,14 @@
     <dl class="islandora-basic-image-fields">
       <?php $row_field = 0; ?>
       <?php foreach($dc_array as $key => $value): ?>
-        <dt class="solr-label <?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
+        <dt class="<?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
           <?php print $value['label']; ?>
         </dt>
-        <?php if ($key == 'PID'): ?>
-          <?php $value['value'] = l($value['value'], 'fedora/repository/' . htmlspecialchars($value['value'], ENT_QUOTES, 'utf-8')); ?>
-        <?php endif; ?>
-        <dd class="solr-value <?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
+        <dd class="<?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
           <?php print $value['value']; ?>
         </dd>
         <?php $row_field++; ?>
       <?php endforeach; ?>
     </dl>
   </div>
-
-
 </div>

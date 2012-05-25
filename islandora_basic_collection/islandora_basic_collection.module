@@ -153,7 +153,7 @@ function islandora_basic_collection_islandora_view_object($object, $user, $page_
   foreach ($object->models as $model) {
     if (isset($cmodel_list[$model][ISLANDORA_VIEW_HOOK]) && $cmodel_list[$model][ISLANDORA_VIEW_HOOK] == TRUE) {
       $output = theme('islandora_basic_collection', array('islandora_object' => $object));
-      return array('Basic Collection Output' => $output);
+      return array('' => $output);
     }
   }
   return NULL;
@@ -166,6 +166,10 @@ function islandora_basic_collection_islandora_view_object($object, $user, $page_
  *   an array of variables that will be passed to the theme function
  */
 function islandora_basic_collection_preprocess_islandora_basic_collection(&$variables) {
+    // base url
+  global $base_url;
+    // base path
+  global $base_path;
   $islandora_object = $variables['islandora_object'];
   module_load_include('inc', 'islandora', 'includes/islandora_dublin_core');
   try {
@@ -178,16 +182,35 @@ function islandora_basic_collection_preprocess_islandora_basic_collection(&$vari
   $variables['islandora_dublin_core'] = $dc_object;
   $variables['islandora_object_label'] = $islandora_object->label;
   $variables['theme_hook_suggestions'][] = 'islandora_basic_collection__' . str_replace(':', '_', $islandora_object->id);
-  global $base_url;
   if (isset($islandora_object['OBJ'])) {
-    $variables['islandora_image_url'] = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/OBJ/view';
+    $full_size_url = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/OBJ/view';
+    $variables['islandora_full_img'] = '<img src="' . $full_size_url . '"/>';
   }
   if (isset($islandora_object['TN'])) {
-    $variables['islandora_thumbnail_url'] = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/TN/view';
+    $thumbnail_size_url = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/TN/view';
+    $variables['islandora_thumbnail_img'] = '<img src="' . $thumbnail_size_url . '"/>';
   }
   if (isset($islandora_object['MEDIUM_SIZE'])) {
-    $variables['islandora_medium_size_url'] = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/MEDIUM_SIZE/view';
+    $medium_size_url = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/MEDIUM_SIZE/view';
+    $variables['islandora_medium_img'] = '<img src="' . $medium_size_url . '"/>';
   }
+
+  $associated_objects_array = array();
+  foreach($variables['islandora_associated_objects'] as $key => $value) {
+    $pid = $variables['islandora_associated_objects'][$key]['object']['value'];
+    $object_url = 'islandora/object/' . $pid;
+    $thumbnail_img = '<img src="' . $base_path . $object_url . '/datastream/TN/view"' . '/>';
+    $title = $variables['islandora_associated_objects'][$key]['title']['value'];
+    $associated_objects_array[$pid]['pid'] = $pid;
+    $associated_objects_array[$pid]['path'] = $object_url;
+    $associated_objects_array[$pid]['title'] = $title;
+    $associated_objects_array[$pid]['class'] = strtolower( preg_replace('/[^A-Za-z0-9]/', '-', $pid));
+    $associated_objects_array[$pid]['thumbnail'] = $thumbnail_img;
+    $associated_objects_array[$pid]['title_link'] = l($title, $object_url, array('html' => TRUE, 'attributes' => array('title' => $title)));
+    $associated_objects_array[$pid]['thumb_link'] = l($thumbnail_img, $object_url, array('html' => TRUE, 'attributes' => array('title' => $title)));
+  }
+  $variables['associated_objects_array'] = $associated_objects_array;
+
 }
 
 function islandora_basic_collection_get_objects($object) {
