@@ -77,7 +77,7 @@ function islandora_basic_image_menu() {
  * @param string $object_id
  * @return string 
  */
-/**
+/*
 function islandora_basic_image_manage_object($object_id){
   return 'Image CModel edit function '.$object_id;
 }*/

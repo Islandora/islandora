@@ -46,29 +46,48 @@
 
 //dsm($object);
 drupal_set_title($islandora_object->label);
-$dublin_core = $variables['islandora_dublin_core'];
-print($islandora_object->label . ' ' . $islandora_object->id);
-print ('<h3>datastreams</h3>');
-foreach ($islandora_object as $ds) {
-  print $ds->label . '<br>';
-  //do something
-}
-print('<h3>Dublin Core</h3>');
+// $dublin_core = $variables['islandora_dublin_core'];
+// print($islandora_object->label . ' ' . $islandora_object->id);
+// print ('<h3>datastreams</h3>');
+// foreach ($islandora_object as $ds) {
+//   print $ds->label . '<br>';
+//   //do something
+// }
+// print('<h3>Dublin Core</h3>');
 
-foreach ($dublin_core as $element) {
-  if (!empty($element)) {
-   // print($element);
-   foreach ($element as  $key => $value) {      
-      foreach($value as $v){
-        if(!empty($v)){
-        print '<strong>'.($key).'</strong>: ';print($v).'<br />';
-        }
-      }
-    }
-  }
-}
-if(isset($variables['islandora_thumbnail_url'])){
-  print('<img src = "'.$variables['islandora_thumbnail_url'].'"/>');
-}
+// foreach ($dublin_core as $element) {
+//   if (!empty($element)) {
+//    // print($element);
+//    foreach ($element as  $key => $value) {      
+//       foreach($value as $v){
+//         if(!empty($v)){
+//         print '<strong>'.($key).'</strong>: ';print($v).'<br />';
+//         }
+//       }
+//     }
+//   }
+// }
+
 ?>
-
+<div class="islandora-object">
+  <h2>Details</h2>
+  <dl class="islandora-object-thumb">
+    <dt>
+      <?php if(isset($variables['islandora_thumbnail_url'])): ?>
+        <?php print('<img src = "'.$variables['islandora_thumbnail_url'].'"/>'); ?></dt>
+      <?php endif; ?>
+    <dd></dd>
+  </dl>
+  <dl class="islandora-object-fields">
+    <?php $row_field = 0; ?>
+    <?php foreach($dc_array as $key => $value): ?>
+      <dt class="<?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
+        <?php print $value['label']; ?>
+      </dt>
+      <dd class="<?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
+        <?php print $value['value']; ?>
+      </dd>
+      <?php $row_field++; ?>
+    <?php endforeach; ?>
+  </dl>
+</div>

@@ -579,6 +579,7 @@ function islandora_preprocess_islandora_default(&$variables) {
   } catch (Exception $e) {
     drupal_set_message(t('Error retrieving object %s %t', array('%s' => $islandora_object->id, '%t' => $e->getMessage())), 'error');
   }
+  $variables['dc_array'] = $dc_object->as_formatted_array();
   $variables['islandora_dublin_core'] = $dc_object;
   $variables['islandora_object_label'] = $islandora_object->label;
   global $base_url;
