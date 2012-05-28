@@ -200,6 +200,8 @@ function islandora_basic_image_islandora_view_object($object, $user, $page_numbe
  *   an array of variables that will be passed to the theme function
  */
 function islandora_basic_image_preprocess_islandora_basic_image(&$variables) {
+  drupal_add_js('misc/form.js');
+  drupal_add_js('misc/collapse.js');
   $islandora_object = $variables['islandora_object'];
   module_load_include('inc', 'islandora', 'includes/islandora_dublin_core');
   try {

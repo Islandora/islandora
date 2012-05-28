@@ -32,19 +32,22 @@
     <h3><?php print $dc_array['dc:description']['label']; ?></h3>
     <p><?php print $dc_array['dc:description']['value']; ?></p>
   </div>
-  <div class="islandora-basic-image-metadata">
-    <h4>Details</h4>
-    <dl class="islandora-basic-image-fields">
-      <?php $row_field = 0; ?>
-      <?php foreach($dc_array as $key => $value): ?>
-        <dt class="<?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
-          <?php print $value['label']; ?>
-        </dt>
-        <dd class="<?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
-          <?php print $value['value']; ?>
-        </dd>
-        <?php $row_field++; ?>
-      <?php endforeach; ?>
-    </dl>
-  </div>
+
+  <fieldset class="collapsible collapsed islandora-basic-image-metadata">
+  <legend><span class="fieldset-legend">Extended Details</span></legend>
+    <div class="fieldset-wrapper">
+      <dl class="islandora-basic-image-fields">
+        <?php $row_field = 0; ?>
+        <?php foreach($dc_array as $key => $value): ?>
+          <dt class="<?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
+            <?php print $value['label']; ?>
+          </dt>
+          <dd class="<?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
+            <?php print $value['value']; ?>
+          </dd>
+          <?php $row_field++; ?>
+        <?php endforeach; ?>
+      </dl>
+    </div>
+  </fieldset>
 </div>
