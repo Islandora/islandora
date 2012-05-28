@@ -74,18 +74,17 @@ function islandora_basic_collection_manage_object($object_id) {
   module_load_include('inc', 'islandora_basic_collection', 'includes/ChildCollection');
   module_load_include('inc', 'islandora_basic_collection', 'includes/ManagePolicies');
 
-
   $form = array();
 
   $form['collection_manager'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'vertical_tabs',
+    '#weight' => 0,
+    '#prefix' => '',
   );
 
   $form['collection_manager']['create_child_collection'] = array(
-    '#type' => 'fieldset',
     '#title' => t('Create Child Collection'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
+    '#type' => 'fieldset',
   );
 
   $form['collection_manager']['create_child_collection']['form'] = drupal_get_form('islandora_create_child_collection_form', $object_id);
