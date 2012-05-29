@@ -108,16 +108,7 @@ function islandora_menu() {
     'access arguments' => array(FEDORA_VIEW),
   );
 
-  
-  $items['islandora/object/%/add'] = array(
-    'title' => 'Add to an object',
-    'file' => 'includes/datastream.inc',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('islandora_add_datastream_form',2),
-    'type' => MENU_NORMAL_ITEM,
-    'access arguments' => array(FEDORA_ADD_DS)
-  );
-   
+
 
   $items['islandora/object/%/view'] = array(
     'title' => 'View',
@@ -153,6 +144,7 @@ function islandora_menu() {
     'weight' => -10,
   );
 
+
   $items['islandora/object/%/manage/properties'] = array(
     'title' => 'Properties',
     'page callback' => 'drupal_get_form',
@@ -163,7 +155,6 @@ function islandora_menu() {
     'weight' => -5,
   );
 
-
   $items['islandora/object/%/delete'] = array(
     'title' => 'Purge object',
     'page callback' => 'islandora_purge_object',
@@ -171,6 +162,26 @@ function islandora_menu() {
     'type' => MENU_CALLBACK,
     'access arguments' => array(FEDORA_PURGE),
   );
+
+  $items['islandora/object/%/manage/datastreams/add'] = array(
+    'title' => 'Add a datastream',
+    'file' => 'includes/datastream.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('islandora_add_datastream_form', 2),
+    'type' => MENU_NORMAL_ITEM,
+    'access arguments' => array(FEDORA_ADD_DS)
+  );
+
+
+  // $items['islandora/object/%/add'] = array(
+  //   'title' => 'Add to an object',
+  //   'file' => 'includes/datastream.inc',
+  //   'page callback' => 'drupal_get_form',
+  //   'page arguments' => array('islandora_add_datastream_form',2),
+  //   'type' => MENU_NORMAL_ITEM,
+  //   'access arguments' => array(FEDORA_ADD_DS)
+  // );
+   
 
   $items['islandora/object/%/datastream/%'] = array(
     'title' => 'View datastream',
@@ -221,6 +232,24 @@ function islandora_menu() {
 function islandora_admin_paths_alter(&$paths) {
 
   $paths['*/manage*'] = TRUE;
+}
+
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function islandora_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  // Add action link 'islandora/object/%/manage/datastreams'.
+  $object_id = $router_item['page_arguments'][0];
+  if ($root_path == 'islandora/object/%/manage/datastreams') {
+    $item = menu_get_item("islandora/object/$object_id/manage/datastreams/add");
+    if ($item['access']) {
+      $data['actions']['output'][] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => $item,
+      );
+    }
+  }
 }
 
 /**
@@ -616,7 +645,7 @@ function islandora_preprocess_islandora_default_edit(&$variables) {
   $datastreams = array();
   $variables['islandora_editmetadata_url'] = $base_url . '/islandora/edit_form/' . $islandora_object->id;
   module_load_include('inc','islandora','includes/datastream');
-  $variables['add_datastream_form'] = drupal_get_form('islandora_add_datastream_form', $islandora_object->id);
+  // $variables['add_datastream_form'] = drupal_get_form('islandora_add_datastream_form', $islandora_object->id);
   foreach ($islandora_object as $ds) {
     $datastreams['download_url'] = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/' . $ds->id . '/download';
     $datastreams['view_url'] = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/' . $ds->id . '/view';

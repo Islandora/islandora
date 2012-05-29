@@ -280,8 +280,8 @@ function islandora_add_datastream_form($form, &$form_state, $object_id) {
   $form['add_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => 'Add a datastream',
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
+    '#collapsible' => FALSE,
+    '#collapsed' => FALSE,
   );
   $form['add_fieldset']['add_datastream_label'] = array(
     '#value' => t('<br /><h3>Add Datastream:</h3>'),
