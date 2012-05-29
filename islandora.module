@@ -234,14 +234,13 @@ function islandora_admin_paths_alter(&$paths) {
   $paths['*/manage*'] = TRUE;
 }
 
-
 /**
  * Implements hook_menu_local_tasks_alter().
  */
 function islandora_menu_local_tasks_alter(&$data, $router_item, $root_path) {
   // Add action link 'islandora/object/%/manage/datastreams'.
-  $object_id = $router_item['page_arguments'][0];
   if ($root_path == 'islandora/object/%/manage/datastreams') {
+    $object_id = $router_item['page_arguments'][0];
     $item = menu_get_item("islandora/object/$object_id/manage/datastreams/add");
     if ($item['access']) {
       $data['actions']['output'][] = array(
