@@ -5,4 +5,56 @@
         Purpose of the stylesheet follows.
 */
 
+.islandora img {
+  max-width: 100%;
+  *width: 100%;
+}
 
+.islandora * {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/*
+ * These rules will display DTs/DDs as columns.
+ * Constructs must follow a key/value pair pattern.
+ * The three last declarations are meant to kill white space between DTs/DDs 
+ * (result of inline-block styling)
+ */
+
+dl.islandora-inline-metadata {
+  margin: 0 auto;
+  letter-spacing: -0.31em;
+  *letter-spacing:normal;
+  word-spacing: -0.43em;
+}
+
+.islandora-inline-metadata dt {
+  margin-right: -1px;
+  width: 15.625%;
+  font-weight: normal;
+  font-weight: bold;
+  padding-right: 0;
+}
+
+.islandora-inline-metadata dd {
+  width: 84.375%;
+  padding-left: 40px;
+}
+
+/* 
+ * In this rule, we reset the white-space (see hack above)
+ */
+.islandora-inline-metadata dt,
+.islandora-inline-metadata dd {
+  display: inline-block;
+  *display: inline;
+  zoom: 1;
+  letter-spacing: normal;
+  word-spacing: normal;
+  vertical-align: top;
+  padding-top: 6px;
+  padding-bottom: 4px;
+  margin: 0;
+}

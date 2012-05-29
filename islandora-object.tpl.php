@@ -69,25 +69,25 @@ drupal_set_title($islandora_object->label);
 // }
 
 ?>
-<div class="islandora-object">
+<div class="islandora-object islandora">
   <h2>Details</h2>
-  <dl class="islandora-object-thumb">
+  <dl class="islandora-object-tn">
     <dt>
       <?php if(isset($variables['islandora_thumbnail_url'])): ?>
         <?php print('<img src = "'.$variables['islandora_thumbnail_url'].'"/>'); ?></dt>
       <?php endif; ?>
     <dd></dd>
   </dl>
-  <dl class="islandora-object-fields">
-    <?php $row_field = 0; ?>
-    <?php foreach($dc_array as $key => $value): ?>
-      <dt class="<?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
-        <?php print $value['label']; ?>
-      </dt>
-      <dd class="<?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
-        <?php print $value['value']; ?>
-      </dd>
-      <?php $row_field++; ?>
-    <?php endforeach; ?>
-  </dl>
+    <dl class="islandora-inline-metadata islandora-object-fields">
+      <?php $row_field = 0; ?>
+      <?php foreach($dc_array as $key => $value): ?>
+        <dt class="<?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
+          <?php print $value['label']; ?>
+        </dt>
+        <dd class="<?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
+          <?php print $value['value']; ?>
+        </dd>
+        <?php $row_field++; ?>
+      <?php endforeach; ?>
+    </dl>
 </div>

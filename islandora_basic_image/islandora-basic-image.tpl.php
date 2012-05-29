@@ -23,7 +23,7 @@
 ?>
 <?php drupal_set_title(""); ?>
 
-<div class="islandora-basic-image-object">
+<div class="islandora-basic-image-object islandora">
   <div class="islandora-basic-image-content clearfix">
     <?php print $islandora_medium_img; ?> 
   </div>
@@ -36,7 +36,7 @@
   <fieldset class="collapsible collapsed islandora-basic-image-metadata">
   <legend><span class="fieldset-legend">Extended Details</span></legend>
     <div class="fieldset-wrapper">
-      <dl class="islandora-basic-image-fields">
+      <dl class="islandora-inline-metadata islandora-basic-image-fields">
         <?php $row_field = 0; ?>
         <?php foreach($dc_array as $key => $value): ?>
           <dt class="<?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">

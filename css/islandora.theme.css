@@ -9,71 +9,27 @@
  * Thumbnails float optionally to the left or right of descriptive lists.
  */
 
-.islandora-object-thumb img {
-  max-width: 100%;
-  *width: 100%;
-}
-
-dl.islandora-object-thumb {
+dl.islandora-object-tn {
   float: left;
-  width: 15%;
-  margin: 0.75em auto;
-}
-
-.islandora-object-thumb dt,
-.islandora-object-thumb dd {
+  width: 20.8333%;
+  padding: 0 10px 0 0;
   margin: 0;
 }
 
-/*
- * These rules will display DTs/DDs as columns.
- * Constructs must follow a key/value pair pattern.
- * The three last declarations are meant to kill white space between DTs/DDs 
- * (result of inline-block styling)
- */
 dl.islandora-object-fields {
   float: right;
-  width:83%;
-  margin: 0.75em auto;
-  letter-spacing:-0.34em;
-  *letter-spacing:normal;
-  word-spacing:-0.44em;
+  width:79.1666%;
   border-top:3px solid #ddd;
-} 
+}
 
-/*
- * The width + left/right padding of DTs/DDs equals 88% when compensating for an image
- */
 .islandora-object-fields dt {
-  margin-right:-1px;
-  width:22.5%;
   font-weight: bold;
 }
 
-.islandora-object-fields dd {
-  width:67%;
-}
-
-/* 
- * In this rule, we reset the white-space (see hack above)
- */
 .islandora-object-fields dt,
 .islandora-object-fields dd {
-  display:inline-block;
-  *display:inline;
-  zoom:1;
-  letter-spacing:normal;
-  word-spacing:normal;
-  vertical-align:top;
   padding:6px 2% 4px;
-  margin:0;
   border-top:1px solid #ddd;
- -ms-word-break: break-all;
-     word-break: break-all;
-     word-break: break-word; /* webkit */
--webkit-hyphens: auto;
-   -moz-hyphens: auto;
-        hyphens: auto;
 }
 
 .islandora-object-fields dt.first,
