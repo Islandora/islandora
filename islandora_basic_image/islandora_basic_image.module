@@ -203,6 +203,7 @@ function islandora_basic_image_preprocess_islandora_basic_image(&$variables) {
   drupal_add_js('misc/form.js');
   drupal_add_js('misc/collapse.js');
   $islandora_object = $variables['islandora_object'];
+  $repository = $islandora_object->repository;
   module_load_include('inc', 'islandora', 'includes/islandora_dublin_core');
   try {
     $dc = $islandora_object['DC']->content;
@@ -214,6 +215,18 @@ function islandora_basic_image_preprocess_islandora_basic_image(&$variables) {
   $variables['dc_array'] = $dc_object->as_formatted_array();
   $variables['islandora_object_label'] = $islandora_object->label;
   $variables['theme_hook_suggestions'][] = 'islandora_basic_image__' . str_replace(':', '_', $islandora_object->id);
+  $parent_collections = array();
+  $collections = $islandora_object->relationships->get(FEDORA_RELS_EXT_URI, 'isMemberOfCollection');
+  foreach($collections as $collection) {
+    $pid = $collection['object']['value'];
+    $object = $repository->getObject($collection['object']['value']);
+    $parent_collections[$pid] = array();
+    $parent_collections[$pid]['object'] = $object;
+    $parent_collections[$pid]['url'] = 'islandora/object/' . $object->id;
+    $parent_collections[$pid]['label'] = $object->label;
+    $parent_collections[$pid]['label_link'] = l($parent_collections[$pid]['label'], $parent_collections[$pid]['url']);
+  }
+  $variables['parent_collections'] = $parent_collections;
   global $base_url;
   if (isset($islandora_object['OBJ'])) {
     $full_size_url = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/OBJ/view';

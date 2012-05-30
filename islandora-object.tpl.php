@@ -75,30 +75,7 @@
  * 
  */
 
-//dsm($object);
 drupal_set_title($islandora_object->label);
-// $dublin_core = $variables['islandora_dublin_core'];
-// print($islandora_object->label . ' ' . $islandora_object->id);
-// print ('<h3>datastreams</h3>');
-// foreach ($islandora_object as $ds) {
-//   print $ds->label . '<br>';
-//   //do something
-// }
-// print('<h3>Dublin Core</h3>');
-
-// foreach ($dublin_core as $element) {
-//   if (!empty($element)) {
-//    // print($element);
-//    foreach ($element as  $key => $value) {      
-//       foreach($value as $v){
-//         if(!empty($v)){
-//         print '<strong>'.($key).'</strong>: ';print($v).'<br />';
-//         }
-//       }
-//     }
-//   }
-// }
-
 ?>
 <div class="islandora-object islandora">
   <h2>Details</h2>
@@ -120,6 +97,12 @@ drupal_set_title($islandora_object->label);
         </dd>
       <?php $row_field++; ?>
       <?php endforeach; ?>
+        <dt>Collections</dt>
+        <dd>
+          <?php foreach($parent_collections as $key => $value): ?>
+            <div><?php print $value['label_link'] ?></div>
+          <?php endforeach; ?>
+        </dd>
     </dl>
 </div>
 <fieldset class="collapsible collapsed" style="display: block; clear:both">
@@ -145,4 +128,3 @@ drupal_set_title($islandora_object->label);
 </table>
 </div>
 </fieldset>
-

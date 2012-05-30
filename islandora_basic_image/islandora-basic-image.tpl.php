@@ -31,6 +31,14 @@
     <h1 class="title"><?php print $islandora_object_label; ?></h1>
     <h3><?php print $dc_array['dc:description']['label']; ?></h3>
     <p><?php print $dc_array['dc:description']['value']; ?></p>
+    <div>
+      <h3>In Collections</h3>
+      <ul>
+        <?php foreach($parent_collections as $key => $value): ?>
+          <li><?php print $value['label_link'] ?></li>
+        <?php endforeach; ?>
+      </ul>
+    </div>
   </div>
 
   <fieldset class="collapsible collapsed islandora-basic-image-metadata">
