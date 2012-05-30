@@ -13,17 +13,22 @@ dl.islandora-object-tn {
   float: left;
   width: 20.8333%;
   padding: 0 10px 0 0;
-  margin: 0;
+  margin: 1.5em 0;
 }
 
 dl.islandora-object-fields {
   float: right;
   width:79.1666%;
-  border-top:3px solid #ddd;
+  border-top:0px solid #ddd;
+  margin: 1.5em 0;
 }
 
 .islandora-object-fields dt {
   font-weight: bold;
+}
+
+.islandora-object-fields dt.first {
+  border-top:0;
 }
 
 .islandora-object-fields dt,

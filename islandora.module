@@ -595,6 +595,8 @@ function islandora_permission() {
  * @param array $variables 
  */
 function islandora_preprocess_islandora_default(&$variables) {
+  drupal_add_js('misc/form.js');
+  drupal_add_js('misc/collapse.js');
   $islandora_object = $variables['islandora_object'];
   $repository = $islandora_object->repository;
   module_load_include('inc', 'islandora', 'includes/islandora_dublin_core');
@@ -609,7 +611,22 @@ function islandora_preprocess_islandora_default(&$variables) {
     $variables['parent_collections'][$pid]['label'] = $object->label;
     $variables['parent_collections'][$pid]['url'] = url('islandora/object/' . $object->id);
   }
-
+  $datastreams = array();
+  foreach ($islandora_object as $ds) {
+    $pid = $islandora_object->id;
+    $id = $ds->id;
+    $label = $ds->label;
+    $download_path = 'islandora/object/' . $pid . '/datastream/' . $id . '/download';
+    $datastreams[$id]['id'] = $id;
+    $datastreams[$id]['label'] = $label;
+    $datastreams[$id]['label_link'] = l($label, $download_path);
+    $datastreams[$id]['download_url'] = $download_path;
+    $datastreams[$id]['mimetype'] = $ds->mimetype;
+    $datastreams[$id]['size'] = bytesToSize($ds->size);
+    $datastreams[$id]['created_date'] = $ds->createdDate->format("Y-m-d");
+    $datastreams[$id]['class'] = strtolower(preg_replace('/[^A-Za-z0-9]/', '-', $id));
+  }
+  $variables['datastreams'] = $datastreams;
   try {
     $dc = $islandora_object['DC']->content;
     //$dc_xml = simplexml_load_string($dc);
@@ -624,6 +641,38 @@ function islandora_preprocess_islandora_default(&$variables) {
   if (isset($islandora_object['TN'])) {
     $variables['islandora_thumbnail_url'] = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/TN/view';
   }
+}
+
+/**
+ * Convert bytes to human readable format
+ *
+ * @param integer bytes Size in bytes to convert
+ * @return string
+ */
+function bytesToSize($bytes, $precision = 2)
+{  
+    $kilobyte = 1024;
+    $megabyte = $kilobyte * 1024;
+    $gigabyte = $megabyte * 1024;
+    $terabyte = $gigabyte * 1024;
+   
+    if (($bytes >= 0) && ($bytes < $kilobyte)) {
+        return $bytes . ' B';
+ 
+    } elseif (($bytes >= $kilobyte) && ($bytes < $megabyte)) {
+        return round($bytes / $kilobyte, $precision) . ' KB';
+ 
+    } elseif (($bytes >= $megabyte) && ($bytes < $gigabyte)) {
+        return round($bytes / $megabyte, $precision) . ' MB';
+ 
+    } elseif (($bytes >= $gigabyte) && ($bytes < $terabyte)) {
+        return round($bytes / $gigabyte, $precision) . ' GB';
+ 
+    } elseif ($bytes >= $terabyte) {
+        return round($bytes / $terabyte, $precision) . ' TB';
+    } else {
+        return $bytes . ' B';
+    }
 }
 
 /**

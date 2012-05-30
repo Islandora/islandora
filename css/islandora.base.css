@@ -32,14 +32,14 @@ dl.islandora-inline-metadata {
 
 .islandora-inline-metadata dt {
   margin-right: -1px;
-  width: 15.625%;
-  font-weight: normal;
+  width: 20.625%;
   font-weight: bold;
   padding-right: 0;
+  word-wrap: normal;
 }
 
 .islandora-inline-metadata dd {
-  width: 84.375%;
+  width: 79.375%;
   padding-left: 40px;
 }
 

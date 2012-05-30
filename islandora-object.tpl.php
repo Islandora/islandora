@@ -57,7 +57,7 @@
  *    $ds->size              - The size of the datastream
  *    $ds->checksum          - The checksum of the datastream
  *    $ds->checksumType      - The type of checksum for the datastream.
- *    $ds->createdDate       - The created date
+ *    $ds->createdDate->format("Y-m-d") - The created date with an option to use a format of your choice
  *    $ds->content           - The content of the datastream
  *    $ds->url               - The URL. This is only valid for R and E datastreams. 
  * 
@@ -118,25 +118,31 @@ drupal_set_title($islandora_object->label);
         <dd class="<?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
           <?php print $value['value']; ?>
         </dd>
-        <?php $row_field++; ?>
+      <?php $row_field++; ?>
       <?php endforeach; ?>
     </dl>
-  <table>
-    <?php foreach($islandora_object as $ds): ?>
-    <tr>
-      <td>
-        <?php print $ds->id; ?>
-      </td>
-      <td>
-        <?php print $ds->label; ?>
-      </td>
-      <td>
-        <?php print $ds->controlGroup; ?>
-      </td>
-      <td>
-        <?php print $ds->mimetype; ?>
-      </td>
-    </tr>
-    <?php endforeach; ?>
-  </table>
 </div>
+<fieldset class="collapsible collapsed" style="display: block; clear:both">
+<legend><span class="fieldset-legend">File Details</span></legend>
+  <div class="fieldset-wrapper">
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Label</th>
+    <th>Size</th>
+    <th>Mimetype</th>
+    <th>Created</th> 
+  </tr>
+  <?php foreach($datastreams as $key => $value): ?>
+  <tr>
+    <td><?php print $value['id']; ?></td>
+    <td><?php print $value['label_link']; ?></td>
+    <td><?php print $value['size']; ?></td>
+    <td><?php print $value['mimetype']; ?></td>
+    <td><?php print $value['created_date']; ?></td>
+  </tr>
+  <?php endforeach; ?>
+</table>
+</div>
+</fieldset>
+
