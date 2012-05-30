@@ -38,3 +38,9 @@ dl.islandora-basic-collection-object
   margin: 0;
   padding: 0;
 }
+
+/* to be moved to admin when it is added */
+#islandora-collection-deletion-form table th.select-all,
+#islandora-collection-migrate-form table th.select-all {
+  width: 20px;
+}
