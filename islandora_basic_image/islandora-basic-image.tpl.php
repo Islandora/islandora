@@ -21,28 +21,34 @@
  * along with the program.  If not, see <http ://www.gnu.org/licenses/>.
  */
 ?>
-<?php drupal_set_title("$islandora_object_label"); ?>
+<?php if($islandora_object_label): ?>
+  <?php drupal_set_title("$islandora_object_label"); ?>
+<?php endif; ?>
 
 <div class="islandora-basic-image-object islandora">
   <div class="islandora-basic-image-content clearfix">
     <?php if(isset($islandora_full_url)): ?>
       <?php print l($islandora_medium_img, $islandora_full_url, array('html' => TRUE)); ?>
-    <?php else: ?>
-      <?php print $islandora_medium_img; ?>
+      <?php elseif(isset($islandora_medium_img)): ?>
+        <?php print $islandora_medium_img; ?>
+      <?php else: ?>
     <?php endif; ?>
   </div>
   <div class="islandora-basic-image-sidebar">
-    <h1 class="title"><?php print $islandora_object_label; ?></h1>
-    <h3><?php print $dc_array['dc:description']['label']; ?></h3>
-    <p><?php print $dc_array['dc:description']['value']; ?></p>
-    <div>
-      <h3>In Collections</h3>
-      <ul>
-        <?php foreach($parent_collections as $key => $value): ?>
-          <li><?php print $value['label_link'] ?></li>
-        <?php endforeach; ?>
-      </ul>
-    </div>
+    <?php if($dc_array['dc:description']['value']): ?>
+      <h3><?php print $dc_array['dc:description']['label']; ?></h3>
+      <p><?php print $dc_array['dc:description']['value']; ?></p>
+    <?php endif; ?>
+    <?php if($parent_collections): ?>
+      <div>
+        <h3>In Collections</h3>
+        <ul>
+          <?php foreach($parent_collections as $key => $value): ?>
+            <li><?php print $value['label_link'] ?></li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+    <?php endif; ?>
   </div>
 
   <fieldset class="collapsible collapsed islandora-basic-image-metadata">
