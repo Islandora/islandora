@@ -6,12 +6,16 @@
 */
 
 .islandora-basic-collection {
-  margin: 1.5em auto;
   overflow: hidden;
-  width: 96%;
+  width: 100%;
+  margin: 0 auto;
 }
 
-dl.islandora-basic-collection-object
+.islandora-basic-collection-object {
+  margin: 1.5em auto 3em;
+}
+
+.islandora-basic-collection-grid dl.islandora-basic-collection-object
 {
   width: 20%;
   min-width: 100px;
@@ -25,7 +29,7 @@ dl.islandora-basic-collection-object
   _height: 180px;
 }
 
-.islandora-basic-collection-object dt img {
+.islandora-basic-collection-grid .islandora-basic-collection-object dt img {
   max-width: 100%;
   *width: 100%;
   -webkit-border-radius: 5px;
@@ -33,7 +37,7 @@ dl.islandora-basic-collection-object
   border-radius: 5px;
 }
 
-.islandora-basic-collection-object dd
+.islandora-basic-collection-grid .islandora-basic-collection-object dd
 {
   margin: 0;
   padding: 0;
@@ -44,3 +48,39 @@ dl.islandora-basic-collection-object
 #islandora-collection-migrate-form table th.select-all {
   width: 20px;
 }
+
+/* the base css for lists is set in islandora, just adding details */
+
+dl.islandora-basic-collection-thumb
+{
+  float: left;
+  width: 15%;
+  margin: 0;
+}
+
+.islandora-basic-collection-thumb dt,
+.islandora-basic-collection-thumb dd
+{
+  margin: 0;
+}
+
+dl.islandora-basic-collection-fields
+{
+  float: right;
+  width: 83%;
+  border-top: 0px solid #ddd;
+  padding-left: 10px;
+} 
+
+.islandora-basic-collection-fields dt,
+.islandora-basic-collection-fields dd
+{
+  border-top: 1px solid #ddd;
+}
+
+.islandora-basic-collection-fields dt.first,
+.islandora-basic-collection-fields dd.first
+{
+  border-top: 1px solid #ddd;
+}
+

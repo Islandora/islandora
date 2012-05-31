@@ -25,7 +25,11 @@
 
 <div class="islandora-basic-image-object islandora">
   <div class="islandora-basic-image-content clearfix">
-    <?php print l($islandora_medium_img, $islandora_full_url, array('html' => TRUE)); ?>
+    <?php if(isset($islandora_full_url)): ?>
+      <?php print l($islandora_medium_img, $islandora_full_url, array('html' => TRUE)); ?>
+    <?php else: ?>
+      <?php print $islandora_medium_img; ?>
+    <?php endif; ?>
   </div>
   <div class="islandora-basic-image-sidebar">
     <h1 class="title"><?php print $islandora_object_label; ?></h1>
