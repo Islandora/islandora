@@ -1,14 +1,22 @@
 /* 
     Document   : islandora_basic_collection.theme
     Created on : May 23, 2012, 11:23:56 AM
-    Description:
-        Purpose of the stylesheet follows.
+    Description: The basic image page is a simple flexible layout page
+    that breaks down to two columns when 2 sidebars are visible
 */
 
-.islandora-basic-image-content,
-.islandora-basic-image-sidebar {
-  display: inline;
-  position: relative;
+.islandora-basic-image-content {
+  background-color: #F2F2F2;
+  border: 1px solid #ddd;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  padding: 15px;
+}
+
+.islandora-basic-image-content img {
+  margin: 0;
+  display: block;
 }
 
 .islandora-basic-image-metadata {
@@ -42,9 +50,6 @@ dl.islandora-basic-image-fields {
   border-top:0;
 }
 
-.islandora-basic-image-sidebar,
-.islandora-basic-image-sidebar,
-body.one-sidebar .islandora-basic-image-sidebar,
 body.two-sidebars .islandora-basic-image-sidebar {
     clear: both;
     width: 100%;
@@ -53,15 +58,17 @@ body.two-sidebars .islandora-basic-image-sidebar {
 @media all and (min-width: 768px) {
 
   body.no-sidebars .islandora-basic-image-content {
-    width: 60%;
-    padding: 0 20px 0 0;
+    width: 65%;
     float: left; /* LTR */
-    margin-top: 1em;
+  }
+
+  body.no-sidebars .islandora-basic-image-sidebar {
+    padding-left: 20px;
   }
 
   body.no-sidebars .islandora-basic-image-sidebar {
     float: right; /* LTR */
-    width: 40%;
+    width: 35%;
     clear: none;
   }
   

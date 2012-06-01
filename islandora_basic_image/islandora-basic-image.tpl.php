@@ -26,22 +26,24 @@
 <?php endif; ?>
 
 <div class="islandora-basic-image-object islandora">
-  <div class="islandora-basic-image-content clearfix">
-    <?php if(isset($islandora_full_url)): ?>
-      <?php print l($islandora_medium_img, $islandora_full_url, array('html' => TRUE)); ?>
+  <div class="islandora-basic-image-content-wrapper clearfix">
+    <?php if(isset($islandora_medium_img)): ?>
+      <div class="islandora-basic-image-content">
+      <?php if(isset($islandora_full_url)): ?>
+        <?php print l($islandora_medium_img, $islandora_full_url, array('html' => TRUE)); ?>
       <?php elseif(isset($islandora_medium_img)): ?>
         <?php print $islandora_medium_img; ?>
-      <?php else: ?>
+      <?php endif; ?>
+      </div>
     <?php endif; ?>
-  </div>
   <div class="islandora-basic-image-sidebar">
     <?php if($dc_array['dc:description']['value']): ?>
-      <h3><?php print $dc_array['dc:description']['label']; ?></h3>
+      <h2><?php print $dc_array['dc:description']['label']; ?></h2>
       <p><?php print $dc_array['dc:description']['value']; ?></p>
     <?php endif; ?>
-    <?php if(empty($parent_collections)): ?>
+    <?php if($parent_collections): ?>
       <div>
-        <h3>In Collections</h3>
+        <h2>In Collections</h2>
         <ul>
           <?php foreach($parent_collections as $key => $value): ?>
             <li><?php print $value['label_link'] ?></li>
@@ -50,7 +52,7 @@
       </div>
     <?php endif; ?>
   </div>
-
+  </div>
   <fieldset class="collapsible collapsed islandora-basic-image-metadata">
   <legend><span class="fieldset-legend">Extended Details</span></legend>
     <div class="fieldset-wrapper">
