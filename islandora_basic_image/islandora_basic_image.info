@@ -3,5 +3,6 @@ description = "A default Islandora Repository module to handle images"
 dependencies[] = islandora
 package = Islandora
 core = 7.x
+configure = admin/islandora/basic_image
 stylesheets[all][] = css/islandora_basic_image.base.css
 stylesheets[all][] = css/islandora_basic_image.theme.css
