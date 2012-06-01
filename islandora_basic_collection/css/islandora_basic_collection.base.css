@@ -1,8 +1,51 @@
 /* 
     Document   : islandora_basic_collection.base.css
     Created on : May 23, 2012, 11:22:04 AM
-    Description:
-        Purpose of the stylesheet follows.
+    Description: Base css, for structural layout, 
+    positioning, and to generally make things function in
+    the most basic form. 
 */
 
+/* List - Displays lists using a dt on the left and dd on the right */
 
+.islandora-basic-collection-list-item {
+  clear: both;
+  width: 100%;
+}
+
+.islandora-basic-collection-list-item dl dt {
+  clear: left;
+  float: left;
+  padding: 3px 0 0;
+  text-align: center;
+  width: 100px;
+}
+
+.islandora-basic-collection-list-item dl dd {
+  margin: 0 0 0 130px;
+}
+
+/* Grid - Displays grid using dl formatted inline */
+.islandora-basic-collection-grid dl
+{
+  width: 20%;
+  min-width: 100px;
+  min-height: 180px;
+  display: -moz-inline-stack;
+  display: inline-block;
+  vertical-align: top;
+  margin: 1.5em 2%;
+  zoom: 1;
+  *display: inline;
+  _height: 180px;
+}
+
+.islandora-basic-collection-grid dd
+{
+  margin: 0;
+  padding: 0;
+}
+
+.islandora-basic-collection-display-switch {
+  float: right;
+}

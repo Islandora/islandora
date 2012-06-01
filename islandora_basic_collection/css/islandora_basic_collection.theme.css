@@ -1,86 +1,46 @@
 /* 
     Document   : islandora_basic_collection.theme
     Created on : May 23, 2012, 11:23:56 AM
-    Description:
-        Purpose of the stylesheet follows.
+    Description: Theme css, like margins, padding, borders, colors, etc
 */
 
+/* Make flexible and assure content doesn't go off the page */
 .islandora-basic-collection {
   overflow: hidden;
   width: 100%;
   margin: 0 auto;
 }
 
-.islandora-basic-collection-object {
-  margin: 1.5em auto 3em;
-}
-
-.islandora-basic-collection-grid dl.islandora-basic-collection-object
-{
-  width: 20%;
-  min-width: 100px;
-  min-height: 180px;
-  display: -moz-inline-stack;
-  display: inline-block;
-  vertical-align: top;
-  margin: 1.5em 2%;
-  zoom: 1;
-  *display: inline;
-  _height: 180px;
-}
-
-.islandora-basic-collection-grid .islandora-basic-collection-object dt img {
-  max-width: 100%;
-  *width: 100%;
+/* Round borders on images */
+.islandora-basic-collection-object dt img {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
 }
 
-.islandora-basic-collection-grid .islandora-basic-collection-object dd
-{
-  margin: 0;
-  padding: 0;
+/* Set space between objects */
+.islandora-basic-collection-object {
+  margin: 1.5em auto;
 }
+
+/* Set space between dd items */
+.islandora-basic-collection-object dd {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+/* LIST VIEW */
+
+/* Borders to seperate collection objects */
+.islandora-basic-collection-list-item {
+  padding-bottom: 1.5em;
+  border-bottom: 1px solid #ddd;
+}
+
 
 /* to be moved to admin when it is added */
 #islandora-collection-deletion-form table th.select-all,
 #islandora-collection-migrate-form table th.select-all {
   width: 20px;
-}
-
-/* the base css for lists is set in islandora, just adding details */
-
-dl.islandora-basic-collection-thumb
-{
-  float: left;
-  width: 15%;
-  margin: 0;
-}
-
-.islandora-basic-collection-thumb dt,
-.islandora-basic-collection-thumb dd
-{
-  margin: 0;
-}
-
-dl.islandora-basic-collection-fields
-{
-  float: right;
-  width: 83%;
-  border-top: 0px solid #ddd;
-  padding-left: 10px;
-} 
-
-.islandora-basic-collection-fields dt,
-.islandora-basic-collection-fields dd
-{
-  border-top: 1px solid #ddd;
-}
-
-.islandora-basic-collection-fields dt.first,
-.islandora-basic-collection-fields dd.first
-{
-  border-top: 1px solid #ddd;
 }
 

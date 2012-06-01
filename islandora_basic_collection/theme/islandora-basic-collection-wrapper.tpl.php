@@ -24,10 +24,10 @@
 <?php drupal_set_title($islandora_object->label); ?>
 
 <div class="islandora-basic-collection-wrapper">
-<div class="islandora-basic-collection clearfix">
-  <?php print ($switch_view_link) ?>
-  <?php print($collection_pager); ?>
-  <?php print ($collection_content); ?>
-  <?php print($collection_pager); ?>
-</div>
+  <div class="islandora-basic-collection clearfix">
+    <span class="islandora-basic-collection-display-switch"><?php print $switch_view_link; ?></span>
+    <?php print $collection_pager; ?>
+    <?php print $collection_content; ?>
+    <?php print $collection_pager; ?>
+  </div>
 </div>
