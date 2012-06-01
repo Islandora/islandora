@@ -21,7 +21,10 @@
  * along with the program.  If not, see <http ://www.gnu.org/licenses/>.
  */
 ?>
-<?php drupal_set_title($islandora_object->label); ?>
+
+<?php if(isset($islandora_object_label)): ?>
+  <?php drupal_set_title("$islandora_object_label"); ?>
+<?php endif; ?>
 
 <div class="islandora islandora-basic-collection">
     <?php $row_field = 0; ?>
@@ -29,10 +32,14 @@
       <div class="islandora-basic-collection-object islandora-basic-collection-list-item clearfix"> 
         <dl class="<?php print $associated_object['class']; ?>">
             <dt>
-              <?php print $associated_object['thumb_link']; ?>
+              <?php if (isset($associated_object['thumb_link'])): ?>
+                <?php print $associated_object['thumb_link']; ?>
+              <?php endif; ?>
             </dt>
             <dd class="collection-value <?php print isset($associated_object['dc_array']['dc:title']['class']) ? $associated_object['dc_array']['dc:title']['class'] : ''; ?> <?php print $row_field == 0 ? ' first' : ''; ?>">
-              <strong><?php print $associated_object['title_link']; ?></strong>
+              <?php if (isset($associated_object['thumb_link'])): ?>
+                <strong><?php print $associated_object['title_link']; ?></strong>
+              <?php endif; ?>
             </dd>
             <?php if (isset($associated_object['dc_array']['dc:description']['value'])): ?>
               <dd class="collection-value <?php print $associated_object['dc_array']['dc:description']['class']; ?>">

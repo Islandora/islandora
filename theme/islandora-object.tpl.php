@@ -74,9 +74,11 @@
  * }
  * 
  */
-
-drupal_set_title($islandora_object->label);
 ?>
+<?php if(isset($islandora_object_label)): ?>
+  <?php drupal_set_title("$islandora_object_label"); ?>
+<?php endif; ?>
+
 <div class="islandora-object islandora">
   <h2>Details</h2>
   <dl class="islandora-object-tn">
@@ -97,12 +99,14 @@ drupal_set_title($islandora_object->label);
         </dd>
       <?php $row_field++; ?>
       <?php endforeach; ?>
+      <?php if($parent_collections): ?>
         <dt>Collections</dt>
         <dd>
           <?php foreach($parent_collections as $key => $value): ?>
             <div><?php print $value['label_link'] ?></div>
           <?php endforeach; ?>
         </dd>
+      <?php endif; ?>
     </dl>
 </div>
 <fieldset class="collapsible collapsed" style="display: block; clear:both">
@@ -118,11 +122,11 @@ drupal_set_title($islandora_object->label);
   </tr>
   <?php foreach($datastreams as $key => $value): ?>
   <tr>
-    <td><?php print $value['id']; ?></td>
-    <td><?php print $value['label_link']; ?></td>
-    <td><?php print $value['size']; ?></td>
-    <td><?php print $value['mimetype']; ?></td>
-    <td><?php print $value['created_date']; ?></td>
+      <td><?php if(isset($value['id'])): ?><?php print $value['id']; ?><?php endif; ?></td>
+      <td><?php if(isset($value['label_link'])): ?><?php print $value['label_link']; ?><?php endif; ?></td>
+      <td><?php if(isset($value['size'])): ?><?php print $value['size']; ?><?php endif; ?></td>
+      <td><?php if(isset($value['mimetype'])): ?><?php print $value['mimetype']; ?><?php endif; ?></td>
+      <td><?php if(isset($value['created_date'])): ?><?php print $value['created_date']; ?><?php endif; ?></td>
   </tr>
   <?php endforeach; ?>
 </table>
