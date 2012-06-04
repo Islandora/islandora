@@ -61,10 +61,11 @@ function fedora_repository_image_tagging_form($form_state, $pid) {
   $tagset = new TagSet($obj);
   $tags = array();
   foreach ($tagset->tags as $tag) {
-    $form_tag = $form['tags-wrapper']['tags'][$tag['name']] = array(
+    $form['tags-wrapper']['tags'][$tag['name']] = array(
       '#prefix' => '<li>',
       '#suffix' => '</li>',
     );
+    $form_tag =& $form['tags-wrapper']['tags'][$tag['name']];
     
     $tag_title_text = t('Added by @creator.', array(
       '@creator' => $tag['creator'],

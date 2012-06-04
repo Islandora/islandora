@@ -179,6 +179,23 @@ class formClass {
       'access arguments' => array('view fedora collection'),
     );
 
+    $items['admin/settings/fedora_repository/object_details_xslt'] = array(
+      'title' => "",
+      'type' => MENU_CALLBACK,
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('fedora_repository_object_details_XSLT_config'),
+      'file' => 'ObjectDetails.inc',
+      'access arguments' => array('administer site configuration'),
+    );
+    $items['admin/settings/fedora_repository/object_details_table'] = array(
+      'title' => "",
+      'type' => MENU_CALLBACK,
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('fedora_repository_object_details_table_config'),
+      'file' => 'ObjectDetails.inc',
+      'access arguments' => array('administer site configuration'),
+    );
+
     return $items;
   }
 
@@ -233,7 +250,7 @@ class formClass {
           theme('image', 'misc/watchdog-ok.png') . t('Successfully connected to Fedora server at @fedora_soap_url', array('@fedora_soap_url' => variable_get('fedora_soap_url', ''))) :
           theme('image', 'misc/watchdog-error.png') . t('Unable to connect to Fedora server at @fedora_soap_url', array('@fedora_soap_url' => variable_get('fedora_soap_url', '')))) . '</p>',
     );
-    
+
     $form['fedora_soap_manage_url'] = array(
       '#type' => 'textfield',
       '#title' => t('Fedora SOAP management URL'),
@@ -241,7 +258,7 @@ class formClass {
       '#required' => TRUE,
       '#weight' => -10
     );
-        
+
 // will allow admin user to remove namepsace restrictions if not explicitly disallowed  in settings.php
     if (variable_get('allow_open_namespace', TRUE)) {
       $form['fedora_namespace'] = array(
@@ -282,10 +299,11 @@ class formClass {
     $form['tabs'] = array(
       '#type' => 'fieldset',
       '#title' => t('Tabs Configuration'),
-      '#description' => t('Configure the tabs avaialble when viewing Fedora objects.'),
+      '#description' => t('Configure the tabs available when viewing Fedora objects.'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
     );
+
     //when checked show object details tab
     $form['tabs']['fedora_repository_show_object_details_tab'] = array(
       '#type' => 'checkbox',
@@ -293,7 +311,27 @@ class formClass {
       '#default_value' => variable_get('fedora_repository_show_object_details_tab', TRUE),
       '#description' => t("When enabled, the 'Object Details' tab will be visible to users with the correct permissions when viewing an object in the repository"),
     );
-    
+
+    module_load_include('inc', 'fedora_repository', 'ObjectDetails');
+    $primary_display_mode = variable_get('islandora_object_details_display_table', 'xslt');
+    $profiles = module_invoke_all("islandora_object_details_display");
+
+    $display_options = array();
+    foreach ($profiles as $machine_name => $profile) {
+      $display_options[$machine_name] = $profile['name'];
+      $config_path = $profile['config'];
+      if (isset($config_path) && $config_path != ""){
+        $display_options[$machine_name] .= " (". l("config", $config_path, array()) .")";
+      }
+    }
+    $form['tabs']['islandora_object_details_display_table'] = array(
+      '#type' => 'radios',
+      '#title' => t('Show object details as'),
+      '#options' => $display_options,
+      '#default_value' => $primary_display_mode,
+      '#description' => t("Tells Islandora how to display the object details page for each object"),
+    );
+
     $form['advanced'] = array(
       '#type' => 'fieldset',
       '#title' => t('Advanced configuration options'),
@@ -323,6 +361,21 @@ class formClass {
       '#default_value' => variable_get('fedora_object_restrict_datastreams', FALSE),
       '#description' => t('When enabled, restricts access to fedora object datastreams that are not listed in the Islandora Content Model for the object (unless the user is an administrator).'),
     );
+    
+    $form['advanced']['fedora_repository_use_imagecache_external_in_collection_view'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Allow imagecache_external use for thumbnails in collection view'),
+      '#default_value' => variable_get('fedora_repository_use_imagecache_external_in_collection_view', FALSE),
+      '#description' => t('If enabled, the default collection list view (or ' .
+        'anywhere the function "@function" is used) will try to use ' .
+        'imagecache_external, defaulting to the "@preset" preset.  XSLTs may ' .
+        'be updated to use this function.', 
+        array(
+          '@function' => '_fedora_repository_render_image()',
+          '@preset' => 'fedora_repository_collection_thumbnail',
+          '@xsl' => 'sparql_to_html.xsl',
+        )),
+    );
 
     $form['advanced']['fedora_collection_display_list'] = array(
       '#type' => 'select',
@@ -330,6 +383,13 @@ class formClass {
       '#default_value' => variable_get('fedora_collection_display_list', ObjectHelper::$DISPLAY_ALWAYS),
       '#options' => array(ObjectHelper::$DISPLAY_ALWAYS => t('Always'), ObjectHelper::$DISPLAY_NEVER => t('Never'), ObjectHelper::$DISPLAY_NO_MODEL_OUTPUT => t('Only if no Content Model display output.')),
       '#description' => t('Determines when to display the list of objects when viewing a collection page.'),
+    );
+    
+    $form['advanced']['fedora_control_group_control_during_ingest'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Allow control groups select in datastream ingest'),
+      '#description' => t('Whether or not we should allow the user to select which control group to ingest a stream as, or to follow the old paradigm--to add stream IDed as XML as inline, and everything else as managed.'),
+      '#default_value' => variable_get('fedora_control_group_control_during_ingest', FALSE),
     );
 
     //Export functionality
@@ -656,17 +716,21 @@ class formClass {
       }
     }
 
-    $form['add_datastream_label'] = array(
-      '#value' => t('<br /><h3>Add Datastream:</h3>'),
-      '#weight' => -10,
+    $form['fieldset'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Add datastream'),
     );
+    //$form['add_datastream_label'] = array(
+    //  '#value' => t('<br /><h3>Add Datastream:</h3>'),
+    //  '#weight' => -10,
+    //);
 
-    $form['pid'] = array(
+    $form['fieldset']['pid'] = array(
       '#type' => 'hidden',
       '#value' => "$pid"
     );
 
-    $form['stream_label'] = array(
+    $form['fieldset']['stream_label'] = array(
       '#title' => 'Datastream Label',
       '#required' => 'TRUE',
       '#description' => t('A Human readable label'),
@@ -674,40 +738,61 @@ class formClass {
     );
 
     $form['#attributes']['enctype'] = 'multipart/form-data';
-    $form['add-stream-file-location'] = array(
+    $form['fieldset']['add-stream-file-location'] = array(
       '#type' => 'file',
       '#title' => t('Upload Document'),
       '#size' => 48,
       // '#required'=>'TRUE',
-      '#description' => t('The file to upload.')
+      '#description' => t('The file to upload. (Only for Managed and Inline)')
     );
+    
+    if (variable_get('fedora_control_group_control_during_ingest', FALSE)) {
+      $form['fieldset']['ds_reference'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Datastream reference'),
+        '#size' => 48,
+        '#description' => t('A URL reference to resolve for the contents of the datastream.  (Required for External and Redirect, but will still work for Managed and Inline.)'),
+      );
+    }
+    
     $form['#redirect'] = "fedora/repository/$pid/";
-    $form['submit'] = array(
+    $form['fieldset']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Add Datastream')
     );
 
     if (!empty($unused_dsids)) {
-      $dsidsForForm = array();
-      foreach ($unused_dsids as $dsid) {
-        $dsidsForForm[$dsid] = $dsid;
-      }
-      $form['stream_id'] = array(
+      $form['fieldset']['stream_id'] = array(
         '#type' => 'select',
         '#title' => t('Datastream ID'),
         '#default_value' => variable_get('feed_item_length', 'teaser'),
-        '#weight' => '-1',
+        '#weight' => -1,
         '#description' => t('Datastream IDs defined by the content model.'),
+        '#options' => array_combine($unused_dsids, $unused_dsids),
       );
-      $form['stream_id']['#options'] = array_combine($unused_dsids, $unused_dsids);
     }
     else {
-      $form['stream_id'] = array(
+      $form['fieldset']['stream_id'] = array(
         '#title' => 'Datastream ID',
         '#required' => 'TRUE',
         '#description' => t('An ID for this stream that is unique to this object. Must start with a letter and contain only alphanumeric characters and dashes and underscores.'),
         '#type' => 'textfield',
         '#weight' => -1,
+      );
+    }
+    
+    if (variable_get('fedora_control_group_control_during_ingest', FALSE)) {
+      $form['fieldset']['control_group'] = array(
+        '#type' => 'select',
+        '#title' => t('Control group'),
+        '#options' => array(
+          'X' => t('Inline XML'),
+          'M' => t('Managed datastream'),
+          'E' => t('Externally Referenced/managed datastream'),
+          'R' => t('Redirect datastream'),
+        ),
+        '#description' => t('The manner in which the datastream will be stored.  "Inline XML" must be XML and will be placed directly into the FOXML for the object.  "Managed" datastreams are made to live on the filesystem as discrete files in the Fedora data directory.  Both "Redirect" and "External" streams are URL references; the difference being the redirect stream instruct clients to perform an HTTP redirect, such that the data does not pass though Fedora (useful for streaming). External streams are mediated (by which I mean loaded and streamed from) the Fedora server.'),
+        '#weight' => 0,
       );
     }
     return $form;
@@ -836,12 +921,33 @@ class formClass {
     $form = array();
 
     $form['#attributes']['enctype'] = 'multipart/form-data';
-    $form['file'] = array(
-      '#type' => 'file',
-      '#title' => t('Upload Document'),
-      '#description' => t('The file to upload.')
-    );
-
+    
+    module_load_include('inc', 'fedora_repository', 'api/fedora_item');
+    $item = new Fedora_Item($pid);
+    $info = $item->get_datastream_info($dsId);
+    $control_group = $info->datastream->controlGroup;
+    if (in_array($control_group, array('M', 'X'))) {
+      $form['file'] = array(
+        '#type' => 'file',
+        '#title' => t('Upload Document'),
+        '#description' => t('A file with which to replace the contents of this datastream.'),
+      );
+    }
+    if ($control_group != 'X') {
+      $form['reference'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Reference to object'),
+        '#description' => t('A URL the datastream will be updated to reference.'),
+      );
+    }
+    if ($control_group == 'M') {
+      $form['note'] = array(
+        '#type' => 'item',
+        '#title' => t('NOTE'),
+        '#value' => t('If both a file and a reference are given, the file will be given preference.'),
+      );
+    }
+    
     $form['pid'] = array(
       '#type' => 'value',
       '#value' => $pid,

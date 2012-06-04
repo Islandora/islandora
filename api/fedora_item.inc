@@ -10,6 +10,12 @@ define("ISLANDORA_PAGE_URI", 'info:islandora/islandora-system:def/pageinfo#');
 define("ISLANDORA_RELS_EXT_URI", 'http://islandora.ca/ontology/relsext#');
 define("ISLANDORA_RELS_INT_URI", "http://islandora.ca/ontology/relsint#");
 
+define("RELS_TYPE_URI", 0);
+define("RELS_TYPE_PLAIN_LITERAL", 1);
+define("RELS_TYPE_STRING", 2);
+define("RELS_TYPE_INT", 3);
+define("RELS_TYPE_DATETIME", 4);
+
 /**
  * Fedora Item Class
  */
@@ -159,7 +165,7 @@ class Fedora_Item {
       'pid' => $this->pid,
       'dsID' => $datastream_id,
       'altIDs' => NULL,
-      'dsLabel' => $datastream_label,
+      'dsLabel' => truncate_utf8($datastream_label, 255, TRUE, TRUE),
       'versionable' => TRUE,
       'MIMEType' => $datastream_mimetype,
       'formatURI' => NULL,
@@ -230,11 +236,22 @@ class Fedora_Item {
    *   The object to be related to.
    * @param string $namespaceURI
    *   The predicate namespace.
-   * @param boolean $literal_value
-   *   Whether or not the object should be added as a URI (FALSE) or a literal (TRUE).
+   * @param int $literal_value
+   *   Used to type the value.
+   *  - 0: URI
+   *  - 1: plain literal
+   *  - 2: string (explicitly typed)
+   *  - 3: integer
+   *  - 4: dateTime
+   * @return ???
+   *  Value returned from SOAP call for modify_datastream.
    */
-  function add_relationship($relationship, $object, $namespaceURI = RELS_EXT_URI, $literal_value = FALSE) {
-    //dd($this, 'The Fedora_Item');
+  function add_relationship($relationship, $object, $namespaceURI = RELS_EXT_URI, $literal_value = RELS_TYPE_URI) {
+    static $relsextxml = NULL;
+    if ($relsextxml === NULL) {
+      $relsextxml = new DOMDocument(); //Avoid new instantiations in long-running processes
+    }
+    
     $ds_list = $this->get_datastreams_list_as_array();
     $f_prefix = 'info:fedora/';
     if (!array_key_exists('RELS-EXT', $ds_list)) {
@@ -249,11 +266,9 @@ RDF;
 
     $relsext = $this->get_datastream_dissemination('RELS-EXT');
     
-    if (!$literal_value && strpos($object, $f_prefix) !== 0) {
+    if ($literal_value == REL_TYPE_URI && strpos($object, $f_prefix) !== 0) {
       $object = $f_prefix . $object;
     }
-
-    $relsextxml = new DOMDocument();
 
     $relsextxml->loadXML($relsext);
     $description = $relsextxml->getElementsByTagNameNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'Description');
@@ -269,8 +284,20 @@ RDF;
     // Create the new relationship node.
     $newrel = $relsextxml->createElementNS($namespaceURI, $relationship);
 
-    if ($literal_value) {
+    if ($literal_value > 0) {
       $newrel->appendChild($relsextxml->createTextNode($object));
+      if ($literal_value == RELS_TYPE_STRING) {
+        $newrel->setAttribute('rdf:datatype', 'http://www.w3.org/2001/XMLSchema#string');
+      }
+      elseif ($literal_value == RELS_TYPE_INT) {
+        $newrel->setAttribute('rdf:datatype', 'http://www.w3.org/2001/XMLSchema#int');
+      }
+      elseif ($literal_value == RELS_TYPE_DATETIME) {
+        $newrel->setAttribute('rdf:datatype', 'http://www.w3.org/2001/XMLSchema#dateTime');
+      }
+      else {
+        //plain literal.
+      }
     }
     else {
       $newrel->setAttribute('rdf:resource', $object);
@@ -303,8 +330,8 @@ RDF;
    *   The object to be related to. (NULL/value for which empty() evaluates to true will remove all relations of the given type, ignoring $literal_value)
    * @param string $namespaceURI
    *   The predicate namespace.
-   * @param boolean $literal_value
-   *   Whether or not the object should be looked for as a URI (FALSE) or a literal (TRUE).
+   * @param int $literal_value
+   *   Same as add_relationship.  NOTE: dateTime implemented.
    * @return boolean
    *   Whether or not this operation has produced any changes in the RELS-EXT
    */
@@ -319,8 +346,10 @@ RDF;
       foreach ($rels as $rel) {
         if (  //If either no object is specified, or the object matches (in either the literal or URI case), remove this node from it's parent, and mark as changed.
           empty($object) || 
-          (!$literal_value && $rel->getAttributeNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'resource') == $object) ||
-          ($literal_value && $rel->textContent == $object)) {
+          (($literal_value == RELS_TYPE_URI) && $rel->getAttributeNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'resource') == $object) ||
+          (($literal_value == RELS_TYPE_PLAIN_LITERAL) && $rel->textContent == $object) ||
+          (($literal_value == RELS_TYPE_STRING) && $rel->getAttribute('rdf:datatype') == 'http://www.w3.org/2001/XMLSchema#string' && $rel->textContent == $object) ||
+          (($literal_value == RELS_TYPE_INT) && $rel->getAttribute('rdf:datatype') == 'http://www.w3.org/2001/XMLSchema#int' && intval($rel->textContent) == $object)) {
           $rel->parentNode->removeChild($rel);
           $modified = TRUE;
         }
@@ -508,13 +537,13 @@ RDF;
    * @param type $as_of_date_time
    * @return type
    */
-  function get_datastream($dsid, $as_of_date_time = '') {
+  function get_datastream($dsid, $as_of_date_time = '', $quiet = TRUE) {
     $params = array(
       'pid' => $this->pid,
       'dsID' => $dsid,
       'asOfDateTime' => $as_of_date_time,
     );
-    $object = self::soap_call('getDatastream', $params);
+    $object = self::soap_call('getDatastream', $params, $quiet);
 
     return $object->datastream;
   }
@@ -637,18 +666,15 @@ RDF;
       // datastream, instead of returning it as an array, only
       // the single item will be returned directly. We have to
       // check for this.
-      if (count($this->datastreams_list->datastreamDef) > 1) {
-        foreach ($this->datastreams_list->datastreamDef as $ds) {
-          if (!is_object($ds)) {
-            print_r($ds);
-          }
-          $ds_list[$ds->ID]['label'] = $ds->label;
-          $ds_list[$ds->ID]['MIMEType'] = $ds->MIMEType;
-          $ds_list[$ds->ID]['URL'] = $this->url() . '/' . $ds->ID . '/' . drupal_urlencode($ds->label);
-        }
+      $xml_list = $this->datastreams_list->datastreamDef;
+      if (!is_array($this->datastreams_list->datastreamDef)) {
+        $xml_list = array($xml_list);
       }
-      else {
-        $ds = $this->datastreams_list->datastreamDef;
+      
+      foreach ($xml_list as $ds) {
+        if (!is_object($ds)) {
+          print_r($ds);
+        }
         $ds_list[$ds->ID]['label'] = $ds->label;
         $ds_list[$ds->ID]['MIMEType'] = $ds->MIMEType;
         $ds_list[$ds->ID]['URL'] = $this->url() . '/' . $ds->ID . '/' . drupal_urlencode($ds->label);
@@ -774,9 +800,9 @@ RDF;
   /**
    * Set the object to a deleted state
    */
-  function move_to_trash($log_message = 'Flagged deleted using Islandora API.') {
+  function move_to_trash($log_message = 'Flagged deleted using Islandora API.', $quiet = TRUE) {
     // Loop through the datastreams and mark them deleted
-    foreach ($this->get_datastreams_list_as_array() as $dsid) {
+    foreach ($this->get_datastreams_list_as_array() as $dsid => $info) {
       $this->set_datastream_state($dsid, 'D');
     }
 
@@ -784,7 +810,7 @@ RDF;
     $params = array(
       'pid' => $this->pid,
       'state' => 'D',
-      'logMessage' => $logMessage,
+      'logMessage' => $log_message,
       'label' => $this->objectProfile->objLabel,
       'ownerId' => null,
     );
@@ -849,11 +875,10 @@ RDF;
 
   /**
    * Get Next PID in Namespace
-   * @param type $pid_namespace
-   * @return type
+   * @param $pid_namespace string
+   * @return string
    */
-  static function get_next_PID_in_namespace($pid_namespace = '') {
-
+  static function get_next_PID_in_namespace($pid_namespace = '', $number_of_pids = 1) {
     if (empty($pid_namespace)) {
       // Just get the first one in the config settings.
       $allowed_namespaces = explode(" ", variable_get('fedora_pids_allowed', 'default: demo: changeme: islandora: ilives: islandora-book: books: newspapers: '));
@@ -867,11 +892,12 @@ RDF;
     }
 
     $params = array(
-      'numPIDs' => '',
+      'numPIDs' => $number_of_pids,
       'pidNamespace' => $pid_namespace,
     );
 
     $result = self::soap_call('getNextPID', $params);
+
     return $result->pid;
   }
 
@@ -887,7 +913,6 @@ RDF;
       'logMessage' => 'Fedora Object Ingested'
     );
     $object = self::soap_call('ingest', $params);
-    //dd($object, 'Soap return');
     return new Fedora_Item($object->objectPID);
   }
 
@@ -927,11 +952,11 @@ RDF;
 
   /**
    * Modify Object
-   * @param type $label
-   * @param type $state
-   * @param type $ownerId
-   * @param type $logMessage
-   * @param type $quiet
+   * @param $label string
+   * @param $state string
+   * @param $ownerId string
+   * @param $logMessage string
+   * @param $quiet boolean
    * @return type
    */
   function modify_object($label = '', $state = NULL, $ownerId = NULL, $logMessage = 'Modified by Islandora API', $quiet=TRUE) {
@@ -1148,6 +1173,7 @@ RDF;
       $pid = self::get_next_PID_in_namespace();
     }
     if (empty($owner)) {
+      global $user;
       if (!empty($user->uid)) { // Default to current Drupal user.
         $owner = $user->uid;
       }
@@ -1170,7 +1196,7 @@ RDF;
 
     $label_property = $foxml->createElementNS("info:fedora/fedora-system:def/foxml#", "foxml:property");
     $label_property->setAttribute("NAME", "info:fedora/fedora-system:def/model#label");
-    $label_property->setAttribute("VALUE", $label);
+    $label_property->setAttribute("VALUE", truncate_utf8($label, 255, TRUE, TRUE));
 
     $owner_property = $foxml->createElementNS("info:fedora/fedora-system:def/foxml#", "foxml:property");
     $owner_property->setAttribute("NAME", "info:fedora/fedora-system:def/model#ownerId");

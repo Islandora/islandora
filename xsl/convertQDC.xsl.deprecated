@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This was how the metadata in the 'Fedora Object Details' tab was rendered.  Can be renamed back to 'convertQDC.xsl' (without '.deprecated') to make it be used again. -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+  <!-- Old parameter names "$baseUrl" and "$path" are deprecated.  Currently just used as defaults. -->
+	<xsl:param name="BASEURL" select="$baseUrl"/>
+	<xsl:param name="PATH" select="$path"/>
+  
+  <xsl:template match="/">
+    <div>
+      <table cellspacing="3" cellpadding="3">
+        <tbody>
+          <tr>
+            <th colspan="3"><h3>MetaData</h3></th>
+          </tr>
+          <xsl:for-each select="/*/*">
+            <xsl:variable name="FULLFIELD" select="name()"/>
+            <xsl:variable name="FIELD" select="local-name()"/>
+            <xsl:variable name="DATA" select="normalize-space(text())"/>
+            <xsl:if test="$DATA">
+              <tr>
+                <td><strong><xsl:value-of select="local-name()"/></strong></td>
+                <td><xsl:value-of select="$DATA"/>
+                  <xsl:for-each select="*">
+                    <div><xsl:value-of select="concat(local-name(), ' = ', text())"/></div>
+                  </xsl:for-each>
+                </td>
+              </tr>
+            </xsl:if>
+          </xsl:for-each>
+        </tbody>
+      </table>
+    </div>
+  </xsl:template>
+</xsl:stylesheet>

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:s="http://www.w3.org/2001/sw/DataAccess/rf1/result" version="1.0" xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
   <!-- Red and White XSLT -->
-  <xsl:variable name="BASEURL" select="$baseUrl"/>
-  <xsl:variable name="PATH" select="$path"/>
-  <xsl:variable name="thisPid" select="$collectionPid"/>
+  <xsl:param name="BASEURL" select="$baseUrl"/>
+  <xsl:param name="PATH" select="$path"/>
+  <xsl:param name="thisPid" select="$collectionPid"/>
+  <xsl:param name="page" select="$hitPage"/>
+  <xsl:param name="COLLECTION_TITLE" select="$collectionTitle"/>
+  <xsl:param name="imagecache_preset">fedora_repository_collection_thumbnail</xsl:param>
+  
   <xsl:variable name="size" select="20"/>
-  <xsl:variable name="page" select="$hitPage"/>
   <xsl:variable name="start" select="((number($page) - 1) * number($size)) + 1"/>
   <xsl:variable name="end" select="($start - 1) + number($size)"/>
   <xsl:variable name="cellsPerRow" select="4"/>
@@ -42,7 +45,7 @@
             <li class="pager-previous">
               <a>
                 <xsl:attribute name="href">
-                  <xsl:value-of select="concat($BASEURL, '/fedora/repository/', $thisPid, '/-/Collection/', $page - 1)"/>
+                  <xsl:value-of select="php:functionString('url', concat('fedora/repository/', $thisPid, '/-/Collection/', $page - 1))"/>
                 </xsl:attribute>
                 &lt;Prev
               </a>
@@ -53,7 +56,7 @@
             <li class="pager-next">
               <a>
                 <xsl:attribute name="href">
-                  <xsl:value-of select="concat($BASEURL, '/fedora/repository/', $thisPid, '/-/Collection/', $page + 1)"/>
+                  <xsl:value-of select="php:functionString('url', concat('fedora/repository/', $thisPid, '/-/Collection/', $page + 1))"/>
                 </xsl:attribute>
                 Next>
               </a>
@@ -64,7 +67,7 @@
             <li class="pager-previous">
               <a>
                 <xsl:attribute name="href">
-                  <xsl:value-of select="concat($BASEURL, '/fedora/repository/', $thisPid, '/-/Collection/', $page - 1)"/>
+                  <xsl:value-of select="php:functionString('url', concat('fedora/repository/', $thisPid, '/-/Collection/', $page - 1))"/>
                 </xsl:attribute>
                 &lt;Prev
               </a>&#160;
@@ -72,7 +75,7 @@
             <li class="pager-next">
               <a>
                 <xsl:attribute name="href">
-                  <xsl:value-of select="concat($BASEURL, '/fedora/repository/', $thisPid, '/-/Collection/', $page + 1)"/>
+                  <xsl:value-of select="php:functionString('url', concat('fedora/repository/', $thisPid, '/-/Collection/', $page + 1))"/>
                 </xsl:attribute>
                 Next>
               </a>
@@ -101,12 +104,12 @@
     <xsl:variable name="linkUrl">
       <xsl:choose>
         <xsl:when test="($CONTENTMODEL='islandora:collectionCModel')">
-          <xsl:value-of select="concat($BASEURL, '/fedora/repository/', $PID, '/-/collection')"/>
+          <xsl:value-of select="php:functionString('url', concat('fedora/repository/', $PID, '/-/collection'))"/>
         </xsl:when>
         <xsl:otherwise>
         <!--the below is an example of going straight to a datastream instead of the details page.
   <xsl:value-of select="$BASEURL"/>/fedora/repository/<xsl:copy-of select="$PID"/>/OBJ/<xsl:value-of select="s:title"/>-->
-          <xsl:value-of select="concat($BASEURL, '/fedora/repository/', $PID)"/>
+          <xsl:value-of select="php:functionString('url', concat('fedora/repository/', $PID))"/>
         </xsl:otherwise>
      </xsl:choose>
      <xsl:value-of select="s:content"/>
@@ -116,10 +119,11 @@
       <xsl:attribute name="href">
         <xsl:value-of select="$linkUrl"/>
       </xsl:attribute>
-      <img>
+      <xsl:copy-of select="php:function('fedora_repository_string_to_domnode', php:functionString('fedora_repository_render_image', $PID, 'TN', $imagecache_preset))"/>
+      <!-- <img>
         <xsl:attribute name="src"><xsl:value-of select="concat($BASEURL, '/fedora/repository/', $PID, '/TN')"/></xsl:attribute>
         <xsl:attribute name="alt"><xsl:value-of select="$newTitle" disable-output-escaping="yes"/></xsl:attribute>
-      </img>
+      </img> -->
      </a><br clear="all" />
      <a>
       <xsl:attribute name="href"><xsl:value-of select="$linkUrl"/>

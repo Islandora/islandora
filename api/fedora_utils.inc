@@ -239,13 +239,24 @@ function get_collections_as_option_array() {
   $allowed_string = variable_get('fedora_pids_allowed', 'default: demo: changeme: islandora:');
   $namespaces = explode(':', $allowed_string);
   $query = 'select $object $title from <#ri>
-                            where ($object <fedora-model:label> $title
-                              and $object <info:fedora/fedora-system:def/model#hasModel> <info:fedora/islandora:collectionCModel>
-                              and $object <fedora-model:state> <info:fedora/fedora-system:def/model#Active>)
-                            order by $title';
+            where ($object <fedora-model:label> $title
+              and $object <info:fedora/fedora-system:def/model#hasModel> <info:fedora/islandora:collectionCModel>
+              and $object <fedora-model:state> <info:fedora/fedora-system:def/model#Active>)
+            order by $title';
   $url = variable_get('fedora_repository_url', 'http://localhost:8080/fedora/risearch');
-  $url .= "?type=tuples&flush=TRUE&format=csv&limit=1000&lang=itql&stream=on&query=";
-  $content = do_curl($url . htmlentities(urlencode($query)));
+  
+  $options = array(
+    'type' => 'tuples',
+    'flush' => 'TRUE',
+    'format' => 'csv',
+    'limit' => '1000',
+    'lang' => 'itql',
+    'stream' => 'on',
+    'query' => $query,
+  );
+  //The url function will take care of URL encoding...
+  $content = do_curl(url($url, array('query' => $options)));
+  
   $list = explode("\n", $content);
   array_shift($list);
   $list = preg_replace('/info:fedora\//', '', $list);
