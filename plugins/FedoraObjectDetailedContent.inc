@@ -65,7 +65,8 @@ class FedoraObjectDetailedContent {
         $dc_html = $details_function($this->item);
       }
       else {
-        // problem
+        // problem - display profile not found
+        watchdog('fedora_repository', "Error - could not find object details display function @function", array('@function' => $details_function), WATCHDOG_WARNING);
       }
     }
 

@@ -3,11 +3,36 @@
 <xsl:variable name="dictionary" select="document('http://www.loc.gov/standards/mods/modsDictionary.xml')/dictionary"/>
 
 <xsl:template match="/">
-<!--html>
+<html>
 <head>
-<style type="text/css">TD {vertical-align:top}</style>
+<style type="text/css">
+.modsLabelTop {
+}
+
+.modsLabelLevel2 {
+  padding-left: 10px;
+}
+
+.modsLabelLevel3 {
+  padding-left: 20px;
+}
+
+.modsLabelLevel4 {
+  padding-left: 30px;
+}
+
+.modsValueTop {
+}
+
+.modsValueLevel2 {
+}
+
+.modsValueLevel3 {
+}
+
+</style>
 </head>
-<body-->
+<body>
   <xsl:choose>
     <xsl:when test="mods:modsCollection">
       <xsl:apply-templates select="mods:modsCollection"/>
@@ -16,8 +41,8 @@
       <xsl:apply-templates select="mods:mods"/>
     </xsl:when>
   </xsl:choose>
-<!--/body>
-</html-->
+</body>
+</html>
 </xsl:template>
 
 <xsl:template match="mods:modsCollection">
@@ -38,7 +63,7 @@
       <span class="modsLabelTop">
       <xsl:call-template name="longName">
         <xsl:with-param name="name">
-          <xsl:value-of select="local-name()"/>
+          <xsl:value-of select="local-name()"/>:
         </xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="attr"/>

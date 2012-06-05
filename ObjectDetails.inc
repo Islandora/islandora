@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * @file ObjectDetails.inc
+ * The functions required to define and respond to all the default object
+ * details display modes.
+ */
+
+/**
+ * Islandora core object details display modes.  These are the default display
+ * modes that are always available.
+ * @return A list of display modes that can be used to render the object details
+ *         page.
+ */
 function fedora_repository_islandora_object_details_display() {
   $profiles = array(
     'hidden' => array(
@@ -29,11 +41,25 @@ function fedora_repository_islandora_object_details_display() {
   return $profiles;
 }
 
+/**
+ * The renderer for the "hidden" display mode.  In this mode, no data is
+ * displayed.  This is supplied so you can disable the object details metadata
+ * display without disabling the tab entirely.
+ * @param item The item with the metadata to display.
+ * @return The fully composed object details metadata display.
+ */
 function fedora_repository_object_details_hidden($item) {
   // do nothing
   return "";
 }
 
+/**
+ * The renderer for the "xslt" display mode.  In this mode, an xslt is applied
+ * to the selected datastream to produce a user defined look and feel to the
+ * output data.
+ * @param item The item with the metadata to display.
+ * @return The fully composed object details metadata display.
+ */
 function fedora_repository_object_details_XSLT($item) {
   global $base_url;
   $path = drupal_get_path('module', 'fedora_repository');
@@ -47,13 +73,13 @@ function fedora_repository_object_details_XSLT($item) {
   $xmlstr = $item->get_datastream_dissemination($dsid);
 
   if (empty($xmlstr)) {
-    return '';
+    return t('Error - could not find datastream @dsid on object @pid<br/>Please contact the site administrator.',
+    array('@dsid' => $dsid, '@pid' => $item->pid));
   }
 
   try {
     $proc = new XsltProcessor();
   } catch (Exception $e) {
-    drupal_set_message($e->getMessage(), 'error');
     watchdog('fedora_repository', "Error while creating XSLT processor: @e", array('@e' => $e->getMessage()), WATCHDOG_ERROR);
     return;
   }
@@ -61,25 +87,34 @@ function fedora_repository_object_details_XSLT($item) {
   $proc->setParameter('', 'baseUrl', $base_url);
   $proc->setParameter('', 'path', $base_url . '/' . $path);
   $input = NULL;
-  
-  $xsl_file = './'. $path .'/'. variable_get('islandora_object_details_xslt_sheet', 'xsl/convertQDC.xsl');
+
+  $xsl_file = './'. $path .'/'. variable_get('islandora_object_details_xslt_sheet', 'object_details_xslts/convertQDC.xsl');
+  // set an error message in case xslt parsing fails
+  $output = t("Failed to parse xslt file at @xsltFile", array('@xsltFile' => $xsl_file));
   if (is_readable($xsl_file)) {
-    $xsl = new DOMDocument();
-    $xsl->load($xsl_file);
-    $input = new DOMDocument();
-    $input->loadXML(trim($xmlstr));
+    $xsl = new DomDocument();
+    $input = new DomDocument();
+    try {
+      $xsl->load($xsl_file);
+
+      $input->loadXML(trim($xmlstr));
+    } catch (Exception $e) {
+      watchdog('fedora_repository', "Problem loading XSL file: @e", array('@e' => $e->getMessage()), NULL, WATCHDOG_ERROR);
+    }
     $xsl = $proc->importStylesheet($xsl);
     $newdom = $proc->transformToDoc($input);
     $output = $newdom->saveHTML();
-    return $output;
   }
-  else {
-    watchdog('fedora_repository', 'The XSLT file @xslt_name is not readable.', array(
-      '@xslt_name' => $xsl_file,
-    ));
-  }
+  return $output;
 }
 
+/**
+ * The renderer for the "table" display mode.  In this mode, the requested
+ * datastream is rendered using a simple table with keys(tags) on the left and
+ * values on the right.
+ * @param item The item with the metadata to display.
+ * @return The fully composed object details metadata display.
+ */
 function fedora_repository_object_details_table($item) {
   global $base_url;
   $path = drupal_get_path('module', 'fedora_repository');
@@ -93,7 +128,8 @@ function fedora_repository_object_details_table($item) {
   $xmlstr = $item->get_datastream_dissemination($dsid);
 
   if (empty($xmlstr)) {
-    return '';
+    return t('Error - could not find datastream @dsid on object @pid<br/>Please contact the site administrator.',
+    array('@dsid' => $dsid, '@pid' => $item->pid));
   }
 
   $simplexml = new SimpleXMLElement($xmlstr);
@@ -123,7 +159,11 @@ function fedora_repository_object_details_table($item) {
   return theme('table', $headers, $rows, array('class' => 'dc-table'));
 }
 
-// configuration pages
+/**
+ * Configuration page for the xslt display mode.  This mode requires two
+ * parameters: the datastream to render, and the xslt to apply to it.
+ * @return The configuration page.
+ */
 function fedora_repository_object_details_XSLT_config() {
   $form = array();
   $form['config'] = array(
@@ -131,10 +171,22 @@ function fedora_repository_object_details_XSLT_config() {
     '#title' => t("XSLT display options"),
   );
 
+  // locate the xslts available
+  $xslt_folder = "object_details_xslts/";
+  $folder = drupal_get_path("module", "fedora_repository") ."/". $xslt_folder;
+  // retrieve the filenames from the system
+  $xslts = file_scan_directory($folder, ".xsl");
+  $options = array();
+  foreach ($xslts as $xsl) {
+    $options[$xslt_folder . $xsl->basename] = $xsl->basename;
+  }
+
   $form['config']['xslt'] = array(
-    '#type' => 'textfield',
+    '#type' => 'select',
     '#title' => t("XSL transform to use"),
-    '#default_value' => variable_get('islandora_object_details_xslt_sheet', 'xsl/convertQDC.xsl'),
+    '#default_value' => variable_get('islandora_object_details_xslt_sheet', 'object_details_xslts/convertQDC.xsl'),
+    '#options' => $options,
+    '#key_type' => 'associative',
     '#required' => TRUE,
   );
   $form['config']['dsid'] = array(
@@ -151,7 +203,21 @@ function fedora_repository_object_details_XSLT_config() {
 
   return $form;
 }
+/**
+ * Custom submit handler for the xslt configuration page.
+ * @param form
+ * @pararm form_state The user supplied values for the form.
+ */
+function fedora_repository_object_details_XSLT_config_submit($form, &$form_state) {
+  variable_set('islandora_object_details_xslt_sheet', $form_state['values']['xslt']);
+  variable_set('islandora_object_details_xslt_datastream', $form_state['values']['dsid']);
+}
 
+/**
+ * Configuration page for the table display mode.  This mode requires only one
+ * parameter: the datastream to render.
+ * @return The configuration page.
+ */
 function fedora_repository_object_details_table_config() {
   $form = array();
   $form['config'] = array(
@@ -174,11 +240,11 @@ function fedora_repository_object_details_table_config() {
   return $form;
 }
 
-function fedora_repository_object_details_XSLT_config_submit($form, &$form_state) {
-  variable_set('islandora_object_details_xslt_sheet', $form_state['values']['xslt']);
-  variable_set('islandora_object_details_xslt_datastream', $form_state['values']['dsid']);
-}
-
+/**
+ * Custom submit handler for the table configuration page.
+ * @param form
+ * @pararm form_state The user supplied values for the form.
+ */
 function fedora_repository_object_details_table_config_submit($form, &$form_state) {
   variable_set('islandora_object_details_table_datastream', $form_state['values']['dsid']);
 }

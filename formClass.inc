@@ -317,11 +317,19 @@ class formClass {
     $profiles = module_invoke_all("islandora_object_details_display");
 
     $display_options = array();
-    foreach ($profiles as $machine_name => $profile) {
-      $display_options[$machine_name] = $profile['name'];
-      $config_path = $profile['config'];
-      if (isset($config_path) && $config_path != ""){
-        $display_options[$machine_name] .= " (". l("config", $config_path, array()) .")";
+    // suppress php warnings from empty lists
+    if ($profiles) {
+      foreach ($profiles as $machine_name => $profile) {
+        // make sure the name exists (the bare minimum)
+        if (array_key_exists('name', $profile)) {
+          $display_options[$machine_name] = $profile['name'];
+          if (array_key_exists('config', $profile)) {
+            $config_path = $profile['config'];
+            if (isset($config_path) && $config_path != "") {
+              $display_options[$machine_name] .= " (". l("config", $config_path, array()) .")";
+            }
+          }
+        }
       }
     }
     $form['tabs']['islandora_object_details_display_table'] = array(
