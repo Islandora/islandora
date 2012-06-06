@@ -85,10 +85,10 @@ function fedora_repository_object_details_XSLT($item) {
   }
 
   $proc->setParameter('', 'baseUrl', $base_url);
-  $proc->setParameter('', 'path', $base_url . '/' . $path);
+  $proc->setParameter('', 'path', $path);
   $input = NULL;
 
-  $xsl_file = './'. $path .'/'. variable_get('islandora_object_details_xslt_sheet', 'object_details_xslts/convertQDC.xsl');
+  $xsl_file = variable_get('islandora_object_details_xslt_sheet', 'sites/all/modules/islandora/object_details_xslts/convertQDC.xsl');
   // set an error message in case xslt parsing fails
   $output = t("Failed to parse xslt file at @xsltFile", array('@xsltFile' => $xsl_file));
   if (is_readable($xsl_file)) {
@@ -160,9 +160,13 @@ function fedora_repository_object_details_table($item) {
 }
 
 /**
- * Configuration page for the xslt display mode.  This mode requires two
- * parameters: the datastream to render, and the xslt to apply to it.
- * @return The configuration page.
+ * Configuration page for the xslt display mode.
+ *
+ * This mode requires two parameters: the datastream to render, and the xslt to
+ * apply to it.
+ *
+ * @return
+ *   The configuration page.
  */
 function fedora_repository_object_details_XSLT_config() {
   $form = array();
@@ -171,20 +175,12 @@ function fedora_repository_object_details_XSLT_config() {
     '#title' => t("XSLT display options"),
   );
 
-  // locate the xslts available
-  $xslt_folder = "object_details_xslts/";
-  $folder = drupal_get_path("module", "fedora_repository") ."/". $xslt_folder;
-  // retrieve the filenames from the system
-  $xslts = file_scan_directory($folder, ".xsl");
-  $options = array();
-  foreach ($xslts as $xsl) {
-    $options[$xslt_folder . $xsl->basename] = $xsl->basename;
-  }
+  $options = module_invoke_all("object_details_get_available_xslts");
 
   $form['config']['xslt'] = array(
     '#type' => 'select',
     '#title' => t("XSL transform to use"),
-    '#default_value' => variable_get('islandora_object_details_xslt_sheet', 'object_details_xslts/convertQDC.xsl'),
+    '#default_value' => variable_get('islandora_object_details_xslt_sheet', 'sites/all/modules/islandora/object_details_xslts/convertQDC.xsl'),
     '#options' => $options,
     '#key_type' => 'associative',
     '#required' => TRUE,
@@ -205,8 +201,10 @@ function fedora_repository_object_details_XSLT_config() {
 }
 /**
  * Custom submit handler for the xslt configuration page.
- * @param form
- * @pararm form_state The user supplied values for the form.
+ *
+ * @param $form
+ * @param &$form_state
+ *   The user supplied values for the form.
  */
 function fedora_repository_object_details_XSLT_config_submit($form, &$form_state) {
   variable_set('islandora_object_details_xslt_sheet', $form_state['values']['xslt']);
@@ -214,9 +212,31 @@ function fedora_repository_object_details_XSLT_config_submit($form, &$form_state
 }
 
 /**
+ * Base function to supply the available xslt files.
+ *
+ * Modules implementing this hook need to return an array describing where the
+ * XSLT is.  The array key is the path to the XSLT (paths start with sites/) and
+ * the value in the array is the display name.  In the simplest form you can use
+ * file_scan_directory like we do here - this puts the filename as the display
+ * name and will automatically detect new files as they are added.
+ */
+function fedora_repository_object_details_get_available_xslts() {
+  $folder = drupal_get_path("module", "fedora_repository") ."/object_details_xslts/";
+  // retrieve the filenames from the system
+  $xslts = file_scan_directory($folder, ".xsl");
+  $options = array();
+  foreach ($xslts as $xsl) {
+    $options[$xsl->filename] = $xsl->basename;
+  }
+  return $options;
+}
+
+/**
  * Configuration page for the table display mode.  This mode requires only one
  * parameter: the datastream to render.
- * @return The configuration page.
+ *
+ * @return
+ *   The configuration page.
  */
 function fedora_repository_object_details_table_config() {
   $form = array();
@@ -242,8 +262,10 @@ function fedora_repository_object_details_table_config() {
 
 /**
  * Custom submit handler for the table configuration page.
- * @param form
- * @pararm form_state The user supplied values for the form.
+ *
+ * @param $form
+ * @param &$form_state
+ *   The user supplied values for the form.
  */
 function fedora_repository_object_details_table_config_submit($form, &$form_state) {
   variable_set('islandora_object_details_table_datastream', $form_state['values']['dsid']);
