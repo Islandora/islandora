@@ -817,15 +817,12 @@ class formClass {
    * @return string 
    */
   function createQDCEditForm($pid, $dsid, $client, &$form_state) {
+    module_load_include('inc', 'fedora_repository', 'api/fedora_item');
     $dsid = empty($dsid) ? 'QDC' : $dsid;
-    try {
-      $params = array('pid' => "$pid", 'dsID' => "$dsid", 'asOfDateTime' => "");
-      $object = $client->__soapCall('getDatastreamDissemination', array('parameters' => $params));
-    } catch (Exception $e) {
-      return array();
-    }
-    $content = $object->dissemination->stream;
-    $content = trim($content);
+
+    $item = new fedora_item($pid);
+    $content = trim($item->get_datastream_dissemination($dsid));
+
     $doc = new DOMDocument();
     if (!$doc->loadXML($content)) {
       echo "error loading xml";

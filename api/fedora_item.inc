@@ -130,6 +130,7 @@ class Fedora_Item {
     $datastream_url = drupal_urlencode($datastream_file);
     $url = file_create_url($datastream_url);
 
+    // add_datastream_from_url forces a re-sync of the datastream list
     $return_value = $this->add_datastream_from_url($url, $datastream_id, $datastream_label, $datastream_mimetype, $controlGroup, $logMessage);
 
     if ($original_path != $datastream_file) {
@@ -177,8 +178,10 @@ class Fedora_Item {
       'logMessage' => ($logMessage != NULL) ? $logMessage : 'Ingested object ' . $datastream_id
     );
 
-
-    return $this->soap_call('addDataStream', $params);
+    $soap_result = $this->soap_call('addDataStream', $params);
+    // make sure to refresh the datastream list after adding so this item stays in sync with the repository
+    $this->datastreams = $this->get_datastreams_list_as_array();
+    return $soap_result;
   }
 
   /**
@@ -197,6 +200,7 @@ class Fedora_Item {
     $tmpfile = fopen($tmpfilename, 'w');
     fwrite($tmpfile, $str, strlen($str));
     fclose($tmpfile);
+    // add_datastream_from_file forces a re-sync of the datastream list
     $returnvalue = $this->add_datastream_from_file($tmpfilename, $datastream_id, $datastream_label, $datastream_mimetype, $controlGroup, $logMessage);
     unlink($tmpfilename);
     return $returnvalue;
@@ -513,6 +517,12 @@ RDF;
    * @return null 
    */
   function get_datastream_dissemination($dsid, $as_of_date_time = "", $quiet=TRUE) {
+    if (!array_key_exists($dsid, $this->datastreams)) {
+      watchdog('fedora_repository', 'Requested invalid datastream dissemination @dsid on object @pid',
+               array('@dsid' => $dsid, '@pid' => $pid));
+      return NULL;
+    }
+
     $params = array(
       'pid' => $this->pid,
       'dsID' => $dsid,
@@ -538,6 +548,11 @@ RDF;
    * @return type
    */
   function get_datastream($dsid, $as_of_date_time = '', $quiet = TRUE) {
+    if (!array_key_exists($dsid, $this->datastreams)) {
+      watchdog('fedora_repository', 'Requested invalid datastream dissemination @dsid on object @pid',
+               array('@dsid' => $dsid, '@pid' => $pid));
+      return NULL;
+    }
     $params = array(
       'pid' => $this->pid,
       'dsID' => $dsid,
@@ -859,7 +874,10 @@ RDF;
       'logMessage' => $log_message,
       'force' => $force,
     );
-    return $this->soap_call('purgeDatastream', $params);
+    $soap_result = $this->soap_call('purgeDatastream', $params);
+    // make sure to refresh the datastream list after adding so this item stays in sync with the repository
+    $this->datastreams = $this->get_datastreams_list_as_array();
+    return $soap_result;
   }
 
   /**

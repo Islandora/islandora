@@ -624,30 +624,9 @@ class ObjectHelper {
    *
    */
   function getStream($pid, $dsid, $showError = FALSE) {
-    module_load_include('inc', 'fedora_repository', 'ConnectionHelper');
-    $soapHelper = new ConnectionHelper();
-    try {
-      $client = $soapHelper->getSoapClient(variable_get('fedora_soap_url', 'http://localhost:8080/fedora/services/access?wsdl'));
-      $params = array(
-        'pid' => "$pid",
-        'dsID' => "$dsid",
-        'asOfDateTime' => ""
-      );
-
-      if (!isset($client)) {
-        drupal_set_message(t('Error connection to Fedora using soap client.'));
-        return NULL;
-      }
-      $object = $client->__soapCall('getDatastreamDissemination', array('parameters' => $params));
-    } catch (Exception $e) {
-      if ($showError) {
-        drupal_set_message(t('Error getting Datastream for %pid and %datastream<br />', array('%pid' => $pid, '%datastream' => $dsid)), 'error');
-      }
-      return NULL;
-    }
-    $content = $object->dissemination->stream;
-    $content = trim($content);
-    return $content;
+    module_load_include('inc', 'fedora_repository', 'api/fedora_item');
+    $item = new fedora_item($pid);
+    return $item->get_datastream_dissemination($dsid);
   }
 
   /**

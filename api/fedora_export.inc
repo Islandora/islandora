@@ -57,7 +57,6 @@ function export_objects_for_pid($pid, $dir, &$log) {
       $file = $dir . '/' . $ds->label . '.' . get_file_extension($ds->MIMEType);
       $paths[$ds->ID] = $file;
 
-      //$content = $ob_helper->getDatastreamDissemination($pid, $ds->ID);
       if ($content = $ob_helper->getStream($pid, $ds->ID, FALSE)) {
         if (!$fp = @fopen($file, 'w')) {
           $log[] = log_line(t("Failed to open file %file to write datastream %dsid for pid %pid", array('%file' => $file, '%dsid' => $ds->ID, '%pid' => $pid)), 'error');
