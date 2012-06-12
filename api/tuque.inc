@@ -77,8 +77,8 @@ class IslandoraTuque {
       $this->cache = new SimpleCache();
       $this->repository = new FedoraRepository($this->api, $this->cache);
     }
-  }
-
+ }
+ 
   static function exists() {
     return class_exists('RepositoryConnection');
   }
@@ -90,4 +90,26 @@ class IslandoraTuque {
     drupal_set_message($message, 'error', FALSE);
   }
 }
+
+function islandora_object_load($object_id) {
+    static $islandora_tuque = NULL;
+
+    if(!$islandora_tuque) {
+      $islandora_tuque = new IslandoraTuque(); 
+    }
+
+    if(IslandoraTuque::exists()) {
+      try {
+        $fedora_object = $islandora_tuque->repository->getObject($object_id);
+      } catch (Exception $e) {
+        return NULL;
+      }
+      return $fedora_object;
+    }
+    else {
+      IslandoraTuque::getError();
+      return NULL;
+    }
+  }
+
 
