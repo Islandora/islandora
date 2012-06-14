@@ -207,8 +207,10 @@ function fedora_repository_object_details_XSLT_config() {
  *   The user supplied values for the form.
  */
 function fedora_repository_object_details_XSLT_config_submit($form, &$form_state) {
+  variable_set('islandora_object_details_display_table', 'xslt');
   variable_set('islandora_object_details_xslt_sheet', $form_state['values']['xslt']);
   variable_set('islandora_object_details_xslt_datastream', $form_state['values']['dsid']);
+  drupal_set_message('Object Details view has been set to XSLT and your configuration has been saved');
 }
 
 /**
@@ -268,5 +270,7 @@ function fedora_repository_object_details_table_config() {
  *   The user supplied values for the form.
  */
 function fedora_repository_object_details_table_config_submit($form, &$form_state) {
+  variable_set('islandora_object_details_display_table', 'table');
   variable_set('islandora_object_details_table_datastream', $form_state['values']['dsid']);
+  drupal_set_message('Object Details view has been set to Table and your configuration has been saved');
 }
