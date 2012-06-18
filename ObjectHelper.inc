@@ -1026,12 +1026,11 @@ PREFIX rels-ext: <info:fedora/fedora-system:def/relations-external#>
 SELECT ?parentObject ?title ?content
 FROM <#ri>
 WHERE {
-  ?this ?relationship ?parentObject .
+  <info:fedora/$pid> ?relationship ?parentObject .
   ?parentObject fedora-model:label ?title ;
                 fedora-model:state fedora-model:Active ;
                 fedora-model:hasModel ?content .
   FILTER(
-    sameTerm(?this, <info:fedora/$pid>) &&
     (
       sameTerm(?relationship, rels-ext:isMemberOfCollection) ||
       sameTerm(?relationship, rels-ext:isMemberOf) ||
