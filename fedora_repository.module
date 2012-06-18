@@ -220,18 +220,26 @@ function fedora_repository_ingest_form_validate($form, &$form_state) {
 // Get the uploaded file.
         $validators = array();
 
-        if (!empty($_FILES['files']['name']['ingest-file-location'])) {
-          $fileObject = file_save_upload('ingest-file-location', $validators);
-
-          file_move($fileObject->filepath, 0, 'FILE_EXISTS_RENAME');
-          $form_state['values']['ingest-file-location'] = $fileObject->filepath;
+        $ifl = 'ingest-file-location';
+        $fileObject = NULL;
+        //Check if it's already there; this is what upload_element provides.
+        if (is_a($form_state['values'][$ifl], 'stdClass') && property_exists($form_state['values'][$ifl], '')) {
+          $fileObject = $form_state['values'][$ifl];
+        }
+        elseif (!empty($_FILES['files']['name'][$ifl])) {
+          $fileObject = file_save_upload($ifl, $validators);
         }
 
-        if (isset($form_state['values']['ingest-file-location']) && file_exists($form_state['values']['ingest-file-location'])) {
+        if ($fileObject !== NULL && property_exists($fileObject, 'filepath')) {
+          file_move($fileObject->filepath, 0, 'FILE_EXISTS_RENAME');
+          $form_state['values'][$ifl] = $fileObject->filepath;
+        }
+
+        if (isset($form_state['values'][$ifl]) && file_exists($form_state['values'][$ifl])) {
           module_load_include('inc', 'fedora_repository', 'ContentModel');
           module_load_include('inc', 'fedora_repository', 'MimeClass');
 
-          $file = $form_state['values']['ingest-file-location'];
+          $file = $form_state['values'][$ifl];
 
           $contentModelPid = ContentModel::getPidFromIdentifier($form_state['values']['models']);
           $contentModelDsid = ContentModel::getDSIDFromIdentifier($form_state['values']['models']);
@@ -244,11 +252,11 @@ function fedora_repository_ingest_form_validate($form, &$form_state) {
 
             if (!empty($file)) {
               if (!in_array($dformat, $allowedMimeTypes)) {
-                form_set_error('ingest-file-location', 
-                    t('The uploaded file\'s mimetype') . 
-                    ' (' . $dformat . ') ' .
-                    t('is not associated with this Content Model. The allowed types are') . 
-                    ' ' . implode(' ', $allowedMimeTypes));
+                form_set_error($ifl, 
+                    t('The uploaded file\'s mimetype (@mime) is not associated with this Content Model. The allowed types are: @allowed', array(
+                      '@mime' => $dformat,
+                      '@allowed' => implode(', ', $allowedMimeTypes),
+                    )));
                 file_delete($file);
                 return;
               }
@@ -1162,6 +1170,9 @@ function fedora_object_as_attachment($pid, $dsId, $label=NULL, $version=NULL) {
     drupal_set_message(t("no pid or dsid given to create an object with!"));
     return ' ';
   }
+
+  //Disable the page cache, so entire datastreams do not get thrown into the page cache.
+  $GLOBALS['conf']['cache'] = CACHE_DISABLED;
 
   $objectHelper = new ObjectHelper();
   $objectHelper->makeObject($pid, $dsId, TRUE, $label, FALSE, $version);

@@ -186,7 +186,7 @@ class ObjectHelper {
           
           //Set what headers we can...
           if ($mimeType = $info['content_type']) {
-            header("Content-Type: $mimeType");
+            drupal_set_header("Content-Type: $mimeType");
             
             if ($asAttachment) {
               $suggestedFileName = "$label";
@@ -212,7 +212,7 @@ class ObjectHelper {
                 $suggestedFileName = "$label.$ext";
               }
 
-              header('Content-Disposition: attachment; filename="' . $suggestedFileName . '"');
+              drupal_set_header('Content-Disposition: attachment; filename="' . $suggestedFileName . '"');
             }
           }
           
@@ -227,14 +227,14 @@ class ObjectHelper {
               unset($query['q']);
             }
             
-            header('HTTP/1.1 307 Moved Temporarily');
-            header('Location: ' . url($effective_url, array('query' => $query)));
+            drupal_set_header('HTTP/1.1 307 Moved Temporarily');
+            drupal_set_header('Location: ' . url($effective_url, array('query' => $query)));
           }
           elseif ((isset($user) && $user->uid != 0) || $forceSoap || isset($_SERVER['HTTPS'])) { //If not anonymous, soap is force or we're using HTTPS
             //Have the webserver mediate the transfer (download and restream)
             
             if (($contentSize = self::getDatastreamSize($pid, $dsID, TRUE)) > 0) {
-              header("Content-Length: $contentSize");
+              drupal_set_header("Content-Length: $contentSize");
             }
             
             $opts = array(
@@ -253,8 +253,8 @@ class ObjectHelper {
             }
           }
           else { //Try to redirect directly to Fedora.
-            header('HTTP/1.1 307 Moved Temporarily');
-            header('Location: ' . $url);
+            drupal_set_header('HTTP/1.1 307 Moved Temporarily');
+            drupal_set_header('Location: ' . $url);
           }
         }
         else {
