@@ -917,13 +917,16 @@ function makeObject($pid, $dsID) {
     drupal_set_message(t("No pid or dsid given to create an object with."));
     return ' ';
   }
-  global $user;
+  global $user, $conf;
   if (!fedora_repository_access(OBJECTHELPER :: $OBJECT_HELPER_VIEW_FEDORA, $pid, $user)) {
     drupal_access_denied();
     return;
     drupal_set_message(t("You do not have access to Fedora objects within the attempted namespace."), 'error');
     return ' ';
   }
+
+  //Disable the page cache, so entire datastreams do not get thrown into the page cache.
+  $conf['cache'] = CACHE_DISABLED;
 
   module_load_include('inc', 'fedora_repository', 'ObjectHelper');
   $objectHelper = new ObjectHelper();

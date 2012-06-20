@@ -533,16 +533,12 @@ class CollectionClass {
   function showFieldSets($page_number) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
     module_load_include('inc', 'fedora_repository', 'CollectionPolicy');
-    //module_load_include('inc', 'fedora_repository', 'BatchIngest'); //Legacy code?
     global $base_url;
     global $user;
     
     $tabset = array();
-    $query = NULL;
+    $query = self::getCollectionQuery($this->pid);
     $item = new Fedora_Item($this->pid);
-    if ($item->exists() && array_key_exists('QUERY', $item->datastreams)) {
-      $query = $item->get_datastream_dissemination('QUERY');
-    }
     $results = $this->getRelatedItems($this->pid, $query);
 
     $collection_items = $this->renderCollection($results, $this->pid, NULL, NULL, $page_number);
