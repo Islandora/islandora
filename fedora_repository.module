@@ -63,37 +63,6 @@ function fedora_repository_purge_object($pid = NULL, $name = NULL) {
 }
 
 /**
- * fedora repository collection view
- * @global type $user
- * @param type $pid
- * @param type $collection
- * @param type $pageNumber
- * @return type 
- */
-function fedora_repository_collection_view($pid = NULL, $collection = NULL, $pageNumber = NULL) {
-  module_load_include('inc', 'fedora_repository', 'ObjectHelper');
-  global $user;
-  if (!fedora_repository_access(OBJECTHELPER :: $OBJECT_HELPER_VIEW_FEDORA, $pid, $user)) {
-    drupal_set_message(t("You do not have access to Fedora objects within the attempted namespace or access to Fedora denied."), 'error');
-    return ' ';
-  }
-
-  $objectHelper = new ObjectHelper();
-  if ($pid == NULL) {
-    $pid = variable_get('fedora_repository_pid', 'islandora:root');
-  }
-
-  $content = '';
-
-  module_load_include('inc', 'fedora_repository', 'CollectionClass');
-  $collectionClass = new CollectionClass();
-  $results = $collectionClass->getRelatedItems($pid, NULL);
-  $content .= $objectHelper->parseContent($results, $pid, $dsId, $collection, $pageNumber);
-
-  return $content;
-}
-
-/**
  * fedora repository ingest object
  * @param type $collection_pid
  * @param type $collection_label
@@ -1091,7 +1060,7 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
   }
   if (!fedora_repository_access(OBJECTHELPER::$OBJECT_HELPER_VIEW_FEDORA, $pid, $user)) {
     if (user_access('access administration pages')) {
-      drupal_set_message(t("PIDs may be added to allowed namespaces, or all namespace restrictions removed @here", array('@here' => l('here', 'admin/settings/fedora_repository'))), 'warning');
+      drupal_set_message(t("PIDs may be added to allowed namespaces, or all namespace restrictions removed !here", array('!here' => l('here', 'admin/settings/fedora_repository'))), 'warning');
     }
     drupal_access_denied();
     exit;

@@ -19,9 +19,7 @@ class ObjectHelper {
   public static $INGEST_FEDORA_OBJECTS = 'ingest new fedora objects';
   public static $EDIT_TAGS_DATASTREAM = 'edit tags datastream';
   public static $VIEW_DETAILED_CONTENT_LIST = 'view detailed list of content';
-  public static $DISPLAY_ALWAYS = 0;
-  public static $DISPLAY_NEVER = 1;
-  public static $DISPLAY_NO_MODEL_OUTPUT = 2;
+
   // TODO: Make this into a static member constant
   public $availableDataStreamsText = 'Detailed list of content';
 
@@ -703,107 +701,6 @@ class ObjectHelper {
     }
     
     return ($namespace_access && user_access($op, $as_user));
-  }
-
-  /**
-   * internal function
-   * uses an xsl to parse the sparql xml returned from the ITQL query
-   * @deprecated
-   *   This is only used in the fedora/repository/collection path, 
-   *   which should probably be nuked.
-   * @param $content String
-   */
-  function parseContent($content, $pid, $dsId, $collection, $pageNumber = NULL) {
-    $path = drupal_get_path('module', 'fedora_repository');
-    global $base_url;
-    $collection_pid = $pid; //we will be changing the pid later maybe
-    $objectHelper = $this;
-    $parsedContent = NULL;
-    $contentModels = $this->get_content_models_list($pid);
-    $isCollection = FALSE;
-
-    $fedoraItem = NULL;
-    $datastreams = $this->get_formatted_datastream_list($pid, $contentModels, $fedoraItem);
-
-    if (!empty($contentModels)) {
-      foreach ($contentModels as $contentModel) {
-        if ($contentModel == variable_get('fedora_collection_model_pid', 'islandora:collectionCModel')) {
-          //if this is a collection object store the $pid in the session as it will come in handy
-          //after a purge or ingest to return to the correct collection.
-
-          $_SESSION['fedora_collection'] = $pid;
-          $isCollection = TRUE;
-        }
-      }
-    }
-
-    if ($fedoraItem !== NULL) {
-      $dslist = $fedoraItem->get_datastreams_list_as_array();
-      if (isset($dslist['COLLECTION_POLICY'])) {
-        $isCollection = TRUE;
-      }
-    }
-    //--------------------------------------------------------------------------------
-    //show the collections datastreams
-    if ($results->length > 0 || $isCollection == TRUE) {
-      //  if(strlen($objectList)>22||$contentModel=='Collection'||$contentModel=='Community')//length of empty dom still equals 22 because of <table/> etc
-      module_load_include('inc', 'fedora_repository', 'CollectionPolicy');
-      $collectionPolicyExists = $this->getMimeType($pid, CollectionPolicy::getDefaultDSID());
-      if (user_access(ObjectHelper::$INGEST_FEDORA_OBJECTS) && $collectionPolicyExists) {
-        if (!empty($collectionPolicyExists)) {
-          $allow = TRUE;
-          if (module_exists('fedora_fesl')) {
-            $allow = fedora_fesl_check_roles($pid, 'write');
-          }
-          if ($allow) {
-            // $ingestObject = '<a title="'. t('Ingest a New object into ') . $collectionName . ' '. $collection_pid . '" href="'. base_path() .
-            $ingest_text = t('Ingest a new object into @collection_name PID @collection_pid', array('@collection_name' => $collectionName, '@collection_pid' => $collection_pid));
-            $ingestObject = l(theme('image', "$path/images/ingest.png", $ingest_text), "fedora/ingestObject/$collection_pid/$collectionName", array('attributes' => array(
-              'class' => 'icon',
-              'title' => $ingest_text,
-            ))) . t('Add to this Collection');
-          }
-        }
-      }
-      else {
-        $ingestObject = '&nbsp;';
-      }
-    }
-
-    $datastreams .= $ingestObject;
-
-
-    $output .= $datastreams;
-
-    $showDesc = FALSE;
-    switch (variable_get('fedora_object_display_description', ObjectHelper :: $DISPLAY_NO_MODEL_OUTPUT)) {
-      case ObjectHelper :: $DISPLAY_NEVER: break;
-      case ObjectHelper :: $DISPLAY_NO_MODEL_OUTPUT:
-        if (trim($datastreams) == '') {
-          $showDesc = TRUE;
-        }
-        break;
-
-      case ObjectHelper :: $DISPLAY_ALWAYS:
-      default:
-        $showDesc = TRUE;
-        break;
-    }
-    if ($showDesc) {
-      //just show default dc or qdc as we could not find a content model
-      $metaDataText = t('Description');
-      $body = $this->getQDC($pid);
-      $fieldset = array(
-        '#title' => t("!metaDataText", array('!metaDataText' => $metaDataText)),
-        '#collapsible' => TRUE,
-        '#collapsed' => TRUE,
-        '#value' => $body
-      );
-      $output .= theme('fieldset', $fieldset);
-    }
-
-
-    return $output;
   }
 
   /**

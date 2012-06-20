@@ -122,13 +122,6 @@ class formClass {
       'type' => MENU_CALLBACK,
       'access arguments' => array('add fedora datastreams')
     );
-
-    $items['fedora/repository/collection'] = array(
-      'title' => t('Collection view'),
-      'page callback' => 'fedora_collection_view',
-      'type' => MENU_CALLBACK,
-      'access argruments' => array('view fedora collection'),
-    );
     
     //new for mnpl******************************************
     $items['fedora/repository/mnpl_advanced_search'] = array(
@@ -347,21 +340,6 @@ class formClass {
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
     );
-    $form['advanced']['fedora_object_display_title'] = array(
-      '#type' => 'select',
-      '#title' => t('Display Object Title Behaviour'),
-      '#default_value' => variable_get('fedora_object_display_title', ObjectHelper::$DISPLAY_ALWAYS),
-      '#options' => array(ObjectHelper::$DISPLAY_ALWAYS => t('Always'), ObjectHelper::$DISPLAY_NEVER => t('Never'), ObjectHelper::$DISPLAY_NO_MODEL_OUTPUT => t('Only if no Content Model display output.')),
-      '#description' => t('Determines when to display the object (or collection) title when viewing an object/collection page.'),
-    );
-
-    $form['advanced']['fedora_object_display_description'] = array(
-      '#type' => 'select',
-      '#title' => t('Display Object Description Behaviour'),
-      '#default_value' => variable_get('fedora_object_display_description', ObjectHelper::$DISPLAY_ALWAYS),
-      '#options' => array(ObjectHelper::$DISPLAY_ALWAYS => t('Always'), ObjectHelper::$DISPLAY_NEVER => t('Never'), ObjectHelper::$DISPLAY_NO_MODEL_OUTPUT => t('Only if no Content Model display output.')),
-      '#description' => t('Determines when to display the default object (or collection) description fieldset when viewing an object/collection page.'),
-    );
 
     $form['advanced']['fedora_object_restrict_datastreams'] = array(
       '#type' => 'checkbox',
@@ -383,14 +361,6 @@ class formClass {
           '@preset' => 'fedora_repository_collection_thumbnail',
           '@xsl' => 'sparql_to_html.xsl',
         )),
-    );
-
-    $form['advanced']['fedora_collection_display_list'] = array(
-      '#type' => 'select',
-      '#title' => t('Display Collection List Behaviour'),
-      '#default_value' => variable_get('fedora_collection_display_list', ObjectHelper::$DISPLAY_ALWAYS),
-      '#options' => array(ObjectHelper::$DISPLAY_ALWAYS => t('Always'), ObjectHelper::$DISPLAY_NEVER => t('Never'), ObjectHelper::$DISPLAY_NO_MODEL_OUTPUT => t('Only if no Content Model display output.')),
-      '#description' => t('Determines when to display the list of objects when viewing a collection page.'),
     );
     
     $form['advanced']['fedora_control_group_control_during_ingest'] = array(
