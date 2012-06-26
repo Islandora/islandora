@@ -2,10 +2,10 @@
 
 /**
  * @file
- * 
+ *
  * Collection Class Class
  */
- 
+
 /**
  * This CLASS caches the streams so once you call a getstream once it will always return
  * the same stream as long as you are using the instance of this class. Cached to
@@ -34,12 +34,12 @@ class CollectionClass {
   }
   
   public static function getCollectionQuery($pid) {
-    if ($query = self::getCollectionQueryFromStream($pid)) {
-      return $query;
+    $query = self::getCollectionQueryFromStream($pid);
+    if (!$query) {
+      $query = self::getDefaultCollectionQuery($pid);
     }
-    else {
-      return self::getDefaultCollectionQuery($pid);
-    }
+    drupal_alter("islandora_collection_query", $query, $pid);
+    return $query;
   }
   
   protected static function getCollectionQueryFromStream($pid) {
