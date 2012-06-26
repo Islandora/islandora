@@ -133,6 +133,7 @@ class MimeClass {
     'xht' => 'application/xhtml+xml',
     'xhtml' => 'application/xhtml+xml',
     'xsl' => 'text/xml',
+    'xslt' => 'text/xml',
     'xml' => 'text/xml',
     'csv' => 'text/csv',
     'tsv' => 'text/tab-separated-values',
