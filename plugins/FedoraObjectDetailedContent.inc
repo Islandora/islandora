@@ -76,7 +76,7 @@ class FedoraObjectDetailedContent {
       $dc_array = $dc_returned;
       $dc_array['#weight'] = $i++;
     }
-    else {
+    elseif (!empty($dc_returned)) {
       $dc_array = array(
         '#type' => 'markup',
         '#value' => $dc_returned, //XXX:  This could easily be done in Drupal, instead of using an XSL
@@ -87,8 +87,12 @@ class FedoraObjectDetailedContent {
     $tabset['fedora_object_details']['tabset']['view'] = array(
       '#type' => 'tabpage',
       '#title' => t('View'),
-      'dc' => $dc_array,
     );
+
+    if (!empty($dc_array)) {
+      $tabset['fedora_object_details']['tabset']['view']['dc'] = $dc_array;
+    }
+
     if (fedora_repository_access(ObjectHelper :: $VIEW_DETAILED_CONTENT_LIST, $this->pid, $user)) {
       $tabset['fedora_object_details']['tabset']['view'] += array(
         'list' => array(
@@ -135,7 +139,8 @@ class FedoraObjectDetailedContent {
     }
 
     $ts = $tabset['fedora_object_details']['tabset'];
-    if (array_key_exists('view', $ts) || array_key_exists('edit', $ts)) {
+    if ((array_key_exists('view', $ts) && (count(element_children($ts['view'])) > 0)) || 
+      (array_key_exists('edit', $ts) && (count(element_children($ts['edit'])) > 0 || array_key_exists('#content', $ts['edit'])))) {
       return $tabset;
     }
     else {
