@@ -44,8 +44,7 @@
 //dsm($object);
 
 drupal_set_title($islandora_object->label);
-//print($islandora_object->label . ' ' . $islandora_object->id);
-  
-print ($variables['datastream_table']);
+//print($islandora_object->label . ' ' . $islandora_object->id); 
+print (theme_table($variables['datastream_table']));
 ?>
 

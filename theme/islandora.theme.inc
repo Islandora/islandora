@@ -39,7 +39,7 @@ function islandora_preprocess_islandora_default_edit(&$variables) {
   }
   $caption = $islandora_object->label . ' - ' . $islandora_object->id;
   $table = array('colgroups' => NULL, 'sticky' => TRUE, 'empty' => 'Error loading datastreams', 'caption' => $caption, 'header' => $header, 'rows' => $rows, 'attributes' => $table_attributes);
-  $variables['datastream_table'] = theme_table($table);
+  $variables['datastream_table'] = $table;
 }
 
 
