@@ -1013,24 +1013,33 @@ RDF;
     if ($parsed_url && array_key_exists('scheme', $parsed_url) && in_array($parsed_url['scheme'], $supported_schemes)) {
       $components = explode('/', $parsed_url['path']);
       $components = array_map('rawurlencode', $components);
-      $result = drupal_http_request(
-        url(
-          t('!scheme://!user:!pass@!host:!port/!path', array(
+      $fixed_url = url(
+        t(
+          '!scheme://!user:!pass@!host:!port/!path',
+          array(
             '!scheme' => $parsed_url['scheme'],
             '!user' => rawurlencode($parsed_url['user']),
             '!pass' => rawurlencode($parsed_url['pass']),
             '!host' => $parsed_url['host'],
+            '!port' => $parsed_url['port'],
             '!path' => implode('/', $components),
-          )),
-          array(
-            'query' => $parsed_url['query'],
-            'fragment' => $parsed_url['fragment'],
           )
+        ),
+        array(
+          'query' => $parsed_url['query'],
+          'fragment' => $parsed_url['fragment'],
         )
       );
+      $result = drupal_http_request($fixed_url);
 
       if ((int)($result->code / 100) === 2) {
         $content = $result->data;
+      }
+      else {
+        watchdog('fedora_repository', 'Failed making HTTP request to @URL.  Info: @info', array(
+          '@URL' => $fixed_url,
+          '@info' => print_r($result, TRUE),
+        ), 'warning');
       }
     }
 
