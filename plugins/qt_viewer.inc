@@ -151,7 +151,7 @@ class ShowQtStreamsInFieldSets {
         'poster' => array(
           '#type' => 'markup',
           '#value' => theme('image', "fedora/repository/{$this->pid}/{$pframe->ID}/poster.jpg", '', '', NULL, FALSE)
-        )
+        ),
         'play' => array(
           '#type' => 'markup',
           '#prefix' => '<div class="play" style="font-size: 128px; color: white; position: absolute; top: 50%; left: 50%; margin-top: -0.085em; margin-left: -0.33em; opacity: 0.9;">',
@@ -167,7 +167,7 @@ class ShowQtStreamsInFieldSets {
         '#value' => l(t('Download Media File'), "fedora/repository/{$this->pid}/OBJ/MOV.mov", array('attributes' => array('class' => 'download'))),
       );
     }
-    $src = url("fedora/repository/{$this->pid}/{$media->ID}/MOV.mov";
+    $src = url("fedora/repository/{$this->pid}/{$media->ID}/MOV.mov");
     
     $qtparams = "'autostart', '" . ($pframe !== FALSE ? 'TRUE' : 'FALSE') . "', ";
     $init = <<<EOD
