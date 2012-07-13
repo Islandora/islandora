@@ -1140,6 +1140,14 @@ RDF;
    * @return type
    */
   function modify_datastream_by_reference($external_url, $dsid, $label, $mime_type, $force = FALSE, $logMessage = 'Modified by Islandora API', $quiet=FALSE) {
+    global $base_url;
+
+    // Fedora has some problems getting files from HTTPS connections sometimes, so if we are getting a file
+    // from the local drupal, we try to pass a HTTP url instead of a HTTPS one.
+    if(stripos($external_url, 'https://') !== FALSE && stripos($external_url, $base_url) !== FALSE) {
+      $external_url = str_ireplace('https://', 'http://', $external_url);
+    }
+    
     $params = array(
       'pid' => $this->pid,
       'dsID' => $dsid,
