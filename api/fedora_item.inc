@@ -980,7 +980,9 @@ RDF;
 
     $params = array(
       'pid' => $this->pid,
-      'ownerId' => $ownerId,
+      'ownerId' => (($ownerId !== NULL)? //Default to the current owner if none is provided.
+        $ownerId:
+        $this->objectProfile->objOwnerId),
       'state' => $state,
       'label' => $label,
       'logMessage' => $logMessage

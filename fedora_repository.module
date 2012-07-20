@@ -797,8 +797,9 @@ function fedora_repository_edit_qdc_form(&$form_state, $pid, $dsId = NULL) {
 // There is no custom function, so just load the standard QDC form.
     $metaDataForm = new formClass();
 //currently we only edit the dc metadata.  If you defined a custom form with a custom handler you are sol for now.
-    return $metaDataForm->createMetaDataForm($pid, $dsId, $client, $form_state);
+    $output = $metaDataForm->createMetaDataForm($pid, $dsId, $client, $form_state);
   }
+  
   return $output;
 }
 
