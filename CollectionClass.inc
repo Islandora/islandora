@@ -54,13 +54,11 @@ class CollectionClass {
   }
   
   protected static function getDefaultCollectionQuery($pid) {
-    return 'select $object $title $content from <#ri>
+    return 'select $object $title from <#ri>
              where ($object <fedora-model:label> $title
-             and $object <fedora-model:hasModel> $content
              and ($object <fedora-rels-ext:isMemberOfCollection> <info:fedora/' . $pid . '>
              or $object <fedora-rels-ext:isMemberOf> <info:fedora/' . $pid . '>)
              and $object <fedora-model:state> <info:fedora/fedora-system:def/model#Active>)
-             minus $content <mulgara:is> <info:fedora/fedora-system:FedoraObject-3.0>
              order by $title';
   }
 

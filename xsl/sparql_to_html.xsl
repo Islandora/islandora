@@ -90,8 +90,6 @@
 
   <xsl:template match="s:result">
     <xsl:variable name='OBJECTURI' select="s:object/@uri"/>
-    <xsl:variable name='CONTENTURI' select="s:content/@uri"/>
-    <xsl:variable name='CONTENTMODEL' select="substring-after($CONTENTURI,'/')"/>
     <xsl:variable name='PID' select="substring-after($OBJECTURI,'/')"/>
     <xsl:variable name="newTitle" >
       <xsl:call-template name="replace-string">
@@ -103,17 +101,9 @@
     <xsl:variable name="cleanTitle" select="php:functionString('fedora_repository_urlencode_string', $newTitle)"/>
     
     <xsl:variable name="linkUrl">
-      <xsl:choose>
-        <xsl:when test="($CONTENTMODEL='islandora:collectionCModel')">
+      
           <xsl:value-of select="php:functionString('url', concat('fedora/repository/', $PID, '/-/collection'))"/>
-        </xsl:when>
-        <xsl:otherwise>
-        <!--the below is an example of going straight to a datastream instead of the details page.
-  <xsl:value-of select="$BASEURL"/>/fedora/repository/<xsl:copy-of select="$PID"/>/OBJ/<xsl:value-of select="s:title"/>-->
-          <xsl:value-of select="php:functionString('url', concat('fedora/repository/', $PID))"/>
-        </xsl:otherwise>
-     </xsl:choose>
-     <xsl:value-of select="s:content"/>
+       
     </xsl:variable>
     <td valign="top" width="25%">
      <a>
