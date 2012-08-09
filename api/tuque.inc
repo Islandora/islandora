@@ -2,7 +2,7 @@
 
 $islandora_module_path = drupal_get_path('module', 'fedora_repository');
 
-//do this until we expost these in a module or library
+//do this until we export these in a module or library
 @include_once 'sites/all/libraries/tuque/Datastream.php';
 @include_once 'sites/all/libraries/tuque/FedoraApi.php';
 @include_once 'sites/all/libraries/tuque/FedoraApiSerializer.php';
@@ -67,7 +67,7 @@ class IslandoraTuque {
     }
 
     if (!isset($url)) {
-      $url = variable_get('islandora_base_url', 'http://localhost:8080/fedora');
+      $url = variable_get('fedora_base_url', 'http://localhost:8080/fedora');
     }
 
     if(self::exists()) {
