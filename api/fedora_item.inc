@@ -118,7 +118,7 @@ class Fedora_Item {
       drupal_set_message(t('The datastream file %datastream_file could not be read! (likely due to permissions...)', array('%datastream_file' => $datastream_file)), 'warning');
       return;
     }
-    
+
     if (empty($datastream_mimetype)) {
       // Get mime type from the file extension.
       $mimetype_helper = new MimeClass();
@@ -158,7 +158,7 @@ class Fedora_Item {
 
     // Fedora has some problems getting files from HTTPS connections sometimes, so if we are getting a file
     // from the local drupal, we try to pass a HTTP url instead of a HTTPS one.
-    if(stripos($datastream_url, 'https://') !== FALSE && stripos($datastream_url, $base_url) !== FALSE) {
+    if (stripos($datastream_url, 'https://') !== FALSE && stripos($datastream_url, $base_url) !== FALSE) {
       $datastream_url = str_ireplace('https://', 'http://', $datastream_url);
     }
 
@@ -255,7 +255,7 @@ class Fedora_Item {
     if ($relsextxml === NULL) {
       $relsextxml = new DOMDocument(); //Avoid new instantiations in long-running processes
     }
-    
+
     $ds_list = $this->get_datastreams_list_as_array();
     $f_prefix = 'info:fedora/';
     if (!array_key_exists('RELS-EXT', $ds_list)) {
@@ -269,7 +269,7 @@ RDF;
     }
 
     $relsext = $this->get_datastream_dissemination('RELS-EXT');
-    
+
     if ($literal_value == REL_TYPE_URI && strpos($object, $f_prefix) !== 0) {
       $object = $f_prefix . $object;
     }
@@ -308,7 +308,7 @@ RDF;
     }
 
     $description->appendChild($newrel);
-    
+
     return $this->modify_datastream($relsextxml->saveXML(), 'RELS-EXT', "Fedora Object-to-Object Relationship Metadata", 'application/rdf+xml');
     //print ($description->dump_node());
     /*
@@ -341,37 +341,37 @@ RDF;
    */
   function purge_relationships($relationship, $object, $namespaceURI = RELS_EXT_URI, $literal_value = FALSE) {
     $relsext = $this->get_datastream_dissemination('RELS-EXT');
-    
+
     $relsextxml = new DomDocument();
     $relsextxml->loadXML($relsext);
     $modified = FALSE;
     $rels = $relsextxml->getElementsByTagNameNS($namespaceURI, $relationship);
     if (!empty($rels)) {
       // iterate backwards so if we delete something our pointer doesn't get out of sync
-      for ($i = $rels->length; $i>0; $i--) {
-        $rel = $rels->item($i-1);
+      for ($i = $rels->length; $i > 0; $i--) {
+        $rel = $rels->item($i - 1);
 //      foreach ($rels as $rel) { // moving forward like this caused iteration errors when something was deleted
-        if (  //If either no object is specified, or the object matches (in either the literal or URI case), remove this node from it's parent, and mark as changed.
-          empty($object) || 
-          (($literal_value == RELS_TYPE_URI) && $rel->getAttributeNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'resource') == $object) ||
-          (($literal_value == RELS_TYPE_PLAIN_LITERAL) && $rel->textContent == $object) ||
-          (($literal_value == RELS_TYPE_STRING) && $rel->getAttribute('rdf:datatype') == 'http://www.w3.org/2001/XMLSchema#string' && $rel->textContent == $object) ||
-          (($literal_value == RELS_TYPE_INT) && $rel->getAttribute('rdf:datatype') == 'http://www.w3.org/2001/XMLSchema#int' && intval($rel->textContent) == $object)) {
+        if (//If either no object is specified, or the object matches (in either the literal or URI case), remove this node from it's parent, and mark as changed.
+            empty($object) ||
+            (($literal_value == RELS_TYPE_URI) && $rel->getAttributeNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'resource') == $object) ||
+            (($literal_value == RELS_TYPE_PLAIN_LITERAL) && $rel->textContent == $object) ||
+            (($literal_value == RELS_TYPE_STRING) && $rel->getAttribute('rdf:datatype') == 'http://www.w3.org/2001/XMLSchema#string' && $rel->textContent == $object) ||
+            (($literal_value == RELS_TYPE_INT) && $rel->getAttribute('rdf:datatype') == 'http://www.w3.org/2001/XMLSchema#int' && intval($rel->textContent) == $object)) {
           $rel->parentNode->removeChild($rel);
           $modified = TRUE;
         }
       }
     }
-    
+
     //Save changes.
     if ($modified) {
       $this->modify_datastream($relsextxml->saveXML(), 'RELS-EXT', "Fedora Object-to-Object Relationship Metadata", 'text/xml');
     }
-    
+
     //Return whether or not we've introduced any changes.
     return $modified;
   }
-  
+
   /**
    * Removes the given relationship from the item's RELS-EXT and re-saves it.
    *
@@ -529,7 +529,7 @@ RDF;
       'dsID' => $dsid,
       'asOfDateTime' => $as_of_date_time,
     );
-    
+
     // Make soap call with quite
     $object = self::soap_call('getDataStreamDissemination', $params, $quiet);
     if (!empty($object)) {
@@ -684,7 +684,7 @@ RDF;
       if (!is_array($this->datastreams_list->datastreamDef)) {
         $xml_list = array($xml_list);
       }
-      
+
       foreach ($xml_list as $ds) {
         if (!is_object($ds)) {
           print_r($ds);
@@ -752,8 +752,26 @@ RDF;
     return $relationships;
   }
 
-  function get_rdf_relationships() {
+  /**
+   * Retrieves RELS-EXT values from item
+   *
+   * @param array $namespaces
+   * @return array
+   */
 
+  function get_rdf_relationships($namespaces = null) {
+    if ($namespaces == NULL) {
+      $namespaces = array(
+        RELS_EXT_URI,
+        FEDORA_MODEL_URI,
+        ISLANDORA_PAGE_URI,
+        ISLANDORA_RELS_EXT_URI,
+        ISLANDORA_RELS_INT_URI,
+      );
+    }
+    if (!is_array($namespaces)) {
+      $namespaces = array($namespaces);
+    }
     $relationships = array();
     try {
       $relsext = $this->get_datastream_dissemination('RELS-EXT');
@@ -767,13 +785,16 @@ RDF;
     $relsextxml->loadXML($relsext);
     $relsextxml->normalizeDocument();
     $allTags = array();
-    $allTags[] = $relsextxml->getElementsByTagNameNS(RELS_EXT_URI, '*');
-    $allTags[] = $relsextxml->getElementsByTagNameNS(FEDORA_MODEL_URI, '*');
-    $allTags[] = $relsextxml->getElementsByTagNameNS(ISLANDORA_PAGE_URI, '*');
+    foreach ($namespaces as $namespace) {
+      $allTags[] = $relsextxml->getElementsByTagNameNS($namespace, '*');
+    }
+
     foreach ($allTags as $tags) {
       foreach ($tags as $child) {
-        $value = preg_replace('/info:fedora\//','',$child->getAttributeNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'resource'));
-        
+        $value = preg_replace('/info:fedora\//', '', $child->getAttributeNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'resource'));
+        if (!$value) {
+          $value = $child->textContent;
+        }
         $relationships[$child->tagName][] = $value;
       }
     }
@@ -980,9 +1001,9 @@ RDF;
 
     $params = array(
       'pid' => $this->pid,
-      'ownerId' => (($ownerId !== NULL)? //Default to the current owner if none is provided.
-        $ownerId:
-        $this->objectProfile->objOwnerId),
+      'ownerId' => (($ownerId !== NULL) ? //Default to the current owner if none is provided.
+          $ownerId :
+          $this->objectProfile->objOwnerId),
       'state' => $state,
       'label' => $label,
       'logMessage' => $logMessage
@@ -1016,32 +1037,32 @@ RDF;
       $components = explode('/', $parsed_url['path']);
       $components = array_map('rawurlencode', $components);
       $fixed_url = url(
-        t(
-          '!scheme://!user:!pass@!host:!port/!path',
-          array(
-            '!scheme' => $parsed_url['scheme'],
-            '!user' => rawurlencode($parsed_url['user']),
-            '!pass' => rawurlencode($parsed_url['pass']),
-            '!host' => $parsed_url['host'],
-            '!port' => $parsed_url['port'],
-            '!path' => implode('/', $components),
-          )
-        ),
-        array(
-          'query' => $parsed_url['query'],
-          'fragment' => $parsed_url['fragment'],
-        )
+              t(
+                  '!scheme://!user:!pass@!host:!port/!path',
+                  array(
+                    '!scheme' => $parsed_url['scheme'],
+                    '!user' => rawurlencode($parsed_url['user']),
+                    '!pass' => rawurlencode($parsed_url['pass']),
+                    '!host' => $parsed_url['host'],
+                    '!port' => $parsed_url['port'],
+                    '!path' => implode('/', $components),
+                  )
+              ),
+              array(
+                'query' => $parsed_url['query'],
+                'fragment' => $parsed_url['fragment'],
+              )
       );
       $result = drupal_http_request($fixed_url);
 
-      if ((int)($result->code / 100) === 2) {
+      if ((int) ($result->code / 100) === 2) {
         $content = $result->data;
       }
       else {
         watchdog('fedora_repository', 'Failed making HTTP request to @URL.  Info: @info', array(
           '@URL' => $fixed_url,
           '@info' => print_r($result, TRUE),
-        ), 'warning');
+            ), 'warning');
       }
     }
 
@@ -1091,7 +1112,7 @@ RDF;
           $content = $filename_or_content;
         }
       }
-      
+
       $toReturn = $this->modify_datastream_by_value($content, $dsid, $label, $mime_type, $force, $logMessage);
     }
     //Otherwise, write to web-accessible temp file and modify by reference.
@@ -1099,7 +1120,7 @@ RDF;
       $file = '';
       $created_temp = FALSE;
       if (is_file($filename_or_content) && is_readable($filename_or_content)) {
-        $file = $filename_or_content;     
+        $file = $filename_or_content;
         $original_path = $file;
         // Temporarily move file to a web-accessible location.
         file_copy($file, file_directory_path());
@@ -1117,21 +1138,21 @@ RDF;
         $file = file_save_data($filename_or_content, file_create_filename($label, file_directory_path()));
         $created_temp = TRUE;
       }
-      
+
       $parts = explode(DIRECTORY_SEPARATOR, $file);
       $parts = array_map('rawurlencode', $parts);
       $file_url = file_create_url(implode(DIRECTORY_SEPARATOR, $parts));
-      
+
       $toReturn = $this->modify_datastream_by_reference($file_url, $dsid, $label, $mime_type, $force, $logMessage);
-      
+
       if ($created_temp && is_file($file) && is_writable($file)) {
         file_delete($file);
       }
     }
-    
+
     return $toReturn;
   }
-  
+
   /**
    * Modify datastream by reference
    * @param type $external_url
@@ -1148,10 +1169,10 @@ RDF;
 
     // Fedora has some problems getting files from HTTPS connections sometimes, so if we are getting a file
     // from the local drupal, we try to pass a HTTP url instead of a HTTPS one.
-    if(stripos($external_url, 'https://') !== FALSE && stripos($external_url, $base_url) !== FALSE) {
+    if (stripos($external_url, 'https://') !== FALSE && stripos($external_url, $base_url) !== FALSE) {
       $external_url = str_ireplace('https://', 'http://', $external_url);
     }
-    
+
     $params = array(
       'pid' => $this->pid,
       'dsID' => $dsid,
@@ -1228,10 +1249,10 @@ RDF;
       self::$connection_helper = new ConnectionHelper();
     }
     $url = (
-      in_array($function, self::$SoapManagedFunctions)?
-        variable_get('fedora_soap_manage_url', 'http://localhost:8080/fedora/wsdl?api=API-M') :
-        variable_get('fedora_soap_url', 'http://localhost:8080/fedora/services/access?wsdl')
-    );
+        in_array($function, self::$SoapManagedFunctions) ?
+            variable_get('fedora_soap_manage_url', 'http://localhost:8080/fedora/wsdl?api=API-M') :
+            variable_get('fedora_soap_url', 'http://localhost:8080/fedora/services/access?wsdl')
+        );
     try {
       $soap_client = self::$connection_helper->getSoapClient($url);
       if (isset($soap_client)) {
