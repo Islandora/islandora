@@ -232,6 +232,8 @@ class ObjectHelper {
             
             if (($contentSize = self::getDatastreamSize($pid, $dsID, TRUE)) > 0) {
               drupal_set_header("Content-Length: $contentSize");
+              // Fixes an IE issue
+              drupal_set_header("Cache-Control: private", TRUE);
             }
             
             $opts = array(
