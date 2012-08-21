@@ -178,13 +178,14 @@ class ObjectHelper {
         
         if ($curl_stat !== FALSE) {
           $info = curl_getinfo($ch);
-          
+          // Fixes an IE issue (ISLANDORA-311)
+          // http://support.microsoft.com/kb/316431 
+          drupal_set_header("Cache-Control: private", TRUE); 
+
           //Set what headers we can...
           if ($mimeType = $info['content_type']) {
             drupal_set_header("Content-Type: $mimeType");
-            // Fixes an IE issue (ISLANDORA-311)
-            // http://support.microsoft.com/kb/316431 
-            drupal_set_header("Cache-Control: private", TRUE); 
+            
             if ($asAttachment) {
               $suggestedFileName = "$label";
               $pos = strpos($suggestedFileName, '.');
@@ -232,8 +233,6 @@ class ObjectHelper {
             
             if (($contentSize = self::getDatastreamSize($pid, $dsID, TRUE)) > 0) {
               drupal_set_header("Content-Length: $contentSize");
-              // Fixes an IE issue
-              drupal_set_header("Cache-Control: private", TRUE);
             }
             
             $opts = array(
