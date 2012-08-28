@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * @file
  * formClass class
@@ -18,7 +16,7 @@ class formClass {
 
   /**
    * Create the paths for urls and map them to php functions
-   * @return array 
+   * @return array
    */
   function createMenu() {
     $items = array();
@@ -87,42 +85,42 @@ class formClass {
       'type' => MENU_CALLBACK,
       'access arguments' => array('view fedora collection')
     );
-    
+
     $items['fedora/repository/editmetadata'] = array(
       'title' => t('Edit metadata'),
       'page callback' => 'fedora_repository_edit_qdc_page',
       'type' => MENU_CALLBACK,
       'access arguments' => array('edit fedora meta data')
     );
-    
+
     $items['fedora/repository/purgeStream'] = array(
       'title' => t('Purge data stream'),
       'page callback' => 'fedora_repository_purge_stream',
       'type' => MENU_CALLBACK,
       'access arguments' => array('purge objects and datastreams')
     );
-    
+
     $items['fedora/repository/replaceStream'] = array(
       'title' => t('Replace Stream'),
       'page callback' => 'fedora_repository_replace_stream',
       'type' => MENU_CALLBACK,
       'access arguments' => array('add fedora datastreams'),
     );
-    
+
     $items['fedora/repository/purgeObject'] = array(
       'title' => t('Purge object'),
       'page callback' => 'fedora_repository_purge_object',
       'type' => MENU_CALLBACK,
       'access arguments' => array('purge objects and datastreams')
     );
-    
+
     $items['fedora/repository/addStream'] = array(
       'title' => t('Add stream'),
       'page callback' => 'add_stream',
       'type' => MENU_CALLBACK,
       'access arguments' => array('add fedora datastreams')
     );
-    
+
     //new for mnpl******************************************
     $items['fedora/repository/mnpl_advanced_search'] = array(
       'title' => t('Repository advanced search'),
@@ -130,7 +128,7 @@ class formClass {
       'type' => MENU_CALLBACK,
       'access arguments' => array('view fedora collection')
     );
-    
+
     $items['fedora/ingestObject'] = array(
       'title' => t('Ingest object'),
       'page callback' => 'fedora_repository_ingest_object',
@@ -194,7 +192,7 @@ class formClass {
 
   /**
    * Create admin form
-   * @return array 
+   * @return array
    */
   function createAdminForm() {
     if (!user_access('administer site configuration')) {
@@ -221,7 +219,7 @@ class formClass {
       '#required' => TRUE,
       '#weight' => -16,
     );
-    
+
 
     $form['fedora_repository_url'] = array(
       '#type' => 'textfield',
@@ -230,7 +228,7 @@ class formClass {
       '#description' => t('The url of the Fedora server'), '#required' => TRUE,
       '#weight' => -14
     );
-    
+
     $form['fedora_soap_url'] = array(
       '#type' => 'textfield',
       '#title' => t('Fedora SOAP Url'),
@@ -239,7 +237,7 @@ class formClass {
       '#required' => TRUE,
       '#weight' => -12,
       '#suffix' => '<p>' . (
-        fedora_available() ? 
+        fedora_available() ?
           theme('image', 'misc/watchdog-ok.png') . t('Successfully connected to Fedora server at @fedora_soap_url', array('@fedora_soap_url' => variable_get('fedora_soap_url', ''))) :
           theme('image', 'misc/watchdog-error.png') . t('Unable to connect to Fedora server at @fedora_soap_url', array('@fedora_soap_url' => variable_get('fedora_soap_url', '')))) . '</p>',
     );
@@ -347,7 +345,7 @@ class formClass {
       '#default_value' => variable_get('fedora_object_restrict_datastreams', FALSE),
       '#description' => t('When enabled, restricts access to fedora object datastreams that are not listed in the Islandora Content Model for the object (unless the user is an administrator).'),
     );
-    
+
     $form['advanced']['fedora_repository_use_imagecache_external_in_collection_view'] = array(
       '#type' => 'checkbox',
       '#title' => t('Allow imagecache_external use for thumbnails in collection view'),
@@ -355,14 +353,14 @@ class formClass {
       '#description' => t('If enabled, the default collection list view (or ' .
         'anywhere the function "@function" is used) will try to use ' .
         'imagecache_external, defaulting to the "@preset" preset.  XSLTs may ' .
-        'be updated to use this function.', 
+        'be updated to use this function.',
         array(
           '@function' => '_fedora_repository_render_image()',
           '@preset' => 'fedora_repository_collection_thumbnail',
           '@xsl' => 'sparql_to_html.xsl',
         )),
     );
-    
+
     $form['advanced']['fedora_control_group_control_during_ingest'] = array(
       '#type' => 'checkbox',
       '#title' => t('Allow control groups select in datastream ingest'),
@@ -370,12 +368,28 @@ class formClass {
       '#default_value' => variable_get('fedora_control_group_control_during_ingest', FALSE),
     );
 
+    //FITS functionality
+    $form['advanced']['enable_fits'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Enable FITS support?'),
+      '#description' => t('Whether or not we should create a FITS datastream upon object ingest.'),
+      '#default_value' => variable_get('enable_fits', FALSE),
+    );
+
+    //FITS Path
+    $form['advanced']['fits_path'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Path to FITS executable'),
+      '#description' => t("Path to FITS program on your server. It must be accessible by Drupal (i.e. apache user)."),
+      '#default_value' => variable_get('fits_path','/usr/local/bin/fits.sh'),
+    );
+
     //Export functionality
     $form['advanced']['module']['export_area'] = array(
       '#type' => 'textfield',
       '#title' => t('Export area'),
       '#default_value' => variable_get('export_area', file_directory_path() . '/fedora_export_area'),
-      '#description' => t("Path to the export area. It must be accessible by druapl (i.e. apache user)."),
+      '#description' => t("Path to the export area. It must be accessible by drupal (i.e. apache user)."),
       '#required' => TRUE,
     );
 
@@ -390,7 +404,7 @@ class formClass {
    * @param type $form_id
    * @param type $form_values
    * @param type $client
-   * @return type 
+   * @return type
    */
   function updateMetaData($form_id, $form_values, $client) {
     // ======================================
@@ -409,13 +423,13 @@ class formClass {
 
     // DC elements
     $previousElement = NULL; // Used in case we have to nest elements for qualified dublin core.
-    
+
     $label = null;
     foreach ($form_values as $key => $value) {
       //echo ($key);
       if ($key == 'dc:title-0') {
         $label = $value;
-      } 
+      }
       $index = strrpos($key, '-');
       $key = substr($key, 0, $index);
       $test = substr($key, 0, 2);
@@ -441,8 +455,8 @@ class formClass {
     {
       $object = new Fedora_Item($form_values['pid']);
       $object->modify_object($label);
-    } 
-    
+    }
+
     $dom->appendChild($oai);
 
     if (!$client) {
@@ -472,7 +486,7 @@ class formClass {
    * to determine if this user is allowed to ingest in this collection
    * we assume if they are able to modify objects in the collection they can ingest as well.
    * @param type $collection_pid
-   * @return type 
+   * @return type
    */
   function can_ingest_here($collection_pid) {
     module_load_include('inc', 'fedora_repository', 'SecurityClass');
@@ -483,7 +497,7 @@ class formClass {
   /**
    * Drupal's permissions at this point no xacml yet. xacml decisions are made by fedora
    * @param type $collection_pid
-   * @return type 
+   * @return type
    */
   function canShowIngestForm($collection_pid) {
     if (!user_access('ingest new fedora objects')) {
@@ -508,11 +522,11 @@ class formClass {
 
   /**
    * Creates the first page of the ingest form for editing QDC.
-   * 
+   *
    * @param string $collection_pid
    * @param string $collection_label
    * @param array $form_state
-   * 
+   *
    * @return array
    */
   function createQDCIngestFormPageOne($collection_pid, $collection_label, array &$form_state) {
@@ -558,11 +572,11 @@ class formClass {
 
   /**
    * Create the second page of the ingest form for editing QDC
-   * 
+   *
    * @param string $collection_pid
    * @param string $collection_label
    * @param array $form_state
-   * 
+   *
    * @return array
    */
   function createQDCIngestFormPageTwo($collection_pid, $collection_label, array &$form_state) {
@@ -593,11 +607,11 @@ class formClass {
 
   /**
    * Create the QDC Ingest Form.
-   * 
+   *
    * @param type $collection_pid
    * @param type $collection_label
-   * @param array $form_state 
-   * 
+   * @param array $form_state
+   *
    * @return array
    */
   function createQDCIngestForm($collection_pid, $collection_label, array &$form_state) {
@@ -613,18 +627,18 @@ class formClass {
 
   /**
    * Create a multi step form (wizard) for ingesting objects into Fedora
-   * 
+   *
    * @param string $collection_pid
    * @param string $collection_label
    * @param array $form_state
-   * 
-   * @return array 
+   *
+   * @return array
    */
   function createIngestForm($collection_pid, $collection_label, array &$form_state) {
     if (!$this->canShowIngestForm($collection_pid)) {
       return FALSE;
     }
-    
+
     drupal_set_title($collection_label);
     if (module_exists('islandora_content_model_forms')) {
       module_load_include('inc', 'islandora_content_model_forms', 'IngestObjectMetadataForm');
@@ -643,7 +657,7 @@ class formClass {
    * this function may not be being used
    * @param type $pid
    * @param type $form_state
-   * @return string 
+   * @return string
    */
   function createAddDataStreamForm($pid, &$form_state) {
     //dump_vars($form_state);
@@ -723,7 +737,7 @@ class formClass {
       // '#required'=>'TRUE',
       '#description' => t('The file to upload. (Only for Managed and Inline)')
     );
-    
+
     if (variable_get('fedora_control_group_control_during_ingest', FALSE)) {
       $form['fieldset']['ds_reference'] = array(
         '#type' => 'textfield',
@@ -732,7 +746,7 @@ class formClass {
         '#description' => t('A URL reference to resolve for the contents of the datastream.  (Required for External and Redirect, but will still work for Managed and Inline.)'),
       );
     }
-    
+
     $form['#redirect'] = "fedora/repository/$pid/";
     $form['fieldset']['submit'] = array(
       '#type' => 'submit',
@@ -758,7 +772,7 @@ class formClass {
         '#weight' => -1,
       );
     }
-    
+
     if (variable_get('fedora_control_group_control_during_ingest', FALSE)) {
       $form['fieldset']['control_group'] = array(
         '#type' => 'select',
@@ -778,13 +792,13 @@ class formClass {
 
   /**
    * Create QDC Edit form.
-   * 
+   *
    * @param string $pid
    * @param string $dsid
    * @param object $client
    * @param array $form_state
-   * 
-   * @return string 
+   *
+   * @return string
    */
   function createQDCEditForm($pid, $dsid, $client, &$form_state) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
@@ -869,7 +883,7 @@ class formClass {
    * @param type $dsid
    * @param type $client
    * @param boolean $form_state
-   * @return type 
+   * @return type
    */
   function createMetaDataForm($pid, $dsid, $client, &$form_state) {
     if (module_exists('islandora_content_model_forms')) {
@@ -890,13 +904,13 @@ class formClass {
    * @param type $dsId
    * @param type $dsLabel
    * @param type $form_state
-   * @return type 
+   * @return type
    */
   function createReplaceDataStreamForm($pid, $dsId, $dsLabel, &$form_state) {
     $form = array();
 
     $form['#attributes']['enctype'] = 'multipart/form-data';
-    
+
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
     $item = new Fedora_Item($pid);
     $info = $item->get_datastream_info($dsId);
@@ -922,7 +936,7 @@ class formClass {
         '#value' => t('If both a file and a reference are given, the file will be given preference.'),
       );
     }
-    
+
     $form['pid'] = array(
       '#type' => 'value',
       '#value' => $pid,
