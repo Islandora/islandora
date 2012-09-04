@@ -389,34 +389,35 @@ RDF;
    *   Whether or not this operation has produced any changes in the RELS-EXT
    */
   function purge_relationships($relationship, $object, $namespaceURI = RELS_EXT_URI, $literal_value = FALSE) {
-    $relsext = $this->get_datastream_dissemination('RELS-EXT');
+    $relsext = trim($this->get_datastream_dissemination('RELS-EXT'));
 
-    $relsextxml = new DomDocument();
-    $relsextxml->loadXML($relsext);
+    $relsextxml = new DOMDocument();
     $modified = FALSE;
-    $rels = $relsextxml->getElementsByTagNameNS($namespaceURI, $relationship);
-    if (!empty($rels)) {
-      // iterate backwards so if we delete something our pointer doesn't get out of sync
-      for ($i = $rels->length; $i > 0; $i--) {
-        $rel = $rels->item($i - 1);
-//      foreach ($rels as $rel) { // moving forward like this caused iteration errors when something was deleted
-        if (//If either no object is specified, or the object matches (in either the literal or URI case), remove this node from it's parent, and mark as changed.
-            empty($object) ||
-            (($literal_value == RELS_TYPE_URI) && $rel->getAttributeNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'resource') == $object) ||
-            (($literal_value == RELS_TYPE_PLAIN_LITERAL) && $rel->textContent == $object) ||
-            (($literal_value == RELS_TYPE_STRING) && $rel->getAttribute('rdf:datatype') == 'http://www.w3.org/2001/XMLSchema#string' && $rel->textContent == $object) ||
-            (($literal_value == RELS_TYPE_INT) && $rel->getAttribute('rdf:datatype') == 'http://www.w3.org/2001/XMLSchema#int' && intval($rel->textContent) == $object)) {
-          $rel->parentNode->removeChild($rel);
-          $modified = TRUE;
+
+    if ($relsext && $relsextxml->loadXML($relsext)) {
+      $rels = $relsextxml->getElementsByTagNameNS($namespaceURI, $relationship);
+      if (!empty($rels)) {
+        // iterate backwards so if we delete something our pointer doesn't get out of sync
+        for ($i = $rels->length; $i > 0; $i--) {
+          $rel = $rels->item($i - 1);
+  //      foreach ($rels as $rel) { // moving forward like this caused iteration errors when something was deleted
+          if (//If either no object is specified, or the object matches (in either the literal or URI case), remove this node from it's parent, and mark as changed.
+              empty($object) ||
+              (($literal_value == RELS_TYPE_URI) && $rel->getAttributeNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'resource') == $object) ||
+              (($literal_value == RELS_TYPE_PLAIN_LITERAL) && $rel->textContent == $object) ||
+              (($literal_value == RELS_TYPE_STRING) && $rel->getAttribute('rdf:datatype') == 'http://www.w3.org/2001/XMLSchema#string' && $rel->textContent == $object) ||
+              (($literal_value == RELS_TYPE_INT) && $rel->getAttribute('rdf:datatype') == 'http://www.w3.org/2001/XMLSchema#int' && intval($rel->textContent) == $object)) {
+            $rel->parentNode->removeChild($rel);
+            $modified = TRUE;
+          }
         }
       }
-    }
 
-    //Save changes.
-    if ($modified) {
-      $this->modify_datastream($relsextxml->saveXML(), 'RELS-EXT', "Fedora Object-to-Object Relationship Metadata", 'text/xml');
+      //Save changes.
+      if ($modified) {
+        $this->modify_datastream($relsextxml->saveXML(), 'RELS-EXT', "Fedora Object-to-Object Relationship Metadata", 'text/xml');
+      }
     }
-
     //Return whether or not we've introduced any changes.
     return $modified;
   }
@@ -433,44 +434,44 @@ RDF;
       $dsid = $f_prefix . $this->pid . '/' . $dsid;
     }
 
-    $relsint = $this->get_datastream_dissemination('RELS-INT');
-
     $relsxml = new DOMDocument();
-    $relsxml->loadXML($relsint);
+    $relsint = trim($this->get_datastream_dissemination('RELS-INT'));
     $modified = FALSE;
+    if ($relsint && $relsxml->loadXML($relsint)) {
 
-    $descs = $relsxml->getElementsByTagNameNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'Description');
-    $description = NULL;
-    foreach ($descs as $desc) {
-      if ($dsid === NULL || $desc->getAttributeNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'about') == $dsid) {
-        $rels = $desc->getElementsByTagNameNS($namespaceURI, $relationship);
-        if (!empty($rels)) {
-          // iterate backwards so if we delete something our pointer doesn't get out of sync
-          for ($i = $rels->length; $i>0; $i--) {
-            $rel = $rels->item($i-1);
-            //      foreach ($rels as $rel) { // moving forward like this caused iteration errors when something was deleted
-            if (  //If either no object is specified, or the object matches (in either the literal or URI case), remove this node from it's parent, and mark as changed.
-              empty($object) ||
-              (($literal_value == RELS_TYPE_URI) && $rel->getAttributeNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'resource') == $object) ||
-              (($literal_value == RELS_TYPE_PLAIN_LITERAL) && $rel->textContent == $object) ||
-              (($literal_value == RELS_TYPE_STRING) && $rel->getAttribute('rdf:datatype') == 'http://www.w3.org/2001/XMLSchema#string' && $rel->textContent == $object) ||
-              (($literal_value == RELS_TYPE_INT) && $rel->getAttribute('rdf:datatype') == 'http://www.w3.org/2001/XMLSchema#int' && intval($rel->textContent) == $object)) {
-              $rel->parentNode->removeChild($rel);
-              $modified = TRUE;
+
+      $descs = $relsxml->getElementsByTagNameNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'Description');
+      $description = NULL;
+      foreach ($descs as $desc) {
+        if ($dsid === NULL || $desc->getAttributeNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'about') == $dsid) {
+          $rels = $desc->getElementsByTagNameNS($namespaceURI, $relationship);
+          if (!empty($rels)) {
+            // iterate backwards so if we delete something our pointer doesn't get out of sync
+            for ($i = $rels->length; $i>0; $i--) {
+              $rel = $rels->item($i-1);
+              //      foreach ($rels as $rel) { // moving forward like this caused iteration errors when something was deleted
+              if (  //If either no object is specified, or the object matches (in either the literal or URI case), remove this node from it's parent, and mark as changed.
+                empty($object) ||
+                (($literal_value == RELS_TYPE_URI) && $rel->getAttributeNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'resource') == $object) ||
+                (($literal_value == RELS_TYPE_PLAIN_LITERAL) && $rel->textContent == $object) ||
+                (($literal_value == RELS_TYPE_STRING) && $rel->getAttribute('rdf:datatype') == 'http://www.w3.org/2001/XMLSchema#string' && $rel->textContent == $object) ||
+                (($literal_value == RELS_TYPE_INT) && $rel->getAttribute('rdf:datatype') == 'http://www.w3.org/2001/XMLSchema#int' && intval($rel->textContent) == $object)) {
+                $rel->parentNode->removeChild($rel);
+                $modified = TRUE;
+              }
             }
           }
-        }
 
-        if ($desc->getAttributeNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'about') == $dsid) {
-          break;
+          if ($desc->getAttributeNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'about') == $dsid) {
+            break;
+          }
         }
       }
-    }
 
-
-    //Save changes.
-    if ($modified) {
-      $this->modify_datastream($relsxml->saveXML(), 'RELS-INT', "Fedora Datastream Relationship Metadata", 'text/xml');
+      //Save changes.
+      if ($modified) {
+        $this->modify_datastream($relsxml->saveXML(), 'RELS-INT', "Fedora Datastream Relationship Metadata", 'text/xml');
+      }
     }
 
     //Return whether or not we've introduced any changes.
