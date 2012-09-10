@@ -274,10 +274,12 @@ class Fedora_Item {
   function add_relationship($relationship, $object, $namespaceURI = RELS_EXT_URI, $literal_value = RELS_TYPE_URI) {
     static $relsextxml = NULL;
     if ($relsextxml === NULL) {
-      $relsextxml = new DOMDocument(); //Avoid new instantiations in long-running processes
+      // Avoid new instantiations in long-running processes.
+      $relsextxml = new DOMDocument();
     }
 
     $ds_list = $this->datastreams;
+
     $f_prefix = 'info:fedora/';
     if (!array_key_exists('RELS-EXT', $ds_list)) {
       $rdf_string = <<<RDF
@@ -977,6 +979,8 @@ RDF;
       'logMessage' => $log_message,
       'force' => $force
     );
+
+    $this->forget();
 
     // Delete the object
     return $this->soap_call('purgeObject', $params);
