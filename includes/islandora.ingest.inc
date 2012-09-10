@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * This file contains ingest callback functions
+ */
+
 function islandora_ingest_get_information(AbstractFedoraObject $collection_object) {
   $models = $collection_object->models;
   $collection_info = module_invoke_all('islandora_ingest_get_information', $models, $collection_object);
@@ -12,7 +17,7 @@ function islandora_ingest_get_object($content_models, $collection_pid, $relation
   global $user;
   $connection = new IslandoraTuque($user);
   $object = $connection->repository->constructObject($namespace);
-  foreach($content_models as $content_model) {
+  foreach ($content_models as $content_model) {
     $object->relationships->add(FEDORA_MODEL_URI, 'hasModel', $content_model['pid']);
   }
   $object->relationships->add(FEDORA_RELS_EXT_URI, $relationship, $collection_pid);

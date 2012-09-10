@@ -1,13 +1,20 @@
 <?php
 
 /**
- * may want more validation here the only restrictions i see on
+ * @file
+ * Contains admin form functions for object properties
+ */
+
+/**
+ * Validate function for object properties admin form.
+ *
+ * @TODO: may want more validation here the only restrictions i see on
  * the object label and owner is the foxml schema says they should be
  * an xsd:string there maybe further restrictions such as length but they aren't
  * defined in the schema.
  * @param array $form
  * @param array $form_state
- * @return boolean 
+ * @return boolean
  */
 function islandora_edit_properties_form_validate($form, &$form_state) {
   $islandora_object = islandora_object_load($form_state['values']['pid']);
@@ -18,9 +25,10 @@ function islandora_edit_properties_form_validate($form, &$form_state) {
 }
 
 /**
+ * Submit function for object properties admin form.
  *
  * @param array $form
- * @param array $form_state 
+ * @param array $form_state
  */
 function islandora_edit_properties_form_submit($form, &$form_state) {
   $islandora_object = islandora_object_load($form_state['values']['pid']);
@@ -32,7 +40,7 @@ function islandora_edit_properties_form_submit($form, &$form_state) {
       $islandora_object->owner = $owner;
       drupal_set_message(t('Successfully updated owner %s', array('%s' => $owner)));
     } catch (Exception $e) {
-      form_set_error('object_owner',t('Error updating owner %s', array('%s'=> $e->getMessage())));
+      form_set_error('object_owner', t('Error updating owner %s', array('%s' => $e->getMessage())));
     }
   }
   if (isset($state) && $state != $islandora_object->state) {
@@ -40,7 +48,7 @@ function islandora_edit_properties_form_submit($form, &$form_state) {
       $islandora_object->state = $state;
       drupal_set_message(t('Successfully updated state %s', array('%s' => $state)));
     } catch (Exception $e) {
-      form_set_error('object_state',t('Error updating state %s', array('%s'=> $e->getMessage())));
+      form_set_error('object_state', t('Error updating state %s', array('%s' => $e->getMessage())));
     }
   }
   if (isset($label) && $label != $islandora_object->label) {
@@ -53,18 +61,22 @@ function islandora_edit_properties_form_submit($form, &$form_state) {
   }
 }
 
+/**
+ * Callback function for object properties admin form delete button.
+ */
 function islandora_edit_properties_form_delete($form, &$form_state) {
   $islandora_object = $form_state['values']['pid'];
   drupal_goto("islandora/object/$islandora_object/delete");
 }
 
 /**
+ * Object properties admin form.
  *
  * @param array $form
  * @param array $form_state
  * @param string $object_id
  *   an object id
- * @return array 
+ * @return array
  */
 function islandora_edit_properties_form($form, &$form_state, $object) {
   $form = array();
@@ -111,5 +123,3 @@ function islandora_edit_properties_form($form, &$form_state, $object) {
   );
   return $form;
 }
-
-?>

@@ -1,28 +1,28 @@
 <?php
 
 /*
- * @file islandora.module
- * defines paths (drupal menu items) as entry points and acts as a hub for dispatching tasks to other modules.
- * 
- * 
+ * @file
+ *
+ * islandora.module: defines paths (drupal menu items) as entry points and acts as a hub for dispatching tasks to other modules.
+ *
  * This file is part of Islandora.
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with the program.  If not, see <http ://www.gnu.org/licenses/>.
  */
 
 
-//Permissions
+// Permissions
 define('FEDORA_VIEW', 'view fedora repository');
 define('FEDORA_METADATA_EDIT', 'edit fedora metadata');
 define('FEDORA_ADD_DS', 'add fedora datastreams');
@@ -31,12 +31,12 @@ define('FEDORA_PURGE', 'delete fedora objects and datastreams');
 define('FEDORA_MODIFY_STATE', 'modify fedora state');
 define('FEDORA_MANAGE', 'manage fedora items');
 
-//hooks
+// hooks
 define('ISLANDORA_VIEW_HOOK', 'islandora_view_object');
 define('ISLANDORA_EDIT_HOOK', 'islandora_edit_object');
 
 /**
- * Implementation of hook_menu. 
+ * Implements hook_menu().
  * we need some standard entry points so we can have consistent urls for different Object actions
  */
 function islandora_menu() {
@@ -215,20 +215,20 @@ function islandora_admin_paths() {
  * @param string $op
  * @param string $pid
  *
- *  @return boolean 
+ *  @return boolean
  */
 function islandora_access_callback($object = NULL, $perm = NULL) {
-  if(!$object || !$perm) {
+  if (!$object || !$perm) {
     return FALSE;
   }
 
   $isRestricted = variable_get('islandora_namespace_restriction_enforced', FALSE);
-  
+
   if (!$isRestricted) {
     $namespace_access = TRUE;
   }
   else {
-    $pid_namespace = substr($object->id, 0, strpos($object->id, ':') + 1); //Get the namespace (with colon)
+    $pid_namespace = substr($object->id, 0, strpos($object->id, ':') + 1); // Get the namespace (with colon)
     $allowed_namespaces = explode(" ", variable_get('islandora_pids_allowed', 'default: demo: changeme: islandora: ilives: islandora-book: books: newspapers: '));
     $namespace_access = in_array($pid_namespace, $allowed_namespaces);
   }
@@ -238,7 +238,7 @@ function islandora_access_callback($object = NULL, $perm = NULL) {
 
 /**
  * returns an array listing object types provided by sub modules
- * @return array 
+ * @return array
  */
 function islandora_get_types() {
   return module_invoke_all('islandora_get_types');
@@ -255,10 +255,10 @@ function islandora_init() {
  * that handle this function this module will build a default page.
  * @global object $user
  * @param string $object_id
- * @return string 
+ * @return string
  */
 function islandora_edit_object($object) {
-  if(!$object) {
+  if (!$object) {
     return drupal_not_found();
   }
   drupal_alter('islandora_edit_object', $object);
@@ -274,7 +274,7 @@ function islandora_edit_object($object) {
 /**
  * edit properties form
  * @param type $object_id
- * @return string 
+ * @return string
  */
 function islandora_edit_properties($object_id) {
   $object = islandora_object_load($object_id);
@@ -290,7 +290,7 @@ function islandora_edit_properties($object_id) {
 /**
  * builds a default page for the edit tab
  *
- * @param object $fedora_object 
+ * @param object $fedora_object
  *   A tuque Fedora Object
  */
 function islandora_islandora_edit_object($fedora_object) {
@@ -315,14 +315,14 @@ function islandora_view_default_object() {
  * their modules want to provide a view for.
  * @global object $user
  * @param string $object_id
- * 
- * @return string 
+ *
+ * @return string
  */
 function islandora_view_object($fedora_object = NULL) {
   module_load_include('inc', 'islandora', 'includes/breadcrumb');
   global $user;
 
-  if(!$fedora_object) {
+  if (!$fedora_object) {
     return drupal_not_found();
   }
 
@@ -348,10 +348,10 @@ function islandora_view_object($fedora_object = NULL) {
 }
 
 /**
- * the default view hook.  If there are no modules registered to handle this objects cmodels or there are 
+ * the default view hook.  If there are no modules registered to handle this objects cmodels or there are
  * not any cmodels specified this will create a default display.
  * @param string $object_id
- * @return string 
+ * @return string
  */
 function islandora_islandora_view_object($object) {
   $supported_models = islandora_get_types();
@@ -425,17 +425,17 @@ function islandora_permission() {
  * a helper function to get a connection and return an object
  * @global object $user
  * @param string $object_id
- * @return FedoraObject 
+ * @return FedoraObject
  */
 function islandora_object_load($object_id) {
   module_load_include('inc', 'islandora', 'includes/tuque');
   static $islandora_tuque = NULL;
 
-  if(!$islandora_tuque) {
+  if (!$islandora_tuque) {
     $islandora_tuque = new IslandoraTuque();
   }
 
-  if(IslandoraTuque::exists()) {
+  if (IslandoraTuque::exists()) {
     try {
       $fedora_object = $islandora_tuque->repository->getObject($object_id);
     } catch (Exception $e) {
@@ -450,13 +450,13 @@ function islandora_object_load($object_id) {
 }
 
 function islandora_ingest_access_callback($object, $perm) {
-  if(islandora_access_callback($object, $perm) === FALSE) {
+  if (islandora_access_callback($object, $perm) === FALSE) {
     return FALSE;
   }
 
   $ingest_registry = module_invoke_all('islandora_ingest_registry', $object);
 
-  if(count($ingest_registry) > 0) {
+  if (count($ingest_registry) > 0) {
     return TRUE;
   }
   else {

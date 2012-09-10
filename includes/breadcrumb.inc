@@ -1,11 +1,16 @@
 <?php
 
+/**
+ * @file
+ * This file contains functions to create breadcrumbs on Islandora object pages.
+ */
+
 function islandora_get_breadcrumbs($object) {
   $breadcrumbs = array();
 
   islandora_get_breadcrumbs_recursive($object->id, $breadcrumbs, $object->repository);
-  
-  if(isset($breadcrumbs[0])) {
+
+  if (isset($breadcrumbs[0])) {
     unset($breadcrumbs[0]);
   }
 
@@ -69,8 +74,8 @@ function islandora_get_breadcrumbs_recursive($pid, &$breadcrumbs, $repository) {
       islandora_get_breadcrumbs_recursive($parent, $breadcrumbs, $repository);
     }
     else {
-      $breadcrumbs[] = '...'; //Add an non-link, as we don't know how to get back to the root.
-      islandora_get_breadcrumbs_recursive($root, $breadcrumbs, $repository); //And render the last two links and break (on the next pass).
+      $breadcrumbs[] = '...'; // Add an non-link, as we don't know how to get back to the root.
+      islandora_get_breadcrumbs_recursive($root, $breadcrumbs, $repository); // And render the last two links and break (on the next pass).
     }
   }
 }

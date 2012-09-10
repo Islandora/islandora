@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * This file contains all theme and preprocess functions.
+ */
+
+/**
  * preprocess the edit template
  * @global string $base_url
  * @param array $variables
@@ -72,9 +77,11 @@ function islandora_preprocess_islandora_default(&$variables) {
       $datastreams[$id]['mimetype'] = $ds->mimetype;
       $datastreams[$id]['size'] = islandora_datastream_get_human_readable_size($ds);
       $datastreams[$id]['created_date'] = $ds->createdDate->format("Y-m-d");
-      $datastreams[$id]['class'] = strtolower(preg_replace('/[^A-Za-z0-9]/', '-', $id));
+      $datastreams[$id]['class'] = drupal_strtolower(preg_replace('/[^A-Za-z0-9]/', '-', $id));
     }
-    catch (RepositoryException $e) {}
+    catch (RepositoryException $e) {
+
+    }
   }
   $variables['datastreams'] = $datastreams;
   try {

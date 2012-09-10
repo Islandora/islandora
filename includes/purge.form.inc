@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * This file contains the admin (confirmation) form and callback functions to purge an object.
+ */
+
+/**
  * Gives the option of deleting or purging and object.
  *
  * The default behaviour is to purge the object to reduce maintenance.
@@ -154,7 +159,7 @@ function islandora_purge_datastream_submit($form, &$form_state) {
     }
   }
   //notify modules post deletion
-  module_invoke_all('islandora_post_purge_datastream', $object, $datastream_id); 
+  module_invoke_all('islandora_post_purge_datastream', $object, $datastream_id);
   drupal_set_message(t('%d datastream sucessfully purged from Islandora object %o', array('%d' => $datastream_id, '%o' => $object->label)));
   drupal_goto('islandora/object/' . $object->id);
 }

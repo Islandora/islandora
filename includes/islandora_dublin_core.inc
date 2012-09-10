@@ -70,7 +70,7 @@ class Dublin_Core {
   /**
    * Serialize this object to XML and return it.
    * @param type $with_preamble
-   * @return type 
+   * @return type
    */
   function as_xml($with_preamble = FALSE) {
     $dc_xml = new DomDocument();
@@ -96,7 +96,7 @@ class Dublin_Core {
    * Create dc from dict ( does nothing )
    */
   static function create_dc_from_dict() {
-    
+
   }
 
   function as_formatted_array() {
@@ -108,9 +108,9 @@ class Dublin_Core {
           if (is_array($values)) {
             $value = '';
             $i = 0;
-            foreach($values as $piece) {
-              if(!empty($piece)) {
-                if($i++) {
+            foreach ($values as $piece) {
+              if (!empty($piece)) {
+                if ($i++) {
                   $value .= ", ";
                 }
                 $value .= $piece;
@@ -121,16 +121,16 @@ class Dublin_Core {
             $value = $values;
           }
           $dc_label = explode(':', $field);
-          $element_label = ucfirst($dc_label[1]);
+          $element_label = drupal_ucfirst($dc_label[1]);
           $dc_array[$field]['label'] = $element_label;
           $dc_array[$field]['value'] = $value;
-          $dc_array[$field]['class'] = strtolower(preg_replace('/[^A-Za-z0-9]/', '-', $field));
+          $dc_array[$field]['class'] = drupal_strtolower(preg_replace('/[^A-Za-z0-9]/', '-', $field));
         }
       }
     }
     return $dc_array;
   }
-  
+
 
   /**
    * Creates a new instance of the class by parsing dc_xml

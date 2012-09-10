@@ -1,11 +1,14 @@
 <?php
 
 /**
- * @file islandora.admin.inc
- * Create admin form
- * @return array 
+ * @file
+ * islandora.admin.inc: This file contains the general islandora admin form and callback functions.
  */
 
+/**
+ * Create admin form
+ * @return array
+ */
 function islandora_repository_admin($form, &$form_state) {
   module_load_include('inc', 'islandora', 'includes/tuque');
   module_load_include('inc', 'islandora', 'includes/utilities');
@@ -17,7 +20,7 @@ function islandora_repository_admin($form, &$form_state) {
 
   $form = array();
 
-  if(isset($form_state['values']['islandora_base_url'])) {
+  if (isset($form_state['values']['islandora_base_url'])) {
     $url = $form_state['values']['islandora_base_url'];
   }
   else {
@@ -33,7 +36,7 @@ function islandora_repository_admin($form, &$form_state) {
     $info = FALSE;
   }
 
-  if($info) {
+  if ($info) {
     try {
       $dc = $connection->api->m->getDatastream('fedora-system:ContentModel-3.0', 'DC');
     }
@@ -41,9 +44,9 @@ function islandora_repository_admin($form, &$form_state) {
       $dc = FALSE;
     }
   }
-  
-  if($info) {
-    if($dc) {
+
+  if ($info) {
+    if ($dc) {
       $confirmation_message = '<img src="' . url('misc/watchdog-ok.png') . '"/>'
         . t('Successfully connected to Fedora Server (Version !version).', array('!version' => $info['repositoryVersion']));
     }
@@ -77,7 +80,7 @@ function islandora_repository_admin($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Fedora base URL'),
     '#default_value' => variable_get('islandora_base_url', 'http://localhost:8080/fedora'),
-    '#description' => t('The URL to use for REST connections <br>' . $confirmation_message),
+    '#description' => t('The URL to use for REST connections <br />' . $confirmation_message),
     '#required' => TRUE,
     '#ajax' => array(
       'callback' => 'islandora_update_url_div',
@@ -121,20 +124,20 @@ function islandora_repository_admin($form, &$form_state) {
       'progress' => array('type' => 'throbber'),
     ),
   );
-  
-  if(isset($form_state['values']['islandora_namespace_restriction_enforced'])) {
+
+  if (isset($form_state['values']['islandora_namespace_restriction_enforced'])) {
     $namespaces = $form_state['values']['islandora_namespace_restriction_enforced'];
   }
   else {
     $namespaces = variable_get('islandora_namespace_restriction_enforced', FALSE);
   }
 
-  if($namespaces) {
+  if ($namespaces) {
     $form['islandora_tabs']['islandora_namespace']['wrapper']['islandora_pids_allowed'] = array(
       '#type' => 'textfield',
       '#title' => t('PID namespaces allowed in this Drupal install'),
       '#default_value' => variable_get('islandora_pids_allowed', 'default: demo: changeme: ilives: islandora-book: books: newspapers: '),
-      '#description' => t('A space separated list of PID namespaces that users are permitted to access from this Drupal installation. <br /> This could be more than a simple namespace ie demo:mydemos. <br> islandora: is reserved and is always allowed.'),
+      '#description' => t('A space separated list of PID namespaces that users are permitted to access from this Drupal installation. <br /> This could be more than a simple namespace ie demo:mydemos. <br /> islandora: is reserved and is always allowed.'),
       '#weight' => 0,
     );
   }
@@ -158,6 +161,6 @@ function islandora_update_url_div($form, $form_state) {
 function islandora_update_namespace_div($form, $form_state) {
   unset($form_state['submit_handlers']);
   $form_state['rebuild'] = TRUE;
-  
+
   return $form['islandora_tabs']['islandora_namespace']['wrapper'];
 }
