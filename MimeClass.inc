@@ -6,26 +6,27 @@
  * @file
  * This class inspired by Chris Jean's work, here:
  * http://chrisjean.com/2009/02/14/generating-mime-type-in-php-is-not-magic/
- * 
- * It does some MIME trickery, inspired by the need to to deal with Openoffice 
- * and MS Office 2007 file formats -- which are often mis-interpreted by 
+ *
+ * It does some MIME trickery, inspired by the need to to deal with Openoffice
+ * and MS Office 2007 file formats -- which are often mis-interpreted by
  * mime-magic, fileinfo, and the *nix `file` command.
  *
- * In Drupal 6, we also make use of file_get_mimetype. See: 
+ * In Drupal 6, we also make use of file_get_mimetype. See:
  * http://api.drupal.org/api/function/file_get_mimetype/6
  * ... however this only provides a uni-directional lookup (ext->mime).
  * While I don't have a specific use case for a mime->extension lookup, I think
  * it's good to have in here.
- * 
+ *
  * Drupal 7 will have better mime handlers.  See:
  * http://api.drupal.org/api/function/file_default_mimetype_mapping/7
  *
  */
+
 class MimeClass {
 
   private $private_mime_types = array(
-    /**
-     * This is a shortlist of mimetypes which should catch most 
+    /*
+     * This is a shortlist of mimetypes which should catch most
      * mimetype<-->extension lookups in the context of Islandora collections.
      *
      * It has been cut from a much longer list.
@@ -33,26 +34,26 @@ class MimeClass {
      * Two types of mimetypes should be put in this list:
      *  1) Special emerging formats which may not yet be expressed in the system
      *     mime.types file.
-     *  2) Heavily used mimetypes of particular importance to the Islandora 
-     *     project, as lookups against this list will be quicker and less 
+     *  2) Heavily used mimetypes of particular importance to the Islandora
+     *     project, as lookups against this list will be quicker and less
      *     resource intensive than other methods.
      *
-     * Lookups are first checked against this short list.  If no results are found,
-     * then the lookup function may move on to check other sources, namely the 
-     * system's mime.types file.
+     * Lookups are first checked against this short list.
+     * If no results are found, then the lookup function may move
+     * on to check other sources, namely the system's mime.types file.
      *
      * In most cases though, this short list should suffice.
-     * 
+     *
      * If modifying this list, please note that for promiscuous mimetypes
      * (those which map to multiple extensions, such as text/plain)
-     * The function get_extension will always return the *LAST* extension in this list,
-     * so you should put your preferred extension *LAST*.
+     * The function get_extension will always return the *LAST* extension
+     * in this list, so you should put your preferred extension *LAST*.
      *
-     * e.g... 
+     * e.g...
      * "jpeg"    => "image/jpeg",
      * "jpe"     => "image/jpeg",
      * "jpg"     => "image/jpeg",
-     * 
+     *
      * $this->get_extension('image/jpeg') will always return 'jpg'.
      *
      */
@@ -89,7 +90,7 @@ class MimeClass {
     'ksp' => 'application/x-kspread',
     'kwt' => 'application/x-kword',
     'kwd' => 'application/x-kword',
-    // ms office 97:
+    // MS office 97:
     'doc' => 'application/msword',
     'xls' => 'application/vnd.ms-excel',
     'ppt' => 'application/vnd.ms-powerpoint',
@@ -113,9 +114,9 @@ class MimeClass {
     'ppam' => 'application/vnd.ms-powerpoint.addin.macroEnabled.12',
     'sldx' => 'application/vnd.openxmlformats-officedocument.presentationml.slide',
     'sldm' => 'application/vnd.ms-powerpoint.slide.macroEnabled.12',
-    // wordperfect (who cares?):
+    // Wordperfect (who cares?):
     'wpd' => 'application/wordperfect',
-    // common and generic containers:
+    // Common and generic containers:
     'pdf' => 'application/pdf',
     'eps' => 'application/postscript',
     'ps' => 'application/postscript',
@@ -185,15 +186,18 @@ class MimeClass {
     "ogg" => "audio/ogg",
     "flac" => "audio/x-flac",
     "wav" => "audio/vnd.wave",
-    // compressed formats: (note: http://svn.cleancode.org/svn/email/trunk/mime.types)
+    /* Compressed formats:
+      (note: http://svn.cleancode.org/svn/email/trunk/mime.types).*/
     "tgz" => "application/x-gzip",
     "gz" => "application/x-gzip",
     "tar" => "application/x-tar",
     "gtar" => "application/x-gtar",
     "zip" => "application/x-zip",
-    // others: 
+    // others:
     'bin' => 'application/octet-stream',
+    'json' => 'application/json',
   );
+
   private $private_file_extensions;
   private $system_types;
   private $system_exts;
@@ -204,10 +208,10 @@ class MimeClass {
    */
   public function __construct() {
 
-    // populate the reverse shortlist:
+    // Populate the reverse shortlist:
     $this->private_file_extensions = array_flip($this->private_mime_types);
 
-    // pick up a local mime.types file if it is available
+    // Pick up a local mime.types file if it is available.
     if (is_readable('mime.types')) {
       $this->etc_mime_types = 'mime.types';
     }
@@ -219,7 +223,7 @@ class MimeClass {
    * for backwards-compatibility with our old mimetype class.
    *
    * @param type $filename
-   * @return type 
+   * @return type
    */
   public function getType($filename) {
     return $this->get_mimetype($filename);
@@ -227,40 +231,47 @@ class MimeClass {
 
   /**
    * function: get_mimetype
-   * description: returns a mimetype associated with the file extension of $filename
+   * description: returns a mimetype associated with the
+   *   file extension of $filename
    *
    * @param type $filename
    * @param type $debug
-   * @return type 
+   * @return string
+   *   mimetype associated with the file extension of $filename
    */
   public function get_mimetype($filename, $debug = FALSE) {
     $ext = strtolower(substr($filename, strrpos($filename, '.') + 1));
 
     if (!empty($this->private_mime_types[$ext])) {
-      if (TRUE === $debug)
+      if (TRUE === $debug) {
         return array('mime_type' => $this->private_mime_types[$ext], 'method' => 'from_array');
+      }
       return $this->private_mime_types[$ext];
     }
 
     if (function_exists('file_get_mimetype')) {
       $drupal_mimetype = file_get_mimetype($filename);
       if ('application/octet-stream' != $drupal_mimetype) {
-        if (TRUE == $debug)
+        if (TRUE == $debug) {
           return array('mime_type' => $drupal_mimetype, 'method' => 'file_get_mimetype');
+        }
         return $drupal_mimetype;
       }
     }
 
-    if (!isset($this->system_types))
+    if (!isset($this->system_types)) {
       $this->system_types = $this->system_extension_mime_types();
+    }
     if (isset($this->system_types[$ext])) {
-      if (TRUE == $debug)
+      if (TRUE == $debug) {
         return array('mime_type' => $this->system_types[$ext], 'method' => 'mime.types');
+      }
       return $this->system_types[$ext];
     }
 
-    if (TRUE === $debug)
+    if (TRUE === $debug) {
       return array('mime_type' => 'application/octet-stream', 'method' => 'last_resort');
+    }
     return 'application/octet-stream';
   }
 
@@ -270,34 +281,38 @@ class MimeClass {
    *
    * @param type $mime_type
    * @param type $debug
-   * @return type 
+   * @return type
    */
   public function get_extension($mime_type, $debug = FALSE) {
 
     if (!empty($this->private_file_extensions[$mime_type])) {
-      if (TRUE == $debug)
+      if (TRUE == $debug) {
         return array('extension' => $this->private_file_extensions[$mime_type], 'method' => 'from_array');
+      }
       return $this->private_file_extensions[$mime_type];
     }
 
-    if (!isset($this->system_exts))
+    if (!isset($this->system_exts)) {
       $this->system_exts = $this->system_mime_type_extensions();
+    }
     if (isset($this->system_exts[$mime_type])) {
-      if (TRUE == $debug)
+      if (TRUE == $debug) {
         return array('extension' => $this->system_exts[$mime_type], 'method' => 'mime.types');
+      }
       return $this->system_exts[$mime_type];
     }
 
-    if (TRUE == $debug)
+    if (TRUE == $debug) {
       return array('extension' => 'bin', 'method' => 'last_resort');
+    }
     return 'bin';
   }
 
   /**
    * function: system_mime_type_extensions
    * description: populates an internal array of mimetype/extension associations
-   * from the system mime.types file, or a local mime.types if one is found (see 
-   * __constuctor). 
+   * from the system mime.types file, or a local mime.types if one is found (see
+   * __constuctor).
    * return: array of mimetype => extension
    */
   private function system_mime_type_extensions() {
@@ -306,15 +321,18 @@ class MimeClass {
       $file = fopen($this->etc_mime_types, 'r');
       while (($line = fgets($file)) !== FALSE) {
         $line = trim(preg_replace('/#.*/', '', $line));
-        if (!$line)
+        if (!$line) {
           continue;
+        }
         $parts = preg_split('/\s+/', $line);
-        if (count($parts) == 1)
+        if (count($parts) == 1) {
           continue;
+        }
         // A single part means a mimetype without extensions, which we ignore.
         $type = array_shift($parts);
-        if (!isset($out[$type]))
+        if (!isset($out[$type])) {
           $out[$type] = array_shift($parts);
+        }
         // We take the first ext from the line if many are present.
       }
       fclose($file);
@@ -325,8 +343,8 @@ class MimeClass {
   /**
    * function: system_mime_type_extensions
    * description: populates an internal array of mimetype/extension associations
-   * from the system mime.types file, or a local mime.types if one is found (see 
-   * __constuctor). 
+   * from the system mime.types file, or a local mime.types if one is found (see
+   * __constuctor).
    * return: array of extension => mimetype
    */
   private function system_extension_mime_types() {
@@ -335,15 +353,18 @@ class MimeClass {
       $file = fopen($this->etc_mime_types, 'r');
       while (($line = fgets($file)) !== FALSE) {
         $line = trim(preg_replace('/#.*/', '', $line));
-        if (!$line)
+        if (!$line) {
           continue;
+        }
         $parts = preg_split('/\s+/', $line);
-        if (count($parts) == 1)
+        if (count($parts) == 1) {
           continue;
+        }
         // A single part means a mimetype without extensions, which we ignore.
         $type = array_shift($parts);
-        foreach ($parts as $part)
+        foreach ($parts as $part) {
           $out[$part] = $type;
+        }
       }
       fclose($file);
     }
@@ -351,4 +372,3 @@ class MimeClass {
   }
 
 }
-
