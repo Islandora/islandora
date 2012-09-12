@@ -57,7 +57,11 @@ function fedora_repository_solution_packs_page() {
  * Check for installed objects and add a 'Update' or 'Install' button if
  * some objects are missing.
  *
- * @param array $solution_pack
+ * @param array &$form_state
+ * @param unknown $solution_pack_module
+ * @param string $solution_pack_name
+ * @param array $objects
+ *   Defaults to an empty array.
  */
 function fedora_repository_solution_pack_form(&$form_state, $solution_pack_module, $solution_pack_name, $objects = array()) {
 
@@ -198,21 +202,24 @@ function fedora_repository_solution_pack_form_submit($form, &$form_state) {
 
   foreach ($solution_pack_info[$module_name]['objects'] as $object) {
     // Add this object to the batch job queue.
-    $batch['operations'][] = array('fedora_repository_batch_reingest_object', array($object));
+    // Module name is needed in the finished callback.
+    $batch['operations'][] = array('fedora_repository_batch_reingest_object', array($object, $module_name));
   }
 
-  batch_set($batch);
+  // Tell the batch to call the function to send out a postprocess hook.
+  $batch['finished'] = 'fedora_repository_solutionpack_send_postprocess';
 
-  // Hook to let solution pack objects be modified.
-  // Not using module_invoke so solution packs can be expanded by other modules.
-  module_invoke_all('postprocess_solution_pack', $module_name);
+  batch_set($batch);
 
 }
 
 /**
+ * Writes a form entry into the database.
  *
- * @param unknown_type $form_name
+ * @param string $form_name
+ *   The name of the form.
  * @param unknown_type $form_xml
+ *   The form definition.
  */
 function solution_pack_add_form($form_name, $form_xml) {
   $result = db_result(db_query('Select name from {xml_forms} where name = "%s"', $form_name));
@@ -226,9 +233,12 @@ function solution_pack_add_form($form_name, $form_xml) {
 }
 
 /**
+ * Writes a form association to the database
  *
- * @param unknown_type $content_model
- * @param unknown_type $form_name
+ * @param string $content_model
+ *   content model PID
+ * @param string $form_name
+ *   Name of the form
  */
 function solution_pack_add_form_association($content_model, $form_name) {
   $result = db_result(db_query('Select content_model from {islandora_content_model_forms} where  content_model = "%s" and form_name = "%s"',

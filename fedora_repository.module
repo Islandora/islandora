@@ -2250,7 +2250,9 @@ function _is_added_to_basket($pid, $account = NULL) {
 
 /**
  * fedora repository display schema
+ *
  * @param type $file
+ *
  * @return type
  */
 function fedora_repository_display_schema($file) {
@@ -2266,14 +2268,23 @@ function fedora_repository_display_schema($file) {
 
 /**
  * fedora repository batch reingest object
- * @param type $object
- * @param type $context
- * @return type
+ *
+ * @param array $object
+ *   An array defining an object to ingest.
+ * @param string $module_name
+ *   The string needed in the finished callback to be
+ *   sent out in the postprocess hook.
+ * @param array $context
+ *   Variables shared between batch iterations
+ *   and finished callback
  */
-function fedora_repository_batch_reingest_object($object, &$context) {
+function fedora_repository_batch_reingest_object($object, $module_name, &$context) {
+
 
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
   module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
+
+  $context['results']['module_name'] = $module_name;
 
   if (!empty($object) && is_array($object)) {
     $pid = $object['pid'];
@@ -2282,23 +2293,22 @@ function fedora_repository_batch_reingest_object($object, &$context) {
     }
 
     // Does the object exist? If so, purge it.
-    //dd("About to test existence of PID: $pid");
     $item = new Fedora_Item($pid);
     if ($item->exists()) {
-      //dd('  Found');
       $item->purge(t('Remove during re-install batch job'));
-      //dd('  Purged');
     }
+    // Need to have this a couple places...
+    // (After trying from FOXML and later for individual DSs)
+    $new_item = NULL;
+    // Seems like this might be getting messed up due to scope?.
+    $datastreams = array();
 
-    $new_item = NULL; //Need to have this a couple places... (After trying from FOXML and later for individual DSs)
-    $datastreams = array(); //Seems like this might be getting messed up due to scope?
-
-// Ingest the object from the source file.
+    // Ingest the object from the source file.
     if (!empty($object['foxml_file'])) {
       $foxml_file = $object['foxml_file'];
       $new_item = Fedora_Item::ingest_from_FOXML_file($foxml_file);
       if ($new_item->exists()) {
-// Batch operation was successful; can still add additional DSs, though
+        // Batch operation was successful; can still add additional DSs, though.
         $context['message'][] = t('%pid installed.', array('%pid' => $new_item->pid));
       }
     }
@@ -2315,9 +2325,7 @@ function fedora_repository_batch_reingest_object($object, &$context) {
 
     $label = !empty($object['label']) ? $object['label'] : '';
     if (!isset($new_item)) {
-      //dd('  Not found, creating');
       $new_item = Fedora_Item::ingest_new_item($pid, 'A', $label);
-      //dd('  Created');
     }
     elseif (!empty($label)) {
       $new_item->modify_object($label);
@@ -2325,17 +2333,12 @@ function fedora_repository_batch_reingest_object($object, &$context) {
 
     if (isset($new_item)) {
       if (!empty($object['cmodel'])) {
-        //dd('  relating to cmodel');
         $new_item->add_relationship('hasModel', $object['cmodel'], FEDORA_MODEL_URI);
-        //dd('  related to cmodel');
       }
       if (!empty($object['parent'])) {
-        //dd('  adding parent');
         $new_item->add_relationship('isMemberOfCollection', $object['parent']);
-        //dd('  parent added');
       }
-      foreach ((array)$datastreams as $ds) {
-        //dd("trying to add ds: {$ds['dsid']}");
+      foreach ((array) $datastreams as $ds) {
         if ($ds['dsid'] == 'DC') {
           $new_item->modify_datastream_by_value(file_get_contents($ds['datastream_file']), $ds['dsid'], $ds['label'], 'text/xml');
         }
@@ -2348,7 +2351,21 @@ function fedora_repository_batch_reingest_object($object, &$context) {
 }
 
 /**
- * Content model, collection view and collection policy datastreams may now optionally define a version
+ * This function will send the postprocess solution pack hook.
+ * It is referenced by the solution pack form's batch finished entry.
+ *
+ */
+function fedora_repository_solutionpack_send_postprocess($success, $results, $operations) {
+  // Hook to let solution pack objects be modified.
+  // Not using module_invoke so solution packs can be expanded by other modules.
+  if ($success) {
+    module_invoke_all('postprocess_solution_pack', $results['module_name']);
+  }
+}
+
+/**
+ * Content model, collection view and collection policy datastreams may
+ * now optionally define a version
  * number in their top-level XML element as an attribute, as in:
  *   <content_model name="Collection" version="2" ...
  *
@@ -2366,7 +2383,7 @@ function fedora_repository_get_islandora_datastream_version($item = NULL, $dsid 
     $doc = simplexml_load_file($datastream_file);
   }
 
-  if (!empty($doc) && $version = (int)$doc->attributes()->version) {
+  if (!empty($doc) && $version = (int) $doc->attributes()->version) {
     $return = $version;
   }
 
@@ -2375,7 +2392,9 @@ function fedora_repository_get_islandora_datastream_version($item = NULL, $dsid 
 
 /**
  * theme fedora repository solution pack list
+ *
  * @param type $solution_packs
+ *
  * @return string
  */
 function theme_fedora_repository_solution_packs_list($solution_packs) {
@@ -2390,8 +2409,10 @@ function theme_fedora_repository_solution_packs_list($solution_packs) {
 }
 
 /**
- * Implementation of hook_forms()
+ * Implements hook_forms()
+ *
  * @param string $form_id
+ *
  * @return array
  */
 function fedora_repository_forms($form_id) {
@@ -2405,7 +2426,7 @@ function fedora_repository_forms($form_id) {
 }
 
 /**
- * Implementation of hook_imagecache_default_presets().
+ * Implements hook_imagecache_default_presets().
  */
 function fedora_repository_imagecache_default_presets() {
   return array(
