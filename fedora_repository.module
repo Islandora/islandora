@@ -2359,7 +2359,7 @@ function fedora_repository_solutionpack_send_postprocess($success, $results, $op
   // Hook to let solution pack objects be modified.
   // Not using module_invoke so solution packs can be expanded by other modules.
   if ($success) {
-    module_invoke_all('postprocess_solution_pack', $results['module_name']);
+    module_invoke_all('fedora_repository_postprocess_solution_pack', $results['module_name']);
   }
 }
 
@@ -2372,7 +2372,9 @@ function fedora_repository_solutionpack_send_postprocess($success, $results, $op
  * @param Fedora_Item $item
  * @param string $dsid
  * @param string $datastream_file
- * @return int, or NULL if no version attribute was found.
+ *
+ * @return mixed
+ *   int, or NULL if no version attribute was found.
  */
 function fedora_repository_get_islandora_datastream_version($item = NULL, $dsid = NULL, $datastream_file = NULL) {
   $return = NULL;
