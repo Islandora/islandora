@@ -31,3 +31,17 @@ function hook_islandora_tabs($content_models, $pid, $page_number) {
 
   return $tabset;
 }
+
+/**
+ * Implements hook_postprocess_solution_pack().
+ * This hook fires after the batch job to ingest a solution pack finishes.
+ *
+ * @param string $module
+ *   Name of the module that spcified the solution pack.
+ */
+function hook_fedora_repository_postprocess_solution_pack($module) {
+
+  // Do something that requires the objects to be ingested ie. add XACML.
+  return;
+
+}
