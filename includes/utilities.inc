@@ -37,6 +37,9 @@ function islandora_convert_bytes_to_human_readable($bytes, $precision = 2) {
   }
 }
 
+/**
+ * Creates a label for control group symbols.
+ */
 function islandora_control_group_to_human_readable($control_group) {
   switch ($control_group) {
     case 'M':
@@ -91,7 +94,7 @@ function islandora_validate_dsid($dsid) {
  *   or if the url is incorrect.
  */
 function islandora_describe_repository($url) {
-
+  module_load_include('inc', 'islandora', 'includes/tuque');
   $connection = new IslandoraTuque(NULL, $url);
   try {
     $info = $connection->api->a->describeRepository();

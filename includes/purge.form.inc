@@ -26,36 +26,9 @@ function islandora_purge_object_submit($form, &$form_state) {
   $object_id = $form_state['values']['pid'];
   $collection = $form_state['values']['col'];
 
-  if (!$object_id) {
-    drupal_set_message(t('Cannot remove object, object id not set'));
-    return;
-  }
+  // purge object
+  islandora_object_purge($object_id);
 
-  $object = islandora_object_load($object_id);
-
-  if (!$object) {
-    drupal_set_message(t('Could not remove object, object not found'));
-    return;
-  }
-  $content_models = $object->models;
-  $arr = module_invoke_all('islandora_pre_purge_object', $object); //notify modules of pending deletion
-  if (isset($arr['delete']) && $arr['delete']) {
-    try {
-      $object->delete();
-    } catch (Exception $e) {
-      drupal_set_message(t('Error deleting Islandora object %s %e', array('%s' => $object_id, '%e' => $e)), 'error');
-      return "";
-    }
-  }
-  else {
-    try {
-      $object->repository->purgeObject($object_id);
-    } catch (Exception $e) {
-      drupal_set_message(t('Error purging Islandora object %s %e', array('%s' => $object_id, '%e' => $e)), 'error');
-      return "";
-    }
-  }
-  module_invoke_all('islandora_post_purge_object', $object_id, $content_models);  //notify modules post deletion
   drupal_goto($collection);
 }
 

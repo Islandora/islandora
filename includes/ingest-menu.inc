@@ -7,6 +7,7 @@
 
 /**
  * Callback function for islandora/ingest/%collection_pid
+ *
  * @TODO: validate?: pid, registry return
  * @param string $pid
  */

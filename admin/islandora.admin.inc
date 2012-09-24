@@ -7,6 +7,7 @@
 
 /**
  * Create admin form
+ *
  * @return array
  */
 function islandora_repository_admin($form, &$form_state) {

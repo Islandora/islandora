@@ -6,6 +6,7 @@
  */
 
 define('DS_COMP_STREAM', 'DS-COMPOSITE-MODEL');
+
 /**
  * Callback function to view or download a datastream.
  *
@@ -33,6 +34,9 @@ function islandora_view_datastream($object, $dsid, $method = 'view') {
   exit();
 }
 
+/**
+ * For a given object, return all parent collections.
+ */
 function islandora_datastream_get_parents($islandora_object) {
   $parent_collections = array();
 
@@ -295,7 +299,7 @@ function islandora_add_datastream_form_validate($form, &$form_state) {
     }
   }
   else {
-    // todo: this is unsafe, should probably be fixed see:
+    // @TODO: this is unsafe, should probably be fixed see:
     // http://api.drupal.org/api/drupal/includes!file.inc/function/file_save_upload/7
     $arr = array();
   }
@@ -462,7 +466,7 @@ function islandora_edit_datastream($object, $ds_id) {
   }
 }
 
-//@TODO: theme / preprocess
+// @TODO: theme / preprocess
 function islandora_edit_datastream_registry_render($edit_registry) {
   $output = array(
     '#type' => 'markup',

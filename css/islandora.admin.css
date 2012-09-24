@@ -1,9 +1,17 @@
-/* 
-    Document   : islandora_basic_collection.admin.css
-    Created on : May 23, 2012, 11:23:06 AM
-    Description:
-        Purpose of the stylesheet follows.
-*/
+/**
+ * @file
+ * Css file for Islandora admin pages
+ */
 
+/* Solution pack admin page */
 
+.islandora-solution-pack-fieldset
+{
+  padding-top: 0.5em;
+}
 
+.islandora-solution-pack-fieldset table th,
+.islandora-solution-pack-fieldset table td
+{
+  width: 33%;
+}

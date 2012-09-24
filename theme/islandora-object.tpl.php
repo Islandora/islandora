@@ -53,22 +53,22 @@
  * 
  */
 ?>
-<?php if(isset($islandora_object_label)): ?>
+<?php if (isset($islandora_object_label)): ?>
   <?php drupal_set_title("$islandora_object_label"); ?>
 <?php endif; ?>
 
 <div class="islandora-object islandora">
-  <h2>Details</h2>
+  <h2><?php print t('Details'); ?></h2>
   <dl class="islandora-object-tn">
     <dt>
-      <?php if(isset($variables['islandora_thumbnail_url'])): ?>
-        <?php print('<img src = "'.$variables['islandora_thumbnail_url'].'"/>'); ?></dt>
+      <?php if (isset($variables['islandora_thumbnail_url'])): ?>
+        <img src="<?php print $variables['islandora_thumbnail_url']; ?>"/></dt>
       <?php endif; ?>
     <dd></dd>
   </dl>
     <dl class="islandora-inline-metadata islandora-object-fields">
       <?php $row_field = 0; ?>
-      <?php foreach($dc_array as $key => $value): ?>
+      <?php foreach ($dc_array as $key => $value): ?>
         <dt class="<?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
           <?php print $value['label']; ?>
         </dt>
@@ -77,10 +77,10 @@
         </dd>
       <?php $row_field++; ?>
       <?php endforeach; ?>
-      <?php if($parent_collections): ?>
+      <?php if ($parent_collections): ?>
         <dt>Collections</dt>
         <dd>
-          <?php foreach($parent_collections as $key => $value): ?>
+          <?php foreach ($parent_collections as $key => $value): ?>
             <div><?php print $value['label_link'] ?></div>
           <?php endforeach; ?>
         </dd>
@@ -88,15 +88,15 @@
     </dl>
 </div>
 <fieldset class="collapsible collapsed" style="display: block; clear:both">
-<legend><span class="fieldset-legend">File Details</span></legend>
+<legend><span class="fieldset-legend"><?php print t('File details'); ?></span></legend>
   <div class="fieldset-wrapper">
 <table>
   <tr>
-    <th>ID</th>
-    <th>Label</th>
-    <th>Size</th>
-    <th>Mimetype</th>
-    <th>Created</th> 
+    <th><?php print t('ID'); ?></th>
+    <th><?php print t('Label'); ?></th>
+    <th><?php print t('Size'); ?></th>
+    <th><?php print t('Mimetype'); ?></th>
+    <th><?php print t('Created'); ?></th> 
   </tr>
   <?php foreach($datastreams as $key => $value): ?>
   <tr>

@@ -1,4 +1,4 @@
-name = Islandora Repository
+name = Islandora
 description = "View and manage Fedora objects"
 package = Islandora
 version = 7.x-dev

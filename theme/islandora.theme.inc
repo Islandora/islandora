@@ -6,7 +6,8 @@
  */
 
 /**
- * preprocess the edit template
+ * Preprocess the edit template
+ *
  * @global string $base_url
  * @param array $variables
  *   theme variables for the edit template
@@ -49,7 +50,8 @@ function islandora_preprocess_islandora_default_edit(&$variables) {
 
 
 /**
- * preprocess for the default view template
+ * Preprocess for the default view template
+ *
  * @global string $base_url
  * @param array $variables
  */

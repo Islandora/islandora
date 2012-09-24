@@ -1,0 +1,21 @@
+<collection_policy name="" xmlns="http://www.islandora.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.islandora.ca http://syn.lib.umanitoba.ca/collection_policy.xsd">
+    <content_models>
+        <content_model dsid="ISLANDORACM" name="Collection" namespace="islandora:collection" pid="islandora:collectionCModel"/>
+    </content_models>
+    <search_terms>
+        <term field="dc.title">dc.title</term>
+        <term field="dc.creator">dc.creator</term>
+        <term default="true" field="dc.description">dc.description</term>
+        <term field="dc.date">dc.date</term>
+        <term field="dc.identifier">dc.identifier</term>
+        <term field="dc.language">dc.language</term>
+        <term field="dc.publisher">dc.publisher</term>
+        <term field="dc.rights">dc.rights</term>
+        <term field="dc.subject">dc.subject</term>
+        <term field="dc.relation">dc.relation</term>
+        <term field="dcterms.temporal">dcterms.temporal</term>
+        <term field="dcterms.spatial">dcterms.spatial</term>
+        <term field="fgs.DS.first.text">Full text</term>
+    </search_terms>
+    <relationship>isMemberOfCollection</relationship>
+</collection_policy>

@@ -5,6 +5,9 @@
  * This file contains functions to create breadcrumbs on Islandora object pages.
  */
 
+/**
+ * Callback function to get the breadcrumbs for an object page
+ */
 function islandora_get_breadcrumbs($object) {
   $breadcrumbs = array();
 
