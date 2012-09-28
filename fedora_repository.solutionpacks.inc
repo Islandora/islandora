@@ -58,8 +58,11 @@ function fedora_repository_solution_packs_page() {
  * some objects are missing.
  *
  * @param array &$form_state
+ *   The current state of the form.
  * @param unknown $solution_pack_module
+ *   Module name of that solution pack.
  * @param string $solution_pack_name
+ *   Human readable name for the solution pack.
  * @param array $objects
  *   Defaults to an empty array.
  */

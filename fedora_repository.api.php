@@ -45,3 +45,47 @@ function hook_fedora_repository_postprocess_solution_pack($module) {
   return;
 
 }
+
+/**
+ * Implements hook_required_fedora_objects().
+ * This hook lets one add objects to the repository through the
+ * solution pack interface.
+ *
+ * @return array
+ *   array( 'path-to-foxml-file', 'pid', 'dsid', 'path-to-datastream-file',
+ *   int dsversion, boolean required)
+ */
+function hook_required_fedora_objects() {
+  return array(
+    'fedora_repository' => array(
+      'module' => 'fedora_repository',
+      'title' => 'Islandora Core',
+      'objects' => array(
+        array(
+          'pid' => 'islandora:collectionCModel',
+          'label' => 'Islandora Collection Content Model',
+          'dsid' => 'ISLANDORACM',
+          'datastream_file' => "./$module_path/content_models/COLLECTIONCM.xml",
+          'dsversion' => 2,
+          'cmodel' => 'fedora-system:ContentModel-3.0',
+        ),
+        array(
+          'pid' => 'islandora:root',
+          'label' => 'Islandora Top-level Collection',
+          'cmodel' => 'islandora:collectionCModel',
+          'datastreams' => array(
+            array(
+              'dsid' => 'COLLECTION_POLICY',
+              'datastream_file' => "./$module_path/collection_policies/COLLECTION-COLLECTION POLICY.xml",
+            ),
+            array(
+              'dsid' => 'TN',
+              'datastream_file' => "./$module_path/images/Gnome-emblem-photos.png",
+              'mimetype' => 'image/png',
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}

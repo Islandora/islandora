@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ *   This file is the Drupal module file for fedora_repository.
+ */
 
 /**
  * Drupal hook for admin form
@@ -8,8 +12,8 @@
  */
 function fedora_repository_admin() {
   module_load_include('inc', 'fedora_repository', 'formClass');
-  $adminForm = new formClass();
-  return $adminForm->createAdminForm();
+  $admin_form = new formClass();
+  return $admin_form->createAdminForm();
 }
 
 /**
@@ -18,16 +22,20 @@ function fedora_repository_admin() {
  */
 function fedora_repository_menu() {
   module_load_include('inc', 'fedora_repository', 'formClass');
-  $adminMenu = new formClass();
-  return $adminMenu->createMenu();
+  $admin_menu = new formClass();
+  return $admin_menu->createMenu();
 }
 
 /**
+ * Implements hook_help().
  * drupal hook to show help
  *
- * @param type $path
+ * @param string $path
+ *   The path to supply the help for.
  * @param type $arg
- * @return type
+ *
+ * @return string
+ *   The help string apropriate to the given path.
  */
 function fedora_repository_help($path, $arg) {
   switch ($path) {
@@ -98,8 +106,8 @@ function fedora_repository_ingest_object($collection_pid=NULL, $collection_label
   $output = drupal_get_form('fedora_repository_ingest_form', $collection_pid, $collection_label, $content_model);
 
   $breadcrumbs = array();
-  $objectHelper = new ObjectHelper();
-  $objectHelper->getBreadcrumbs($collection_pid, $breadcrumbs);
+  $object_helper = new ObjectHelper();
+  $object_helper->getBreadcrumbs($collection_pid, $breadcrumbs);
   drupal_set_breadcrumb(array_reverse($breadcrumbs));
 
   return $output;
@@ -109,16 +117,17 @@ function fedora_repository_ingest_object($collection_pid=NULL, $collection_label
  * fedora repository ingest form submit
  * @global type $base_url
  * @global type $user
+ *
  * @param array $form
  * @param array $form_state
  */
 function fedora_repository_ingest_form_submit(array $form, array &$form_state) {
-//only validate the form if the submit button was pressed (other buttons may be used for AHAH
+  // Only validate the form if the submit button was pressed (other buttons may be used for AHAH.
   if ($form_state['ahah_submission']) {
     $form_state['submitted'] = FALSE;
     return;
   }
-  //ddebug_backtrace();
+
   if ($form_state['storage']['xml'] && module_exists('islandora_content_model_forms')) {
     module_load_include('inc', 'islandora_content_model_forms', 'IngestObjectMetadataForm');
     $xml_form = new IngestObjectMetadataForm();
@@ -146,7 +155,8 @@ function fedora_repository_ingest_form_submit(array $form, array &$form_state) {
 
         $err = (!$cm->execFormHandler($form_state['values'], $form_state));
 
-        $_SESSION['fedora_ingest_files'] = ''; //empty this variable
+        // Empty this variable.
+        $_SESSION['fedora_ingest_files'] = '';
 
         $attr = $cm->getIngestFormAttributes();
         $redirect = $attr['redirect'];
@@ -165,12 +175,14 @@ function fedora_repository_ingest_form_submit(array $form, array &$form_state) {
 
 /**
  * fedora repository ingest form validate
+ *
  * @param type $form
  * @param type $form_state
+ *
  * @return type
  */
 function fedora_repository_ingest_form_validate($form, &$form_state) {
-//only validate the form if the submit button was pressed (other buttons may be used for AHAH
+  // Only validate the form if the submit button was pressed (other buttons may be used for AHAH.
   if ($form_state['ahah_submission']) {
     $form_state['submitted'] = FALSE;
     return;
@@ -183,18 +195,18 @@ function fedora_repository_ingest_form_validate($form, &$form_state) {
         break;
 
       case 2:
-// XML based form.
+        // XML based form.
         if ($form_state['storage']['xml']) {
           module_load_include('inc', 'xml_form_api', 'XMLForm');
           $xml_form = new XMLForm($form_state);
           $xml_form->validate($form, $form_state);
         }
-// Get the uploaded file.
+        // Get the uploaded file.
         $validators = array();
 
         $ifl = 'ingest-file-location';
         $fileObject = NULL;
-        //Check if it's already there; this is what upload_element provides.
+        // Check if it's already there; this is what upload_element provides.
         if (is_a($form_state['values'][$ifl], 'stdClass') && property_exists($form_state['values'][$ifl], '')) {
           $fileObject = $form_state['values'][$ifl];
         }
@@ -249,22 +261,24 @@ function fedora_repository_ingest_form_validate($form, &$form_state) {
 
 /**
  * fedora repository ingest form
+ *
  * @param type $form_state
  * @param type $collection_pid
  * @param type $collection_label
  * @param type $content_model
+ *
  * @return type
  */
 function fedora_repository_ingest_form(&$form_state, $collection_pid, $collection_label = NULL, $content_model = NULL) {
   module_load_include('inc', 'fedora_repository', 'formClass');
-// For the sake of easily maintaining the module in different core versions create our own form_values variable.
+  // For the sake of easily maintaining the module in different core versions create our own form_values variable.
   if (empty($form_state['storage']['step'])) {
     $form_state['storage']['step'] = 1;
   }
-  $ingestForm = new formClass();
+  $ingest_form = new formClass();
   $form_state['storage']['content_model'] = $content_model;
   $form_state['storage']['collection_pid'] = $collection_pid;
-  $form = $ingestForm->createIngestForm($collection_pid, $collection_label, $form_state);
+  $form = $ingest_form->createIngestForm($collection_pid, $collection_label, $form_state);
   return $form;
 }
 
@@ -324,8 +338,10 @@ function fedora_repository_purge_object_form(&$form_state, $pid, $referrer = NUL
 
 /**
  * add stream
+ *
  * @param type $collection_pid
  * @param type $collectionName
+ *
  * @return type
  */
 function add_stream($collection_pid=NULL, $collectionName=NULL) {
@@ -350,8 +366,10 @@ function add_stream($collection_pid=NULL, $collectionName=NULL) {
 /**
  * add stream form submit
  * @global type $base_url
+ *
  * @param type $form
  * @param type $form_state
+ *
  * @return type
  */
 function add_stream_form_submit($form, &$form_state) {
@@ -389,8 +407,10 @@ function add_stream_form_submit($form, &$form_state) {
 
 /**
  * add stream form
+ *
  * @param type $form_state
  * @param type $pid
+ *
  * @return type
  */
 function add_stream_form(&$form_state, $pid) {
@@ -401,8 +421,10 @@ function add_stream_form(&$form_state, $pid) {
 
 /**
  * add stream form validate
+ *
  * @param type $form
  * @param type $form_state
+ *
  * @return type
  */
 function add_stream_form_validate($form, &$form_state) {
@@ -470,9 +492,11 @@ function add_stream_form_validate($form, &$form_state) {
 /**
  * fedora repository purge stream
  * @global type $user
+ *
  * @param type $pid
  * @param type $dsId
  * @param type $name
+ *
  * @return type
  */
 function fedora_repository_purge_stream($pid = NULL, $dsId = NULL, $name = NULL) {
@@ -1240,7 +1264,7 @@ function repository_service($pid = NULL, $servicePid = NULL, $serviceMethod = NU
 //Search Stuff ********************************************************************
 
 /**
- * Implementation of hook_search().
+ * Implements hook_search().
  * sends a search query to fedora fgsearch which is backed by Lucene
  * In our implementation of Fedora we have api-a and api-m locked down
  * to authorized users but at the object level.  We can query Lucene and the
@@ -1291,7 +1315,6 @@ function fedora_repository_search($op = 'search', $keys = NULL) {
         $xmlDoc->load($path . '/searchTerms.xml');
         $nodeList = $xmlDoc->getElementsByTagName('default');
         if (!$type) {
-//$type = 'dc.description';
           $type = $nodeList->item(0)->nodeValue;
         }
         $nodeList = $xmlDoc->getElementsByTagName('number_of_results');
@@ -1306,12 +1329,11 @@ function fedora_repository_search($op = 'search', $keys = NULL) {
         else {
           $searchQuery = $keys;
         }
-//$searchQuery.=" AND (PID:vre OR PID:vre:ref OR PID:demo OR PID:changeme)";
 
         $searchUrl = variable_get('fedora_fgsearch_url', 'http://localhost:8080/fedoragsearch/rest');
         $searchString = '?operation=gfindObjects&indexName=' . $indexName . '&restXslt=copyXml&query=' . $searchQuery;
         $searchString .= '&hitPageSize=' . $numberOfHitsPerPage . '&hitPageStart=' . $startPage;
-//$searchString = htmlentities(urlencode($searchString));
+
         $searchUrl .= $searchString;
         $objectHelper = new ObjectHelper();
         $resultData = do_curl($searchUrl);
@@ -1324,22 +1346,24 @@ function fedora_repository_search($op = 'search', $keys = NULL) {
         );
         return $results;
       }
-  } // switch ($op)
+  }
 }
 
 /**
- * Implementation of hook_search_page().
+ * Implements hook_search_page().
  * Display the search results
  *
  * @param type $resultData
+ *
  * @return array
  */
 function fedora_repository_search_page($resultData) {
   $path = drupal_get_path('module', 'fedora_repository');
   $isRestricted = variable_get('fedora_namespace_restriction_enforced', TRUE);
   $proc = NULL;
+  // No results.
   if (!$resultData[0][0]['data']) {
-    return ''; //no results
+    return '';
   }
   $text = utf8_encode($resultData[0][0]['data']);
 
@@ -1349,13 +1373,13 @@ function fedora_repository_search_page($resultData) {
     $out[] = array(
       array(
         'data' => $e->getMessage(),
-        'colspan' => 2
-      )
+        'colspan' => 2,
+      ),
     );
     return $out;
   }
 
-//inject into xsl stylesheet
+  // Inject into xsl stylesheet.
   $proc->setParameter('', 'searchToken', drupal_get_token('search_form')); //token generated by Drupal, keeps tack of what tab etc we are on
   $proc->setParameter('', 'searchUrl', url('search') . '/fedora_repository'); //needed in our xsl
   $proc->setParameter('', 'objectsPage', base_path());
@@ -1813,10 +1837,12 @@ function fedora_repository_demo_objects_form_submit($form, &$form_state) {
 
 /**
  * fedora repository required fedora objects
- * @return type
+ *
+ * @return array
+ *  array( 'path-to-foxml-file', 'pid', 'dsid', 'path-to-datastream-file', int dsversion, boolean required)
  */
 function fedora_repository_required_fedora_objects() {
-// array( 'path-to-foxml-file', 'pid', 'dsid', 'path-to-datastream-file', int dsversion, boolean required)
+
   $module_path = drupal_get_path('module', 'fedora_repository');
   return array(
     'fedora_repository' => array(
