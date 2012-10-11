@@ -293,7 +293,7 @@ RDF;
 
     $relsext = $this->get_datastream_dissemination('RELS-EXT');
 
-    if ($literal_value == REL_TYPE_URI && strpos($object, $f_prefix) !== 0) {
+    if ($literal_value == RELS_TYPE_URI && strpos($object, $f_prefix) !== 0) {
       $object = $f_prefix . $object;
     }
 
@@ -340,7 +340,7 @@ RDF;
 
     $rels_text = $this->get_datastream_dissemination('RELS-INT');
 
-    if ($literal_value == REL_TYPE_URI && strpos($object, $f_prefix) !== 0) {
+    if ($literal_value == RELS_TYPE_URI && strpos($object, $f_prefix) !== 0) {
       $object = $f_prefix . $object;
     }
     if (strpos($dsid, $f_prefix) !== 0) {
