@@ -104,3 +104,31 @@ function fedora_repository_requirements($phase) {
 
   return $requirements;
 }
+
+/**
+ * Implements hook_update_N().
+ *
+ * This function will try and update the SOAP WSDLs
+ * as they were set wrong in previous releases.
+ */
+function fedora_repository_update_6001() {
+  // Get variables to check for update.
+  $API_A_WSDL = variable_get('fedora_soap_url', $default = NULL);
+  $API_M_WSDL = variable_get('fedora_soap_manage_url', $default = NULL);
+
+  // Update API A if necessary.
+  $A_WSDL = parse_url($API_A_WSDL,  PHP_URL_PATH) . '?' . parse_url($API_A_WSDL,  PHP_URL_QUERY);
+  if ($A_WSDL == '/fedora/services/access?wsdl') {
+    variable_set('fedora_soap_url', str_replace('/fedora/services/access?wsdl', '/fedora/wsdl?api=API-A', $API_A_WSDL));
+  }
+
+  // Update API M if necessary.
+  $M_WSDL = parse_url($API_M_WSDL,  PHP_URL_PATH) . '?' . parse_url($API_M_WSDL,  PHP_URL_QUERY);
+  if ($M_WSDL == '/fedora/services/management?wsdl') {
+    variable_set('fedora_soap_manage_url', str_replace('/fedora/services/management?wsdl', '/fedora/wsdl?api=API-M', $API_M_WSDL));
+  }
+
+  return array(
+      array('success' => TRUE, 'query' => 'Please check your WSDL paths in Islandora\'s config, this update requires them to be set correctly: access; /fedora/wsdl?api=API-A, management; /fedora/wsdl?api=API-M'),
+    );
+}

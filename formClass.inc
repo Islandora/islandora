@@ -232,7 +232,7 @@ class formClass {
     $form['fedora_soap_url'] = array(
       '#type' => 'textfield',
       '#title' => t('Fedora SOAP Url'),
-      '#default_value' => variable_get('fedora_soap_url', 'http://localhost:8080/fedora/services/access?wsdl'),
+      '#default_value' => variable_get('fedora_soap_url', 'http://localhost:8080/fedora/wsdl?api=API-A'),
       '#description' => t('The URL to use for SOAP connections'),
       '#required' => TRUE,
       '#weight' => -12,
