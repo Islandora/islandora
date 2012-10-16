@@ -1465,7 +1465,9 @@ RDF;
    * @param string $pid if none given, getnextpid will be called.
    * @param string $state The initial state, A - Active, I - Inactive, D - Deleted
    * @param type $label
-   * @param type $owner
+   * @param string $owner
+   *   Used to set an object's ownerId attribute.  Defaults to current user's
+   *   name. If we are not a Drupal user(ie. Drush) defaults to ''.
    *
    * @return DOMDocument
    */
@@ -1479,12 +1481,12 @@ RDF;
     if (empty($owner)) {
       global $user;
       // Default to current Drupal user.
-      if (!empty($user->uid)) {
-        $owner = $user->uid;
+      if (!empty($user->name)) {
+        $owner = $user->name;
       }
-      // We are not inside Drupal.
-      else {
-        $owner = 'fedoraAdmin';
+      // We are annonamous user.
+      elseif ($user->uid == 0) {
+        $owner = 'anonymous';
       }
     }
 
