@@ -860,7 +860,7 @@ RDF;
     $this->get_datastreams_list_as_SimpleXML();
 
     $mimetype = '';
-    foreach ($datastream_list as $datastream) {
+    foreach ($this->datastreams_list as $datastream) {
       foreach ($datastream as $datastreamValue) {
         if ($datastreamValue->ID == $dsid) {
           return $datastreamValue->MIMEType;
