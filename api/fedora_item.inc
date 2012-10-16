@@ -79,7 +79,7 @@ class Fedora_Item {
       if (!empty($raw_objprofile)) {
         $this->objectProfile = $raw_objprofile->objectProfile;
         $this->datastreams = $this->get_datastreams_list_as_array();
-        $this->ownerId = & Fedora_Item::getOwnerId($pid);
+        $this->ownerId = Fedora_Item::getOwnerId($pid);
       }
       else {
         $this->objectProfile = '';
@@ -1165,7 +1165,6 @@ RDF;
    * @return type
    */
   function modify_object($label = '', $state = NULL, $ownerId = NULL, $logMessage = 'Modified by Islandora API', $quiet=TRUE) {
-
     $params = array(
       'pid' => $this->pid,
        // Default to the current owner if none is provided..
@@ -1551,9 +1550,17 @@ RDF;
    *   The Fedora PID to retrieve the
    */
   static function getOwnerId($PID) {
-
     $params = array(
-      'query' => array(array('property' => 'pid', 'operator' => 'eq', 'value' => $object_id)),
+      'query' => array(
+        'conditions' => array(
+          array(
+            'property' => 'pid',
+            'operator' => 'eq',
+            'value' => $PID,
+          ),
+        ),
+        'terms' => '',
+      ),
       'resultFields' => array('pid', 'ownerId'),
       'maxResults' => 1,
     );
@@ -1562,7 +1569,8 @@ RDF;
     if (!$response) {
       return FALSE;
     }
-    return $response->result->resultList->objectFields->ownerId;
+    $ownerId = $response->result->resultList->objectFields->ownerId;
 
+    return $ownerId;
   }
 }
