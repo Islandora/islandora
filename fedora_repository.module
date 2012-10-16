@@ -2489,7 +2489,7 @@ function fedora_repository_imagecache_default_presets() {
  * @return
  *   Markup for the image, making use of imagecache_external if it is available.
  */
-function _fedora_repository_render_image($tn_path, $imagecache_preset = 'fedora_repository_collection_thumbnail') {
+function _fedora_repository_render_image($tn_path, $imagecache_preset = 'fedora_repository_collection_thumbnail', $truncated_title = '', $title = '') {
   $thumbnail = NULL;
   if ($thumbnail === NULL &&
     module_exists('imagecache_external') &&
@@ -2512,6 +2512,9 @@ function _fedora_repository_render_image($tn_path, $imagecache_preset = 'fedora_
  * _fedora_repository_render_image(), and returns the result.
  *
  * @see _fedora_repository_render_image()
+ * @todo
+ *   Set the title/alt text(truncated title) for passing into _fedora_repository_render_image()
+ *
  * @param $pid string
  *   A string containing a Fedora PID.
  * @param $dsid
