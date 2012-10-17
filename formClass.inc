@@ -41,6 +41,7 @@ class formClass {
       'title' => t('Solution Packs'),
       'description' => t('Install content models and collections required by installed solution packs.'),
       'page callback' => 'fedora_repository_solution_packs_page',
+      'access callback' => 'fedora_repository_check_perm',
       'access arguments' => array('add fedora datastreams'),
       'file' => 'fedora_repository.solutionpacks.inc',
       'type' => MENU_LOCAL_TASK,
@@ -50,6 +51,7 @@ class formClass {
       'page callback' => 'fedora_repository_display_schema',
       'page arguments' => array('islandoracm.xsd'),
       'type' => MENU_CALLBACK,
+      'access callback' => 'fedora_repository_check_perm',
       'access arguments' => array('view fedora collection'),
     );
 
@@ -58,24 +60,28 @@ class formClass {
       'page callback' => 'fedora_repository_display_schema',
       'page arguments' => array('collection_policy.xsd'),
       'type' => MENU_CALLBACK,
+      'access callback' => 'fedora_repository_check_perm',
       'access arguments' => array('view fedora collection'),
     );
 
     $items['fedora'] = array(
       'page callback' => 'repository_page',
       'type' => MENU_CALLBACK,
-      'access arguments' => array('view fedora collection'),
+      'access callback' => 'fedora_repository_check_perm',
+      'access arguments' => array('view fedora collection', 1),
     );
     $items['fedora/repository'] = array(
       'title' => 'Digital Repository',
       'page callback' => 'repository_page',
       'type' => MENU_NORMAL_ITEM,
-      'access arguments' => array('view fedora collection'),
+      'access callback' => 'fedora_repository_check_perm',
+      'access arguments' => array('view fedora collection', 2),
     );
 
     $items['fedora/repository/service'] = array(
       'page callback' => 'repository_service',
       'type' => MENU_CALLBACK,
+      'access callback' => 'fedora_repository_check_perm',
       'access arguments' => array('view fedora collection'),
     );
 
@@ -83,6 +89,7 @@ class formClass {
       'title' => t('Download object'),
       'page callback' => 'fedora_object_as_attachment',
       'type' => MENU_CALLBACK,
+      'access callback' => 'fedora_repository_check_perm',
       'access arguments' => array('view fedora collection')
     );
 
@@ -90,35 +97,40 @@ class formClass {
       'title' => t('Edit metadata'),
       'page callback' => 'fedora_repository_edit_qdc_page',
       'type' => MENU_CALLBACK,
-      'access arguments' => array('edit fedora meta data')
+      'access callback' => 'fedora_repository_check_perm',
+      'access arguments' => array('edit fedora meta data', 3)
     );
 
     $items['fedora/repository/purgeStream'] = array(
       'title' => t('Purge data stream'),
       'page callback' => 'fedora_repository_purge_stream',
       'type' => MENU_CALLBACK,
-      'access arguments' => array('purge objects and datastreams')
+      'access callback' => 'fedora_repository_check_perm',
+      'access arguments' => array('purge objects and datastreams', 3)
     );
 
     $items['fedora/repository/replaceStream'] = array(
       'title' => t('Replace Stream'),
       'page callback' => 'fedora_repository_replace_stream',
       'type' => MENU_CALLBACK,
-      'access arguments' => array('add fedora datastreams'),
+      'access callback' => 'fedora_repository_check_perm',
+      'access arguments' => array('add fedora datastreams', 3),
     );
 
     $items['fedora/repository/purgeObject'] = array(
       'title' => t('Purge object'),
       'page callback' => 'fedora_repository_purge_object',
       'type' => MENU_CALLBACK,
-      'access arguments' => array('purge objects and datastreams')
+      'access callback' => 'fedora_repository_check_perm',
+      'access arguments' => array('purge objects and datastreams', 3)
     );
 
     $items['fedora/repository/addStream'] = array(
       'title' => t('Add stream'),
       'page callback' => 'add_stream',
       'type' => MENU_CALLBACK,
-      'access arguments' => array('add fedora datastreams')
+      'access callback' => 'fedora_repository_check_perm',
+      'access arguments' => array('add fedora datastreams', 3)
     );
 
     //new for mnpl******************************************
@@ -133,7 +145,8 @@ class formClass {
       'title' => t('Ingest object'),
       'page callback' => 'fedora_repository_ingest_object',
       'type' => MENU_CALLBACK,
-      'access arguments' => array('add fedora datastreams')
+      'access callback' => 'fedora_repository_check_perm',
+      'access arguments' => array('add fedora datastreams', 2)
     );
 
     $items['fedora/repository/list_terms'] = array(
@@ -500,7 +513,7 @@ class formClass {
    * @return type
    */
   function canShowIngestForm($collection_pid) {
-    if (!user_access('ingest new fedora objects')) {
+    if (!fedora_repository_check_perm('ingest new fedora objects', $collection_pid)) {
       $ingest_override_array = module_invoke_all('fedora_repository_can_ingest', $collection_pid);
       $overrides = array_filter($ingest_override_array);
       if (empty($overrides)) {

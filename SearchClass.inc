@@ -187,7 +187,7 @@ class SearchClass {
   function quickSearch($type, $query, $showForm = 1, $orderBy = 0, & $userArray) {
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');
     module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
-    if (user_access('view fedora collection')) {
+    if (fedora_repository_check_perm('view fedora collection')) {
       $numberOfHistPerPage = '5000'; //hack for IR they do not want next button
       $luceneQuery = NULL;
       // Demo search string ?operation=gfindObjects&indexName=DemoOnLucene&query=fgs.DS.first.text%3Achristmas&hitPageStart=11&hitPageSize=10
@@ -272,7 +272,7 @@ class SearchClass {
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');
     module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
 
-    if (user_access('view fedora collection')) {
+    if (fedora_repository_check_perm('view fedora collection')) {
       //$numberOfHistPerPage = '50';//hack for IR they do not want next button
       $luceneQuery = NULL;
       $indexName = variable_get('fedora_index_name', 'DemoOnLucene');

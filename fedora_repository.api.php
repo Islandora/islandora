@@ -95,6 +95,8 @@ function hook_required_fedora_objects() {
  * Override ingest permissions.
  * (from islandora_workflow)
  *
+ * @deprecated
+ *   Deprecated in favour of hook_fedora_repository_check_perm().
  * @param string $collection_pid
  *   The PID of the collection
  *
@@ -106,4 +108,30 @@ function hook_fedora_repository_can_ingest($collection_pid) {
   module_load_include('inc', 'islandora_workflow', 'islandora_workflow.permissions');
   return (islandora_workflow_user_collection_permission_check($collection_pid) !== FALSE);
 
+}
+
+/**
+ * Implements hook_fedora_repository_check_perm().
+ *
+ * Hook to allow other modules to allow or deny operations on conditions other
+ * than the explicit Drupal permissions.
+ *
+ * @param string $op
+ *   A string representing the operation to be performed.
+ * @param string|null $pid
+ *   A string containing the Fedora PID on which the operation is to be
+ *   performed. The (default) value of NULL will use the PID indicated by the
+ *   fedora_repository_pid Drupal variable.
+ * @param object|null $as_user
+ *   An object representing the user for whom to check the permissions (as
+ *   given by user_load or the $user global).  The (default) value of NULL will
+ *   cause permissions to be evaluated for the current user (from the $user
+ *   global).
+ *
+ * @return boolean|null
+ *   Either a boolean permitting (TRUE) or forbidding (FALSE) an operation, or
+ *   NULL to make no assertion.
+ */
+function hook_fedora_repository_check_perm($op, $pid = NULL, $as_user = NULL) {
+  return NULL;
 }

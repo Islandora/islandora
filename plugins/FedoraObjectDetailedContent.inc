@@ -93,7 +93,7 @@ class FedoraObjectDetailedContent {
       $tabset['fedora_object_details']['tabset']['view']['dc'] = $dc_array;
     }
 
-    if (fedora_repository_access(ObjectHelper :: $VIEW_DETAILED_CONTENT_LIST, $this->pid, $user)) {
+    if (fedora_repository_check_perm(ObjectHelper :: $VIEW_DETAILED_CONTENT_LIST, $this->pid, $user)) {
       $tabset['fedora_object_details']['tabset']['view'] += array(
         'list' => array(
           '#type' => 'fieldset',
@@ -118,7 +118,7 @@ class FedoraObjectDetailedContent {
       );
     }
 
-    if (fedora_repository_access(ObjectHelper :: $PURGE_FEDORA_OBJECTSANDSTREAMS, $this->pid, $user)) {
+    if (fedora_repository_check_perm(ObjectHelper :: $PURGE_FEDORA_OBJECTSANDSTREAMS, $this->pid, $user)) {
       $tabset['fedora_object_details']['tabset']['view'] += array(
         'purge' => array(
           '#type' => 'markup',
@@ -128,7 +128,7 @@ class FedoraObjectDetailedContent {
       );
     }
 
-    if (fedora_repository_access(OBJECTHELPER :: $EDIT_FEDORA_METADATA, $this->pid, $user)) {
+    if (fedora_repository_check_perm(OBJECTHELPER :: $EDIT_FEDORA_METADATA, $this->pid, $user)) {
       $editform = drupal_get_form('fedora_repository_edit_qdc_form', $this->pid, 'DC');
       $tabset['fedora_object_details']['tabset']['edit'] = array(
         '#type' => 'tabpage',

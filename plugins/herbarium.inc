@@ -186,7 +186,7 @@ class Herbarium {
     );
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');
     $obj = new ObjectHelper();
-    if (fedora_repository_access(OBJECTHELPER :: $EDIT_FEDORA_METADATA, $this->pid, $user)) {
+    if (fedora_repository_check_perm(OBJECTHELPER :: $EDIT_FEDORA_METADATA, $this->pid, $user)) {
       $editform = drupal_get_form('fedora_repository_edit_qdc_form', $this->pid, 'DARWIN_CORE');
       $tabset['third_tab']['tabset']['edit'] = array(
         '#type' => 'tabpage',

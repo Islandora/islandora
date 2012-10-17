@@ -102,7 +102,7 @@ class CollectionClass {
   function getRelatedItems($pid, $query_string = NULL, $limit = NULL, $offset = NULL) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');
-    if (!fedora_repository_access(OBJECTHELPER :: $OBJECT_HELPER_VIEW_FEDORA, $pid)) {
+    if (!fedora_repository_check_perm(OBJECTHELPER :: $OBJECT_HELPER_VIEW_FEDORA, $pid)) {
       drupal_set_message(t("You do not have access to Fedora objects within the attempted namespace or access to Fedora denied."), 'error');
       return ' ';
     }
@@ -321,7 +321,7 @@ class CollectionClass {
    * @return type 
    */
   function getAndDoRules($file, $mimetype, $pid, $dsid) {
-    if (!user_access('ingest new fedora objects')) {
+    if (!fedora_repository_check_perm('ingest new fedora objects', $pid)) {
       drupal_set_message(t('You do not have permission to ingest objects.'));
       return FALSE;
     }
@@ -586,7 +586,7 @@ class CollectionClass {
   function getIngestInterface() {
     module_load_include('inc', 'fedora_repository', 'CollectionPolicy');
     $collectionPolicyExists = $this->collectionObject->getMimeType($this->pid, CollectionPolicy::getDefaultDSID());
-    if (user_access(ObjectHelper :: $INGEST_FEDORA_OBJECTS) && $collectionPolicyExists) {
+    if (fedora_repository_check_perm(ObjectHelper :: $INGEST_FEDORA_OBJECTS, $this->pid) && $collectionPolicyExists) {
       if (!empty($collectionPolicyExists)) {
         $allow = TRUE;
         if (module_exists('fedora_fesl')) {

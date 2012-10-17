@@ -121,7 +121,7 @@ EOJS
       '#content' => $dl_link . $dc_html,
     );
 
-    if (fedora_repository_access(OBJECTHELPER :: $EDIT_FEDORA_METADATA, $this->pid, $user)) {
+    if (fedora_repository_check_perm(OBJECTHELPER :: $EDIT_FEDORA_METADATA, $this->pid, $user)) {
       $editform = drupal_get_form('fedora_repository_edit_qdc_form', $this->pid, 'DC');
       $tabset['first_tab']['tabs']['edit'] = array(
         '#type' => 'tabpage',
