@@ -637,7 +637,7 @@ class CollectionClass {
    * @return int
    *   An integer representing what the current page should be.
    */
-  protected static function hackPager($pager_name, $per_page = NULL, $total_items = NULL) {
+  public static function hackPager($pager_name, $per_page = NULL, $total_items = NULL) {
     global $pager_total, $pager_page_array;
     
     if ($per_page !== NULL && $total_items !== NULL) {
