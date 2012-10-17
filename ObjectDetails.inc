@@ -72,6 +72,11 @@ function fedora_repository_object_details_XSLT($item) {
   }
   $xmlstr = $item->get_datastream_dissemination($dsid);
 
+  $default_to_dc = FALSE;
+  if (empty($xmlstr) && variable_get('islandora_object_details_xslt_default_dc', FALSE) && $dsid != 'DC' && $dsid != 'QDC') {
+    $xmlstr = $item->get_datastream_dissemination('DC');
+    $default_to_dc = TRUE;
+  }
   if (empty($xmlstr)) {
     return t('Error - could not find datastream @dsid on object @pid<br/>Please contact the site administrator.',
     array('@dsid' => $dsid, '@pid' => $item->pid));
@@ -88,7 +93,13 @@ function fedora_repository_object_details_XSLT($item) {
   $proc->setParameter('', 'path', $path);
   $input = NULL;
 
-  $xsl_file = variable_get('islandora_object_details_xslt_sheet', 'sites/all/modules/islandora/object_details_xslts/convertQDC.xsl');
+  if (!$default_to_dc) {
+    $xsl_file = variable_get('islandora_object_details_xslt_sheet', 'sites/all/modules/islandora/object_details_xslts/convertQDC.xsl');
+  }
+  else {
+    $xsl_file = 'sites/all/modules/islandora/object_details_xslts/convertQDC.xsl';
+  }
+  
   // set an error message in case xslt parsing fails
   $output = t("Failed to parse xslt file at @xsltFile", array('@xsltFile' => $xsl_file));
   if (is_readable($xsl_file)) {
@@ -126,7 +137,11 @@ function fedora_repository_object_details_table($item) {
     $dsid = array_key_exists('QDC', $item->get_datastreams_list_as_array()) ? 'QDC' : 'DC';
   }
   $xmlstr = $item->get_datastream_dissemination($dsid);
-
+  
+  if (empty($xmlstr) && variable_get('islandora_object_details_table_default_dc', FALSE) && $dsid != 'DC' && $dsid != 'QDC') {
+    $dsid = 'DC';
+    $xmlstr = $item->get_datastream_dissemination($dsid);
+  }
   if (empty($xmlstr)) {
     return t('Error - could not find datastream @dsid on object @pid<br/>Please contact the site administrator.',
     array('@dsid' => $dsid, '@pid' => $item->pid));
@@ -136,7 +151,7 @@ function fedora_repository_object_details_table($item) {
 
   $headers = array(
     array(
-      'data' => t('Metadata'),
+      'data' => t('Metadata (@dsid)', array('@dsid' => $dsid)),
       'colspan' => 2,
     ),
   );
@@ -191,6 +206,11 @@ function fedora_repository_object_details_XSLT_config() {
     '#default_value' => variable_get('islandora_object_details_xslt_datastream', 'DC'),
     '#required' => TRUE,
   );
+  $form['config']['default_dc'] = array(
+    '#type' => 'checkbox',
+    '#title' => t("If the datastream to transform is unavailable, attempt to transform using the DC datastream"),
+    '#default_value' => variable_get('islandora_object_details_xslt_default_dc', FALSE),
+  );
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t("Submit"),
@@ -210,6 +230,7 @@ function fedora_repository_object_details_XSLT_config_submit($form, &$form_state
   variable_set('islandora_object_details_display_table', 'xslt');
   variable_set('islandora_object_details_xslt_sheet', $form_state['values']['xslt']);
   variable_set('islandora_object_details_xslt_datastream', $form_state['values']['dsid']);
+  variable_set('islandora_object_details_xslt_default_dc', $form_state['values']['default_dc']);
   drupal_set_message('Object Details view has been set to XSLT and your configuration has been saved');
 }
 
@@ -253,6 +274,11 @@ function fedora_repository_object_details_table_config() {
     '#default_value' => variable_get('islandora_object_details_table_datastream', 'DC'),
     '#required' => TRUE,
   );
+  $form['config']['default_dc'] = array(
+    '#type' => 'checkbox',
+    '#title' => t("If the datastream to transform is unavailable, attempt to transform using the DC datastream"),
+    '#default_value' => variable_get('islandora_object_details_table_default_dc', FALSE),
+  );
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t("Submit"),
@@ -272,5 +298,6 @@ function fedora_repository_object_details_table_config() {
 function fedora_repository_object_details_table_config_submit($form, &$form_state) {
   variable_set('islandora_object_details_display_table', 'table');
   variable_set('islandora_object_details_table_datastream', $form_state['values']['dsid']);
+  variable_set('islandora_object_details_table_default_dc', $form_state['values']['default_dc']);
   drupal_set_message('Object Details view has been set to Table and your configuration has been saved');
 }

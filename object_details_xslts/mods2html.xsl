@@ -51,6 +51,7 @@
 
 <xsl:template match="mods:mods">
   <table class="modsContainer">
+  <tr><th colspan="2"><h3 class="islandora-obj-details-metadata-title">Metadata <span class="islandora-obj-details-dsid">(MODS)</span></h3></th></tr>
   <xsl:apply-templates/>
   </table>
   <!--hr/-->
