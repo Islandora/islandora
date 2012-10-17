@@ -123,10 +123,11 @@ function fedora_repository_ingest_object($collection_pid=NULL, $collection_label
  */
 function fedora_repository_ingest_form_submit(array $form, array &$form_state) {
   // Only validate the form if the submit button was pressed (other buttons may be used for AHAH.
-  if ($form_state['ahah_submission']) {
+  if (array_key_exists('ahah_submission', $form_state) && $form_state['ahah_submission']) {
     $form_state['submitted'] = FALSE;
     return;
   }
+
 
   if ($form_state['storage']['xml'] && module_exists('islandora_content_model_forms')) {
     module_load_include('inc', 'islandora_content_model_forms', 'IngestObjectMetadataForm');
@@ -183,11 +184,12 @@ function fedora_repository_ingest_form_submit(array $form, array &$form_state) {
  */
 function fedora_repository_ingest_form_validate($form, &$form_state) {
   // Only validate the form if the submit button was pressed (other buttons may be used for AHAH.
-  if ($form_state['ahah_submission']) {
+  $is_ahah_submission = (array_key_exists('ahah_submission', $form_state) && $form_state['ahah_submission']);
+  if ($is_ahah_submission) {
     $form_state['submitted'] = FALSE;
     return;
   }
-  if (strpos($form_state['clicked_button']['#id'], 'edit-submit') === 0 && $form_state['ahah_submission'] != 1) {
+  if (strpos($form_state['clicked_button']['#id'], 'edit-submit') === 0 && !$is_ahah_submission) {
     switch ($form_state['storage']['step']) {
       case 1:
         $form_state['storage']['step']++;
