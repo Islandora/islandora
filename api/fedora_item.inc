@@ -281,8 +281,8 @@ class Fedora_Item {
    *
    * @param string $relationship
    *   The predicate/relationship tag to add
-   * @param string $object
-   *   The object to be related to.
+   * @param string|array $object
+   *   The object(s) to be related to.
    * @param string $namespaceURI
    *   The predicate namespace.
    * @param int $literal_value
@@ -318,10 +318,6 @@ RDF;
 
     $relsext = $this->get_datastream_dissemination('RELS-EXT');
 
-    if ($literal_value == RELS_TYPE_URI && strpos($object, $f_prefix) !== 0) {
-      $object = $f_prefix . $object;
-    }
-
     $relsextxml->loadXML($relsext);
     $description = $relsextxml->getElementsByTagNameNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'Description');
     if ($description->length == 0) {
@@ -333,18 +329,26 @@ RDF;
     }
     $description = $description->item(0);
 
-    // Create the new relationship node.
-    $newrel = $relsextxml->createElementNS($namespaceURI, $relationship);
+    // Casting a string to an array gives an array containing the string, and
+    //   casting an array to an array does nothing.
+    foreach ((array)$object as $obj) {
+      if ($literal_value == RELS_TYPE_URI && strpos($obj, $f_prefix) !== 0) {
+        $obj = $f_prefix . $obj;
+      }
 
-    $this->buildRelsStatement($newrel, $object, $literal_value);
+      // Create the new relationship node.
+      $newrel = $relsextxml->createElementNS($namespaceURI, $relationship);
 
-    $description->appendChild($newrel);
+      $this->buildRelsStatement($newrel, $obj, $literal_value);
+
+      $description->appendChild($newrel);
+    }
 
     return $this->modify_datastream($relsextxml->saveXML(), 'RELS-EXT', "Fedora Object-to-Object Relationship Metadata", 'application/rdf+xml');
   }
 
   /**
-   * Extension of add_relationship, which acts on RELS-INT.
+   * Extension of add_relationship(), which acts on RELS-INT.
    *
    * @param $dsid
    *   A string containing either the base dsid (EXAMPLE)
@@ -367,9 +371,6 @@ RDF;
 
     $rels_text = $this->get_datastream_dissemination('RELS-INT');
 
-    if ($literal_value == RELS_TYPE_URI && strpos($object, $f_prefix) !== 0) {
-      $object = $f_prefix . $object;
-    }
     if (strpos($dsid, $f_prefix) !== 0) {
       $dsid = $f_prefix . $this->pid . '/' . $dsid;
     }
@@ -391,12 +392,18 @@ RDF;
       $relsxml->documentElement->appendChild($description);
     }
 
-    // Create the new relationship node.
-    $newrel = $relsxml->createElementNS($namespaceURI, $relationship);
+    foreach ((array)$object as $obj) {
+      if ($literal_value == RELS_TYPE_URI && strpos($obj, $f_prefix) !== 0) {
+        $obj = $f_prefix . $object;
+      }
 
-    $this->buildRelsStatement($newrel, $object, $literal_value);
+      // Create the new relationship node.
+      $newrel = $relsxml->createElementNS($namespaceURI, $relationship);
 
-    $description->appendChild($newrel);
+      $this->buildRelsStatement($newrel, $obj, $literal_value);
+
+      $description->appendChild($newrel);
+    }
 
     return $this->modify_datastream($relsxml->saveXML(), 'RELS-INT', "Fedora Datastream Relationship Metadata", 'application/rdf+xml');
   }
