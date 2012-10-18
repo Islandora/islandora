@@ -133,27 +133,12 @@ class formClass {
       'access arguments' => array('add fedora datastreams', 3)
     );
 
-    //new for mnpl******************************************
-    $items['fedora/repository/mnpl_advanced_search'] = array(
-      'title' => t('Repository advanced search'),
-      'page callback' => 'fedora_repository_mnpl_advanced_search',
-      'type' => MENU_CALLBACK,
-      'access arguments' => array('view fedora collection')
-    );
-
     $items['fedora/ingestObject'] = array(
       'title' => t('Ingest object'),
       'page callback' => 'fedora_repository_ingest_object',
       'type' => MENU_CALLBACK,
       'access callback' => 'fedora_repository_check_perm',
       'access arguments' => array('add fedora datastreams', 2)
-    );
-
-    $items['fedora/repository/list_terms'] = array(
-      'title' => t('List terms'),
-      'page callback' => 'fedora_repository_list_terms',
-      'type' => MENU_CALLBACK,
-      'access arguments' => array('view fedora collection')
     );
 
     $items['admin/settings/fedora_repository/object_details_xslt'] = array(
