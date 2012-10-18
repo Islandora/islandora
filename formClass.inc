@@ -156,33 +156,6 @@ class formClass {
       'access arguments' => array('view fedora collection')
     );
 
-    /* Export functionality */
-    $items['fedora/basket'] = array(
-      'title' => t('Fedora Basket'),
-      'description' => t('View and download objects added to your basket'),
-      'page callback' => 'fedora_repository_basket',
-      'access arguments' => array('view fedora collection'),
-      'type' => MENU_CALLBACK,
-    );
-
-    $items['fedora/repository/addToBasket'] = array(
-      'page callback' => 'fedora_repository_add_to_basket',
-      'type' => MENU_CALLBACK,
-      'access arguments' => array('view fedora collection'),
-    );
-
-    $items['fedora/repository/removeFromBasket'] = array(
-      'page callback' => 'fedora_repository_remove_from_basket',
-      'type' => MENU_CALLBACK,
-      'access arguments' => array('view fedora collection'),
-    );
-
-    $items['fedora/repository/add_search_results_to_basket'] = array(
-      'page callback' => 'fedora_repository_add_search_results_to_basket',
-      'type' => MENU_CALLBACK,
-      'access arguments' => array('view fedora collection'),
-    );
-
     $items['admin/settings/fedora_repository/object_details_xslt'] = array(
       'title' => "",
       'type' => MENU_CALLBACK,
