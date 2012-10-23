@@ -65,7 +65,7 @@ function hook_islandora_edit_object($islandora_object) {}
  * @param type $islandora_object
  *   a tugue FedoraObject
  */
-function islandora_islandora_edit_object_alter($islandora_object) {}
+function hook_islandora_edit_object_alter($islandora_object) {}
 
 
 /**
@@ -123,4 +123,3 @@ function hook_islandora_display_alter($arr) {}
  * @param string $collection_pid
  */
 function hook_islandora_ingest_pre_ingest($islandora_object, $content_models, $collection_pid) {}
-
