@@ -120,7 +120,7 @@ function fedora_repository_ingest_object($collection_pid, $collection_label = NU
  * @param array $form_state
  */
 function fedora_repository_ingest_form_submit(array $form, array &$form_state) {
-  // Only validate the form if the submit button was pressed (other buttons may be used for AHAH.
+  // Only validate if the submit button was pressed, AHAH may use other buttons.
   if (array_key_exists('ahah_submission', $form_state) && $form_state['ahah_submission']) {
     $form_state['submitted'] = FALSE;
     return;
@@ -181,7 +181,7 @@ function fedora_repository_ingest_form_submit(array $form, array &$form_state) {
  * @return type
  */
 function fedora_repository_ingest_form_validate($form, &$form_state) {
-  // Only validate the form if the submit button was pressed (other buttons may be used for AHAH.
+  // Only validate if the submit button was pressed, AHAH may use other buttons.
   $is_ahah_submission = (array_key_exists('ahah_submission', $form_state) && $form_state['ahah_submission']);
   if ($is_ahah_submission) {
     $form_state['submitted'] = FALSE;
@@ -205,18 +205,18 @@ function fedora_repository_ingest_form_validate($form, &$form_state) {
         $validators = array();
 
         $ifl = 'ingest-file-location';
-        $fileObject = NULL;
+        $file_object = NULL;
         // Check if it's already there; this is what upload_element provides.
         if (is_a($form_state['values'][$ifl], 'stdClass') && property_exists($form_state['values'][$ifl], '')) {
-          $fileObject = $form_state['values'][$ifl];
+          $file_object = $form_state['values'][$ifl];
         }
         elseif (!empty($_FILES['files']['name'][$ifl])) {
-          $fileObject = file_save_upload($ifl, $validators);
+          $file_object = file_save_upload($ifl, $validators);
         }
 
-        if ($fileObject !== NULL && property_exists($fileObject, 'filepath')) {
-          file_move($fileObject->filepath, 0, 'FILE_EXISTS_RENAME');
-          $form_state['values'][$ifl] = $fileObject->filepath;
+        if ($file_object !== NULL && property_exists($file_object, 'filepath')) {
+          file_move($file_object->filepath, 0, 'FILE_EXISTS_RENAME');
+          $form_state['values'][$ifl] = $file_object->filepath;
         }
 
         if (isset($form_state['values'][$ifl]) && file_exists($form_state['values'][$ifl])) {
@@ -237,7 +237,7 @@ function fedora_repository_ingest_form_validate($form, &$form_state) {
             if (!empty($file)) {
               if (!in_array($dformat, $allowedMimeTypes)) {
                 form_set_error($ifl,
-                    t('The uploaded file\'s mimetype (@mime) is not associated with this Content Model. The allowed types are: @allowed', array(
+                    t("The uploaded file's mimetype (@mime) is not associated with this Content Model. The allowed types are: @allowed", array(
                       '@mime' => $dformat,
                       '@allowed' => implode(', ', $allowedMimeTypes),
                     )));
@@ -271,7 +271,8 @@ function fedora_repository_ingest_form_validate($form, &$form_state) {
  */
 function fedora_repository_ingest_form(&$form_state, $collection_pid, $collection_label = NULL, $content_model = NULL) {
   module_load_include('inc', 'fedora_repository', 'formClass');
-  // For the sake of easily maintaining the module in different core versions create our own form_values variable.
+  // For the sake of easily maintaining the module in different core versions
+  // create our own form_values variable.
   if (empty($form_state['storage']['step'])) {
     $form_state['storage']['step'] = 1;
   }
@@ -378,7 +379,8 @@ function add_stream_form_submit($form, &$form_state) {
 
   $pid = $form_state['values']['pid'];
   $dsid = $form_state['values']['stream_id'];
-  $dsLabel = $form_state['values']['stream_label'] . substr($form_state['storage']['stream_url'], strrpos($form_state['storage']['stream_url'], '.')); // Add the file extention to the end of the label.;
+  // Add the file extention to the end of the label.
+  $dsLabel = $form_state['values']['stream_label'] . substr($form_state['storage']['stream_url'], strrpos($form_state['storage']['stream_url'], '.'));
 
   try {
     $item = new Fedora_Item($pid);
@@ -394,7 +396,8 @@ function add_stream_form_submit($form, &$form_state) {
     drupal_set_message(t('@message', array('@message' => check_plain($e->getMessage()))), 'error');
     return;
   }
-  unset($form_state['storage']); //Using storage; need to unset it for forms to work properly...
+  // Using storage; need to unset it for forms to work properly...
+  unset($form_state['storage']);
   $form_state['rebuild'] = TRUE;
 }
 
@@ -873,12 +876,14 @@ function fedora_repository_edit_qdc_form_validate($form, &$form_state) {
 }
 
 /**
- * Check if there is a custom edit metadata function defined in the content model. If so,
- * call it, if not do the submit action for the standard QDC metadata.  Custom forms will
- * need to implement their own equivalent to the FormClass->updateMetaData function
+ * Check if there is a custom edit metadata function defined in the
+ * content model. If so, call it, if not do the submit action for the
+ * standard QDC metadata.  Custom forms willneed to implement their own
+ * equivalent to the FormClass->updateMetaData function
  *
  * @param array $form
  * @param array $form_state
+ *
  * @return
  */
 function fedora_repository_edit_qdc_form_submit($form, &$form_state) {
@@ -972,7 +977,7 @@ function makeObject($pid, $dsID) {
 }
 
 /**
- * Implementation of hook_islandora_tabs().
+ * Implements hook_islandora_tabs().
  *
  * @param $content_models array
  *   An array of ContentModel objects to which the current Fedora Object
@@ -991,8 +996,8 @@ function fedora_repository_islandora_tabs($content_models, $pid, $page_number) {
   foreach ($content_models as $content_model) {
     $content_model_fieldset = $content_model->displayExtraFieldset($pid, $page_number);
 
-    // Each content model may return either a tabpage array or plain HTML. If
-    //  it is HTML, stick it in a tabpage.
+    // Each content model may return either a tabpage array or plain HTML.
+    // If it is HTML, stick it in a tabpage.
     if (is_array($content_model_fieldset)) {
       $cmodels_tabs = array_merge($cmodels_tabs, $content_model_fieldset);
     }
@@ -1005,7 +1010,7 @@ function fedora_repository_islandora_tabs($content_models, $pid, $page_number) {
     }
   }
 
-  //can disable showing the object details tab in admin UI
+  // Can disable showing the object details tab in admin UI.
   if (variable_get('fedora_repository_show_object_details_tab', TRUE)) {
     // Add a 'manage object' tab for all objects, where detailed list of content is shown.
     // XXX:  Perhaps this should be extracted into its own object?
@@ -1020,7 +1025,7 @@ function fedora_repository_islandora_tabs($content_models, $pid, $page_number) {
 }
 
 /**
- * Implementation of hook_islandora_tabs_alter().
+ * Implements hook_islandora_tabs_alter().
  *
  * @param &$tabs array
  *   The array of tabs/tabset to alter.
@@ -1030,8 +1035,8 @@ function fedora_repository_islandora_tabs($content_models, $pid, $page_number) {
  * @see fedora_repository_get_items()
  */
 function fedora_repository_islandora_tabs_alter(&$tabs, $params) {
-  //Deselect all other tabs if the fedora_object_details tab is supposed
-  //  to be selected.
+  // Deselect all other tabs if the fedora_object_details tab is supposed
+  // to be selected.
   $object_details_key = 'fedora_object_details';
   if ($tabs[$object_details_key]['#selected']) {
     foreach (element_children($tabs) as $key) {
@@ -1049,18 +1054,21 @@ function fedora_repository_islandora_tabs_alter(&$tabs, $params) {
  * datastream via the makeObject() function; otherwise, call out to the PIDs'
  * ContentModels and all Drupal modules for Islandora tabs.
  *
- * @global $user stdObject
- * @param $pid string
- *   An optional string containing the PID of an object.  (defaults to islandora:root)
- * @param $dsId string
+ * @global stdObject $user
+ *
+ * @param string $pid
+ *   An optional string containing the PID of an object.
+ *   (defaults to islandora:root)
+ * @param string $dsId
  *   An optional string containing the dsid of an object. ("-" will be ignored
  *   to allow later parameters without including one).
- * @param $collection string
+ * @param string $collection
  *   The collection name...  Deprecated.
- * @param $page_number string/integer(?)
+ * @param string/integer(?) $page_number
  *   A page number to start on...  Seems to be going towards deprecation?
- * @param $limit string/integer(?)
+ * @param string/integer(?) $limit
  *   Used to limit the number of results returned?  Deprecated?
+ *
  * @return string
  *   A string containing markup for the rendered tabs.
  */
@@ -1118,8 +1126,10 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
     exit;
     return ' ';
   }
-  if ($dsId != NULL && $dsId != '-') { //if we have a dsID return the stream otherwise query for a collection of objects
-//probably should check pid as well here.
+  // If we have a dsID return the stream
+  // otherwise query for a collection of objects.
+  if ($dsId != NULL && $dsId != '-') {
+    // Probably should check pid as well here.
     return makeObject($pid, $dsId);
   }
 
@@ -1198,8 +1208,8 @@ function fedora_object_as_attachment($pid, $dsId, $label=NULL, $version=NULL) {
  * @return type
  */
 function repository_page($pid = NULL, $dsId = NULL, $collection = NULL, $pageNumber = NULL) {
-//do security check at fedora_repository_get_items function as it has to be called there in case
-//someone trys to come in a back door.
+  // Do security check at fedora_repository_get_items function as
+  // it has to be called there in case someone trys to come in a back door.
   return fedora_repository_get_items($pid, $dsId, $collection, $pageNumber);
 }
 
@@ -1220,7 +1230,6 @@ function repository_service($pid = NULL, $servicePid = NULL, $serviceMethod = NU
   global $user;
 
   if (!fedora_repository_check_perm(OBJECTHELPER::$OBJECT_HELPER_VIEW_FEDORA, $pid, $user)) {
-//drupal_set_message(t("You do not have access to Fedora objects within the attempted namespace or access to Fedora denied"), 'error');
     drupal_access_denied();
     if (user_access('access administration pages')) {
       drupal_set_message(t("PIDs may be added to allowed namespaces, or all namespace restrictions removed @here", array('@here' => l('here', 'admin/settings/fedora_repository'))), 'error');
@@ -1247,14 +1256,16 @@ function repository_service($pid = NULL, $servicePid = NULL, $serviceMethod = NU
 }
 
 /**
- * fedora repository theme
- * @return type
+ * Implements hook_theme().
+ *
+ * @return array
+ *   The themes for the fedora_repository module.
  */
 function fedora_repository_theme() {
   return array(
     'fedora_repository_time' => array(
       'arguments' => array(
-        'element' => NULL
+        'element' => NULL,
       ),
       'fedora_repository_solution_packs_list' => array(
         'arguments' => array(
@@ -1269,7 +1280,12 @@ function fedora_repository_theme() {
  * fedora repository required fedora objects
  *
  * @return array
- *  array( 'path-to-foxml-file', 'pid', 'dsid', 'path-to-datastream-file', int dsversion, boolean required)
+ *   array( 'path-to-foxml-file',
+ *   'pid',
+ *   'dsid',
+ *   'path-to-datastream-file',
+ *   int dsversion,
+ *   boolean required)
  */
 function fedora_repository_required_fedora_objects() {
 
@@ -1322,12 +1338,14 @@ function fedora_repository_elements() {
 
 /**
  * fedora repository expand time
+ *
  * @param type $element
+ *
  * @return string
  */
 function fedora_repository_expand_time($element) {
-// Default to current time, check default_value but set value so that if
-// default value is present it will override value
+  // Default to current time, check default_value but set value so that if
+  // default value is present it will override value.
   if (empty($element['#default_value'])) {
     $element['#value'] = array(
       'hour' => intval(format_date(time(), 'custom', 'h')),
@@ -1365,7 +1383,9 @@ function fedora_repository_expand_time($element) {
 
 /**
  * fedora repository time
+ *
  * @param type $element
+ *
  * @return type
  */
 function fedora_repository_time($element) {
@@ -1375,7 +1395,9 @@ function fedora_repository_time($element) {
 
 /**
  * theme fedora repository time
+ *
  * @param type $element
+ *
  * @return type
  */
 function theme_fedora_repository_time($element) {
@@ -1544,7 +1566,7 @@ function theme_fedora_repository_solution_packs_list($solution_packs) {
 }
 
 /**
- * Implements hook_forms()
+ * Implements hook_forms().
  *
  * @param string $form_id
  *
