@@ -814,9 +814,11 @@ function fedora_repository_edit_qdc_page($pid = NULL, $dsId = NULL) {
 /**
  * fedora repository edit qdc form
  * @global type $user
+ *
  * @param type $form_state
  * @param type $pid
  * @param type $dsId
+ *
  * @return type
  */
 function fedora_repository_edit_qdc_form(&$form_state, $pid, $dsId = NULL) {
@@ -836,24 +838,25 @@ function fedora_repository_edit_qdc_form(&$form_state, $pid, $dsId = NULL) {
   $soapHelper = new ConnectionHelper();
   $client = $soapHelper->getSoapClient(variable_get('fedora_soap_url', 'http://localhost:8080/fedora/services/access?wsdl'));
 
-// Check if there is a custom edit metadata function defined in the content model.
+  // Check if there's a custom edit metadata function in the content model.
   $output = '';
   if (($cm = ContentModel::loadFromObject($pid)) !== FALSE) {
     $output = $cm->buildEditMetadataForm($pid, $dsId);
   }
 
   if (empty($output)) {
-// There is no custom function, so just load the standard QDC form.
+    // There is no custom function, so just load the standard QDC form.
     $metaDataForm = new formClass();
-//currently we only edit the dc metadata.  If you defined a custom form with a custom handler you are sol for now.
+    // Currently we only edit the dc metadata.
+    // If you defined a custom form with a custom handler you are sol for now.
     $output = $metaDataForm->createMetaDataForm($pid, $dsId, $client, $form_state);
   }
-
   return $output;
 }
 
 /**
  * fedora repository edit qdc form validate
+ *
  * @param type $form
  * @param boolean $form_state
  */
@@ -1128,7 +1131,7 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
 
   $content_models = $objectHelper->get_content_models_list($pid);
 
-  //Get the tabs from all modules...
+  // Get the tabs from all modules...
   $hook_tabs = module_invoke_all('islandora_tabs', $content_models, $pid, $page_number);
 
   $cmodels_tabs = array(
@@ -1136,14 +1139,14 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
   );
   $cmodels_tabs += $hook_tabs;
 
-  //Assemble parameters, to pass during alter
+  // Assemble parameters, to pass during alter.
   $params = array(
     'content_models' => $content_models,
     'pid' => $pid,
     'page' => $page_number,
   );
 
-  //Allow returned tabs to be altered, before return.
+  // Allow returned tabs to be altered, before return.
   drupal_alter('islandora_tabs', $cmodels_tabs, $params);
 
   return tabs_render($cmodels_tabs);
@@ -1637,7 +1640,7 @@ function fedora_repository_render_image($pid, $dsid, $imagecache_preset = 'fedor
 /**
  * Convenience function used in XSLT callback...
  *
- * @param $string string
+ * @param string $string
  *   A string containing some markup to convert to a domnode.
  */
 function fedora_repository_string_to_domnode($string) {
@@ -1662,6 +1665,7 @@ function fedora_repository_access() {
  *
  * @global $user
  * @see hook_fedora_repository_check_perm()
+ *
  * @param string $op
  *   The operation to be performed.
  * @param string|null $pid
@@ -1674,15 +1678,15 @@ function fedora_repository_access() {
  * @return boolean
  *   A boolean indicating if the operation should be permitted (TRUE) or denied
  *   (FALSE).
- */ 
+ */
 function fedora_repository_check_perm($op, $pid = NULL, $as_user = NULL, $reset_cache = FALSE) {
   static $cache = array();
 
   if ($reset_cache) {
     $cache = array();
   }
-
-  if ($pid === NULL) {
+  // The PID can be empty for the root object.
+  if (empty($pid)) {
     $pid = variable_get('fedora_repository_pid', 'islandora:root');
   }
   if ($as_user === NULL) {
@@ -1693,7 +1697,6 @@ function fedora_repository_check_perm($op, $pid = NULL, $as_user = NULL, $reset_
   // Populate the cache on a miss.
   if (!isset($cache[$op][$pid][$as_user->uid])) {
     $results = module_invoke_all('fedora_repository_check_perm', $op, $pid, $as_user);
-
     // Nothing returned FALSE, and something returned TRUE.
     $cache[$op][$pid][$as_user->uid] = (!in_array(FALSE, $results, TRUE) && in_array(TRUE, $results, TRUE));
   }
@@ -1710,13 +1713,13 @@ function fedora_repository_check_perm($op, $pid = NULL, $as_user = NULL, $reset_
 function fedora_repository_fedora_repository_check_perm($op, $pid, $user) {
   $to_return = TRUE;
   if (variable_get('fedora_namespace_restriction_enforced', TRUE)) {
-    //Get the namespace (with colon)
+    // Get the namespace (with colon)
     $pid_namespace = substr($pid, 0, strpos($pid, ':') + 1);
     $allowed_namespaces = explode(" ", variable_get('fedora_pids_allowed', 'default: demo: changeme: islandora: ilives: islandora-book: books: newspapers: '));
 
     $to_return = in_array($pid_namespace, $allowed_namespaces);
   }
-  
+
   if ($to_return && user_access($op, $user)) {
     // Straight Drupal permissions, let's allow it.
     return TRUE;
@@ -1730,4 +1733,3 @@ function fedora_repository_fedora_repository_check_perm($op, $pid, $user) {
     return NULL;
   }
 }
-
