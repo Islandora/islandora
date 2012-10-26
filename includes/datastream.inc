@@ -121,7 +121,7 @@ function islandora_get_unused_dsids($object) {
     }
   }
   foreach ($defined_dsids as $key => $value) {
-    if (isset($fedora_object[$key])) {
+    if (isset($object[$key])) {
       unset($defined_dsids[$key]); //ds exists in the object so don't show in the dropdown
     }
   }
@@ -324,6 +324,9 @@ function islandora_add_datastream_form_validate($form, &$form_state) {
  *  a form ready to be rendered with a call to Drupal render
  */
 function islandora_add_datastream_form($form, &$form_state, $object) {
+  // Ensure we're loaded, in case AJAX stuff is ever added.
+  form_load_include($form_state, 'inc', 'islandora', 'includes/datastream');
+
   $unused_dsids = islandora_get_unused_dsids($object); //$defined_dsids;
   $form = array();
   $form['add_fieldset'] = array(
@@ -376,7 +379,7 @@ function islandora_add_datastream_form($form, &$form_state, $object) {
   $form['add_fieldset']['stream_id'] = array(
     '#title' => 'Datastream ID',
     '#required' => 'TRUE',
-    '#description' => t('An ID for this stream that is unique to this object. Must start with a letter and contain only alphanumeric characters and dashes and underscores. Datastreams that are defined by the content model dont currently exist: <b>' . $dsids_for_form . '</b>.'),
+    '#description' => t('An ID for this stream that is unique to this object. Must start with a letter and contain only alphanumeric characters and dashes and underscores. Datastreams that are defined by the content model don\'t currently exist: <b>' . $dsids_for_form . '</b>.'),
     '#type' => 'textfield',
     '#weight' => -1,
     '#autocomplete_path' => "islandora/object/$object->id/manage/datastreams/add/autocomplete",
