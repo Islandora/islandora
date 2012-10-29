@@ -33,7 +33,7 @@
  * Builds the tab for the solution packs.
  */
 function fedora_repository_solution_packs_page() {
-  $enabled_solution_packs = module_invoke_all('required_fedora_objects');
+  $enabled_solution_packs = module_invoke_all('fedora_repository_required_fedora_objects');
   $output = '';
   foreach ($enabled_solution_packs as $solution_pack_module => $solution_pack_info) {
     $objects = array();
