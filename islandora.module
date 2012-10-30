@@ -328,7 +328,7 @@ function islandora_islandora_edit_object($fedora_object) {
     }
   }
   $output = theme('islandora_default_edit', array('islandora_object' => $fedora_object));
-  return array('Default Edit output' => $output);
+  return array('Default edit output' => $output);
 }
 
 function islandora_view_default_object() {
@@ -352,8 +352,9 @@ function islandora_view_object($fedora_object = NULL) {
     return drupal_not_found();
   }
 
+  // set breadcrumbs
   drupal_set_breadcrumb(islandora_get_breadcrumbs($fedora_object));
-
+  // optional pager parameters
   $page_number = (empty($_GET['page'])) ? '1' : $_GET['page'];
   $page_size = (empty($_GET['pagesize'])) ? '10' : $_GET['pagesize'];
 
@@ -361,7 +362,7 @@ function islandora_view_object($fedora_object = NULL) {
   $arr = module_invoke_all('islandora_view_object', $fedora_object, $user, $page_number, $page_size); //allow submodules to decide how to handle content base on object type
   if (empty($arr)) {
     //TODO: make sure we iterate over the array as they will be more then one cmodel per object
-    drupal_set_message(t('there was an error loading the view for islandora object %s', array('%s' => $object_id)), 'error');
+    drupal_set_message(t('there was an error loading the view for Islandora object "%s"', array('%s' => $fedora_object->label)), 'error');
     return "";
   }
   arsort($arr);
@@ -384,12 +385,12 @@ function islandora_islandora_view_object($object) {
   $supported_models = islandora_get_types();
   $output = "";
   foreach ($object->models as $model) {
-    if (isset($supported_models[$model][ISLANDORA_VIEW_HOOK]) && (boolean) $supported_models[$model][ISLANDORA_VIEW_HOOK] === TRUE) {//another module is handling the view
+    if (isset($supported_models[$model][ISLANDORA_VIEW_HOOK]) && (boolean) $supported_models[$model][ISLANDORA_VIEW_HOOK] === TRUE) { //another module is handling the view
       return;
     }
   }
   $output = theme('islandora_default', array('islandora_object' => $object));
-  return array('Default Output' => $output);
+  return array('Default output' => $output);
 }
 
 /**
