@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * @file
  * Generic test case to be extended to implement Islandora testing.
@@ -90,20 +91,26 @@ abstract class IslandoraTestCase extends DrupalWebTestCase {
     $modules = module_rebuild_cache();
 
     // Grab the module to test's dependencies
-    $dependencies = $modules[$this->getModuleShortFormName()]->info['dependencies'];
+    $dependencies = $modules[$this->getModuleName()]->info['dependencies'];
 
     // Sort them so they're in the correct order to enable
     $dependencies = array_reverse($dependencies);
 
     // Add our module to the end
-    $dependencies[] = $this->getModuleShortFormName();
+    $dependencies[] = $this->getModuleName();
     
     // Enable the module's dependencies in order
     call_user_func_array('parent::setUp', $dependencies);
 
     // Authenticate the privileged user
     $this->createPrivilegedUser();
-  } 
+  }
+
+  public function invoke($hook_name) {
+    $args = func_get_args();
+    array_unshift($args, $this->getModuleName());
+    return call_user_func_array('module_invoke', $args);
+  }
 }
 
 /**
@@ -137,18 +144,18 @@ abstract class SolutionPackTestCase extends IslandoraTestCase {
   public function testFedoraRepositoryRequiredFedoraObjects() {
     
     // Invoke the hook
-    $results = module_invoke($this->getModuleShortFormName(), 'fedora_repository_required_fedora_objects');
+    $results = $this->invoke('fedora_repository_required_fedora_objects');
 
     // Validate the schema of the returned data structure
     $this->assertNotNull($results, 'A non-null result was returned from the fedora_repository_required_fedora_objects hook.');
     $this->assertTrue(is_array($results), 'An array was returned from the fedora_repository_required_fedora_objects hook.');
-    $this->assertTrue(array_key_exists($this->getModuleShortFormName(), $results), "Returned array has top level key that is equal to the module's short form name");
-    $this->assertTrue(is_array($results[$this->getModuleShortFormName()]), "Value associated with top level key that is equal to the module's short form name is an array");
-    $this->assertTrue(array_key_exists('module', $results[$this->getModuleShortFormName()]), "Top level array has 'module' key");
-    $this->assertEqual($results[$this->getModuleShortFormName()]['module'], $this->getModuleShortFormName(), "Value associated with 'module' key is equal to the module's short form name");
-    $this->assertTrue(array_key_exists('title', $results[$this->getModuleShortFormName()]), "Top level array has 'title' key");
-    $this->assertTrue($results[$this->getModuleShortFormName()]['title'], "Title string is not empty");
-    $this->assertTrue(array_key_exists('objects', $results[$this->getModuleShortFormName()]), "Returned array has second level key equal to 'object'");
-    $this->assertTrue(is_array($results[$this->getModuleShortFormName()]['objects']), "Value associated with second level 'object' key is an array");
+    $this->assertTrue(array_key_exists($this->getModuleName(), $results), "Returned array has top level key that is equal to the module's short form name");
+    $this->assertTrue(is_array($results[$this->getModuleName()]), "Value associated with top level key that is equal to the module's short form name is an array");
+    $this->assertTrue(array_key_exists('module', $results[$this->getModuleName()]), "Top level array has 'module' key");
+    $this->assertEqual($results[$this->getModuleName()]['module'], $this->getModuleName(), "Value associated with 'module' key is equal to the module's short form name");
+    $this->assertTrue(array_key_exists('title', $results[$this->getModuleName()]), "Top level array has 'title' key");
+    $this->assertTrue($results[$this->getModuleName()]['title'], "Title string is not empty");
+    $this->assertTrue(array_key_exists('objects', $results[$this->getModuleName()]), "Returned array has second level key equal to 'object'");
+    $this->assertTrue(is_array($results[$this->getModuleName()]['objects']), "Value associated with second level 'object' key is an array");
   }
 }
