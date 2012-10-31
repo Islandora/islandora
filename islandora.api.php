@@ -6,120 +6,192 @@
  */
 
 /**
- * remove a datastream from a repository object
- * @param object $fedora_object
- *  tuque FedoraObject
- * @param string $datastream_id
- */
-function hook_islandora_purge_datastream($fedora_object, $datastream_id) {}
-
-/**
+ * Generate a repository objects view.
  *
- * @param type $object
- *   tuque FedoraObject
- */
-function hook_islandora_purge_object($islandora_object) {}
-
-/**
- * allows modules to add to a repository objects display.  If you implement this
- * hook you should also register your module for view with the get types hook.
- *
- * islandora gets all displays back in an array and iterates over them.  the order
- * they are displayed is based on the order of the key of the array that each
- * module returns.
- *
- * your module may also want to register a varible that says whether or not it
- * should be part of the default display. Modules can also add secondary tabs as
- * a way to add there output to an islandora display.  the basic image module has
- * samples of both (the secondary tabs examples are commented out)
- *
- * @param type $islandora_object
- *   tuque FedoraObject
- */
-function hook_islandora_view_object($islandora_object) {}
-
-/**
- * returns an array listing object types provided by sub modules
- *  Ex.  array($types['islandora:collectionCModel'][ISLANDORA_VIEW_HOOK] = variable_get('islandora_basic_collection_use_for_default_tab', TRUE);
- * $types['islandora:collectionCModel'][ISLANDORA_EDIT_HOOK] = FALSE;
+ * @param FedoraObject $fedora_object
+ *   A Tuque FedoraObject being operated on.
+ * @param object $user
+ *   The user accessing the object.
+ * @param string $page_number
+ *   The page in the content.
+ * @param string $page_size: The size of the page.
  *
  * @return array
+ *   An array whose values are markup.
  */
-function hook_islandora_get_types() {}
+function hook_islandora_view_object($fedora_object, $user, $page_number, $page_size) {}
 
 /**
- * allows modules to define an object edit page by cmodel
+ * Generate an object's display for the given content model.
  *
- * your module should return true for ISLANDORA_EDIT_HOOK in its get_types function
+ * Content models PIDs have colons and hyphens changed to underscores, to
+ * create the hook name.
  *
- * islandora provides a default implementation that should work for most use cases
- * @param string $islandora_object
- * @return string
+ * @param type $fedora_object
+ *   A Tuque FedoraObject
  *
+ * @return array
+ *   An array whose values are markup.
  */
-function hook_islandora_edit_object($islandora_object) {}
-
-/**
- * allows modules to alter the fedora object before it is pass through the edit
- * hooks
- * @param type $islandora_object
- *   a tugue FedoraObject
- */
-function hook_islandora_edit_object_alter($islandora_object) {}
+function hook_CMODEL_PID_islandora_view_object($fedora_object) {}
 
 
 /**
- * creates and populates a php Fedora object.
+ * Alter display output after it has been generated.
+ *
+ * @param FedoraObject $fedora_object
+ *   A Tuque FedoraObject being operated on.
+ * @param array $arr
+ *   An arr of rendered views.
  */
-function hook_islandora_preingest_alter() {}
+function hook_islandora_view_object_alter(&$fedora_object, &$arr) {}
 
 /**
- * modules can implement this hook to add or remove datastreams after an
- * object has been ingested.
+ * Generate an object's management display.
  *
- * Each module should check for the newly ingested repository objects content
- * model to make sure it is a type of object they want to act on.
+ * @param type $fedora_object
+ *   A Tuque FedoraObject
  *
- * @param type $islandora_object
- *   tugue FeodoraObject
+ * @return array
+ *   An array whose values are markup.
  */
-function hook_islandora_postingest($islandora_object) {}
+function hook_islandora_edit_object($fedora_object) {}
 
 /**
- * Register potential ingest routes. Implementations should return an array containing possible routes.
- * Ex. array(
- *       array('name' => t('Ingest Route Name'), 'url' => 'ingest_route/url', 'weight' => 0),
- *     );
+ * Generate an object's management display for the given content model.
+ *
+ * Content models PIDs have colons and hyphens changed to underscores, to
+ * create the hook name.
+ *
+ * @param type $fedora_object
+ *   A Tuque FedoraObject
+ *
+ * @return array
+ *   An array whose values are markup.
  */
-function hook_islandora_ingest_registry($collection_object) {}
+function hook_CMODEL_PID_islandora_edit_object($fedora_object) {}
+
+/**
+ * Allow management display output to be altered.
+ *
+ * @param type $fedora_object
+ *   A Tuque FedoraObject
+ * @param type $arr
+ *   an arr of rendered views
+ */
+function hook_islandora_edit_object_alter(&$fedora_object, &$arr) {}
+
+/**
+ * Allows modules to add to an objects ingest process.
+ *
+ * @param FedoraObject $fedora_object
+ *   A Tuque FedoraObject.
+ */
+function hook_islandora_ingest_post_ingest($fedora_object) {}
+
+/**
+ * Allow modules to add to the ingest process of a specific content model.
+ */
+function hook_CMODEL_PID_islandora_ingest_post_ingest($fedora_object) {}
+
+/**
+ * Allows modules to add to a repository objects view/edit(/misc) process.
+ *
+ * If you implement this hook you must also register your module with
+ * hook_islandora_hook_info().
+ *
+ * @param FedoraObject $fedora_object
+ *   A Tuque FedoraObject.
+ *
+ * @return array|null
+ *   An associative array with 'deleted' mapped to TRUE--indicating that the
+ *   object should just be marked as deleted, instead of actually being
+ *   purged--or NULL/no return if we just need to do something before the
+ *   is purged.
+ */
+function hook_islandora_pre_purge_object($fedora_object) {}
+
+/**
+ * Allow modules to react to the purge process of a specific content model.
+ *
+ * @see hook_islandora_pre_purge_object()
+ */
+function hook_CMODEL_PID_islandora_pre_purge_object($fedora_object) {}
+
+/**
+ * Register potential ingest routes.
+ *
+ * Implementations should return an array containing possible routes.
+ */
+function hook_islandora_ingest_registry($collection_object) {
+  $reg = array(
+    array(
+      'name' => t('Ingest Route Name'),
+      'url' => 'ingest_route/url',
+      'weight' => 0,
+    ),
+  );
+  return $reg
+}
 
 /**
  * Register a datastream edit route/form.
+ *
  * @param $islandora_object
  * @param $ds_id
  */
 function hook_islandora_edit_datastream_registry($islandora_object, $ds_id) {}
 
 /**
- * alter an object before it gets used further down the stack
+ * Alter an object before it gets used further down the stack.
+ *
  * @param type $object
- *   a tuque FedoraObject
+ *   A Tuque FedoraObject
  */
 function hook_islandora_object_alter($fedora_object) {}
 
 /**
- * insert or remove rendered elements by implementing this function
- * in your module
- * @param type $arr
- *   an arr of rendered views
- */
-function hook_islandora_display_alter($arr) {}
-
-/**
+ * Allow modification of an object before ingesting.
  *
  * @param type $islandora_object
- *   a tuque FedoraObject
+ *   A Tuque FedoraObject
  * @param array $content_models
  * @param string $collection_pid
  */
 function hook_islandora_ingest_pre_ingest($islandora_object, $content_models, $collection_pid) {}
+
+/**
+ * Allow modification of objects of a certain content model before ingesting.
+ *
+ * @see hook_islandora_ingest_pre_ingest()
+ */
+function hook_CMODEL_PID_islandora_ingest_pre_ingest($islandora_object, $content_models, $collection_pid) {}
+
+/**
+ * Allow modules to setup for the purge of a datastream.
+ *
+ * @param object $datastream
+ *   A Tuque FedoraDatastream object.
+ */
+function hook_islandora_pre_purge_datastream($datastream) {}
+
+/**
+ * Allow modules to react after a datastream is purged.
+ *
+ * @param object $object
+ *   A Tuque FedoraObject.
+ * @param string $dsid
+ *   A id of the former datastream.
+ */
+function hook_islandora_post_purge_datastream($object, $dsid) {}
+
+/**
+ * Allow modules to react post-purge.
+ *
+ * @param string $object_id
+ *   The former object's PID.
+ * @param array $content_models
+ *   An array containing the models to which the former object.
+ */
+function hook_islandora_post_purge_object($object_id, $content_models) {}
+

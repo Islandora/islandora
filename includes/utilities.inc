@@ -8,6 +8,8 @@
 /**
  * Convert bytes to human readable format
  *
+ * XXX: Shouldn't Drupal's format_size() be preferred?
+ *
  * @param integer bytes Size in bytes to convert
  * @return string
  */
@@ -103,4 +105,50 @@ function islandora_describe_repository($url) {
   catch (RepositoryException $e) {
     return FALSE;
   }
+}
+
+/**
+ * Build a list of all the hooks to call.
+ *
+ * Concatenates the each pid (escaped) to the hook name, for calling in
+ * module_invoke_all().
+ *
+ * @param string $hook
+ *   A hook to call.
+ * @param array $pids
+ *   An array of PIDs (probably content models).
+ *
+ * @return array
+ *   An array with each PID escaped and concatenated with the base hook name,
+ *   in addition to the base hook name at the end.
+ */
+function islandora_build_hook_list($hook, $pids = array()) {
+  $hooks = array();
+
+  foreach ($pids as $model) {
+    $hooks[] = islandora_escape_pid_for_function($model) . '_' . $hook;
+  }
+  $hooks[] = $hook;
+
+  return $hooks;
+}
+
+/**
+ * Escape a Fedora PID to be valid inside of a PHP function name.
+ *
+ * Originally intended to allow inclusion of a PID in a module_invoke_all()
+ * call.
+ */
+function islandora_escape_pid_for_function($pid) {
+  // Apparently, case doesn't matter for function calls in PHP, so let's not
+  //   really worry about changing the case.
+  return str_replace(
+    // Any PID characters which are not valid in the name of a PHP function.
+    array(
+      ':',
+      '-',
+    ),
+    '_',
+    $pid
+  );
 }

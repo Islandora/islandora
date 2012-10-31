@@ -31,9 +31,11 @@ define('FEDORA_PURGE', 'delete fedora objects and datastreams');
 define('FEDORA_MODIFY_STATE', 'modify fedora state');
 define('FEDORA_MANAGE', 'manage fedora items');
 
-// hooks
+// Hooks
 define('ISLANDORA_VIEW_HOOK', 'islandora_view_object');
 define('ISLANDORA_EDIT_HOOK', 'islandora_edit_object');
+define('ISLANDORA_POST_INGEST_HOOK', 'islandora_ingest_post_ingest');
+define('ISLANDORA_PRE_PURGE_OBJECT_HOOK', 'islandora_pre_purge_object');
 
 /**
  * Implements hook_menu().
@@ -249,14 +251,6 @@ function islandora_access_callback($object = NULL, $perm = NULL) {
   return ($namespace_access && user_access($perm));
 }
 
-/**
- * returns an array listing object types provided by sub modules
- * @return array
- */
-function islandora_get_types() {
-  return module_invoke_all('islandora_get_types');
-}
-
 function islandora_init() {
   if (path_is_admin(current_path())) {
     drupal_add_css(drupal_get_path('module', 'islandora') . '/css/islandora.admin.css');
@@ -287,14 +281,30 @@ function islandora_edit_object($object) {
   if (!$object) {
     return drupal_not_found();
   }
-  drupal_alter('islandora_edit_object', $object);
-  $arr = module_invoke_all('islandora_edit_object', $object);
-  $output = "";
-  foreach ($arr as $key => $value) {
-    $output .= $value; //if we have multiple modules handle one cmodel we need to iterate over multiple
+
+  module_load_include('inc', 'islandora', 'includes/utilities');
+
+  // Accumulate the output.
+  $output = array();
+
+  // Call cmodel oriented variants first.
+  foreach (islandora_build_hook_list(ISLANDORA_EDIT_HOOK, $object->models) as $hook) {
+    $temp = module_invoke_all($hook, $object);
+    if (!empty($temp)) {
+      $output = array_merge_recursive($output, $temp);
+    }
   }
-  //we could do another module invoke all here to build the edit tab with a default implemented in this module?
-  return $output;
+
+  // Add in the default, if we did not get any results.
+  if (empty($output)) {
+    $output = islandora_default_islandora_edit_object($object);
+  }
+
+  arsort($output);
+
+  drupal_alter(ISLANDORA_EDIT_HOOK, $object, $output);
+
+  return implode('', $output);
 }
 
 /**
@@ -314,23 +324,25 @@ function islandora_edit_properties($object_id) {
 }
 
 /**
- * builds a default page for the edit tab
+ * Builds a default page for the edit tab.
  *
  * @param object $fedora_object
  *   A tuque Fedora Object
  */
-function islandora_islandora_edit_object($fedora_object) {
-  $supported_models = islandora_get_types();
-  $output = "";
-  foreach ($fedora_object->models as $model) {
-    if (isset($supported_models[$model][ISLANDORA_EDIT_HOOK]) && $supported_models[$model][ISLANDORA_EDIT_HOOK] == TRUE) {//another module is handling the view
-      return;
-    }
-  }
-  $output = theme('islandora_default_edit', array('islandora_object' => $fedora_object));
-  return array('Default edit output' => $output);
+function islandora_default_islandora_edit_object($fedora_object) {
+  $output = theme('islandora_default_edit', array(
+    'islandora_object' => $fedora_object,
+  ));
+
+  return array('Default Edit output' => $output);
 }
 
+/**
+ * Page callback for the path "islandora".
+ *
+ * Redirects to the view of the object indicated by the Drupal variable
+ * islandora_repository_pid.
+ */
 function islandora_view_default_object() {
   $pid = variable_get('islandora_repository_pid', 'islandora:root');
   drupal_goto("islandora/object/$pid");
@@ -346,6 +358,8 @@ function islandora_view_default_object() {
  */
 function islandora_view_object($fedora_object = NULL) {
   module_load_include('inc', 'islandora', 'includes/breadcrumb');
+  module_load_include('inc', 'islandora', 'includes/utilities');
+
   global $user;
 
   if (!$fedora_object) {
@@ -358,37 +372,38 @@ function islandora_view_object($fedora_object = NULL) {
   $page_number = (empty($_GET['page'])) ? '1' : $_GET['page'];
   $page_size = (empty($_GET['pagesize'])) ? '10' : $_GET['pagesize'];
 
-  drupal_alter('islandora_object', $fedora_object); //modify object if required before it is passed along
-  $arr = module_invoke_all('islandora_view_object', $fedora_object, $user, $page_number, $page_size); //allow submodules to decide how to handle content base on object type
-  if (empty($arr)) {
-    //TODO: make sure we iterate over the array as they will be more then one cmodel per object
-    drupal_set_message(t('there was an error loading the view for Islandora object "%s"', array('%s' => $fedora_object->label)), 'error');
-    return "";
+  // Accumulate the output.
+  $output = array();
+
+  // Call cmodel oriented variants first.
+  foreach (islandora_build_hook_list(ISLANDORA_VIEW_HOOK, $fedora_object->models) as $hook) {
+    $temp = module_invoke_all($hook, $fedora_object, $user, $page_number, $page_size);
+    if (!empty($temp)) {
+      $output = array_merge_recursive($output, $temp);
+    }
   }
-  arsort($arr);
-  drupal_alter('islandora_display', $arr);
-  $output = "";
-  foreach ($arr as $key => $value) {
-    $output .= $value; //if we have multiple modules handle one cmodel we need to iterate over multiple
+
+  // Add in the default, if we did not get any results.
+  if (empty($output)) {
+    $output = islandora_default_islandora_view_object($fedora_object);
   }
-  return $output;
+
+  arsort($output);
+ 
+  drupal_alter(ISLANDORA_VIEW_HOOK, $fedora_object, $output);
+
+  return implode('', $output);
 }
 
 /**
- * The default view hook.  If there are no modules registered to handle this objects cmodels or there are
+ * If there are no modules registered to handle this objects cmodels or there are
  * not any cmodels specified this will create a default display.
  *
- * @param string $object_id
- * @return string
+ * @param FedoraObject $object
+ *   The object whose display we are to render.
+ * @return array
  */
-function islandora_islandora_view_object($object) {
-  $supported_models = islandora_get_types();
-  $output = "";
-  foreach ($object->models as $model) {
-    if (isset($supported_models[$model][ISLANDORA_VIEW_HOOK]) && (boolean) $supported_models[$model][ISLANDORA_VIEW_HOOK] === TRUE) { //another module is handling the view
-      return;
-    }
-  }
+function islandora_default_islandora_view_object($object) {
   $output = theme('islandora_default', array('islandora_object' => $object));
   return array('Default output' => $output);
 }
@@ -460,7 +475,7 @@ function islandora_permission() {
  */
 function islandora_object_load($object_id) {
   module_load_include('inc', 'islandora', 'includes/tuque');
-  static $islandora_tuque = NULL;
+  $islandora_tuque = &drupal_static(__FUNCTION__);
 
   if (!$islandora_tuque) {
     $islandora_tuque = new IslandoraTuque();
@@ -472,6 +487,8 @@ function islandora_object_load($object_id) {
     } catch (Exception $e) {
       return NULL;
     }
+
+    drupal_alter('islandora_object', $fedora_object);
     return $fedora_object;
   }
   else {
@@ -500,8 +517,19 @@ function islandora_object_purge($object_id) {
     drupal_set_message(t('Could not remove object, object not found'));
     return;
   }
+
+  module_load_include('inc',  'islandora', 'includes/utilities');
+
   $content_models = $object->models;
-  $arr = module_invoke_all('islandora_pre_purge_object', $object); // notify modules of pending deletion
+  
+  $arr = array();
+  foreach (islandora_build_hook_list(ISLANDORA_PRE_PURGE_OBJECT_HOOK, $object->models) as $hook) {
+    $temp = module_invoke_all($hook, $object);
+    if (!empty($temp)) {
+      $arr = array_merge_recursive($arr, $temp);
+    }
+  }
+
   if (isset($arr['delete']) && $arr['delete']) {
     try {
       $object->delete();
@@ -518,6 +546,7 @@ function islandora_object_purge($object_id) {
       return "";
     }
   }
+
   module_invoke_all('islandora_post_purge_object', $object_id, $content_models);  // notify modules post deletion
 }
 

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * This file contains ingest callback functions
+ * This file contains ingest callback functions.
  */
 
 /**
@@ -16,23 +16,69 @@ function islandora_ingest_get_information(AbstractFedoraObject $collection_objec
 }
 
 /**
- * @TODO: needs documentation
+ * Get an ingestable object.
+ * 
+ * @deprecated
+ *   Deprecated in favour of the more flexible
+ *   islandora_ingest_new_object_prepare()--which this function has been made
+ *   to call behind the scenes anyway.
+ *
+ * @param array $content_models
+ *   An array of content models to which the new object should subscribe, where
+ *   each content model is described by an associative array containing:
+ *   - pid: The Fedora PID of the content model.
+ * @param string $collection_pid
+ *   The collection to which the new object should belong.
+ * @param string $relationship
+ *   The relationship this object will have to the collection.
+ * @param string $namespace
+ *   The namespace in which the PID for the new object will be created.
+ *
+ * @return NewFedoraObject
+ *   A NewFedoraObject which may be adjusted before ingesting.
  */
 function islandora_ingest_get_object($content_models, $collection_pid, $relationship, $namespace) {
-  module_load_include('inc', 'islandora', 'includes/tuque');
-  global $user;
-  $connection = new IslandoraTuque($user);
-  $object = $connection->repository->constructObject($namespace);
-  foreach ($content_models as $content_model) {
-    $object->relationships->add(FEDORA_MODEL_URI, 'hasModel', $content_model['pid']);
+  $models = array();
+  foreach ($content_models as $relation) {
+    $models[] = $relation['pid'];
   }
-  $object->relationships->add(FEDORA_RELS_EXT_URI, $relationship, $collection_pid);
-  module_invoke_all('islandora_ingest_pre_ingest', $object, $content_models, $collection_pid);
-  return $object;
+
+  return islandora_ingest_new_object_prepare($namespace, NULL, array(), $models, array(
+    array(
+      'pid' => $collection_pid,
+      'relationship' => $relationship,
+    ),
+  ), $collection_pid);
 }
 
 /**
- * @TODO: needs documentation
+ * Prepare an ingestable object.
+ *
+ * @param string $namespace
+ *   The namespace in which the PID for the new object will be created.
+ * @param string $label
+ *   An optional label to apply to the object.
+ * @param array $datastreams
+ *   A array of datastreams to add, where each datastream definition is an
+ *   associative array containing:
+ *   - dsid: The datastream ID.
+ *   - label: An optional label for the datastream.
+ *   - mimetype: A MIMEtype for the datastream; defaults to text/xml.
+ *   - control_group: One of X, M, R and E; defaults to M.
+ *   - datastream_file: A web-accessible path, for which we try to get an
+ *     absolute path using url().
+ * @param array $content_models
+ *   An array of content model PIDs to which the new object should subscribe.
+ * @param array $relationships
+ *   An array of relationships, where each relationship is an associative array
+ *   containing:
+ *   - relationship: The predicate for the relationship, from the Fedora
+ *     RELS-EXT namespace.
+ *   - pid: The object for the relationship, to which we are creating the
+ *     relationhsip.
+ *
+ * @return NewFedoraObject
+ *   An ingestable NewFedoraObject.
  */
 function islandora_ingest_new_object_prepare($namespace = NULL, $label = NULL, $datastreams = array(), $content_models = array(), $relationships = array(), $collection_pid = NULL) {
   // include Tuque library
@@ -86,20 +132,56 @@ function islandora_ingest_new_object_prepare($namespace = NULL, $label = NULL, $
     $object->ingestDatastream($datastream);
   }
 
-  module_invoke_all('islandora_ingest_pre_ingest', $object, $content_models, $collection_pid);
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  foreach (islandora_build_hook_list('islandora_ingest_pre_ingest', $content_models) as $hook) {
+    module_invoke_all($hook, $object, $content_models, $collection_pid);
+  }
+
   return $object;
 }
 
 /**
- * @TODO: needs documentation
+ * Ingest the given object into Fedora.
+ *
+ * @param NewFedoraObject $object
+ *   An ingestable FedoraObject.
+ *
+ * @return FedoraObject
+ *   The ingested FedoraObject, after running the post ingest hooks.
  */
 function islandora_ingest_add_object(&$object) {
   $object->repository->ingestObject($object);
-  module_invoke_all('islandora_ingest_post_ingest', $object);
+
+  module_load_include('inc', 'islandora', 'includes/utilities');
+
+  foreach (islandora_build_hook_list(ISLANDORA_POST_INGEST_HOOK, $object->models) as $hook) {
+    module_invoke_all($hook, $object);
+  }
+
   return $object;
 }
 
-
+/**
+ * Ingest an object.
+ *
+ * @param array $object_model
+ *   An associative array containing the necessary parameters to create the
+ *   desired object:
+ *   - pid: The PID with which the object will be created.
+ *   - label: An optional label to apply to the object.
+ *   - datastreams: Same as the "datastreams" array accepted by
+ *     islandora_ingest_new_object_prepare().
+ *   - cmodel: Either an array of content models as accepted by
+ *     islandora_ingest_new_object_prepare(), or a single content model PID to add
+ *     to the object.
+ *   - parent: Either an array of parents, or a single parent PID to which to
+ *     relate to; uses isMemberOfCollection by default.
+ *   - relationships: An array of relationships as accepted by
+ *     islandora_ingest_new_object_prepare().
+ *
+ * @return FedoraObject
+ *   An FedoraObject which has been ingested into Fedora.
+ */
 function islandora_ingest_new_object($object_model) {
   // prepare variables
   // namespace
