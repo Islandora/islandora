@@ -21,7 +21,8 @@ function islandora_view_datastream($object, $dsid, $method = 'view') {
   if (!isset($object[$dsid])) {
     return drupal_not_found();
   }
-
+  header_remove('Cache-Control');
+  header_remove('Expires');
   header('Content-type: ' . $object[$dsid]->mimetype);
   if ($object[$dsid]->controlGroup == 'M' || $object[$dsid]->controlGroup == 'X') {
     header('Content-length: ' . $object[$dsid]->size);
@@ -30,7 +31,15 @@ function islandora_view_datastream($object, $dsid, $method = 'view') {
   if ($method == 'download') {
     header("Content-Disposition: attachment; filename=\"" . $object[$dsid]->label);
   }
-  print($object[$dsid]->content);
+
+  // Disable page caching
+  drupal_page_is_cacheable(FALSE);
+
+  // Try not to load the file into PHP memory
+  $file = drupal_tempnam(file_directory_temp(), 'islandora');
+  $object[$dsid]->getContent($file);
+  readfile($file);
+  drupal_unlink($file);
   exit();
 }
 
