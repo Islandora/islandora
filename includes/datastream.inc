@@ -388,7 +388,9 @@ function islandora_add_datastream_form($form, &$form_state, $object) {
   $form['add_fieldset']['stream_id'] = array(
     '#title' => 'Datastream ID',
     '#required' => 'TRUE',
-    '#description' => t('An ID for this stream that is unique to this object. Must start with a letter and contain only alphanumeric characters and dashes and underscores. Datastreams that are defined by the content model don\'t currently exist: <b>' . $dsids_for_form . '</b>.'),
+    '#description' => t('An ID for this stream that is unique to this object. Must start with a letter and contain only alphanumeric characters and dashes and underscores. Datastreams that are defined by the content model don\'t currently exist: <b>@unused_dsids</b>.', array(
+      '@unused_dsids' => $dsids_for_form,
+    )),
     '#type' => 'textfield',
     '#weight' => -1,
     '#autocomplete_path' => "islandora/object/$object->id/manage/datastreams/add/autocomplete",

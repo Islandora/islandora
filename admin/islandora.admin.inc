@@ -81,7 +81,9 @@ function islandora_repository_admin($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Fedora base URL'),
     '#default_value' => variable_get('islandora_base_url', 'http://localhost:8080/fedora'),
-    '#description' => t('The URL to use for REST connections <br />' . $confirmation_message),
+    '#description' => t('The URL to use for REST connections <br /> !confirmation_message', array(
+      '!confirmation_message' => $confirmation_message,
+    )),
     '#required' => TRUE,
     '#ajax' => array(
       'callback' => 'islandora_update_url_div',
