@@ -530,7 +530,7 @@ function fedora_repository_purge_object_form_validate($form, &$form_state) {
   $content_models = $object_helper->get_content_models_list($pid);
   foreach ($content_models as $content_model) {
     if ($content_model->pid == 'islandora:collectionCModel') {
-      $member_pids = get_related_items_as_array($pid, 'isMemberOfCollection');
+      $member_pids = get_related_items_as_array($pid, 'isMemberOfCollection', 10000, 0, FALSE);
       if (is_array($member_pids) && ! empty($member_pids)) {
         form_set_error('new_collection_pid', t("Please purge all members of this collection before deleting the collection itself."));
         return;
