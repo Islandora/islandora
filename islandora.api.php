@@ -131,7 +131,7 @@ function hook_islandora_ingest_registry($collection_object) {
       'weight' => 0,
     ),
   );
-  return $reg
+  return $reg;
 }
 
 /**
