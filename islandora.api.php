@@ -126,7 +126,7 @@ function hook_CMODEL_PID_islandora_pre_purge_object($fedora_object) {}
 function hook_islandora_ingest_registry($collection_object) {
   $reg = array(
     array(
-      'name' => t('Ingest Route Name'),
+      'name' => t('Ingest route name'),
       'url' => 'ingest_route/url',
       'weight' => 0,
     ),
@@ -195,3 +195,26 @@ function hook_islandora_post_purge_datastream($object, $dsid) {}
  */
 function hook_islandora_post_purge_object($object_id, $content_models) {}
 
+/**
+ * Registry hook for required objects.
+ *
+ * Solution packs can include data to create certain objects that describe or
+ * help the objects it would create. This includes collection objects and content
+ * models.
+ *
+ * @see islandora_solution_packs_admin()
+ * @see islandora_install_solution_pack()
+ * @example islandora_islandora_required_objects()
+ */
+function hook_islandora_required_objects() {}
+
+/**
+ * Registry hook for viewers that can be implemented by solution packs.
+ *
+ * Solution packs can use viewers for their data. This hook lets Islandora know
+ * which viewers there are available.
+ *
+ * @see islandora_get_viewers()
+ * @see islandora_get_viewer_callback()
+ */
+function hook_islandora_viewer_info() {}
