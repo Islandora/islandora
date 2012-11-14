@@ -150,6 +150,8 @@ function islandora_ingest_new_object_prepare($namespace = NULL, $label = NULL, $
  *   The ingested FedoraObject, after running the post ingest hooks.
  */
 function islandora_ingest_add_object(&$object) {
+  drupal_alter('islandora_pre_ingest', $object);
+
   $object->repository->ingestObject($object);
 
   module_load_include('inc', 'islandora', 'includes/utilities');
