@@ -194,7 +194,7 @@ function fedora_repository_solution_pack_form_submit($form, &$form_state) {
 
   $module_name = $form_state['values']['solution_pack_module'];
 
-  $solution_pack_info = module_invoke($module_name, 'required_fedora_objects');
+  $solution_pack_info = module_invoke($module_name, 'fedora_repository_required_fedora_objects');
 
   $batch = array(
     'title' => t('Installing / updating solution pack objects'),
