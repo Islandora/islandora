@@ -11,6 +11,19 @@ function islandora_get_object_token($pid, $dsid) {
   $time = time();
   $token = hash("sha256", $user->uid . $pid . $dsid . $time);
 
+  //** check if this request is allowed **//
+  module_load_include("inc", "islandora", "includes/tuque");
+  // test if this is a valid request
+  $validator = new IslandoraTuque($user);
+  try {
+    $result = $validator->connection->getRequest("objects/$pid/datastreams/$dsid/content", true);
+  }
+  catch (RepositoryException $rx) {
+    //print_r("authentication failed");
+    return FALSE;
+  }
+  //** **//
+
   $id = db_insert("islandora_authtokens")
     ->fields(array(
       'token' => $token,
@@ -46,6 +59,7 @@ function islandora_validate_object_token($pid, $dsid, $token) {
     ->condition('pid', $pid, '=')
     ->condition('dsid', $dsid, '=')
     ->execute();
+  //** **//
 
 //  print_r($result);
   return $result > 0;
