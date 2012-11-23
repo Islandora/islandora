@@ -1287,7 +1287,7 @@ function fedora_repository_theme() {
  *   int dsversion,
  *   boolean required)
  */
-function fedora_repository_required_fedora_objects() {
+function fedora_repository_fedora_repository_required_fedora_objects() {
 
   $module_path = drupal_get_path('module', 'fedora_repository');
   return array(
