@@ -164,8 +164,11 @@ function islandora_menu() {
     'access arguments' => array(2, FEDORA_ADD_DS)
   );
 
-  $items['islandora/object/%islandora_object/datastream/%'] = array(
+  // this menu item has been modified to use a tokened version of islandora_object_load
+  // added load arguments to pass both pid and dsid to loader
+  $items['islandora/object/%islandora_tokened_object/datastream/%'] = array(
     'title' => 'View datastream',
+    'load arguments' => array(4),
     'page callback' => 'islandora_view_datastream',
     'page arguments' => array(2, 4),
     'type' => MENU_CALLBACK,
@@ -174,7 +177,8 @@ function islandora_menu() {
     'access arguments' => array(2, FEDORA_VIEW),
   );
 
-  $items['islandora/object/%islandora_object/datastream/%/view'] = array(
+  // this menu item has been modified to use a tokened version of islandora_object_load
+  $items['islandora/object/%islandora_tokened_object/datastream/%/view'] = array(
     'title' => 'View datastream',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
@@ -208,7 +212,25 @@ function islandora_menu() {
     'access callback' => 'islandora_access_callback',
     'access arguments' => array(2, FEDORA_PURGE),
   );
+/*
+// These are two test hooks that can be used to create and validate authentication tokens
+// They are for debug purposes only and are currently disabled
+  $items['admin/islandora/get_object_token'] = array(
+    'title' => 'Object Token',
+    'page callback' => 'islandora_get_object_token',
+    'access callback' => TRUE,
+    'file' => 'includes/islandora_authtokens.inc',
+    'type' => MENU_CALLBACK,
+  );
 
+  $items['admin/islandora/validate_object_token'] = array(
+    'title' => 'Validate Object Token',
+    'page callback' => 'islandora_validate_object_token',
+    'access callback' => TRUE,
+    'file' => 'includes/islandora_authtokens.inc',
+    'type' => MENU_CALLBACK,
+  );
+*/
   return $items;
 }
 
@@ -420,7 +442,6 @@ function islandora_view_object($fedora_object = NULL) {
   module_load_include('inc', 'islandora', 'includes/utilities');
 
   global $user;
-
   if (!$fedora_object) {
     return drupal_not_found();
   }
@@ -496,6 +517,57 @@ function islandora_object_load($object_id) {
     IslandoraTuque::getError();
     return NULL;
   }
+}
+
+/**
+ * A helper function to get a connection and return an object using a token for authentication.
+ *
+ * @param string $object_id
+ * @param string $datastream_id
+ * @return FedoraObject
+ */
+function islandora_tokened_object_load($object_id, $datastream_id) {
+  if (in_array('token', $_GET)) {
+    $token = $_GET['token'];
+  }
+  else {
+    $token = NULL;
+  }
+
+  if ($token) {
+    module_load_include('inc', 'islandora', 'includes/islandora_authtokens');
+    $tokenUser = islandora_validate_object_token($object_id, $datastream_id, $token);
+
+    if ($tokenUser) {
+// The following block is the same as the islandora_object_load function
+// and we can probably just update the islandora_tuque static object and call
+// islandora_object_load so we don't have to duplicate the function code
+  module_load_include('inc', 'islandora', 'includes/tuque');
+  $islandora_tuque = &drupal_static(__FUNCTION__);
+
+  if (!$islandora_tuque) {
+    $islandora_tuque = new IslandoraTuque($tokenUser);
+  }
+
+  if (IslandoraTuque::exists()) {
+    try {
+      $fedora_object = $islandora_tuque->repository->getObject($object_id);
+    } catch (Exception $e) {
+      return NULL;
+    }
+
+    drupal_alter('islandora_object', $fedora_object);
+    return $fedora_object;
+  }
+  else {
+    IslandoraTuque::getError();
+    return NULL;
+  }
+//
+    }
+  }
+  // By default, if no token is found, use original load function
+  return islandora_object_load($object_id);
 }
 
 /**
@@ -633,8 +705,4 @@ function islandora_islandora_required_objects() {
     ),
   );
 }
-
-
-
-
 
