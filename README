@@ -7,3 +7,10 @@ https://wiki.duraspace.org/display/ISLANDORA/Islandora
 All bugs, feature requests and improvement suggestions are tracked at the DuraSpace JIRA: 
 
 https://jira.duraspace.org/browse/ISLANDORA
+
+Fedora/Drupal Security
+======================
+The islandora_drupal_filter passes the username of 'anonymous' through to Fedora for unauthenticated 
+Drupal Users.  A user with the name of 'anonymous' may have XACML policies applied to them that are
+meant to be applied to Drupal users that are not logged in or vice-versa.  This is a potential security
+issue that can be plugged by creating a user named 'anonymous' and restricting access to the account.
