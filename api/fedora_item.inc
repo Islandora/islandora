@@ -175,12 +175,13 @@ class Fedora_Item {
     if (stripos($datastream_url, 'https://') !== FALSE && stripos($datastream_url, $base_url) !== FALSE) {
       $datastream_url = str_ireplace('https://', 'http://', $datastream_url);
     }
+    $datastream_label = truncate_utf8($datastream_label, 255, TRUE, TRUE);
 
     $params = array(
       'pid' => $this->pid,
       'dsID' => $datastream_id,
       'altIDs' => NULL,
-      'dsLabel' => truncate_utf8($datastream_label, 255, TRUE, TRUE),
+      'dsLabel' => $datastream_label,
       'versionable' => TRUE,
       'MIMEType' => $datastream_mimetype,
       'formatURI' => NULL,
@@ -193,8 +194,14 @@ class Fedora_Item {
     );
 
     $soap_result = $this->soap_call('addDataStream', $params);
-    // Make sure to refresh the datastream list after adding so this item stays in sync with the repository.
-    $this->datastreams = $this->get_datastreams_list_as_array();
+
+    // Add new DS to the DS list so the item is in sync with the repository.
+    $this->datastreams[$datastream_id] = array(
+      'label' => $datastream_label,
+      'MIMEType' => $datastream_mimetype,
+      'URL' => ($this->url() . '/' . $datastream_id . '/' .
+        drupal_urlencode($datastream_label)),);
+
     return $soap_result;
   }
 
