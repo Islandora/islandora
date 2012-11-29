@@ -671,13 +671,19 @@ RDF;
   /**
    * Get datastream dissemination
    *
-   * @param type $dsid
-   * @param type $as_of_date_time
+   * @param string $dsid
+   *   The DSID of the datastream to get the dissemination of.
+   * @param string $as_of_date_time
+   *   We can get old versions of versioned datastreams.
+   *   Defaults to now.
    * @param type $quiet
+   *   Squash errors? defaults to FALSE.
    *
-   * @return null
+   * @return mixed
+   *   NULL if the DS is not present in Fedora Item's datastream list.
+   *   The content of the DS (NULL if empty)
    */
-  function get_datastream_dissemination($dsid, $as_of_date_time = "", $quiet=TRUE) {
+  function get_datastream_dissemination($dsid, $as_of_date_time = "", $quiet = FALSE) {
     if (!array_key_exists($dsid, $this->datastreams)) {
       return NULL;
     }
@@ -688,7 +694,7 @@ RDF;
       'asOfDateTime' => $as_of_date_time,
     );
 
-    // Make soap call with quite
+    // Make soap call.
     $object = self::soap_call('getDataStreamDissemination', $params, $quiet);
     if (!empty($object)) {
       $content = $object->dissemination->stream;
