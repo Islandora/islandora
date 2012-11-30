@@ -2,29 +2,25 @@
 
 /**
  * @file
- * This file contains all admin and callback functions for solution pack management.
+ *
+ * This file contains all admin and callback functions for solution pack
+ * management.
  */
 
 /**
- * Solution pack admin page callback
+ * Solution pack admin page callback.
  */
 function islandora_solution_packs_admin() {
-  // add css
-  drupal_add_css(drupal_get_path('module', 'islandora') . '/css/islandora.admin.css');
-  // check connection
   module_load_include('inc', 'islandora', 'includes/utilities');
-  $url = variable_get('islandora_base_url', 'http://localhost:8080/fedora');
-  $info = islandora_describe_repository($url);
-  if (!$info) {
-    $config_url = url('admin/islandora/configure');
-    drupal_set_message(t('Could not connect to the repository. Please check the settings on the <a href="@config_url" title="Islandora configuration page">Islandora configuration</a> page.', array('@config_url' => $config_url)), 'error');
+  drupal_add_css(drupal_get_path('module', 'islandora') . '/css/islandora.admin.css');
+  if (!islandora_describe_repository()) {
+    $message = t('Could not connect to the repository. Please check the settings on the ' .
+               '<a href="@config_url" title="Islandora configuration page">Islandora configuration</a> page.',
+               array('@config_url' => url('admin/islandora/configure')));
+    drupal_set_message($message, 'error');
   }
-
-  // set variables
   $enabled_solution_packs = module_invoke_all('islandora_required_objects');
-
   $output = '';
-
   foreach ($enabled_solution_packs as $solution_pack_module => $solution_pack_info) {
     $objects = array();
     foreach ($solution_pack_info as $field => $value) {
@@ -37,12 +33,9 @@ function islandora_solution_packs_admin() {
           break;
       }
     }
-    // get form
     $form_array = drupal_get_form('islandora_solution_pack_form_' . $solution_pack_module, $solution_pack_module, $solution_pack_name, $objects);
-    // render form
     $output .= drupal_render($form_array);
   }
-
   return $output;
 }
 
@@ -50,10 +43,7 @@ function islandora_solution_packs_admin() {
  * Solution pack admin page
  */
 function islandora_solution_pack_form($form, &$form_state,  $solution_pack_module, $solution_pack_name, $objects = array()) {
-
-  // set variables
   global $base_url;
-  global $base_path;
   $needs_update = FALSE;
   $needs_install = FALSE;
   $could_not_connect = FALSE;
@@ -80,25 +70,15 @@ function islandora_solution_pack_form($form, &$form_state,  $solution_pack_modul
     '#value' => $objects,
   );
 
-  // table
-  // header
   $table_header = array(t('Label'), t('PID'), t('Status'));
   $table_rows = array();
 
-  // loop over defined objects
   foreach ($objects as $object) {
     $datastreams = NULL;
     if (isset($object['pid'])) {
-      // set variables
       $pid = $object['pid'];
-
-      // table row
       $table_row = array();
-
-      // check object status
       $object_status = islandora_check_object_status($object);
-
-      // set status labels
       switch ($object_status) {
         case 'up_to_date':
           $object_status = t('Up-to-date');
@@ -120,8 +100,6 @@ function islandora_solution_pack_form($form, &$form_state,  $solution_pack_modul
           $could_not_connect = TRUE;
           break;
       }
-
-      // label
       if ($needs_install OR $could_not_connect) {
         $label = $object['label'] ? $object['label'] : '';
       }
@@ -129,11 +107,8 @@ function islandora_solution_pack_form($form, &$form_state,  $solution_pack_modul
         $label = $object['label'] ? l($object['label'], $base_url . '/islandora/object/' . $pid) : '';
       }
       $table_row[] = $label;
-      // pid
       $table_row[] = $pid;
-      // object status
       $table_row[] = $object_status;
-      // add row
       $table_rows[] = $table_row;
     }
   }
@@ -146,7 +121,6 @@ function islandora_solution_pack_form($form, &$form_state,  $solution_pack_modul
       '#suffix' => '</h3>',
     );
 
-    // install status
     $form['solution_pack']['install_status'] = array(
       '#markup' => '<strong>' . t('Object status:') . '&nbsp;</strong>',
       '#prefix' => '<div class="islandora-solution-pack-install-status">',
@@ -169,14 +143,12 @@ function islandora_solution_pack_form($form, &$form_state,  $solution_pack_modul
       $submit_button_text = '';
     }
 
-    // table
     $form['solution_pack']['table'] = array(
       '#type' => 'item',
       '#markup' => theme('table', array('header' => $table_header, 'rows' => $table_rows)),
     );
   }
 
-  // submit
   if (!$could_not_connect) {
     $form['solution_pack']['submit'] = array(
       '#value' => $submit_button_text,
@@ -185,12 +157,8 @@ function islandora_solution_pack_form($form, &$form_state,  $solution_pack_modul
       '#attributes' => array('class' => array('islandora-solution-pack-submit')),
       '#weight' => 40,
     );
-    // submit callback
-    $form['solution_pack']['#submit'] = array(
-      'islandora_solution_pack_form_submit',
-    );
+    $form['solution_pack']['#submit'] = array('islandora_solution_pack_form_submit');
   }
-
   return $form;
 }
 
@@ -203,8 +171,6 @@ function islandora_solution_pack_form($form, &$form_state,  $solution_pack_modul
  *   The state of the form submited.
  */
 function islandora_solution_pack_form_submit($form, &$form_state) {
-
-  // get variables
   $solution_pack_module = $form_state['values']['solution_pack_module'];
   $solution_pack_name = $form_state['values']['solution_pack_name'];
   $objects = $form_state['values']['objects'];
@@ -228,22 +194,16 @@ function islandora_solution_pack_form_submit($form, &$form_state) {
 
 }
 
-
-
-
 /**
  * Batch reingest object(s)
  *
- * @param type $object
+ * @param array $object
  * @param type $context
  * @return type
  */
 function islandora_batch_reingest_object($object_model, &$context) {
-
   module_load_include('inc', 'islandora', 'includes/utilities');
-  module_load_include('inc', 'islandora', 'includes/islandora.ingest');
-  // include Tuque library
-  module_load_include('inc', 'islandora', 'includes/tuque');
+
   global $user;
   global $base_url;
   // new connection
@@ -256,9 +216,8 @@ function islandora_batch_reingest_object($object_model, &$context) {
   }
 
   if (!empty($object_model) && is_array($object_model)) {
-    // set and validate PID
     $pid = $object_model['pid'];
-    if (!islandora_validate_pid($pid)) {
+    if (!islandora_is_valid_pid($pid)) {
       return NULL;
     }
 
@@ -267,13 +226,16 @@ function islandora_batch_reingest_object($object_model, &$context) {
     $object_query = $connection->api->a->findObjects('query', 'pid=' . $pid);
     $reinstall = FALSE;
     if (!empty($object_query['results'])) {
-      islandora_object_purge($pid);
+      $object = islandora_object_load($pid);
+      if (isset($object)) {
+        islandora_delete_object($object);
+      }
       $reinstall = TRUE;
     }
 
     // build and ingest new object
     try {
-      $object = islandora_ingest_new_object($object_model);
+      $object = islandora_solution_pack_add_object($object_model);
       $object_name = $object->label;
       if ($reinstall) {
         drupal_set_message(t('Successfully reinstalled <em>@object_name</em>.', array('@object_name' => $object_name, '@pid' => $pid)));
@@ -297,11 +259,7 @@ function islandora_batch_reingest_object($object_model, &$context) {
 function islandora_install_solution_pack($module_name = NULL, $op = 'install') {
   // check if a module name is given. // @TODO: check module name for existance
   if (!empty($module_name)) {
-
-    // include files
-    module_load_include('inc', 'islandora', 'includes/tuque');
     module_load_include('module', 'islandora', 'islandora');
-    module_load_include('inc', 'islandora', 'includes/islandora.ingest');
     module_load_include('inc', 'islandora', 'includes/utilities');
     module_load_include('module', $module_name, $module_name);
 
@@ -381,9 +339,7 @@ function islandora_install_solution_pack($module_name = NULL, $op = 'install') {
             }
           }
           else {
-            // build and ingest new object
-            islandora_ingest_new_object($object);
-            // set message
+            islandora_solution_pack_add_object($object);
             drupal_set_message(st('@module_label: installed <a href="@object_url" title="@pid">@label</a> object.', array('@module_label' => $module_label, '@label' => $label, '@pid' => $pid, '@object_url' => $object_url)));
           }
           break;
@@ -414,7 +370,8 @@ function islandora_install_solution_pack($module_name = NULL, $op = 'install') {
  *
  * @see islandora_solution_pack_form()
  * @see islandora_install_solution_pack()
- * @TODO: should this function live in islandora.module so it can be called easier without having to include the solution_packs.inc file?
+ * @todo: Should this function live in islandora.module so it can be called
+ *   easier without having to include the solution_packs.inc file?
  */
 function islandora_check_object_status($object_model = array()) {
   if (!empty($object_model)) {
@@ -441,7 +398,8 @@ function islandora_check_object_status($object_model = array()) {
         $object_status = 'missing';
       }
       else {
-        // object defined with single datastream file // @TODO: should dsversion be mandatory for the check to valid?
+        // object defined with single datastream file
+        // @TODO: should dsversion be mandatory for the check to valid?
         if (isset($object_model['dsid']) && isset($object_model['datastream_file']) && isset($object_model['dsversion'])) {
           $datastreams = array(
             array(
@@ -484,6 +442,88 @@ function islandora_check_object_status($object_model = array()) {
     return FALSE;
   }
 }
+
+/**
+ * Converts the given definition into an object and add's it to the repository.
+ *
+ * @param array $object_definition
+ *   An associative array containing the necessary parameters to create the
+ *   desired object:
+ *   - pid: The PID with which the object will be created.
+ *   - label: An optional label to apply to the object.
+ *   - datastreams: Same as the "datastreams" array accepted by
+ *     islandora_prepare_new_object().
+ *   - cmodel: Either an array of content models as accepted by
+ *     islandora_preprare_new_object(), or a single content model PID to add
+ *     to the object.
+ *   - parent: Either an array of parents, or a single parent PID to which to
+ *     relate to; uses isMemberOfCollection by default.
+ *   - relationships: An array of relationships as accepted by
+ *     islandora_prepare_new_object().
+ *
+ * @return FedoraObject
+ *   The newly created object.
+ */
+function islandora_solution_pack_add_object(array $object_definition) {
+  $object = islandora_solution_pack_prepare_new_object($object_definition);
+  return islandora_add_object($object);
+}
+
+/**
+ * Prepares a new object based on the solution pack style of declaring them as arrays.
+ *
+ * @param array $object_definition
+ *   An associative array containing the necessary parameters to create the
+ *   desired object:
+ *   - pid: The PID with which the object will be created.
+ *   - label: An optional label to apply to the object.
+ *   - datastreams: Same as the "datastreams" array accepted by
+ *     islandora_prepare_new_object().
+ *   - cmodel: Either an array of content models as accepted by
+ *     islandora_prepare_new_object(), or a single content model PID to add
+ *     to the object.
+ *   - parent: Either an array of parents, or a single parent PID to which to
+ *     relate to; uses isMemberOfCollection by default.
+ *   - relationships: An array of relationships as accepted by
+ *     islandora_prepare_new_object().
+ *
+ * @return NewFedoraObject
+ *   An NewFedoraObject which has been initalized with the given properties.
+ */
+function islandora_solution_pack_prepare_new_object(array $object_definition) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  $namespace = $object_definition['pid'];
+  $label = !empty($object_definition['label']) ? $object_definition['label'] : NULL;
+  $datastreams = array();
+  if (!empty($object_definition['datastreams']) AND is_array($object_definition['datastreams'])) {
+    $datastreams = $object_definition['datastreams'];
+  }
+  $content_models = array();
+  if (!empty($object_definition['cmodel'])) {
+    if (is_array($object_definition['cmodel'])) {
+      $content_models = $object_definition['cmodel'];
+    }
+    else {
+      $content_models[] = $object_definition['cmodel'];
+    }
+  }
+  $relationships = array();
+  if (!empty($object_definition['parent']) AND !is_array($object_definition['parent'])) {
+    $relationships[] = array('relationship' => 'isMemberOfCollection', 'pid' => $object_definition['parent']);
+  }
+  if (!empty($object_definition['parents']) AND is_array($object_definition['parents'])) {
+    foreach ($object_definition['parents'] as $parent) {
+      $relationships[] = array('relationship' => 'isMemberOfCollection', 'pid' => $parent);
+    }
+  }
+  if (!empty($object_definition['relationships']) AND is_array($object_definition['relationships'])) {
+    foreach ($object_definition['relationships'] as $relationship) {
+      $relationships[] = array('relationship' => $relationship['relationship'], 'pid' => $relationship['pid']);
+    }
+  }
+  return islandora_prepare_new_object($namespace, $label, $datastreams, $content_models, $relationships);
+}
+
 
 /**
  * @defgroup viewer-functions
@@ -531,13 +571,15 @@ function islandora_viewers_form($variable_id = NULL, $mimetype = NULL) {
       '#type' => 'item',
       '#title' => t('Select a viewer'),
       '#description' => t('Preferred viewer for your solution pack. These may be provided by third-party modules.'),
-      '#tree' => TRUE, // this attribute is important to return the submitted values in a deeper nested arrays in
+      // This attribute is important to return the submitted values in a deeper
+      // nested arrays in
+      '#tree' => TRUE,
       '#theme' => 'islandora_viewers_table',
     );
 
     // table loop
     foreach ($viewers as $name => $profile) {
-  
+
       $options[$name] = '';
         // machine name
       $form['viewers'][$variable_id]['name'][$name] = array(
@@ -582,16 +624,17 @@ function islandora_viewers_form($variable_id = NULL, $mimetype = NULL) {
  * Returns all defined viewers.
  *
  * @param string $mimetype
- *  specify a mimetype to return only viewers that support this certain mimetype.
+ *  specify a mimetype to return only viewers that support this certain
+ *  mimetype.
  * @return
  *  array of viewer definitions, or FALSE if none are found.
  */
 function islandora_get_viewers($mimetype = NULL) {
   $viewers = array();
   // get all viewers
-  $defined_viewers = module_invoke_all('islandora_viewer_info');  
+  $defined_viewers = module_invoke_all('islandora_viewer_info');
   // filter viewers by mimetype
-  foreach($defined_viewers as $key => $value) {
+  foreach ($defined_viewers as $key => $value) {
     if (in_array($mimetype, $value['mimetype']) OR $mimetype == NULL) {
       $viewers[$key] = $value;
     }
@@ -702,11 +745,9 @@ function islandora_get_viewer_id($variable_id) {
  */
 function islandora_get_viewer_callback($viewer_id = NULL) {
   if ($viewer_id !== NULL) {
-    // get defined viewers
     $viewers = module_invoke_all('islandora_viewer_info');
     if (isset($viewers[$viewer_id]['callback'])) {
-      // return callback function
-      return $viewers[$viewer_id]['callback'];      
+      return $viewers[$viewer_id]['callback'];
     }
   }
   return FALSE;

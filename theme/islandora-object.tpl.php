@@ -1,9 +1,11 @@
 <?php
 
-/*
+/**
  * @file
- * This is a template for objects that do not have a module to registered to build their display.
- * 
+ *
+ * This is a template for objects that do not have a module to registered to
+ * build their display.
+ *
  * islandora_object is a fedora tuque Object
  *    $object->label             - The label for this object.
  *    $object->id                - The identifier of the object.
@@ -17,7 +19,7 @@
  * to test if a datastream exists isset($object['dsid'])
  *
  * to iterate over datastreams:
- * foreach($object as $ds) {
+ * foreach ($object as $ds) {
  *   $ds->label, etc
  * }
  *
@@ -35,22 +37,25 @@
  *    $ds->size              - The size of the datastream
  *    $ds->checksum          - The checksum of the datastream
  *    $ds->checksumType      - The type of checksum for the datastream.
- *    $ds->createdDate->format("Y-m-d") - The created date with an option to use a format of your choice
+ *    $ds->createdDate->format("Y-m-d") - The created date with an option to use
+ *                                        a format of your choice
  *    $ds->content           - The content of the datastream
- *    $ds->url               - The URL. This is only valid for R and E datastreams. 
- * 
- * $dublin_core is a Dublin_Core object
+ *    $ds->url               - The URL. This is only valid for R and E
+ *                             datastreams.
+ *
+ * $dublin_core is a DublinCore object
  * which is an array of elements, such as dc.title
- * and each element has an array of values.  dc.title can have none, one or many titles
+ * and each element has an array of values.
+ * dc.title can have none, one or many titles
  * this is the case for all dc elements.
  *
  *
- * 
+ *
  * we can get a list of datastreams by doing
- * foreach ($object as $ds){
+ * foreach ($object as $ds) {
  * do something here
  * }
- * 
+ *
  */
 ?>
 <?php if (isset($islandora_object_label)): ?>
@@ -80,8 +85,8 @@
       <?php if ($parent_collections): ?>
         <dt>Collections</dt>
         <dd>
-          <?php foreach ($parent_collections as $key => $value): ?>
-            <div><?php print $value['label_link'] ?></div>
+          <?php foreach ($parent_collections as $collection): ?>
+            <div><?php print l($collection->label, "islandora/object/{$collection->id}"); ?></div>
           <?php endforeach; ?>
         </dd>
       <?php endif; ?>
@@ -96,7 +101,7 @@
     <th><?php print t('Label'); ?></th>
     <th><?php print t('Size'); ?></th>
     <th><?php print t('Mimetype'); ?></th>
-    <th><?php print t('Created'); ?></th> 
+    <th><?php print t('Created'); ?></th>
   </tr>
   <?php foreach($datastreams as $key => $value): ?>
   <tr>

@@ -6,4 +6,7 @@ core = 7.x
 configure = admin/islandora/configure
 stylesheets[all][] = css/islandora.base.css
 stylesheets[all][] = css/islandora.theme.css
+files[] = includes/MimeDetect.inc
+files[] = includes/DublinCore.inc
+files[] = includes/IslandoraTuque.inc
 php = 5.3

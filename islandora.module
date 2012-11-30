@@ -1,9 +1,10 @@
 <?php
 
-/*
+/**
  * @file
  *
- * islandora.module: defines paths (drupal menu items) as entry points and acts as a hub for dispatching tasks to other modules.
+ * islandora.module: defines paths (drupal menu items) as entry points and acts
+ *  as a hub for dispatching tasks to other modules.
  *
  * This file is part of Islandora.
  *
@@ -21,6 +22,8 @@
  * along with the program.  If not, see <http ://www.gnu.org/licenses/>.
  */
 
+// Common datastreams
+define('DS_COMP_STREAM', 'DS-COMPOSITE-MODEL');
 
 // Permissions
 define('FEDORA_VIEW', 'view fedora repository');
@@ -34,16 +37,23 @@ define('FEDORA_MANAGE', 'manage fedora items');
 // Hooks
 define('ISLANDORA_VIEW_HOOK', 'islandora_view_object');
 define('ISLANDORA_EDIT_HOOK', 'islandora_edit_object');
+define('ISLANDORA_PRE_INGEST_HOOK', 'islandora_ingest_pre_ingest');
 define('ISLANDORA_POST_INGEST_HOOK', 'islandora_ingest_post_ingest');
 define('ISLANDORA_PRE_PURGE_OBJECT_HOOK', 'islandora_pre_purge_object');
+define('ISLANDORA_POST_PURGE_OBJECT_HOOK', 'islandora_post_purge_object');
+define('ISLANDORA_INGEST_STEP_HOOK', 'islandora_ingest_steps');
+define('ISLANDORA_PRE_PURGE_DATASTREAM_HOOK', 'islandora_pre_purge_datastream');
+define('ISLANDORA_POST_PURGE_DATASTREAM_HOOK', 'islandora_post_purge_datastream');
+define('ISLANDORA_EDIT_DATASTREAM_HOOK', 'islandora_edit_datastream');
 
 /**
  * Implements hook_menu().
- * we need some standard entry points so we can have consistent urls for different Object actions
+ *
+ * We need some standard entry points so we can have consistent urls for
+ * different Object actions
  */
 function islandora_menu() {
   $items = array();
-
   $items['admin/islandora'] = array(
     'title' => 'Islandora',
     'description' => "Configure settings associated with Islandora.",
@@ -60,7 +70,6 @@ function islandora_menu() {
     'type' => MENU_NORMAL_ITEM,
     'weight' => -1,
   );
-
   $items['admin/islandora/solution_packs'] = array(
     'title' => 'Solution packs',
     'description' => 'Install content models and collections required by installed solution packs.',
@@ -69,146 +78,130 @@ function islandora_menu() {
     'file' => 'includes/solution_packs.inc',
     'type' => MENU_NORMAL_ITEM,
   );
-
-  $items['islandora/object/%islandora_object/manage/ingest'] = array(
-    'title' => 'Add an object',
-    'page callback' => 'islandora_ingest_callback',
-    'page arguments' => array(2),
-    'file' => 'includes/ingest-menu.inc',
-    'type' => MENU_LOCAL_ACTION,
-    'access callback' => 'islandora_ingest_access_callback',
-    'access arguments' => array(2, FEDORA_INGEST),
-  );
-
   $items['islandora'] = array(
     'title' => 'Islandora Repository',
     'page callback' => 'islandora_view_default_object',
     'type' => MENU_NORMAL_ITEM,
     'access arguments' => array(FEDORA_VIEW),
   );
-
   $items['islandora/object/%islandora_object'] = array(
     'title' => 'Repository',
     'page callback' => 'islandora_view_object',
     'page arguments' => array(2),
     'type' => MENU_NORMAL_ITEM,
-    'access callback' => 'islandora_access_callback',
-    'access arguments' => array(2, FEDORA_VIEW),
+    'access callback' => 'islandora_object_access_callback',
+    'access arguments' => array(FEDORA_VIEW, 2),
   );
-
-
   $items['islandora/object/%islandora_object/view'] = array(
     'title' => 'View',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -1,
   );
-
   $items['islandora/object/%islandora_object/view/default'] = array(
     'title' => 'View',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -1,
   );
-
   $items['islandora/object/%islandora_object/manage'] = array(
     'title' => 'Manage',
     'page callback' => 'islandora_edit_object',
     'page arguments' => array(2),
     'type' => MENU_LOCAL_TASK,
-    'access callback' => 'islandora_access_callback',
-    'access arguments' => array(2, FEDORA_MODIFY_STATE),
+    'access callback' => 'islandora_object_access_callback',
+    'access arguments' => array(FEDORA_MODIFY_STATE, 2),
   );
-
   $items['islandora/object/%islandora_object/manage/datastreams'] = array(
     'title' => 'Datastreams',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
-
   $items['islandora/object/%islandora_object/manage/properties'] = array(
     'title' => 'Properties',
     'page callback' => 'drupal_get_form',
-    'file' => 'includes/object_properties.inc',
-    'page arguments' => array('islandora_edit_properties_form', 2),
+    'file' => 'includes/object_properties.form.inc',
+    'page arguments' => array('islandora_object_properties_form', 2),
     'type' => MENU_LOCAL_TASK,
-    'access callback' => 'islandora_access_callback',
-    'access arguments' => array(2, FEDORA_MODIFY_STATE),
+    'access callback' => 'islandora_object_access_callback',
+    'access arguments' => array(FEDORA_MODIFY_STATE, 2),
     'weight' => -5,
   );
-
   $items['islandora/object/%islandora_object/delete'] = array(
     'title' => 'Delete object',
-    'file' => 'includes/purge.form.inc',
+    'file' => 'includes/delete_object.form.inc',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('islandora_purge_object', 2),
+    'page arguments' => array('islandora_delete_object_form', 2),
     'type' => MENU_CALLBACK,
-    'access callback' => 'islandora_access_callback',
-    'access arguments' => array(2, FEDORA_PURGE),
+    'access callback' => 'islandora_object_access_callback',
+    'access arguments' => array(FEDORA_PURGE, 2),
   );
-
   $items['islandora/object/%islandora_object/manage/datastreams/add'] = array(
     'title' => 'Add a datastream',
-    'file' => 'includes/datastream.inc',
+    'file' => 'includes/add_datastream.form.inc',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('islandora_add_datastream_form', 2),
     'type' => MENU_LOCAL_ACTION,
-    'access callback' => 'islandora_access_callback',
-    'access arguments' => array(2, FEDORA_ADD_DS)
+    'access callback' => 'islandora_object_access_callback',
+    'access arguments' => array(FEDORA_ADD_DS, 2)
   );
-
   $items['islandora/object/%islandora_object/manage/datastreams/add/autocomplete'] = array(
-    'file' => 'includes/datastream.inc',
-    'page callback' => 'islandora_datastream_autocomplete_callback',
+    'file' => 'includes/add_datastream.form.inc',
+    'page callback' => 'islandora_add_datastream_form_autocomplete_callback',
     'page arguments' => array(2),
     'type' => MENU_CALLBACK,
-    'access callback' => 'islandora_access_callback',
-    'access arguments' => array(2, FEDORA_ADD_DS)
+    'access callback' => 'islandora_object_access_callback',
+    'access arguments' => array(FEDORA_ADD_DS, 2)
   );
-
-  $items['islandora/object/%islandora_object/datastream/%'] = array(
+  $items['islandora/object/%islandora_object/datastream/%islandora_datastream'] = array(
     'title' => 'View datastream',
     'page callback' => 'islandora_view_datastream',
-    'page arguments' => array(2, 4),
+    'page arguments' => array(4, FALSE),
     'type' => MENU_CALLBACK,
     'file' => 'includes/datastream.inc',
-    'access callback' => 'islandora_access_callback',
-    'access arguments' => array(2, FEDORA_VIEW),
+    'access callback' => 'islandora_object_datastream_access_callback',
+    'access arguments' => array(FEDORA_VIEW, 2, 4),
+    'load arguments' => array(2),
   );
-
-  $items['islandora/object/%islandora_object/datastream/%/view'] = array(
+  $items['islandora/object/%islandora_object/datastream/%islandora_datastream/view'] = array(
     'title' => 'View datastream',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-
-  $items['islandora/object/%islandora_object/datastream/%/download'] = array(
+  $items['islandora/object/%islandora_object/datastream/%islandora_datastream/download'] = array(
     'title' => 'Download datastream',
-    'page callback' => 'islandora_view_datastream',
-    'page arguments' => array(2, 4, 5),
+    'page callback' => 'islandora_download_datastream',
+    'page arguments' => array(4),
     'type' => MENU_CALLBACK,
     'file' => 'includes/datastream.inc',
-    'access callback' => 'islandora_access_callback',
-    'access arguments' => array(2, FEDORA_VIEW),
+    'access callback' => 'islandora_object_datastream_access_callback',
+    'access arguments' => array(FEDORA_VIEW, 2, 4),
+    'load arguments' => array(2),
   );
-
-  $items['islandora/object/%islandora_object/datastream/%/edit'] = array(
+  $items['islandora/object/%islandora_object/datastream/%islandora_datastream/edit'] = array(
     'title' => 'Edit datastream',
     'page callback' => 'islandora_edit_datastream',
-    'page arguments' => array(2, 4),
+    'page arguments' => array(4),
     'type' => MENU_CALLBACK,
     'file' => 'includes/datastream.inc',
-    'access callback' => 'islandora_access_callback',
-    'access arguments' => array(2, FEDORA_METADATA_EDIT),
+    'access callback' => 'islandora_object_datastream_access_callback',
+    'access arguments' => array(FEDORA_METADATA_EDIT, 2, 4),
+    'load arguments' => array(2),
   );
-
-  $items['islandora/object/%islandora_object/datastream/%/delete'] = array(
-    'title' => 'Purge data stream',
+  $items['islandora/object/%islandora_object/datastream/%islandora_datastream/delete'] = array(
+    'title' => 'Delete data stream',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('islandora_purge_datastream', 2, 4),
-    'file' => 'includes/purge.form.inc',
+    'page arguments' => array('islandora_delete_datastream_form', 4),
+    'file' => 'includes/delete_datastream.form.inc',
     'type' => MENU_CALLBACK,
-    'access callback' => 'islandora_access_callback',
-    'access arguments' => array(2, FEDORA_PURGE),
+    'access callback' => 'islandora_object_datastream_access_callback',
+    'access arguments' => array(FEDORA_PURGE, 2, 4),
+    'load arguments' => array(2),
   );
-
+  $items['islandora/ingest'] = array(
+    'title' => 'Add an Object',
+    'page callback' => 'islandora_ingest_callback',
+    'file' => 'includes/ingest.menu.inc',
+    'type' => MENU_SUGGESTED_ITEM,
+    'access arguments' => array(FEDORA_INGEST),
+  );
   return $items;
 }
 
@@ -225,8 +218,6 @@ function islandora_admin_paths() {
 
 /**
  * Implements hook_theme().
- *
- * @return array
  */
 function islandora_theme() {
   return array(
@@ -252,8 +243,6 @@ function islandora_theme() {
 
 /**
  * Implements hook_permission().
- *
- * @return array
  */
 function islandora_permission() {
   return array(
@@ -302,97 +291,101 @@ function islandora_forms($form_id) {
 }
 
 /**
- * determines whether we can see the object or not
- * checks PID namespace permissions, and user permissions
- * @global object $user
- * @param string $op
- * @param string $pid
+ * Checks whether the user can access the given object with the given
+ * permission.
  *
- *  @return boolean
+ * Checks for object existance, accessiblitly, namespace permissions,
+ * and user permissions
+ *
+ * @see islandora_object_load() To find potential solutions to enable
+ *   page not found errors.
+ *
+ * @param string $perm
+ *   The user permission to test for.
+ * @param FedoraObject $object
+ *   The object to test, if NULL given the object doesn't exist or is
+ *   inaccessible.
+ *
+ * @return boolean
+ *   TRUE if the user is allowed to access this object, FALSE otherwise.
  */
-function islandora_access_callback($object = NULL, $perm = NULL) {
-  if (!$object || !$perm) {
-    return FALSE;
-  }
-
-  $is_restricted = variable_get('islandora_namespace_restriction_enforced', FALSE);
-
-  if (!$is_restricted) {
-    $namespace_access = TRUE;
-  }
-  else {
-    $pid_namespace = substr($object->id, 0, strpos($object->id, ':') + 1); // Get the namespace (with colon)
-    $allowed_namespaces = explode(" ", variable_get('islandora_pids_allowed', 'default: demo: changeme: islandora: ilives: islandora-book: books: newspapers: '));
-    $namespace_access = in_array($pid_namespace, $allowed_namespaces);
-  }
-
-  return ($namespace_access && user_access($perm));
+function islandora_object_access_callback($perm, $object = NULL) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  return user_access($perm) && is_object($object) && islandora_namespace_accessible($object->id);
 }
 
 /**
- * a function to call other modules edit page.  If there are not any modules
- * that handle this function this module will build a default page.
- * @global object $user
- * @param string $object_id
- * @return string
+ * Checks whether the user can access the given object and datastream with
+ * the given permission.
+ *
+ * Checks for object existance, accessiblitly, namespace permissions,
+ * and user permissions
+ *
+ * @see islandora_object_load() To find potential solutions to enable page
+ *   not found errors.
+ *
+ * @param string $perm
+ *   The user permission to test for.
+ * @param FedoraObject $object
+ *   The object to test, if NULL given the object doesn't exist or is
+ *   inaccessible.
+ * @param FedoraDatastream $datastream
+ *   The datastream to test, if NULL given the datastream doesn't exist
+ *   or is inaccessible.
+ *
+ * @return boolean
+ *   TRUE if the user is allowed to access this object, FALSE otherwise.
  */
-function islandora_edit_object($object) {
-  if (!$object) {
-    return drupal_not_found();
-  }
-
+function islandora_object_datastream_access_callback($perm, $object = NULL, $datastream = NULL) {
   module_load_include('inc', 'islandora', 'includes/utilities');
+  return user_access($perm) && is_object($object) && islandora_namespace_accessible($object->id) && is_object($datastream);
+}
 
-  // Accumulate the output.
+/**
+ * Renders the given objects manage page.
+ *
+ * Its possible to modify the output of this function if 'ISLANDORA_EDIT_HOOK'
+ * is implemented in other modules.
+ *
+ * If no modules implement 'ISLANDORA_EDIT_HOOK' then this function returns the
+ *  default manage view.
+ *
+ * @param FedoraObject $object
+ *   The object to manage.
+ *
+ * @return string
+ *   The HTML repersentation of the manage object page.
+ */
+function islandora_edit_object(FedoraObject $object) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
   $output = array();
-
-  // Call cmodel oriented variants first.
   foreach (islandora_build_hook_list(ISLANDORA_EDIT_HOOK, $object->models) as $hook) {
     $temp = module_invoke_all($hook, $object);
     if (!empty($temp)) {
       $output = array_merge_recursive($output, $temp);
     }
   }
-
-  // Add in the default, if we did not get any results.
   if (empty($output)) {
+    // Add in the default, if we did not get any results.
     $output = islandora_default_islandora_edit_object($object);
   }
-
   arsort($output);
-
   drupal_alter(ISLANDORA_EDIT_HOOK, $object, $output);
-
   return implode('', $output);
 }
 
 /**
- * edit properties form
- * @param type $object_id
- * @return string
- */
-function islandora_edit_properties($object_id) {
-  $object = islandora_object_load($object_id);
-  if (isset($object)) {
-    module_load_include('inc', 'islandora', 'includes/object_properties');
-    $form = drupal_get_form('islandora_edit_properties_form', $object);
-    drupal_set_title($object->label);
-    return drupal_render($form);
-  }
-  return "";
-}
-
-/**
- * Builds a default page for the edit tab.
+ * Renders the default manage object page for the given object.
  *
- * @param object $fedora_object
- *   A tuque Fedora Object
+ * @param FedoraObject $object
+ *   The object used to render the manage object page.
+ *
+ * @return array
+ *   The default rendering of the object manage page, indexed at
+ *   'Default Edit output'.
  */
-function islandora_default_islandora_edit_object($fedora_object) {
-  $output = theme('islandora_default_edit', array(
-    'islandora_object' => $fedora_object,
-  ));
-
+function islandora_default_islandora_edit_object(FedoraObject $object) {
+  $output = theme('islandora_default_edit', array('islandora_object' => $object));
   return array('Default Edit output' => $output);
 }
 
@@ -400,7 +393,7 @@ function islandora_default_islandora_edit_object($fedora_object) {
  * Page callback for the path "islandora".
  *
  * Redirects to the view of the object indicated by the Drupal variable
- * islandora_repository_pid.
+ * 'islandora_repository_pid'.
  */
 function islandora_view_default_object() {
   $pid = variable_get('islandora_repository_pid', 'islandora:root');
@@ -408,59 +401,53 @@ function islandora_view_default_object() {
 }
 
 /**
- * The view entry point.  modules should implement hook_islandora_view_object for the Fedora Content models that
- * their modules want to provide a view for.
- * @global object $user
- * @param string $object_id
+ * Renders the default view object page for the given object.
+ *
+ * Modules should implement ISLANDORA_VIEW_HOOK for the Fedora Content
+ * models that their modules want to provide a view for.
+ *
+ * If no modules implement the hook then the default view object page
+ *  will be rendered.
+ *
+ * @param FedoraObject $object
+ *   The object to view.
  *
  * @return string
+ *   The html repersentation of this object.
  */
-function islandora_view_object($fedora_object = NULL) {
+function islandora_view_object(FedoraObject $object) {
   module_load_include('inc', 'islandora', 'includes/breadcrumb');
   module_load_include('inc', 'islandora', 'includes/utilities');
-
-  global $user;
-
-  if (!$fedora_object) {
-    return drupal_not_found();
-  }
-
-  // set breadcrumbs
-  drupal_set_breadcrumb(islandora_get_breadcrumbs($fedora_object));
-  // optional pager parameters
+  drupal_set_breadcrumb(islandora_get_breadcrumbs($object));
+  // Optional pager parameters
   $page_number = (empty($_GET['page'])) ? '1' : $_GET['page'];
   $page_size = (empty($_GET['pagesize'])) ? '10' : $_GET['pagesize'];
-
-  // Accumulate the output.
   $output = array();
-
-  // Call cmodel oriented variants first.
-  foreach (islandora_build_hook_list(ISLANDORA_VIEW_HOOK, $fedora_object->models) as $hook) {
-    $temp = module_invoke_all($hook, $fedora_object, $page_number, $page_size);
+  foreach (islandora_build_hook_list(ISLANDORA_VIEW_HOOK, $object->models) as $hook) {
+    // @todo Remove page number and size from this hook, implementers of the
+    // hook should use drupal page handling directly.
+    $temp = module_invoke_all($hook, $object, $page_number, $page_size);
     if (!empty($temp)) {
       $output = array_merge_recursive($output, $temp);
     }
   }
-
-  // Add in the default, if we did not get any results.
   if (empty($output)) {
-    $output = islandora_default_islandora_view_object($fedora_object);
+    // No results, use the default view.
+    $output = islandora_default_islandora_view_object($object);
   }
-
   arsort($output);
- 
-  drupal_alter(ISLANDORA_VIEW_HOOK, $fedora_object, $output);
-
+  drupal_alter(ISLANDORA_VIEW_HOOK, $object, $output);
   return implode('', $output);
 }
 
 /**
- * If there are no modules registered to handle this objects cmodels or there are
- * not any cmodels specified this will create a default display.
+ * Renders the default view object page for the given object.
  *
  * @param FedoraObject $object
- *   The object whose display we are to render.
+ *   The object used to render the view object page.
+ *
  * @return array
+ *   The default rendering of the object view page, indexed at 'Default output'.
  */
 function islandora_default_islandora_view_object($object) {
   $output = theme('islandora_default', array('islandora_object' => $object));
@@ -468,111 +455,77 @@ function islandora_default_islandora_view_object($object) {
 }
 
 /**
- * A helper function to get a connection and return an object
+ * A helper function to get a connection and return an object for objects
+ * specified in the menu path as '%islandora_object'.
  *
- * @global object $user
  * @param string $object_id
+ *   The pid of an object in the menu path identified by '%islandora_object'.
+ *
  * @return FedoraObject
+ *   If the given object id exists in the repository then this returns a
+ *   FedoraObject.
+ *   If no object was found it returns FALSE which triggers
+ *   drupal_page_not_found().
+ *   If the object was inaccessible then NULL is returned, and the
+ *   access callback is expected to catch that case, triggering
+ *   drupal_access_denied().
  */
 function islandora_object_load($object_id) {
-  module_load_include('inc', 'islandora', 'includes/tuque');
-  $islandora_tuque = &drupal_static(__FUNCTION__);
-
-  if (!$islandora_tuque) {
-    $islandora_tuque = new IslandoraTuque();
-  }
-
-  if (IslandoraTuque::exists()) {
+  module_load_include('inc', 'islandora', 'includes/IslandoraTuque');
+  $tuque = islandora_get_tuque_connection();
+  if ($tuque) {
     try {
-      $fedora_object = $islandora_tuque->repository->getObject($object_id);
+      $object = $tuque->repository->getObject($object_id);
+      drupal_alter('islandora_object', $object);
+      return $object;
     } catch (Exception $e) {
-      return NULL;
+      if ($e->getCode() == '404') {
+        return FALSE;
+      }
+      else {
+        return NULL;
+      }
     }
-
-    drupal_alter('islandora_object', $fedora_object);
-    return $fedora_object;
   }
   else {
     IslandoraTuque::getError();
-    return NULL;
   }
+  // Assuming access denied in all other cases for now.
+  return NULL;
 }
 
 /**
- * A helper function to get a connection and purge an object
+ * A helper function to get an datastream specified as '%islandora_datastream'
+ * for the object specified in the menu path as '%islandora_object'.
  *
- * @global object $user
- * @param string $object_id
- * @return FedoraObject
+ * Its up to the access callbacks and menu callbacks to trigger
+ * drupal_access_denied() when appropriate.
+ *
+ * @param string $datastream_id
+ *   The dsid of the datastream specified as '%islandora_datastream' to fetch
+ *   from the given object in the menu path identified by '%islandora_object'.
+ *
+ * $param string $object_id
+ *   The object to load the datastream from.
+ *
+ * @return FedoraDatastream
+ *   If the given datastream ID exists then this returns a FedoraDatastream
+ *   object, otherwise it returns NULL which triggers drupal_page_not_found().
  */
-function islandora_object_purge($object_id) {
-  if (!$object_id) {
-    drupal_set_message(t('Cannot remove object, object id not set'));
-    return;
-  }
-
-  // load object
+function islandora_datastream_load($datastream_id, $object_id) {
   $object = islandora_object_load($object_id);
 
   if (!$object) {
-    drupal_set_message(t('Could not remove object, object not found'));
-    return;
+    return NULL;
   }
 
-  module_load_include('inc',  'islandora', 'includes/utilities');
-
-  $content_models = $object->models;
-  
-  $arr = array();
-  foreach (islandora_build_hook_list(ISLANDORA_PRE_PURGE_OBJECT_HOOK, $object->models) as $hook) {
-    $temp = module_invoke_all($hook, $object);
-    if (!empty($temp)) {
-      $arr = array_merge_recursive($arr, $temp);
-    }
-  }
-
-  if (isset($arr['delete']) && $arr['delete']) {
-    try {
-      $object->delete();
-    } catch (Exception $e) {
-      drupal_set_message(t('Error deleting Islandora object %s %e', array('%s' => $object_id, '%e' => $e)), 'error');
-      return "";
-    }
-  }
-  else {
-    try {
-      $object->repository->purgeObject($object_id);
-    } catch (Exception $e) {
-      drupal_set_message(t('Error purging Islandora object %s %e', array('%s' => $object_id, '%e' => $e)), 'error');
-      return "";
-    }
-  }
-
-  module_invoke_all('islandora_post_purge_object', $object_id, $content_models);  // notify modules post deletion
-}
-
-
-/**
- * Ingest access callback
- */
-function islandora_ingest_access_callback($object, $perm) {
-  if (islandora_access_callback($object, $perm) === FALSE) {
-    return FALSE;
-  }
-
-  $ingest_registry = module_invoke_all('islandora_ingest_registry', $object);
-
-  if (count($ingest_registry) > 0) {
-    return TRUE;
-  }
-  else {
-    return FALSE;
-  }
+  return $object[$datastream_id];
 }
 
 /**
- * Content model, collection view and collection policy datastreams may now optionally define a version
- * number in their top-level XML element as an attribute, as in:
+ * Content model, collection view and collection policy datastreams may now
+ * optionally define a version number in their top-level XML element as an
+ * attribute, as in:
  *   <content_model name="Collection" version="2" ...
  *
  * @param object $item
@@ -602,7 +555,6 @@ function islandora_get_islandora_datastream_version($item = NULL, $dsid = NULL, 
  * Implements hook_islandora_required_objects().
  */
 function islandora_islandora_required_objects() {
-  // module path
   $module_path = drupal_get_path('module', 'islandora');
   return array(
     'islandora' => array(
@@ -634,7 +586,202 @@ function islandora_islandora_required_objects() {
   );
 }
 
+/**
+ * Implements islandora_undeleteable_datastreams().
+ */
+function islandora_islandora_undeletable_datastreams(array $models) {
+  return array('DC');
+}
+
+/**
+ * Ingest the given object into Fedora calling its pre/post hooks as well.
+ *
+ * @todo will be cleaned up in the future
+ *
+ * @param NewFedoraObject $object
+ *   An ingestable FedoraObject.
+ *
+ * @return FedoraObject
+ *   The ingested FedoraObject, after running the pre/post ingest hooks.
+ */
+function islandora_add_object(NewFedoraObject &$object) {
+  islandora_pre_add_object($object);
+  $object->repository->ingestObject($object);
+  islandora_post_add_object($object);
+  return $object;
+}
+
+/**
+ * Calls the ISLANDORA_PRE_INGEST_HOOK hooks.
+ *
+ * @param NewFedoraObject $object
+ *   An ingestable FedoraObject.
+ */
+function islandora_pre_add_object(NewFedoraObject $object) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  foreach (islandora_build_hook_list(ISLANDORA_PRE_INGEST_HOOK, $object->models) as $hook) {
+    module_invoke_all($hook, $object);
+  }
+}
 
 
+/**
+ * Calls the ISLANDORA_POST_INGEST_HOOK hooks.
+ *
+ * @param FedoraObject $object
+ *   A recently ingestable FedoraObject.
+ */
+function islandora_post_add_object(FedoraObject $object) {
+  foreach (islandora_build_hook_list(ISLANDORA_POST_INGEST_HOOK, $object->models) as $hook) {
+    module_invoke_all($hook, $object);
+  }
+}
 
+/**
+ * Deletes the given object into Fedora calling its pre/post hooks as well.
+ *
+ * @param FedoraObject $object
+ *   An object to delete.
+ *
+ * @return FedoraObject
+ *   The ingested FedoraObject, after running the pre/post ingest hooks.
+ */
+function islandora_delete_object(FedoraObject &$object) {
+  $object_id = $object->id;
+  $models = $object->models;
+  $action = islandora_pre_delete_object($object);
+  switch ($action) {
+    case 'blocked':
+      // Do nothing.
+      return FALSE;
+    case 'delete':
+      // Change the state to deleted.
+      $object->delete();
+      islandora_post_delete_object($object_id, $models);
+      return TRUE;
+    default:
+      // Purge
+      $object->repository->purgeObject($object_id);
+      islandora_post_delete_object($object_id, $models);
+      $object = NULL;
+      return TRUE;
+  }
+}
 
+/**
+ * Calls the ISLANDORA_PRE_PURGE_OBJECT_HOOK hooks.
+ *
+ * @param FedoraObject $object
+ *   The object that is about to be deleted.
+ */
+function islandora_pre_delete_object(FedoraObject $object) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  $results = array();
+  foreach (islandora_build_hook_list(ISLANDORA_PRE_PURGE_OBJECT_HOOK, $object->models) as $hook) {
+    $results = array_merge_recursive($results, module_invoke_all($hook, $object));
+  }
+  $action = (isset($results['block']) && $results['block']) ? 'block' : FALSE;
+  $action = (!$action && isset($results['delete']) && $results['delete']) ? 'delete' : $action;
+  $action = !$action ? 'purge' : $action;
+  return $action;
+}
+
+/**
+ * Calls the ISLANDORA_POST_PURGE_OBJECT_HOOK hooks.
+ *
+ * @param string $object_id
+ *   The object id of an the recently deleted object.
+ * @param array $models
+ *   The list of content models the delete object subsribed to.
+ */
+function islandora_post_delete_object($object_id, array $models) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  foreach (islandora_build_hook_list(ISLANDORA_POST_PURGE_OBJECT_HOOK, $models) as $hook) {
+    module_invoke_all($hook, $object_id, $models);
+  }
+}
+
+/**
+ * Delete's/Purges the given datastream.
+ *
+ * @throws Exception
+ *  Which types are undefined, but more than likely because of the hooks
+ *  there will be several kinds.
+ *
+ * @param FedoraDatastream $datastream
+ *   The datastream to delete.
+ *
+ * @return boolean
+ *   TRUE is returned if the datastream was Deleted/Purged, FALSE if it was
+ *   blocked.
+ */
+function islandora_delete_datastream(FedoraDatastream &$datastream) {
+  $datastream_id = $datastream->id;
+  $object = $datastream->parent;
+  $action = islandora_pre_delete_datastream($datastream);
+  switch ($action) {
+    case 'blocked':
+      // Do nothing.
+      return FALSE;
+    case 'delete':
+      // Change the state to deleted.
+      $object[$datastream_id]->state = 'D';
+      // @todo Differentiate between delete/purge in the hooks.
+      islandora_post_delete_datastream($object, $datastream_id);
+      return TRUE;
+    default:
+      // Purge
+      $object->purgeDatastream($datastream_id);
+      islandora_post_delete_datastream($object, $datastream_id);
+      $datastream = NULL;
+      return TRUE;
+  }
+}
+
+/**
+ * The default behaviour is to 'purge' the datastream but this can be overridden
+ * by modules that implement the 'islandora_pre_purge_datastream' hook.
+ *
+ * @todo make this an alter.
+ *
+ * The returned array can include a 'block' => TRUE
+ * pair which will prevent the datastream from being deleted if it particularly
+ * needed for a certain function. Returning 'delete' => TRUE will cause the
+ * datastream to be put into a deleted state.
+ *
+ * @param FedoraDatastream $datastream
+ *   The datastream to delete.
+ *
+ * @return string
+ *   The action to take when deleting the given datastream, either 'purge',
+ *   'delete', or 'block'.
+ */
+function islandora_pre_delete_datastream(FedoraDatastream $datastream) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  $results = array();
+  foreach (islandora_build_hook_list(ISLANDORA_PRE_PURGE_DATASTREAM_HOOK, $datastream->parent->models) as $hook) {
+    // Not sure this will work the greatest, probably an alter would be better..
+    $results = array_merge_recursive($results, module_invoke_all($hook, $datastream));
+  }
+  $action = (isset($results['block']) && $results['block']) ? 'block' : FALSE;
+  $action = (!$action && isset($results['delete']) && $results['delete']) ? 'delete' : $action;
+  $action = !$action ? 'purge' : $action;
+  return $action;
+}
+
+/**
+ * Calls the post purge datastream hooks.
+ *
+ * @todo Should differentiate between purging/deleting.
+ *
+ * @param FedoraObject $object
+ *   The parent object of the deleted datastream.
+ * @param string $datastream_id
+ *   The datastream id of the deleted datastream.
+ */
+function islandora_post_delete_datastream(FedoraObject $object, $datastream_id) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  foreach (islandora_build_hook_list(ISLANDORA_POST_PURGE_DATASTREAM_HOOK, $object->models) as $hook) {
+    module_invoke_all($hook, $object, $datastream_id);
+  }
+}

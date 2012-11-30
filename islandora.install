@@ -2,7 +2,8 @@
 
 /**
  * @file
- * This file contains all install functions.
+ *
+ * This file contains all install related hooks.
  */
 
 /**
@@ -12,7 +13,6 @@
  */
 function islandora_install() {
   module_load_include('inc', 'islandora', 'includes/solution_packs');
-  // install object(s)
   islandora_install_solution_pack('islandora');
 }
 
@@ -23,6 +23,5 @@ function islandora_install() {
  */
 function islandora_uninstall() {
   module_load_include('inc', 'islandora', 'includes/solution_packs');
-  // uninstall callback
   islandora_install_solution_pack('islandora', 'uninstall');
 }

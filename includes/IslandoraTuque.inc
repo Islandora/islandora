@@ -2,6 +2,7 @@
 
 /**
  * @file
+ *
  * This file contains a class to include the Tuque php library.
  */
 
@@ -77,11 +78,11 @@ class IslandoraTuque {
     }
 
     if (self::exists()) {
-      $this->connection = new RepositoryConnection($url, $user_string, $pass_string);
+      $this->connection = new IslandoraRepositoryConnection($url, $user_string, $pass_string);
       $this->connection->reuseConnection = TRUE;
-      $this->api = new FedoraApi($this->connection);
-      $this->cache = new SimpleCache();
-      $this->repository = new FedoraRepository($this->api, $this->cache);
+      $this->api = new IslandoraFedoraApi($this->connection);
+      $this->cache = new IslandoraSimpleCache();
+      $this->repository = new IslandoraFedoraRepository($this->api, $this->cache);
     }
   }
 
@@ -97,3 +98,27 @@ class IslandoraTuque {
   }
 }
 
+/**
+ * Just a wrapper around fetchings the IslandoraTuque object, with some very
+ *  basic error logging.
+ *
+ * @return IslandoraTuque
+ *   A IslandoraTuque instance
+ */
+function islandora_get_tuque_connection() {
+  $tuque = &drupal_static(__FUNCTION__);
+  if (!$tuque) {
+    if (IslandoraTuque::exists()) {
+      require_once(__DIR__ . '/IslandoraTuqueWrapper.inc');
+      try {
+        $tuque = new IslandoraTuque();
+      } catch (Exception $e) {
+        drupal_set_message(t('Unable to connect to the repository %e', array('%e' => $e)), 'error');
+      }
+    }
+    else {
+      return NULL;
+    }
+  }
+  return $tuque;
+}

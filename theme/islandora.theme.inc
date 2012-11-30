@@ -2,6 +2,7 @@
 
 /**
  * @file
+ *
  * This file contains all theme and preprocess functions.
  */
 
@@ -13,13 +14,12 @@
  *   theme variables for the edit template
  */
 function islandora_preprocess_islandora_default_edit(&$variables) {
-  $islandora_object = $variables['islandora_object'];
   global $base_url;
+  $islandora_object = $variables['islandora_object'];
   $datastreams = array();
   $variables['islandora_editmetadata_url'] = $base_url . '/islandora/edit_form/' . $islandora_object->id;
   module_load_include('inc', 'islandora', 'includes/datastream');
   module_load_include('inc', 'islandora', 'includes/utilities');
-  // $variables['add_datastream_form'] = drupal_get_form('islandora_add_datastream_form', $islandora_object->id);
   $header = array(
     array('data' => t('ID')),
     array('data' => t('Label')),
@@ -27,7 +27,6 @@ function islandora_preprocess_islandora_default_edit(&$variables) {
     array('data' => t('Mime type')),
     array('data' => t('Size')),
     array('data' => t('Operations'), 'colspan' => '3'),
-      //array('data' => t('Delete')),
   );
   $table_attributes = array('class' => array('manage-datastreams'));
   $rows = array();
@@ -39,7 +38,7 @@ function islandora_preprocess_islandora_default_edit(&$variables) {
       array('class' => 'datastream-mime', 'data' => $ds->mimeType),
       array('class' => 'datastream-size', 'data' => islandora_datastream_get_human_readable_size($ds)),
       array('class' => 'datastream-download', 'data' => l(t('download'), islandora_datastream_get_url($ds, 'download'))),
-      array('class' => 'datstream-edit', 'data' => islandora_datastream_edit_get_link($islandora_object, $ds->id)),
+      array('class' => 'datstream-edit', 'data' => islandora_datastream_edit_get_link($ds)),
       array('class' => 'datastream-delete', 'data' => islandora_datastream_get_delete_link($ds)),
     );
   }
@@ -59,11 +58,10 @@ function islandora_preprocess_islandora_default(&$variables) {
   drupal_add_js('misc/form.js');
   drupal_add_js('misc/collapse.js');
   $islandora_object = $variables['islandora_object'];
-  module_load_include('inc', 'islandora', 'includes/islandora_dublin_core');
   module_load_include('inc', 'islandora', 'includes/utilities');
   module_load_include('inc', 'islandora', 'includes/datastream');
 
-  $variables['parent_collections'] = islandora_datastream_get_parents($islandora_object);
+  $variables['parent_collections'] = islandora_get_parents_from_rels_ext($islandora_object);
 
   $datastreams = array();
   foreach ($islandora_object as $ds) {
@@ -88,8 +86,7 @@ function islandora_preprocess_islandora_default(&$variables) {
   $variables['datastreams'] = $datastreams;
   try {
     $dc = $islandora_object['DC']->content;
-    //$dc_xml = simplexml_load_string($dc);
-    $dc_object = Dublin_Core::import_from_xml_string($dc);
+    $dc_object = DublinCore::import_from_xml_string($dc);
     $dc_array = $dc_object->as_formatted_array();
   } catch (Exception $e) {
     drupal_set_message(t('Error retrieving object %s %t', array('%s' => $islandora_object->id, '%t' => $e->getMessage())), 'error', FALSE);

@@ -2,6 +2,7 @@
 
 /**
  * @file
+ *
  * Implements a simple class for working with Dublin Core data and exporting it
  * back to XML. Inspiration and design shamelessly stolen from the pyfedora
  * project at http://pypi.python.org/pypi/pyfedora/0.1.0
@@ -10,7 +11,7 @@
 /**
  * Dublin Core Class
  */
-class Dublin_Core {
+class DublinCore {
 
   public $dc = array(
     'dc:title' => array(),
@@ -32,11 +33,12 @@ class Dublin_Core {
   public $owner;
 
   /**
-   * Constructs a Dublin_Core object from a Fedora_Item object and populates
-   * the $dc array.
-   * @param <type> $item
+   * Constructs a DublinCore object from a Fedora_Item object and populates the
+   * $dc array.
+   *
+   * @param string $dc_xml
    */
-  function Dublin_Core($dc_xml = NULL) {
+  function DublinCore($dc_xml = NULL) {
     if (!empty($dc_string)) {
       $this->dc = self::import_from_xml_string($dc_xml);
     }
@@ -134,14 +136,15 @@ class Dublin_Core {
 
   /**
    * Creates a new instance of the class by parsing dc_xml
+   *
    * @param string $dc_xml
-   * @return Dublin_Core
+   * @return DublinCore
    */
   static function import_from_xml_string($dc_xml) {
     $dc_doc = new DomDocument();
     if ($dc_doc->loadXML($dc_xml)) {
       $oai_dc = $dc_doc->getElementsByTagNameNS('http://purl.org/dc/elements/1.1/', '*');
-      $new_dc = new Dublin_Core();
+      $new_dc = new DublinCore();
       foreach ($oai_dc as $child) {
         array_push($new_dc->dc[$child->nodeName], $child->nodeValue);
       }
@@ -153,4 +156,3 @@ class Dublin_Core {
   }
 
 }
-
