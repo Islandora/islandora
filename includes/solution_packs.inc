@@ -203,18 +203,11 @@ function islandora_solution_pack_form_submit($form, &$form_state) {
  */
 function islandora_batch_reingest_object($object_model, &$context) {
   module_load_include('inc', 'islandora', 'includes/utilities');
-
-  global $user;
   global $base_url;
-  // new connection
-  try {
-    $connection = new IslandoraTuque($user);
-  }
-  catch (Exception $e) {
-    drupal_set_message(t('Unable to connect to the repository %e', array('%e' => $e)), 'error');
+  $connection = islandora_get_tuque_connection();
+  if (!$connection) {
     return;
   }
-
   if (!empty($object_model) && is_array($object_model)) {
     $pid = $object_model['pid'];
     if (!islandora_is_valid_pid($pid)) {
@@ -293,15 +286,7 @@ function islandora_install_solution_pack($module_name = NULL, $op = 'install') {
       return;
     }
 
-    // create new connection
-    try {
-      $connection = new IslandoraTuque($user);
-    }
-    catch (Exception $e) {
-      drupal_set_message(st('Unable to connect to the repository %e', array('%e' => $e)), 'error');
-      return;
-    }
-
+    $connection = islandora_get_tuque_connection();
     // get object models
     $enabled_solution_packs = module_invoke_all('islandora_required_objects');
     $islandora_required_objects = $module_name . '_islandora_required_objects';

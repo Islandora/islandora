@@ -78,6 +78,7 @@ class IslandoraTuque {
     }
 
     if (self::exists()) {
+      module_load_include('inc', 'islandora', 'includes/IslandoraTuqueWrapper');
       $this->connection = new IslandoraRepositoryConnection($url, $user_string, $pass_string);
       $this->connection->reuseConnection = TRUE;
       $this->api = new IslandoraFedoraApi($this->connection);
@@ -96,29 +97,4 @@ class IslandoraTuque {
     $message = t('Islandora requires the !tuque_url. Please install in /sites/all/libraries/tuque before continuing. See the !islandora_url.', array( '!tuque_url' => $tuque_link, '!islandora_url' => $islandora_doc_link));
     drupal_set_message(filter_xss($message), 'error', FALSE);
   }
-}
-
-/**
- * Just a wrapper around fetchings the IslandoraTuque object, with some very
- *  basic error logging.
- *
- * @return IslandoraTuque
- *   A IslandoraTuque instance
- */
-function islandora_get_tuque_connection() {
-  $tuque = &drupal_static(__FUNCTION__);
-  if (!$tuque) {
-    if (IslandoraTuque::exists()) {
-      require_once(__DIR__ . '/IslandoraTuqueWrapper.inc');
-      try {
-        $tuque = new IslandoraTuque();
-      } catch (Exception $e) {
-        drupal_set_message(t('Unable to connect to the repository %e', array('%e' => $e)), 'error');
-      }
-    }
-    else {
-      return NULL;
-    }
-  }
-  return $tuque;
 }

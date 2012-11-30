@@ -98,14 +98,17 @@ function islandora_is_valid_dsid($dsid) {
  */
 function islandora_describe_repository($url = NULL) {
   $url = isset($url) ? $url : variable_get('islandora_base_url', 'http://localhost:8080/fedora');
-  $connection = new IslandoraTuque(NULL, $url);
-  try {
-    $info = $connection->api->a->describeRepository();
-    return $info;
+  $connection = islandora_get_tuque_connection();
+  if ($connection) {
+    try {
+      $info = $connection->api->a->describeRepository();
+      return $info;
+    }
+    catch (RepositoryException $e) {
+      return FALSE;
+    }
   }
-  catch (RepositoryException $e) {
-    return FALSE;
-  }
+  return FALSE;
 }
 
 /**
@@ -375,7 +378,6 @@ function islandora_get_datastreams_requirements_from_content_model(FedoraObject 
  *   An ingestable NewFedoraObject.
  */
 function islandora_prepare_new_object($namespace = NULL, $label = NULL, $datastreams = array(), $content_models = array(), $relationships = array()) {
-  module_load_include('inc', 'islandora', 'includes/IslandoraTuque');
   global $user;
   $tuque = islandora_get_tuque_connection();
   $object = isset($namespace) ? $tuque->repository->constructObject($namespace) : new NewFedoraObject(NULL, $tuque->repository);

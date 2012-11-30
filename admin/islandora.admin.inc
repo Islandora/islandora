@@ -16,11 +16,6 @@ function islandora_repository_admin($form, &$form_state) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   drupal_add_css(drupal_get_path('module', 'islandora') . '/css/islandora.admin.css');
 
-  if (!IslandoraTuque::exists()) {
-    IslandoraTuque::getError();
-    return;
-  }
-
   $form = array();
   if (isset($form_state['values']['islandora_base_url'])) {
     $url = $form_state['values']['islandora_base_url'];
@@ -29,7 +24,11 @@ function islandora_repository_admin($form, &$form_state) {
     $url = variable_get('islandora_base_url', 'http://localhost:8080/fedora');
   }
 
-  $connection = new IslandoraTuque(NULL, $url);
+  $connection = islandora_get_tuque_connection(NULL, $url);
+  if (!$connection) {
+    return;
+  }
+
   try {
     $info = $connection->api->a->describeRepository();
   }

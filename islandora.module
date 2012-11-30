@@ -455,6 +455,31 @@ function islandora_default_islandora_view_object($object) {
 }
 
 /**
+ * Just a wrapper around fetchings the IslandoraTuque object, with some very
+ *  basic error logging.
+ *
+ * @return IslandoraTuque
+ *   A IslandoraTuque instance
+ */
+function islandora_get_tuque_connection($user = NULL, $url = NULL) {
+  module_load_include('inc', 'islandora', 'includes/IslandoraTuque');
+  $tuque = &drupal_static(__FUNCTION__);
+  if (!$tuque) {
+    if (IslandoraTuque::exists()) {
+      try {
+        $tuque = new IslandoraTuque($user, $url);
+      } catch (Exception $e) {
+        drupal_set_message(t('Unable to connect to the repository %e', array('%e' => $e)), 'error');
+      }
+    }
+    else {
+      return NULL;
+    }
+  }
+  return $tuque;
+}
+
+/**
  * A helper function to get a connection and return an object for objects
  * specified in the menu path as '%islandora_object'.
  *
@@ -471,7 +496,6 @@ function islandora_default_islandora_view_object($object) {
  *   drupal_access_denied().
  */
 function islandora_object_load($object_id) {
-  module_load_include('inc', 'islandora', 'includes/IslandoraTuque');
   $tuque = islandora_get_tuque_connection();
   if ($tuque) {
     try {
@@ -603,12 +627,21 @@ function islandora_islandora_undeletable_datastreams(array $models) {
  *
  * @return FedoraObject
  *   The ingested FedoraObject, after running the pre/post ingest hooks.
+ *   Returns FALSE if the ingest failed.
  */
 function islandora_add_object(NewFedoraObject &$object) {
   islandora_pre_add_object($object);
-  $object->repository->ingestObject($object);
-  islandora_post_add_object($object);
-  return $object;
+  try {
+    $object->repository->ingestObject($object);
+    islandora_post_add_object($object);
+    return $object;
+  } catch (Exception $e) {
+    watchdog('islandora', 'Failed to ingest object: @pid</br>code: @code<br/>message: @msg', array(
+        '@pid' => $object->id,
+        '@code' => $e->getCode(),
+        '@msg' => $e->getMessage()), WATCHDOG_ERROR);
+  }
+  return FALSE;
 }
 
 /**
