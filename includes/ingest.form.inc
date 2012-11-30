@@ -32,7 +32,21 @@
  */
 function islandora_ingest_form(array $form, array &$form_state, array $configuration) {
   islandora_ingest_form_init_form_state($form_state, $configuration);
-  return islandora_ingest_form_execute_step($form, $form_state);
+
+  $original_form = $form;
+  $form = islandora_ingest_form_execute_step($original_form, $form_state);
+
+  // XXX: One would think that this would be handled by Drupal proper; however,
+  //   it is not.  To trigger rebuilds from inside of a form building function
+  //   does not look to be provided for.
+  while ($form_state['rebuild'] === TRUE) {
+    $form_state['rebuild'] = FALSE;
+    // Might've changed the step...  Might need to include new files.
+    islandora_ingest_form_step_form_load_include($form_state);
+    $form = islandora_ingest_form_execute_step($original_form, $form_state);
+  }
+
+  return $form;
 }
 
 /**
