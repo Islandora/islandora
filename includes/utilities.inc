@@ -294,9 +294,11 @@ function islandora_get_datastreams_requirements(FedoraObject $object) {
  */
 function islandora_get_datastreams_requirements_from_models(array $models) {
   $dsids = array();
-  foreach ($models as  $model) {
-    $model = islandora_object_load($model);
-    $dsids += islandora_get_datastreams_requirements_from_content_model($model);
+  foreach ($models as $model_pid) {
+    $model = islandora_object_load($model_pid);
+    if (isset($model) && $model) {
+      $dsids += islandora_get_datastreams_requirements_from_content_model($model);
+    }
   }
   // The AUDIT Datastream can not really be added, so it can't really be missing.
   unset($dsids['AUDIT']);
