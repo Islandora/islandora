@@ -9,6 +9,29 @@
  * @todo Overload functions and apply pre/post hooks.
  */
 
+$islandora_module_path = drupal_get_path('module', 'islandora');
+
+//do this until we expost these in a module or library
+@include_once 'sites/all/libraries/tuque/Datastream.php';
+@include_once 'sites/all/libraries/tuque/FedoraApi.php';
+@include_once 'sites/all/libraries/tuque/FedoraApiSerializer.php';
+@include_once 'sites/all/libraries/tuque/Object.php';
+@include_once 'sites/all/libraries/tuque/RepositoryConnection.php';
+@include_once 'sites/all/libraries/tuque/Cache.php';
+@include_once 'sites/all/libraries/tuque/RepositoryException.php';
+@include_once 'sites/all/libraries/tuque/Repository.php';
+@include_once 'sites/all/libraries/tuque/FedoraRelationships.php';
+
+@include_once "$islandora_module_path/libraries/tuque/Datastream.php";
+@include_once "$islandora_module_path/libraries/tuque/FedoraApi.php";
+@include_once "$islandora_module_path/libraries/tuque/FedoraApiSerializer.php";
+@include_once "$islandora_module_path/libraries/tuque/Object.php";
+@include_once "$islandora_module_path/libraries/tuque/RepositoryConnection.php";
+@include_once "$islandora_module_path/libraries/tuque/Cache.php";
+@include_once "$islandora_module_path/libraries/tuque/RepositoryException.php";
+@include_once "$islandora_module_path/libraries/tuque/Repository.php";
+@include_once "$islandora_module_path/libraries/tuque/FedoraRelationships.php";
+
 class IslandoraFedoraRepository extends FedoraRepository {
   protected $queryClass = 'IslandoraRepositoryQuery';
   protected $newObjectClass = 'IslandoraNewFedoraObject';

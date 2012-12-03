@@ -9,4 +9,5 @@ stylesheets[all][] = css/islandora.theme.css
 files[] = includes/MimeDetect.inc
 files[] = includes/DublinCore.inc
 files[] = includes/IslandoraTuque.inc
+files[] = includes/IslandoraTuqueWrapper.inc
 php = 5.3
