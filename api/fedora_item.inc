@@ -2,6 +2,7 @@
 /**
  * @file
  * Fedora Item
+ * wrapper around Fedora's Soap api
  */
 
 define('RELS_EXT_URI', 'info:fedora/fedora-system:def/relations-external#');
@@ -18,6 +19,7 @@ define("RELS_TYPE_DATETIME", 4);
 
 /**
  * Fedora Item Class
+ * includes wrapper functions for the most commonly used Fedora soap apis
  */
 class Fedora_Item {
 
@@ -102,23 +104,34 @@ class Fedora_Item {
   /**
    * Exists
    *
-   * @return type
+   * @return boolean
+   *   returns TRUE if the object exists in Fedora and we have permission to 
+   *   access
+   *   
    */
   function exists() {
     return (!empty($this->objectProfile));
   }
 
   /**
-   * Add datastream from file
+   * Add Fedora datastream from file
    *
-   * @param type $datastream_file
-   * @param type $datastream_id
-   * @param type $datastream_label
-   * @param type $datastream_mimetype
-   * @param type $controlGroup
-   * @param type $logMessage
+   * @param string $datastream_file
+   *   path to the file we want to add to fedora as a datastream
+   * @param string $datastream_id
+   *   the id to give to the datastream
+   * @param string $datastream_label
+   *   a label for the datastream
+   * @param string $datastream_mimetype
+   *   mimetype of the content to be added
+   * @param string $controlGroup
+   *   One of "X", "M", "R", or "E" (Inline XML, Managed Content, Redirect, or External Referenced)
+   * @param string $logMessage
+   *   this will be written to the objects audit trail
    *
-   * @return type
+   * @return string
+   *   returns the dsid of the newly added datastream
+   *   
    */
   function add_datastream_from_file($datastream_file, $datastream_id, $datastream_label = NULL, $datastream_mimetype = '', $controlGroup = 'M', $logMessage = NULL) {
     module_load_include('inc', 'fedora_repository', 'MimeClass');
@@ -152,16 +165,23 @@ class Fedora_Item {
   }
 
   /**
-   * Add datastream from url
+   * Add a fedora datastream from url
    *
-   * @param type $datastream_url
-   * @param type $datastream_id
-   * @param type $datastream_label
-   * @param type $datastream_mimetype
-   * @param type $controlGroup
-   * @param type $logMessage
-   *
-   * @return type
+   * @param string $datastream_url
+   *   a url that references the location of the content
+   * @param string $datastream_id
+   *   the id to give to the datastream
+   * @param string $datastream_label
+   *   a label for the datastream
+   * @param string $datastream_mimetype
+   *   mimetype of the content to be added
+   * @param string $controlGroup
+   *   One of "X", "M", "R", or "E" (Inline XML, Managed Content, Redirect, or External Referenced)
+   * @param string $logMessage
+   *   this will be written to the objects audit trail
+ 
+   * @return string
+   *   returns the dsid of the newly added datastream
    */
   function add_datastream_from_url($datastream_url, $datastream_id, $datastream_label = NULL, $datastream_mimetype = '', $controlGroup = 'M', $logMessage = NULL) {
     global $base_url;
@@ -208,14 +228,22 @@ class Fedora_Item {
   /**
    * Add datastream from string
    *
-   * @param type $str
-   * @param type $datastream_id
-   * @param type $datastream_label
-   * @param type $datastream_mimetype
-   * @param type $controlGroup
-   * @param type $logMessage
-   *
-   * @return type
+   * @param string str
+   *   a string containing the content for the new datastream
+   * @param string $datastream_id
+   *   the id to give to the datastream
+   * @param string $datastream_label
+   *   a label for the datastream
+   * @param string $datastream_mimetype
+   *   mimetype of the content to be added
+   * @param string $controlGroup
+   *   One of "X", "M", "R", or "E" (Inline XML, Managed Content, Redirect, or External Referenced)
+   * @param string $logMessage
+   *   this will be written to the objects audit trail
+ 
+   * @return string
+   *   returns the dsid of the newly added datastream
+   
    */
   function add_datastream_from_string($str, $datastream_id, $datastream_label = NULL, $datastream_mimetype = 'text/xml', $controlGroup = 'M', $logMessage = NULL) {
     $dir = file_directory_temp();
@@ -233,15 +261,25 @@ class Fedora_Item {
    * Wrapper to add new or modify existing datastream
    *
    * @global url $base_url
+   *   drupal $base_url
    *
    * @param url $external_url
    * @param string $dsid
+   *   datastream id
    * @param string $label
+   *   datastream label
    * @param string $mime_type
+   *   mimetype of the content to be added or modified
    * @param string $controlGroup
+   *   One of "X", "M", "R", or "E" (Inline XML, Managed Content, Redirect, or External Referenced)
    * @param boolean $force
+   *   DEPRECATED in the Fedora api-m soap api, the default is FALSE and should 
+   *   be left at FALSE in most cases.
+   *   Force the update even if it would break the data contract
    * @param string $logMessage
+   *   this will be written to the objects audit trail
    * @param boolean $quiet
+   *   if TRUE will suppress drupal messages
    */
   function add_or_modify_by_reference($external_url, $dsid, $label, $mime_type, $controlGroup = 'M', $force = FALSE, $logMessage = 'Modified by Islandora API', $quiet=FALSE) {
     global $base_url;
@@ -256,9 +294,9 @@ class Fedora_Item {
 
   /**
    *
-   * @param unknown_type $el
-   * @param unknown_type $object
-   * @param unknown_type $type
+   * @param DomElement $el
+   * @param string $object
+   * @param string $type
    */
   protected function buildRelsStatement(&$el, $object, $type) {
     if ($type > 0) {
@@ -300,8 +338,8 @@ class Fedora_Item {
    *  - 3: integer
    *  - 4: dateTime
    *
-   * @return ???
-   *   Value returned from SOAP call for modify_datastream.
+   * @return string 
+   *   The timestamp of the operation according to the server, in ISO8601 format.
    */
   function add_relationship($relationship, $object, $namespaceURI = RELS_EXT_URI, $literal_value = RELS_TYPE_URI) {
     static $relsextxml = NULL;
@@ -357,9 +395,24 @@ RDF;
   /**
    * Extension of add_relationship(), which acts on RELS-INT.
    *
-   * @param $dsid
+   * @staticvar DomDocument $relsxml
+   * @param string $dsid
    *   A string containing either the base dsid (EXAMPLE)
    *   or URI to the datastream (info:fedora/pid/EXAMPLE)
+   * @param string $relationship
+   *   The predicate/relationship tag to add
+   * @param string $object
+   *    The object(s)/dsid to be related to.
+   * @param string $namespaceURI
+   * @param int $literal_value
+   *    Used to type the value.
+   *  - 0: URI
+   *  - 1: plain literal
+   *  - 2: string (explicitly typed)
+   *  - 3: integer
+   *  - 4: dateTime
+   * @return string
+   *   The timestamp of the operation according to the server, in ISO8601 format. 
    */
   function add_dsid_relationship($dsid, $relationship, $object, $namespaceURI = RELS_EXT_URI, $literal_value = RELS_TYPE_URI) {
     static $relsxml = NULL;
@@ -469,11 +522,22 @@ RDF;
   }
 
   /**
-   * Extension of purge_relationships, which acts on RELS-INT.
-   *
+   * Extension of purge_relationships, this function acts on RELS-INT.
    * @param string $dsid
    *   A string containing either the base dsid (EXAMPLE)
    *   or URI to the datastream (info:fedora/pid/EXAMPLE)
+   * @param string $relationship
+   *   The predicate/relationship tag to delete
+   * @param string $object
+   *   The object to be related to. (NULL/value for which empty()
+   *   evaluates to true will remove all relations of the given type,
+   *   ignoring $literal_value)
+   * @param string $namespaceURI
+   *    The predicate namespace.
+   * @param int $literal_value
+   *    Same as add_relationship.
+   * @return boolean 
+   *   returns TRUE if the RElS-INT was modified
    */
   function purge_dsid_relationships($dsid, $relationship, $object, $namespaceURI = RELS_EXT_URI, $literal_value = FALSE) {
     $f_prefix = 'info:fedora/';
@@ -533,6 +597,8 @@ RDF;
    *   Dropped in favour of purge_relationships, which follows the same paradigm as add_relationship.  This function tries to figure out the predicate URI based on the prefix/predicate given, which requires specific naming...
    * @param string $relationship
    * @param string $object
+   * @return boolean
+   *   True if object was modified
    */
   function purge_relationship($relationship, $object) {
     $relsext = $this->get_datastream_dissemination('RELS-EXT');
@@ -590,7 +656,8 @@ RDF;
   /**
    * Export as foxml
    *
-   * @return type
+   * @return string
+   *   xml
    */
   function export_as_foxml() {
     $params = array(
@@ -605,11 +672,15 @@ RDF;
   /**
    * Does a search using the "query" format followed by the Fedora REST APi.
    *
-   * @param string $pattern to search for, including wildcards.
-   * @param string $field The field to search on, e.g. pid, title, cDate. See http://www.fedora-commons.org/confluence/display/FCR30/REST+API#RESTAPI-findObjects for details
-   * @param int $max_results not used at this time
+   * @param string $pattern 
+   *   pattern to search for, including wildcards.
+   * @param string $field 
+   *   The field to search on, e.g. pid, title, cDate. See http://www.fedora-commons.org/confluence/display/FCR30/REST+API#RESTAPI-findObjects for details
+   * @param int $max_results 
+   *   not used at this time
    *
-   * @return Array of pid => title pairs that match the results
+   * @return Array 
+   *   pid => title pairs that match the results
    */
   static function find_objects_by_pattern($pattern = '*', $field = 'pid', $max_results = 100, $resultFields = array()) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
@@ -671,11 +742,18 @@ RDF;
   /**
    * Get datastream dissemination
    *
-   * @param type $dsid
-   * @param type $as_of_date_time
+   * @param string $dsid
+   *   The DSID of the datastream to get the dissemination of.
+   * @param string $as_of_date_time
+   *   The date/time stamp specifying the desired version of the object. 
+   *   If null, the current version of the object (the most recent time)
+   *   is assumed.
    * @param type $quiet
+   *   Squash errors? 
    *
-   * @return null
+   * @return mixed
+   *   NULL if the DS is not present in Fedora Item's datastream list.
+   *   The content of the DS (NULL if empty)
    */
   function get_datastream_dissemination($dsid, $as_of_date_time = "", $quiet=TRUE) {
     if (!array_key_exists($dsid, $this->datastreams)) {
@@ -703,10 +781,29 @@ RDF;
   /**
    * Get datastream
    *
-   * @param type $dsid
+   * @param string $dsid
+   *   datastream id
    * @param type $as_of_date_time
+   *   The date/time stamp specifying the desired version of the object. 
+   *   If null, the current version of the object (the most recent time)
+   *   is assumed.
    *
    * @return type
+   *   a datastream object    
+   *    DatastreamControlGroup controlGroup - String restricted to the values of "X", "M", "R", or "E" (InlineXML,Managed Content,Redirect, or External Referenced).
+   *    String ID - The datastream ID (64 characters max).
+   *    String versionID - The ID of the most recent datastream version
+   *    String[] altIDs - Alternative IDs for the datastream, if any.
+   *    String label - The Label of the datastream.
+   *    boolean versionable - Whether the datastream is versionable.
+   *    String MIMEType - The mime-type for the datastream, if set.
+   *    String formatURI - The format uri for the datastream, if set.
+   *    String createDate - The date the first version of the datastream was created.
+   *    long size - The size of the datastream in Fedora. Only valid for inline XML metadata and managed content datastreams.
+   *    String state - The state of the datastream. Will be "A" (active), "I" (inactive) or "D" (deleted).
+   *    String location - If the datastream is an external reference or redirect, the url to the contents. TODO: Managed?
+   *    String checksumType - The algorithm used to compute the checksum. One of "DEFAULT", "DISABLED", "MD5", "SHA-1", "SHA-256", "SHA-385", "SHA-512".
+   *    String checksum - The value of the checksum represented as a hexadecimal string.
    */
   function get_datastream($dsid, $as_of_date_time = '', $quiet = TRUE) {
     if (!array_key_exists($dsid, $this->datastreams)) {
@@ -724,10 +821,13 @@ RDF;
 
   /**
    * Get datastream history
+   * Gets all versions of a datastream, sorted from most to least recent.
    *
-   * @param type $dsid
+   * @param string $dsid
+   *   the datastream id
    *
-   * @return type
+   * @return array
+   *   array of datastreams
    */
   function get_datastream_history($dsid) {
     $params = array(
@@ -745,13 +845,18 @@ RDF;
 
   /**
    * Get dissemination
+   * Calls a Fedora disseminator
    *
-   * @param type $service_definition_pid
-   * @param type $method_name
-   * @param type $parameters
-   * @param type $as_of_date_time
-   *
+   * @param string $service_definition_pid
+   *   the id of the service identifier object
+   * @param string $method_name
+   *   The name of the method to be executed.
+   * @param array $parameters
+   *    array of key value pairs
+   * @param string $as_of_date_time
+   *   The versioning dateTime. If null, Fedora will use the most recent version.
    * @return string
+   *   the content returned by the specified method
    */
   function get_dissemination($service_definition_pid, $method_name, $parameters = array(), $as_of_date_time = NULL) {
     $params = array(
@@ -776,7 +881,15 @@ RDF;
    * Retrieves and returns a SimpleXML list of this item's datastreams,
    * and stores them as an instance variable for caching purposes.
    *
-   * @return SimpleXMLElement
+   * @return array
+   *   an array of datastream definitions each element in the array contains an 
+   *   object with    
+   *      - String ID The datastream id - "DC" for the DC datastream
+   *       - String label The datastream label
+   *       - String MIMEType The mimetype of the datastream, if any
+   * 
+   * @todo verify this documentation, previous version of this documentation 
+   * stated this function returned a simpleXML object   
    */
   function get_datastreams_list_as_SimpleXML() {
     //if ( empty( $this->datastreams_list ) ) {
@@ -791,6 +904,7 @@ RDF;
   }
 
   /**
+   * gets information regarding a datastream including
    * DatastreamControlGroup controlGroup - String restricted to the values of "X", "M", "R", or "E" (InlineXML,Managed Content,Redirect, or External Referenced).
    * String ID - The datastream ID (64 characters max).
    * String versionID - The ID of the most recent datastream version
@@ -868,7 +982,9 @@ RDF;
    * Returns a MIME type string for the given Datastream ID.
    *
    * @param string $dsid
+   *   the datastream id
    * @return string
+   *   the mime type
    */
   function get_mimetype_of_datastream($dsid) {
     $this->get_datastreams_list_as_SimpleXML();
@@ -890,7 +1006,10 @@ RDF;
    * exception so we will parse the RELS-EXT ourselves and simulate the
    * documented behaviour.
    *
-   * @param String $relationship - filter the results to match this string.
+   * @param string $relationship
+   *  - filter the results to match this string.
+   * @return array
+   *   array of relationships
    */
   function get_relationships($relationship = NULL) {
     $relationships = array();
@@ -969,14 +1088,22 @@ RDF;
     return $relationships;
   }
 
+  /**
+   * @todo test and verify that this function is in use
+   *   wrapper for the get_relationships function
+   * @return array 
+   *   returns an array of relationships
+   */
   function get_models() {
     //This is/was formerly just a copy/paste jobbie, without the parameter being passable...
     return $this->get_relationships();
   }
 
   /**
-   * Creates a RELS-EXT XML stream from the supplied array and saves it to
-   * the item on the server.
+   * save_relationships
+   * This function looks like it does nothing except return false
+   *
+   * @todo complete function or remove function
    *
    * @param <type> $relationships
    */
@@ -1000,7 +1127,15 @@ RDF;
   }
 
   /**
-   * Set the object to a deleted state
+   * Set the Fedora object's state to deleted (does not remove the object from 
+   * the repository)
+   * 
+   * @param string $log_message
+   *   a log message, this will be written to the fedora objects audit trail
+   * @param boolean $quiet
+   *   TRUE to suppress drupal error messages
+   * @return string
+   *   The timestamp of the operation according to the server, in ISO8601 format. 
    */
   function move_to_trash($log_message = 'Flagged deleted using Islandora API.', $quiet = TRUE) {
     // Loop through the datastreams and mark them deleted.
@@ -1022,10 +1157,12 @@ RDF;
   }
 
   /**
-   * Removes this object form the repository.
-   * @param type $log_message
+   * Permanently removes an object from the repository.
+   * @param string $log_message
    * @param type $force
-   * @return type
+   *   force Force the purge, even if it would break a dependency
+   * @return string
+   *   The timestamp of the operation according to the server, in ISO8601 format.
    */
   function purge($log_message = 'Purged using Islandora API.', $force = FALSE) {
 
@@ -1048,13 +1185,24 @@ RDF;
   /**
    * Purge datastream
    *
-   * @param type $dsID
-   * @param type $start_date
-   * @param type $end_date
-   * @param type $log_message
-   * @param type $force
+   * @param string $dsID
+   *   the datastream id
+   * @param string $start_date
+   *   The (inclusive) start date-time stamp of the range. If null, this is
+   *   taken to be the lowest possible value, and thus, the entire version 
+   *   history up to the endDT be purged.   *   
+   * @param string $end_date
+   *   The (inclusive) ending date-time stamp of the range. If null, this is
+   *   taken to be the greatest possible value, and thus, the entire version 
+   *   history back to the startDT will be purged.
+   * @param string $log_message
+   *   a log message, this will be written to the Fedora objects audit trail
+   * @param boolean $force
+   *   force Deprecated. Force the update even if it would break a data contract.
+   *   in most cases this should be left as FALSE
    *
-   * @return type
+   * @return string 
+   *   The timestamp of the operation according to the server, in ISO8601 format.
    */
   function purge_datastream($dsID, $start_date = NULL, $end_date = NULL, $log_message = 'Purged datastream using Islandora API', $force = FALSE) {
     $params = array(
@@ -1072,10 +1220,12 @@ RDF;
   }
 
   /**
-   * URL
+   * url
    * @global type $base_url
+   *   drupal $base_url
    *
-   * @return type
+   * @return string
+   *   A string containing a URL to the given path.
    */
   function url() {
     return url('fedora/repository/' . $this->pid . (!empty($this->objectProfile) ? '/-/' . drupal_urlencode($this->objectProfile->objLabel) : ''), array(
@@ -1086,9 +1236,10 @@ RDF;
   /**
    * Get Next PID in Namespace
    *
-   * @param $pid_namespace string
+   * @param string $pid_namespace 
    *
    * @return string
+   *   a new PID 
    */
   static function get_next_PID_in_namespace($pid_namespace = '', $number_of_pids = 1) {
     if (empty($pid_namespace)) {
@@ -1116,7 +1267,7 @@ RDF;
   /**
    * ingest from FOXML
    *
-   * @param type $foxml
+   * @param DOMDocument $foxml
    *
    * @return Fedora_Item
    */
@@ -1133,9 +1284,10 @@ RDF;
   /**
    * ingest from FOXML file
    *
-   * @param type $foxml_file
+   * @param string $foxml_file
+   *   well formed xml conforming to Fedora's FOXML schema
    *
-   * @return type
+   * @return Fedora_Item
    */
   static function ingest_from_FOXML_file($foxml_file) {
     $foxml = new DOMDocument();
@@ -1144,9 +1296,10 @@ RDF;
   }
 
   /**
-   * ingest from FOXML files in directory
+   * batch ingest from FOXML files in directory
    *
-   * @param type $path
+   * @param string $path
+   *   the path on the server to the foxml files
    */
   static function ingest_from_FOXML_files_in_directory($path) {
     // Open the directory.
@@ -1170,13 +1323,19 @@ RDF;
   /**
    * Modify Object
    *
-   * @param $label string
-   * @param $state string
-   * @param $ownerId string
-   * @param $logMessage string
-   * @param $quiet boolean
+   * @param string $label 
+   *   the objects label
+   * @param string $state 
+   *   The new state, "A", "I" or "D". Null leaves unchanged
+   * @param string $ownerId 
+   *   The ownerId for the object.
+   * @param string $logMessage 
+   *   a log message this will get written to the Fedora objects audit trail
+   * @param boolean $quiet 
+   *   If TRUE suppress drupal error message
    *
-   * @return type
+   * @return string
+   *   The timestamp of the operation according to the server, in ISO8601 format.
    */
   function modify_object($label = '', $state = NULL, $ownerId = NULL, $logMessage = 'Modified by Islandora API', $quiet=TRUE) {
     $params = array(
@@ -1273,8 +1432,11 @@ RDF;
    * @param string $logMessage
    *   A message for the audit log.
    * @param boolean $quiet
-   *   Error suppression?  Refer to soap_call for usage
-   *   (just passed along here).
+   *   if set to true will not do a drupal set message
+   * 
+   * @return string
+   *   The timestamp of the operation according to the server, in ISO8601 format.
+   *   if successfull
    */
   function modify_datastream($filename_or_content, $dsid, $label, $mime_type, $force = FALSE, $logMessage='Modified by Islandora API', $quiet=FALSE) {
     $toReturn = NULL;
@@ -1340,15 +1502,25 @@ RDF;
   /**
    * Modify datastream by reference
    *
-   * @param type $external_url
-   * @param type $dsid
-   * @param type $label
-   * @param type $mime_type
-   * @param type $force
-   * @param type $logMessage
-   * @param type $quiet
+   * @param string $external_url
+   *   a url to pass to fedora so it can load the content
+   * @param string $dsid
+   *   the datastreams id
+   * @param string $label
+   *   the datastreams label
+   * @param string $mime_type
+   *   contents mime type
+   * @param boolean $force
+   *   DEPRECATED in the Fedora api-m soap api, the default is FALSE and should 
+   *   be left at FALSE in most cases.
+   *   Force the update even if it would break the data contract
+   * @param string $logMessage
+   *   a log message, this will get written to the fedora audit trail
+   * @param boolean $quiet
+   *   if quiet = TRUE we don't print error messages.
    *
-   * @return type
+   * @return string
+   *   The timestamp of the operation according to the server, in ISO8601 format.
    */
   function modify_datastream_by_reference($external_url, $dsid, $label, $mime_type, $force = FALSE, $logMessage = 'Modified by Islandora API', $quiet=FALSE) {
     global $base_url;
@@ -1376,17 +1548,28 @@ RDF;
   }
 
   /**
-   * Modify datastream by value
+   * Modify datastream by value.  This operation is only valid for Inline XML 
+   * Datastreams (i.e. controlGroup "X")
    *
-   * @param type $content
-   * @param type $dsid
-   * @param type $label
-   * @param type $mime_type
-   * @param type $force
-   * @param type $logMessage
-   * @param type $quiet
+   * @param string $content
+   *   the datastreams content
+   * @param string $dsid
+   *   the datastreams id
+   * @param string $label
+   *   the datastreams label
+   * @param string $mime_type
+   *   the contents mime type
+   * @param boolean $force
+   *   DEPRECATED in the Fedora api-m soap api, the default is FALSE and should 
+   *   be left at FALSE in most cases.
+   *   Force the update even if it would break the data contract
+   * @param string $logMessage
+   *   a log message, this will get written to the fedora objects audit trail
+   * @param boolean $quiet
+   *   if $quiet = TRUE don't do drupal_set_message
    *
-   * @return type
+   * @return string
+   *   The timestamp of the operation according to the server, in ISO8601 format.
    */
   function modify_datastream_by_value($content, $dsid, $label, $mime_type, $force = FALSE, $logMessage = 'Modified by Islandora API', $quiet=FALSE) {
     $params = array(
@@ -1406,11 +1589,18 @@ RDF;
   }
 
   /**
+   * set the state of a fedora objects datastream
+   * @param string $dsid
+   *   the datastream id
+   * @param string $state
+   *   the datastream state one of 'A', 'D' or 'I' (Active, Deleted, Inactive)
+   * @param string $log_message
+   *   a log message will get written to the Fedora objects audit trail
+   * @param string $quiet
+   *   if $quite = TRUE do not call drupal_set_message
+   * @return string
+   *   The timestamp of the operation according to the server, in ISO8601 format.
    *
-   * @param unknown_type $dsid
-   * @param unknown_type $state
-   * @param unknown_type $log_message
-   * @param unknown_type $quiet
    */
   function set_datastream_state($dsid, $state, $log_message = 'Modified by Islandora API', $quiet = FALSE) {
     $valid_states = array('A', 'D', 'I');
@@ -1476,8 +1666,10 @@ RDF;
    * Creates the minimal FOXML for a new Fedora object, which is then passed to
    * ingest_from_FOXML to be added to the repository.
    *
-   * @param string $pid if none given, getnextpid will be called.
-   * @param string $state The initial state, A - Active, I - Inactive, D - Deleted
+   * @param string $pid 
+   *   if none given, getnextpid will be called.
+   * @param string $state 
+   *   The initial state, A - Active, I - Inactive, D - Deleted
    * @param type $label
    * @param string $owner
    *   Used to set an object's ownerId attribute.  Defaults to current user's
@@ -1535,12 +1727,17 @@ RDF;
   /**
    * ingest new item
    *
-   * @param type $pid
-   * @param type $state
-   * @param type $label
-   * @param type $owner
+   * @param string $pid
+   *   Fedora identifier to use in the Foxml
+   * @param string $state
+   *   Objects state one of 'A', 'D' or 'I' (Active, Deleted, Inactive)
+   * @param string $label
+   *   the objects label
+   * @param string $owner
+   *   the objects owner
    *
-   * @return type
+   * @return Fedora_Item
+   *   the new Fedora_Item object
    */
   static function ingest_new_item($pid = '', $state = 'A', $label = '', $owner = '') {
     return self::ingest_from_FOXML(self::create_object_FOXML($pid, $state, $label, $owner));
@@ -1549,9 +1746,11 @@ RDF;
   /**
    * fedora item exists
    *
-   * @param type $pid
+   * @param string $pid
+   *   The Fedora objects identifier (pid)
    *
-   * @return type
+   * @return boolean
+   *   returns TRUE if the item exists
    */
   static function fedora_item_exists($pid) {
     $item = new Fedora_Item($pid);
@@ -1564,6 +1763,9 @@ RDF;
    *
    * @param string $PID
    *   The Fedora PID to retrieve the
+   * 
+   * @return string
+   *   The ownerId property of the Fedora object
    */
   static function getOwnerId($PID) {
     $params = array(
