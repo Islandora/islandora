@@ -226,9 +226,14 @@ function hook_islandora_undeletable_datastreams(array $models) {}
 /**
  * Define steps used in the islandora_ingest_form() ingest process.
  *
+ * @param array $form_state
+ *   An array containing the form_state, on which infomation from step storage
+ *   might be extracted.  Note that the 
+ *
  * @return array
- *   An array of associative arrays which define each step in the ingest
- *   process.  Steps are defined by by a number of properties (keys) including:
+ *   An associative array of associative arrays which define each step in the
+ *   ingest process.  Each step should consist of a unique name mapped to an
+ *   array of properties (keys) including:
  *   - type: The type of step.  Currently, only "form" is implemented.
  *   - weight: The "weight" of this step--heavier(/"larger") values sink to the
  *     end of the process while smaller(/"lighter") values are executed first.
@@ -240,9 +245,9 @@ function hook_islandora_undeletable_datastreams(array $models) {}
  *   - file: A file to include (relative to the module's path, including the
  *     file's extension).
  */
-function hook_islandora_ingest_steps(array $configuration) {
+function hook_islandora_ingest_steps(array $form_state) {
   return array(
-    array(
+    'my_cool_step_definition' => array(
       'type' => 'form',
       'weight' => 1,
       'form_id' => 'my_cool_form',
@@ -253,6 +258,11 @@ function hook_islandora_ingest_steps(array $configuration) {
 /**
  * Content model specific version of hook_islandora_ingest_steps().
  *
+ * XXX: Content models are not selected in a generic manner. Currently, this
+ *   gets called for every content model in the "configuration", yet the
+ *   configuration never changes.  We should determine a consistent way to bind
+ *   content models, so as to consistently be able to build steps.
+ *
  * @see hook_islandora_ingest_steps()
  */
-function hook_CMODEL_PID_islandora_ingest_steps(array $configuration) {}
+function hook_CMODEL_PID_islandora_ingest_steps(array $form_state) {}
