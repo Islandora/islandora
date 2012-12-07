@@ -82,12 +82,11 @@ function islandora_ingest_form_init_form_state_storage(array &$form_state, array
     );
   }
 
-  $form_state['islandora']['steps'] = islandora_ingest_get_steps($form_state);
-
+  $steps = islandora_ingest_get_steps($form_state);
   if ($form_state['islandora']['step_id'] === NULL || !array_key_exists(
-    $form_state['islandora']['step_id'], $form_state['islandora']['steps'])) {
-    reset($form_state['islandora']['steps']);
-    $form_state['islandora']['step_id'] = key($form_state['islandora']['steps']);
+    $form_state['islandora']['step_id'], $steps)) {
+    reset($steps);
+    $form_state['islandora']['step_id'] = key($steps);
   }
 }
 
@@ -255,6 +254,7 @@ function islandora_ingest_form_next_button(array $step_info) {
  */
 function islandora_ingest_form_next_submit(array $form, array &$form_state) {
   $step = islandora_ingest_form_get_step_number($form_state);
+  drupal_static_reset('islandora_ingest_form_get_steps');
   islandora_ingest_form_stash_info($form_state);
   $step = min(array($step + 1, islandora_ingest_form_get_step_count($form_state) - 1)) ;
   $form_state['islandora']['step_id'] = islandora_ingest_form_get_step_id($form_state, $step);
@@ -412,9 +412,9 @@ function islandora_ingest_form_get_step_id(array &$form_state, $step_number = NU
  * @return integer
  *   The step info of the requested step if found, NULL otherwise.
  */
-function &islandora_ingest_form_get_step_info(array &$form_state, $step = NULL) {
+function islandora_ingest_form_get_step_info(array &$form_state, $step = NULL) {
   $step = isset($step) ? $step : islandora_ingest_form_get_step_id($form_state);
-  $steps = &islandora_ingest_form_get_steps($form_state);
+  $steps = islandora_ingest_form_get_steps($form_state);
   if (!empty($steps[$step])) {
     return $steps[$step];
   }
@@ -446,8 +446,8 @@ function &islandora_ingest_form_get_step_storage(array &$form_state, $step_id = 
  * @return array
  *   All the steps to be used in the ingest process.
  */
-function &islandora_ingest_form_get_steps(array &$form_state) {
-  return $form_state['islandora']['steps'];
+function islandora_ingest_form_get_steps(array &$form_state) {
+  return islandora_ingest_get_steps($form_state);
 }
 
 /**
