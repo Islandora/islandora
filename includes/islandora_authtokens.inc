@@ -110,3 +110,13 @@ function islandora_validate_object_token($pid, $dsid, $token) {
     return FALSE;
   }
 }
+
+/**
+ * Will remove any expired authentication tokens.
+ */
+function islandora_remove_expired_tokens() {
+  $time = time();
+  db_delete("islandora_authtokens")
+    ->condition('time', $time - TOKEN_TIMEOUT, '<')
+    ->execute();
+}
