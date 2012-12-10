@@ -161,10 +161,13 @@ function islandora_menu() {
     'access arguments' => array(FEDORA_VIEW, 2, 4),
     'load arguments' => array(2),
   );
-  $items['islandora/object/%islandora_object/datastream/%islandora_datastream/view'] = array(
+  // This menu item uses token authentication in islandora_tokened_object.
+  $items['islandora/object/%islandora_tokened_object/datastream/%islandora_tokened_datastream/view'] = array(
     'title' => 'View datastream',
+    'load arguments' => array('%map'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
+   
   $items['islandora/object/%islandora_object/datastream/%islandora_datastream/download'] = array(
     'title' => 'Download datastream',
     'page callback' => 'islandora_download_datastream',
@@ -519,6 +522,55 @@ function islandora_object_load($object_id) {
 }
 
 /**
+ * A helper function to get a connection and return an object using a token
+ * for authentication.
+ *
+ * @param string $object_id
+ *   The PID of an object in the menu path identified by
+ *   '%islandora_tokened_object'.
+ * @param array $map
+ *   Used to extract the Fedora object's DSID at $map[4].
+ * 
+ * @return FedoraObject
+ *   A token authenticated object. @see islandora_object_load
+ */
+function islandora_tokened_object_load($object_id, $map) {
+  if (array_key_exists('token', $_GET)) {
+    $token = filter_input(INPUT_GET, 'token', FILTER_SANITIZE_STRING);
+    if ($token) {
+      module_load_include('inc', 'islandora', 'includes/islandora_authtokens');
+      $token_user = islandora_validate_object_token($object_id, $map[4], $token);
+      islandora_get_tuque_connection($user = $token_user);
+    }
+  }
+  return islandora_object_load($object_id);
+}
+
+/**
+ * This datastream load must take in arguments in a different 
+ * order than the usual islandora_datastream_load.  This is because 
+ * the function islandora_tokened_object_load needs DSID. It uses
+ * the path %map to avoid duplicate parameters. The menu system
+ * passes 'load arguments' to both islandora_tokened_object_load
+ * and this function and the first parameter is positional with the token.
+ * An alternative: 
+ * islandora_tokened_object_load(PID, DSID, PID)
+ * islandora_tokened_datastream_load(DSID, DSID, PID)
+ * 
+ * @param mixed $datastream_id
+ *   %islandora_tokened_datastream @see islandora_datastream_load
+ * @param array $map
+ *   Used to extract the Fedora object's PID at $map[2].
+ * 
+ * @return FedoraDatastream
+ *   A datastream from Fedora.
+ *   @see islandora_datastream_load
+ */
+function islandora_tokened_datastream_load($datastream_id, $map) {
+  return islandora_datastream_load($datastream_id, $map[2]);
+}
+
+/**
  * A helper function to get an datastream specified as '%islandora_datastream'
  * for the object specified in the menu path as '%islandora_object'.
  *
@@ -526,11 +578,13 @@ function islandora_object_load($object_id) {
  * drupal_access_denied() when appropriate.
  *
  * @param string $datastream_id
- *   The dsid of the datastream specified as '%islandora_datastream' to fetch
+ *   The DSID of the datastream specified as '%islandora_datastream' to fetch
  *   from the given object in the menu path identified by '%islandora_object'.
  *
- * $param string $object_id
- *   The object to load the datastream from.
+ * @param mixed $object_id
+ *   The object to load the datastream from.  This can be a Fedora PID or 
+ *   an instantiated IslandoraFedoraObject as it implements __toString() 
+ *   returning the PID.
  *
  * @return FedoraDatastream
  *   If the given datastream ID exists then this returns a FedoraDatastream

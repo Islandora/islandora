@@ -1,15 +1,13 @@
 <?php
-
 /**
  * @file
- *
- * This file contains all install related hooks.
+ *   This file contains all install related hooks.
  */
 
 /**
  * Implements hook_install().
  *
- * @see islandora_islandora_required_objects().
+ * @see islandora_islandora_required_objects()
  */
 function islandora_install() {
   module_load_include('inc', 'islandora', 'includes/solution_packs');
@@ -19,9 +17,81 @@ function islandora_install() {
 /**
  * Implements hook_uninstall().
  *
- * @see islandora_islandora_required_objects().
+ * @see islandora_islandora_required_objects()
  */
 function islandora_uninstall() {
   module_load_include('inc', 'islandora', 'includes/solution_packs');
   islandora_install_solution_pack('islandora', 'uninstall');
+}
+
+/**
+ * Implements hook_schema().
+ *
+ * @return array
+ *   The database schema for the module.
+ */
+function islandora_schema() {
+  $schema['islandora_authtokens'] = array(
+    'description' => 'The hub for all islandora authentication tokens',
+    'fields' => array(
+      'id' => array(
+        'description' => 'key',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'token' => array(
+        'description' => 'a unique identifier for this token',
+        'type' => 'varchar',
+        'length' => 64,
+      ),
+      'remaining_uses' => array(
+        'description' => 'How many uses until this should be removed',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => 'the user id that requested this token',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'time' => array(
+        'description' => 'when this token was created',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'pid' => array(
+        'description' => 'the pid of the object this token unlocks',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+      ),
+      'dsid' => array(
+        'description' => 'the datasteram id of the object this token unlocks',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ),
+    ),
+    'unique keys' => array(
+      'id' => array('id'),
+    ),
+    'primary key' => array('id'),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Add the required table for handling authentication tokens.
+ * This is the first instance that has this table.
+ */
+function islandora_update_7001(&$sandbox) {
+  drupal_install_schema('islandora');
+  $t = get_t();
+  return $t("Islandora database updates complete");
 }
