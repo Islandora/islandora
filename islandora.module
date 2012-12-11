@@ -313,6 +313,12 @@ function islandora_forms($form_id) {
  */
 function islandora_object_access_callback($perm, $object = NULL) {
   module_load_include('inc', 'islandora', 'includes/utilities');
+
+  if (!$object && !islandora_describe_repository()) {
+    islandora_display_repository_inaccessible_message();
+    return FALSE;
+  }
+
   return user_access($perm) && is_object($object) && islandora_namespace_accessible($object->id);
 }
 
@@ -629,35 +635,32 @@ function islandora_get_islandora_datastream_version($item = NULL, $dsid = NULL, 
 /**
  * Implements hook_islandora_required_objects().
  */
-function islandora_islandora_required_objects() {
+function islandora_islandora_required_objects(IslandoraTuque $connection) {
   $module_path = drupal_get_path('module', 'islandora');
+  // Root Collection
+  $root_collection = $connection->repository->constructObject('islandora:root');
+  $root_collection->owner = 'fedoraAdmin';
+  $root_collection->label = 'Top-level Collection';
+  $root_collection->models = 'islandora:collectionCModel';
+  // Collection Policy Datastream
+  $datastream = $root_collection->constructDatastream('COLLECTION_POLICY', 'X');
+  $datastream->label = 'Collection policy';
+  $datastream->mimetype = 'text/xml';
+  $datastream->setContentFromFile("$module_path/xml/islandora_collection_policy.xml", FALSE);
+  $root_collection->ingestDatastream($datastream);
+  // TN Datastream
+  $datastream = $root_collection->constructDatastream('TN', 'M');
+  $datastream->label = 'Thumbnail';
+  $datastream->mimetype = 'image/png';
+  $datastream->setContentFromFile("$module_path/images/folder.png", FALSE);
+  $root_collection->ingestDatastream($datastream);
   return array(
     'islandora' => array(
       'title' => 'Islandora',
       'objects' => array(
-        array(
-          'pid' => 'islandora:root',
-          'label' => 'Top-level collection',
-          'cmodel' => 'islandora:collectionCModel',
-          'datastreams' => array(
-            array(
-              'dsid' => 'COLLECTION_POLICY',
-              'label' => 'Collection policy',
-              'mimetype' => 'text/xml',
-              'control_group' => 'X',
-              'datastream_file' => "$module_path/xml/islandora_collection_policy.xml",
-            ),
-            array(
-              'dsid' => 'TN',
-              'label' => 'Thumbnail',
-              'mimetype' => 'image/png',
-              'control_group' => 'M',
-              'datastream_file' => "$module_path/images/folder.png",
-            ),
-          ),
-        ),
-      ),
-    ),
+        $root_collection
+      )
+    )
   );
 }
 
