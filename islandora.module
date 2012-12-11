@@ -167,7 +167,7 @@ function islandora_menu() {
     'load arguments' => array('%map'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-   
+
   $items['islandora/object/%islandora_object/datastream/%islandora_datastream/download'] = array(
     'title' => 'Download datastream',
     'page callback' => 'islandora_download_datastream',
@@ -530,7 +530,7 @@ function islandora_object_load($object_id) {
  *   '%islandora_tokened_object'.
  * @param array $map
  *   Used to extract the Fedora object's DSID at $map[4].
- * 
+ *
  * @return FedoraObject
  *   A token authenticated object. @see islandora_object_load
  */
@@ -547,21 +547,21 @@ function islandora_tokened_object_load($object_id, $map) {
 }
 
 /**
- * This datastream load must take in arguments in a different 
- * order than the usual islandora_datastream_load.  This is because 
+ * This datastream load must take in arguments in a different
+ * order than the usual islandora_datastream_load.  This is because
  * the function islandora_tokened_object_load needs DSID. It uses
  * the path %map to avoid duplicate parameters. The menu system
  * passes 'load arguments' to both islandora_tokened_object_load
  * and this function and the first parameter is positional with the token.
- * An alternative: 
+ * An alternative:
  * islandora_tokened_object_load(PID, DSID, PID)
  * islandora_tokened_datastream_load(DSID, DSID, PID)
- * 
+ *
  * @param mixed $datastream_id
  *   %islandora_tokened_datastream @see islandora_datastream_load
  * @param array $map
  *   Used to extract the Fedora object's PID at $map[2].
- * 
+ *
  * @return FedoraDatastream
  *   A datastream from Fedora.
  *   @see islandora_datastream_load
@@ -582,8 +582,8 @@ function islandora_tokened_datastream_load($datastream_id, $map) {
  *   from the given object in the menu path identified by '%islandora_object'.
  *
  * @param mixed $object_id
- *   The object to load the datastream from.  This can be a Fedora PID or 
- *   an instantiated IslandoraFedoraObject as it implements __toString() 
+ *   The object to load the datastream from.  This can be a Fedora PID or
+ *   an instantiated IslandoraFedoraObject as it implements __toString()
  *   returning the PID.
  *
  * @return FedoraDatastream
@@ -632,35 +632,32 @@ function islandora_get_islandora_datastream_version($item = NULL, $dsid = NULL, 
 /**
  * Implements hook_islandora_required_objects().
  */
-function islandora_islandora_required_objects() {
+function islandora_islandora_required_objects(IslandoraTuque $connection) {
   $module_path = drupal_get_path('module', 'islandora');
+  // Root Collection
+  $root_collection = $connection->repository->constructObject('islandora:root');
+  $root_collection->owner = 'fedoraAdmin';
+  $root_collection->label = 'Top-level Collection';
+  $root_collection->models = 'islandora:collectionCModel';
+  // Collection Policy Datastream
+  $datastream = $root_collection->constructDatastream('COLLECTION_POLICY', 'X');
+  $datastream->label = 'Collection policy';
+  $datastream->mimetype = 'text/xml';
+  $datastream->setContentFromFile("$module_path/xml/islandora_collection_policy.xml", FALSE);
+  $root_collection->ingestDatastream($datastream);
+  // TN Datastream
+  $datastream = $root_collection->constructDatastream('TN', 'M');
+  $datastream->label = 'Thumbnail';
+  $datastream->mimetype = 'image/png';
+  $datastream->setContentFromFile("$module_path/images/folder.png", FALSE);
+  $root_collection->ingestDatastream($datastream);
   return array(
     'islandora' => array(
       'title' => 'Islandora',
       'objects' => array(
-        array(
-          'pid' => 'islandora:root',
-          'label' => 'Top-level collection',
-          'cmodel' => 'islandora:collectionCModel',
-          'datastreams' => array(
-            array(
-              'dsid' => 'COLLECTION_POLICY',
-              'label' => 'Collection policy',
-              'mimetype' => 'text/xml',
-              'control_group' => 'X',
-              'datastream_file' => "$module_path/xml/islandora_collection_policy.xml",
-            ),
-            array(
-              'dsid' => 'TN',
-              'label' => 'Thumbnail',
-              'mimetype' => 'image/png',
-              'control_group' => 'M',
-              'datastream_file' => "$module_path/images/folder.png",
-            ),
-          ),
-        ),
-      ),
-    ),
+        $root_collection
+      )
+    )
   );
 }
 
@@ -875,7 +872,7 @@ function islandora_post_delete_datastream(FedoraObject $object, $datastream_id) 
 
 /**
  * Implements hook_cron()
- * 
+ *
  * Removes expired authentication tokens.
  */
 function islandora_cron() {

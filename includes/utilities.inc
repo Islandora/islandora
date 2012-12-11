@@ -413,3 +413,17 @@ function islandora_prepare_new_object($namespace = NULL, $label = NULL, $datastr
   }
   return $object;
 }
+
+/**
+ * Displays the repository is inaccessible message
+ *
+ * Use anywhere we want to ensure a consitent error message when the repository
+ * is not accessible.
+ */
+function islandora_display_repository_inaccessible_message() {
+  $text = t('Islandora configuration');
+  $link = l($text, 'admin/islandora/configure', array('attributes' => array('title' => $text)));
+  $message = t('Could not connect to the repository. Please check the settings on the @link page.',
+             array('@link' => $link));
+  drupal_set_message($message, 'error');
+}
