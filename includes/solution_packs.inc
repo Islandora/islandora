@@ -253,8 +253,7 @@ function islandora_install_solution_pack($module, $op = 'install') {
     return;
   }
   $connection = islandora_get_tuque_connection();
-  $islandora_required_objects = $module . '_islandora_required_objects';
-  $required_objects = $islandora_required_objects($connection);
+  $required_objects = module_invoke($module, 'islandora_required_objects', $connection);
   $objects = $required_objects[$module]['objects'];
   $status_messages = array(
     'up_to_date' => 'The object already exists and is up-to-date',
@@ -322,8 +321,7 @@ function islandora_uninstall_solution_pack($module) {
     return;
   }
   $connection = islandora_get_tuque_connection();
-  $islandora_required_objects = $module . '_islandora_required_objects';
-  $required_objects = $islandora_required_objects($connection);
+  $required_objects = module_invoke($module, 'islandora_required_objects', $connection);
   $objects = $required_objects[$module]['objects'];
   $existing_objects = array_filter($objects, function($o) use($connection) {
                         $param = "pid={$o->id}";
@@ -379,7 +377,8 @@ function islandora_check_object_status(NewFedoraObject $object_definition) {
       $out_of_date_datastreams[] = $ds->id;
     }
   }
-  if(count($out_of_date_datastreams)) {
+
+  if (count($out_of_date_datastreams)) {
     $status_friendly = format_plural(count($out_of_date_datastreams), 'Datastream out of date: %dsids.', 'Datastreams out of date: %dsids.', array('%dsids' => implode(', ', $out_of_date_datastreams)));
     return array('status' => 'out_of_date', 'status_friendly' => $status_friendly, 'data' => $out_of_date_datastreams);
   }
@@ -388,31 +387,36 @@ function islandora_check_object_status(NewFedoraObject $object_definition) {
   // performance trouble, we should maybe remove this.
   $modified_datastreams = array();
   foreach ($object_definition as $ds) {
-    if($ds->mimetype == 'text/xml' || $ds->mimetype == 'application/rdf+xml') {
+    if ($ds->mimetype == 'text/xml'
+      || $ds->mimetype == 'application/rdf+xml'
+      || $ds->mimetype == 'application/xml') {
       // If the datastream is XML we use the domdocument C14N cannonicalization
       // function to test if they are equal, because the strings likely won't
       // be equal as Fedora does some XML mangling. In order for C14N to work
       // we need to replace the info:fedora namespace, as C14N hates it.
+      // C14N also doesn't normalize whitespace at the end of lines and Fedora
+      // may add some whitespace on some lines.
       $object_definition_dom = new DOMDocument();
+      $object_definition_dom->preserveWhiteSpace = FALSE;
       $object_definition_dom->loadXML(str_replace('info:', 'http://', $ds->content));
       $object_actual_dom = new DOMDocument();
+      $object_actual_dom->preserveWhiteSpace = FALSE;
       $object_actual_dom->loadXML(str_replace('info:', 'http://', $existing_object[$ds->id]->content));
 
-      // We have to use the shutup function here. C14N throws warnings about the
-      // info:fedora namespace, but they are mostly useless.
-      if($object_actual_dom->C14N() != $object_definition_dom->C14N()) {
+      // Fedora changes the xml structure so we need to cannonize it.
+      if ($object_actual_dom->C14N() != $object_definition_dom->C14N()) {
         $modified_datastreams[] = $ds->id;
       }
     }
     else {
       $object_definition_hash = md5($ds->content);
       $object_actual_hash = md5($existing_object[$ds->id]->content);
-      if($object_definition_hash != $object_actual_hash) {
+      if ($object_definition_hash != $object_actual_hash) {
         $modified_datastreams[] = $ds->id;;
       }
     }
   }
-  if(count($modified_datastreams)) {
+  if (count($modified_datastreams)) {
     $status_friendly = format_plural(count($modified_datastreams), 'Modified Datastream: %dsids.', 'Modified Datastreams: %dsids.', array('%dsids' => implode(', ', $modified_datastreams)));
     return array('status' => 'modified_datastream', 'data' => $modified_datastreams, 'status_friendly' => $status_friendly);
   }
