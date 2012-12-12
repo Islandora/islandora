@@ -88,6 +88,10 @@ function islandora_ingest_form_init_form_state_storage(array &$form_state, array
     reset($steps);
     $form_state['islandora']['step_id'] = key($steps);
   }
+
+  // Stash the current configuration in the step.
+  $storage = &islandora_ingest_form_get_step_storage($form_state);
+  $storage['configuration'] = $form_state['islandora']['configuration'];
 }
 
 /**
@@ -268,7 +272,6 @@ function islandora_ingest_form_next_submit(array $form, array &$form_state) {
 function islandora_ingest_form_stash_info(array &$form_state) {
   $storage = &islandora_ingest_form_get_step_storage($form_state);
   $storage['values'] = $form_state['values'];
-  $storage['configuration'] = $form_state['islandora']['configuration'];
   unset($form_state['values']); 
 }
 
@@ -278,12 +281,9 @@ function islandora_ingest_form_stash_info(array &$form_state) {
 function islandora_ingest_form_grab_info(array &$form_state) {
   $storage = islandora_ingest_form_get_step_storage($form_state);
   $form_state['values'] = isset($storage['values'])?$storage['values']:array();
-  $form_state['islandora']['configuration'] = array_merge(
-    $form_state['islandora']['configuration'],
-    isset($storage['configuration'])?
-      $storage['configuration']:
-      array()
-  );
+  if (isset($storage['configuration'])) {
+    $form_state['islandora']['configuration'] = $storage['configuration'];
+  }
 }
 
 /**
@@ -341,7 +341,7 @@ function islandora_ingest_form_submit(array $form, array &$form_state) {
  * @return array
  *   The configuration used to generate the multi-page ingest forms.
  */
-function &islandora_ingest_form_get_configuration(array $form_state) {
+function &islandora_ingest_form_get_configuration(array &$form_state) {
   return $form_state['islandora']['configuration'];
 }
 
@@ -515,7 +515,8 @@ function &islandora_ingest_get_steps(array &$form_state) {
       // Need to pass by ref...  But don't really want an alter.
       foreach (module_implements($hook) as $module) {
         $function = $module . '_' . $hook;
-        $steps = array_merge($steps, (array)$function($form_state));
+        $module_steps = (array)$function($form_state);
+        $steps = array_merge($steps, $module_steps);
       }
     }
 
