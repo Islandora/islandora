@@ -39,7 +39,7 @@ class DublinCore {
    * @param string $dc_xml
    */
   function DublinCore($dc_xml = NULL) {
-    if (!empty($dc_string)) {
+    if (!empty($dc_xml)) {
       $this->dc = self::import_from_xml_string($dc_xml);
     }
   }
@@ -145,8 +145,11 @@ class DublinCore {
     if ($dc_doc->loadXML($dc_xml)) {
       $oai_dc = $dc_doc->getElementsByTagNameNS('http://purl.org/dc/elements/1.1/', '*');
       $new_dc = new DublinCore();
+
       foreach ($oai_dc as $child) {
-        array_push($new_dc->dc[$child->nodeName], $child->nodeValue);
+        if(isset($new_dc->dc[$child->nodeName])) {
+          array_push($new_dc->dc[$child->nodeName], $child->nodeValue);
+        }
       }
       return $new_dc;
     }
