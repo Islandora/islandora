@@ -31,7 +31,7 @@ define('FEDORA_METADATA_EDIT', 'edit fedora metadata');
 define('FEDORA_ADD_DS', 'add fedora datastreams');
 define('FEDORA_INGEST', 'ingest fedora objects');
 define('FEDORA_PURGE', 'delete fedora objects and datastreams');
-define('FEDORA_MODIFY_STATE', 'modify fedora state');
+define('FEDORA_MANAGE_PROPERTIES', 'manage object properties');
 define('FEDORA_MANAGE', 'manage fedora items');
 
 // Hooks
@@ -108,7 +108,7 @@ function islandora_menu() {
     'page arguments' => array(2),
     'type' => MENU_LOCAL_TASK,
     'access callback' => 'islandora_object_access_callback',
-    'access arguments' => array(FEDORA_MODIFY_STATE, 2),
+    'access arguments' => array(FEDORA_MANAGE, 2),
   );
   $items['islandora/object/%islandora_object/manage/datastreams'] = array(
     'title' => 'Datastreams',
@@ -122,7 +122,7 @@ function islandora_menu() {
     'page arguments' => array('islandora_object_properties_form', 2),
     'type' => MENU_LOCAL_TASK,
     'access callback' => 'islandora_object_access_callback',
-    'access arguments' => array(FEDORA_MODIFY_STATE, 2),
+    'access arguments' => array(FEDORA_MANAGE_PROPERTIES, 2),
     'weight' => -5,
   );
   $items['islandora/object/%islandora_object/delete'] = array(
@@ -268,9 +268,9 @@ function islandora_permission() {
       'title' => t('Permanently remove objects from the repository'),
       'description' => t('Permanently remove objects from the repository.')
     ),
-    FEDORA_MODIFY_STATE => array(
-      'title' => t('Change repository object states'),
-      'description' => t('Change the state of objects in the repository (e.g. from Active to Inactive).')
+    FEDORA_MANAGE_PROPERTIES => array(
+      'title' => t('Manage object properties'),
+      'description' => t('Modify object labels, owner IDs, and states.')
     ),
     FEDORA_MANAGE => array(
       'title' => t('View object management tabs'),
