@@ -382,7 +382,7 @@ function islandora_get_datastreams_requirements_from_content_model(FedoraObject 
 function islandora_prepare_new_object($namespace = NULL, $label = NULL, $datastreams = array(), $content_models = array(), $relationships = array()) {
   global $user;
   $tuque = islandora_get_tuque_connection();
-  $object = isset($namespace) ? $tuque->repository->constructObject($namespace) : new NewFedoraObject(NULL, $tuque->repository);
+  $object = $tuque->repository->constructObject($namespace);
   $object->owner = isset($user->name) ? $user->name : $object->owner;
   $object->label = isset($label) ? $label : $object->label;
   foreach ($content_models as $content_model) {
