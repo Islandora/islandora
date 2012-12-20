@@ -41,10 +41,7 @@ function islandora_view_datastream(FedoraDatastream $datastream, $download = FAL
   }
   drupal_page_is_cacheable(FALSE);
   // Try not to load the file into PHP memory!
-  $file = drupal_tempnam(file_directory_temp(), 'islandora');
-  $datastream->getContent($file);
-  readfile($file);
-  drupal_unlink($file);
+  $datastream->getContent('php://output');
   exit();
 }
 
