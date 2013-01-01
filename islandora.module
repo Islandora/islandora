@@ -507,7 +507,7 @@ function islandora_object_load($object_id) {
   $tuque = islandora_get_tuque_connection();
   if ($tuque) {
     try {
-      $object = $tuque->repository->getObject($object_id);
+      $object = $tuque->repository->getObject(urldecode($object_id));
       drupal_alter('islandora_object', $object);
       return $object;
     } catch (Exception $e) {
