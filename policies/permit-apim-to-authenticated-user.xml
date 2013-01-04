@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Policy xmlns="urn:oasis:names:tc:xacml:1.0:policy"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        PolicyId="permit-apim-to-authenticated-user"
+        RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable">
+  <Description>note that other policies may provide exceptions to this broad policy.  This policy assumes api-m users have to be authenticated</Description>
+  <Target>
+    <Subjects>
+      <Subject>
+	<SubjectMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">authenticated user</AttributeValue>
+          <SubjectAttributeDesignator AttributeId="fedoraRole" MustBePresent="false"
+				      DataType="http://www.w3.org/2001/XMLSchema#string"/>
+	</SubjectMatch>
+      </Subject>
+    </Subjects>
+    <Resources>
+      <AnyResource/>
+    </Resources>
+    <Actions>
+      <Action>
+	<ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:api-m</AttributeValue>
+          <ActionAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
+            AttributeId="urn:fedora:names:fedora:2.1:action:api"/>
+        </ActionMatch>
+      </Action>
+    </Actions>
+  </Target>
+  <Rule RuleId="1" Effect="Permit"/>
+</Policy>

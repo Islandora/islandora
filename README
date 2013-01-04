@@ -34,6 +34,9 @@ REQUIREMENTS
 INSTALLATION
 ------------
 
+Before installing Islandora the XACML policies located in the policies folder
+should be copied into the Fedora global XACML policies folder. This will allow
+"authenticated users" in Drupal to access Fedora API-M functions.
 
 CONFIGURATION
 -------------
