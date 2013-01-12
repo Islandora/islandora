@@ -147,7 +147,7 @@ class DublinCore {
       $new_dc = new DublinCore();
 
       foreach ($oai_dc as $child) {
-        if(isset($new_dc->dc[$child->nodeName])) {
+        if (isset($new_dc->dc[$child->nodeName])) {
           array_push($new_dc->dc[$child->nodeName], $child->nodeValue);
         }
       }

@@ -165,6 +165,8 @@ function islandora_menu() {
   $items['islandora/object/%islandora_tokened_object/datastream/%islandora_tokened_datastream/view'] = array(
     'title' => 'View datastream',
     'load arguments' => array('%map'),
+    'access callback' => 'islandora_object_datastream_tokened_access_callback',
+    'access arguments' => array(FEDORA_VIEW_OBJECTS, 2, 4),
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['islandora/object/%islandora_object/datastream/%islandora_datastream/download'] = array(
@@ -347,6 +349,48 @@ function islandora_object_access_callback($perm, $object = NULL) {
 function islandora_object_datastream_access_callback($perm, $object = NULL, $datastream = NULL) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   return user_access($perm) && is_object($object) && islandora_namespace_accessible($object->id) && is_object($datastream);
+}
+
+/**
+ * Checks whether the user who added the token can access the given object and datastream with
+ * the given permission.
+ *
+ * Checks for object existance, accessiblitly, namespace permissions,
+ * and user permissions
+ *
+ * @see islandora_object_load() To find potential solutions to enable page
+ *   not found errors.
+ *
+ * @param string $perm
+ *   The user permission to test for.
+ * @param FedoraObject $object
+ *   The object to test, if NULL given the object doesn't exist or is
+ *   inaccessible.
+ * @param FedoraDatastream $datastream
+ *   The datastream to test, if NULL given the datastream doesn't exist
+ *   or is inaccessible.
+ *
+ * @return boolean
+ *   TRUE if the user is allowed to access this object.
+ *   TRUE if the user who created the token is allowed to access the object
+ *   FALSE otherwise
+ */
+function islandora_object_datastream_tokened_access_callback($perm, $object = NULL, $datastream = NULL) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  $drupal_access = islandora_object_datastream_access_callback($perm, $object, $datastream);
+  $token_access = FALSE;
+  if($drupal_access) {
+    return $drupal_access;
+  }
+  if (array_key_exists('token', $_GET)) {
+    $token = filter_input(INPUT_GET, 'token', FILTER_SANITIZE_STRING);
+    $token_user = islandora_validate_object_token($object->id, $datastream->id, $token);
+    if (isset($token_user)) {
+      $token_account = user_load(array('uid' => $token_user->uid));
+      $token_access = user_access($perm, $token_account);
+    }
+  }
+  return $token_access;
 }
 
 /**
