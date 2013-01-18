@@ -23,7 +23,9 @@ define('TOKEN_TIMEOUT', 300);
  *   Defaults to 1.
  *   The number of uses the token should be used for.  There are
  *   times when this should be greater than 1: ie. Djatoka needs
- *   to make two calls.
+ *   to make two calls. This is the number of times it can be called
+ *   from different php sessions, not in the run of a program. (it is
+ *   statically cached).
  *
  * @return string
  *   The generated authentication token.
@@ -68,6 +70,12 @@ function islandora_get_object_token($pid, $dsid, $uses = 1) {
  *   FALSE otherwise
  */
 function islandora_validate_object_token($pid, $dsid, $token) {
+  static $accounts = array();
+
+  if(!empty($accounts[$pid][$dsid][$token])) {
+    return $accounts[$pid][$dsid][$token];
+  }
+
   // Check for database token.
   $time = time();
   $query = db_select('islandora_authtokens', 'tokens');
@@ -104,11 +112,13 @@ function islandora_validate_object_token($pid, $dsid, $token) {
       ->execute();
     }
     unset($result[0]->remaining_uses);
-    return $result[0];
+    $accounts[$pid][$dsid][$token] = $result[0];
   }
   else {
-    return FALSE;
+    $accounts[$pid][$dsid][$token] = FALSE;
   }
+
+  return $accounts[$pid][$dsid][$token];
 }
 
 /**

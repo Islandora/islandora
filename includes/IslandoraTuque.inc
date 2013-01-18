@@ -64,7 +64,7 @@ class IslandoraTuque {
       global $user;
     }
 
-    if (!isset($user) || $user->uid == 0) {
+    if ($user->uid == 0) {
       $user_string = 'anonymous';
       $pass_string = 'anonymous';
     }

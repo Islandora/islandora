@@ -1,0 +1,94 @@
+<?php
+
+class IslandoraAuthtokensTestCase extends IslandoraWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Islandora Authorization Tokens',
+      'description' => 'Ensure the correct functionality of the tokens to pass authorization to Djatoka in Islandora.',
+      'group' => 'Islandora',
+    );
+  }
+
+  public function setUp() {
+    parent::setUp(array('islandora'));
+  }
+
+  public function testRedeemInvalidToken() {
+    module_load_include('inc', 'islandora', 'includes/islandora_authtokens');
+
+    // get a token
+    $token = islandora_get_object_token('test:pid', 'woot', 1);
+    $this->assertTrue($token, 'Token was generated correctly.', 'Unit Tests');
+
+    // redeem a token that doesn't exist with real pid and dsid
+    $account = islandora_validate_object_token('test:pid', 'woot', 'foo');
+    $this->assertFalse($account, 'Redeeming an token that doesn\'t exist returns FALSE', 'Unit Tests');
+  }
+
+  public function testRedeemValidToken() {
+    module_load_include('inc', 'islandora', 'includes/islandora_authtokens');
+
+    // change the current user
+    global $user;
+    $user_backup = $user;
+    $test_account = $this->drupalCreateUser();
+    $user = $test_account;
+
+    $token = islandora_get_object_token('test:pid', 'woot', 1);
+
+    // logout again
+    $user = $user_backup;
+
+    $token_account = islandora_validate_object_token('test:pid', 'woot', $token);
+
+    $this->assertEqual($token_account->uid, $test_account->uid, 'UID from token is correct', 'Unit Tests');
+    $this->assertEqual($token_account->pass, $test_account->pass, 'Pass from token is correct', 'Unit Tests');
+    $this->assertEqual($token_account->name, $test_account->name, 'Name from token is correct', 'Unit Tests');
+  }
+
+  public function testTokenedViewDatastreamWithoutXacml() {
+    // ingest the fixture
+    $fixture_path = drupal_get_path('module', 'islandora') . '/tests/fixtures/bug.jp2';
+    $tuque = islandora_get_tuque_connection();
+    $newpid = "{$this->randomName()}:{$this->randomName()}";
+    $fixture_object = $tuque->repository->constructObject($newpid);
+    $fixture_datastream = $fixture_object->constructDatastream('JP2');
+    $fixture_datastream->setContentFromFile($fixture_path, TRUE);
+    $fixture_object->ingestDatastream($fixture_datastream);
+    $tuque->repository->ingestObject($fixture_object);
+
+    $this->drupalGet("islandora/object/{$newpid}/datastream/JP2/view");
+    $this->assertResponse(403, 'Page not found as anonymous');
+
+    $account = $this->drupalCreateUser(array(FEDORA_VIEW_OBJECTS));
+    $this->drupalLogin($account);
+
+    $this->drupalGet("islandora/object/{$newpid}/datastream/JP2/view");
+    $this->assertResponse(200, 'Page loaded as the authorized user');
+
+    // do some voodoo to get a token as the user we are connecting as
+    // to do this we need to change the user we are logged in as
+    module_load_include('inc', 'islandora', 'includes/islandora_authtokens');
+    global $user;
+    $backup = $user;
+    $user = $account;
+    $token = islandora_get_object_token($newpid, 'JP2', 1);
+    $user = $backup;
+
+    $this->drupalLogout();
+
+    $this->drupalGet("islandora/object/{$newpid}/datastream/JP2/view", array('query' => array('token' => $token)));
+    $this->assertResponse(200, 'Page loaded with the token');
+
+    $this->drupalGet("islandora/object/{$newpid}/datastream/JP2/view", array('query' => array('token' => $token)));
+    $this->assertResponse(403, 'Token is unable to be reused');
+
+    // delete fixture object
+    $tuque->repository->purgeObject($newpid);
+  }
+
+  public function testTokenedViewDatastreamWithXacml() {
+    // we need to add this test.
+  }
+}

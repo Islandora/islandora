@@ -10,4 +10,6 @@ files[] = includes/MimeDetect.inc
 files[] = includes/DublinCore.inc
 files[] = includes/IslandoraTuque.inc
 files[] = includes/IslandoraTuqueWrapper.inc
+files[] = tests/islandora_web_test_case.inc
+files[] = tests/islandora_authtokens.test
 php = 5.3
