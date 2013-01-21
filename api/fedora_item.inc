@@ -123,7 +123,7 @@ class Fedora_Item {
   function add_datastream_from_file($datastream_file, $datastream_id, $datastream_label = NULL, $datastream_mimetype = '', $controlGroup = 'M', $logMessage = NULL) {
     module_load_include('inc', 'fedora_repository', 'MimeClass');
     if (!is_file($datastream_file)) {
-      drupal_set_message(t('The datastream file %datastream_file could not found! (or is not a regular file...)', array('%datastream_file' => $datastream_file)), 'warning');
+      drupal_set_message(t('The datastream file %datastream_file could not be found! (or is not a regular file...)', array('%datastream_file' => $datastream_file)), 'warning');
       return;
     }
     elseif (!is_readable($datastream_file)) {
