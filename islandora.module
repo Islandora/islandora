@@ -65,7 +65,7 @@ function islandora_menu() {
     'description' => 'Configure settings for Islandora.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('islandora_repository_admin'),
-    'file' => 'admin/islandora.admin.inc',
+    'file' => 'includes/admin.form.inc',
     'access arguments' => array('administer site configuration'),
     'type' => MENU_NORMAL_ITEM,
     'weight' => -1,
