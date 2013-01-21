@@ -16,7 +16,7 @@
  * @return array
  *   The Drupal form definition.
  */
-function islandora_repository_admin(array $form, array &$form_state) {
+function islandora_admin_form(array $form, array &$form_state) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   drupal_add_css(drupal_get_path('module', 'islandora') . '/css/islandora.admin.css');
 
