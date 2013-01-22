@@ -1831,10 +1831,15 @@ function islandora_fedora_settings_form_submit($form, &$form_state) {
   drupal_rebuild_theme_registry();
 }
 
-function islandora_guarantee_root_collection($pid){
+function islandora_guarantee_root_collection($pid) {
+  module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
+  if(!fedora_available ()){
+    return;
+  }
   $item = new Fedora_Item($pid);
-  if($item->exists()){
+  if ($item->exists()) {
+    drupal_set_message(t('Fedora is not available'));
     return;
   }
   $item = Fedora_item::ingest_new_item($pid, 'A', 'Islandora Root Collection', 'admin');
