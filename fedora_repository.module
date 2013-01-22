@@ -1835,11 +1835,12 @@ function islandora_guarantee_root_collection($pid) {
   module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
   if(!fedora_available ()){
+    drupal_set_message(t('Fedora is not available'));
     return;
   }
   $item = new Fedora_Item($pid);
   if ($item->exists()) {
-    drupal_set_message(t('Fedora is not available'));
+    
     return;
   }
   $item = Fedora_item::ingest_new_item($pid, 'A', 'Islandora Root Collection', 'admin');
