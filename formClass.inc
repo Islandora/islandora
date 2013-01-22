@@ -158,6 +158,13 @@ class formClass {
       'access arguments' => array('administer site configuration'),
     );
 
+    $items['islandora/fedora/url'] = array(
+      'page callback' => 'update_fedora_url_div',
+      'access arguments' => array('view fedora collection'),
+      'file' => 'fedora_repository.module',
+      'type' => MENU_CALLBACK,
+    );
+
     return $items;
   }
 
@@ -165,14 +172,25 @@ class formClass {
    * Create admin form
    * @return array
    */
-  function createAdminForm() {
+  function createAdminForm(&$form_state) {
     if (!user_access('administer site configuration')) {
       drupal_set_message(t('You must be a site administrator to edit the Fedora collections list.'), 'error');
       return;
     }
     module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+    $fedora_path = isset($form_state['values']['fedora_base_url']) ? $form_state['values']['fedora_base_url'] : variable_get('fedora_base_url', 'http://localhost:8080/fedora');
+    $triplepath = "$fedora_path/risearch";
+    $response = do_curl_ext($fedora_path . '/describe');
+    $available = ($response != NULL) ? ($response[1] == 0) : FALSE;
+
+    $confirmation_message = ($available ? '<img src="' . url('misc/watchdog-ok.png') . '"/>'
+            . t('Successfully connected to Fedora server at @fedora_soap_url', array('@fedora_soap_url' => $fedora_path)) : '<img src="'
+            . url('misc/watchdog-error.png') . '"/> '
+            . t('Unable to connect to Fedora server at @fedora_soap_url', array('@fedora_soap_url' => $fedora_path)));
+
     $form = array();
+
     $form['fedora_repository_pid'] = array(
       '#type' => 'textfield',
       '#title' => t('Root Collection PID'),
@@ -182,44 +200,40 @@ class formClass {
       '#weight' => -18
     );
 
-    $form['fedora_base_url'] = array(
+
+
+// new ahah stuff
+
+    $form['fedora_ahah_wrapper'] = array(
+      '#prefix' => '<div id="islandora-fedora-url">',
+      '#suffix' => '</div>',
+      '#type' => 'markup',
+    );
+
+    $form['fedora_ahah_wrapper']['fedora_base_url'] = array(
       '#type' => 'textfield',
       '#title' => t('Fedora base URL'),
-      '#default_value' => variable_get('fedora_base_url', 'http://localhost:8080/fedora'),
+      '#default_value' => $fedora_path,
       '#description' => t('The URL to use for REST-type connections'),
-      '#required' => TRUE,
-      '#weight' => -16,
+      '#ahah' => array(
+        'path' => 'islandora/fedora/url',
+        'wrapper' => 'islandora-fedora-url',
+        'effect' => 'fade',
+        'event' => 'change'),
     );
-
-
-    $form['fedora_repository_url'] = array(
+    $form['fedora_ahah_wrapper']['infobox'] = array(
+      '#type' => 'item',
+      '#value' => $confirmation_message,
+    );
+    $form['fedora_ahah_wrapper']['fedora_repository_url'] = array(
       '#type' => 'textfield',
       '#title' => t('Fedora RISearch URL'),
-      '#default_value' => variable_get('fedora_repository_url', 'http://localhost:8080/fedora/risearch'),
-      '#description' => t('The url of the Fedora server'), '#required' => TRUE,
-      '#weight' => -14
+      '#default_value' => $triplepath,
+      '#description' => t('The url of the Fedora server\'s Triplestore.  Change this only if you have set up an external triplestore'),
+      '#required' => TRUE,
+      
     );
 
-    $form['fedora_soap_url'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Fedora SOAP Url'),
-      '#default_value' => variable_get('fedora_soap_url', 'http://localhost:8080/fedora/wsdl?api=API-A'),
-      '#description' => t('The URL to use for SOAP connections'),
-      '#required' => TRUE,
-      '#weight' => -12,
-      '#suffix' => '<p>' . (
-        fedora_available() ?
-          theme('image', 'misc/watchdog-ok.png') . t('Successfully connected to Fedora server at @fedora_soap_url', array('@fedora_soap_url' => variable_get('fedora_soap_url', ''))) :
-          theme('image', 'misc/watchdog-error.png') . t('Unable to connect to Fedora server at @fedora_soap_url', array('@fedora_soap_url' => variable_get('fedora_soap_url', '')))) . '</p>',
-    );
-
-    $form['fedora_soap_manage_url'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Fedora SOAP management URL'),
-      '#default_value' => variable_get('fedora_soap_manage_url', 'http://localhost:8080/fedora/wsdl?api=API-M'), '#description' => t('The URL to use for SOAP API-M connections'),
-      '#required' => TRUE,
-      '#weight' => -10
-    );
 
 // will allow admin user to remove namepsace restrictions if not explicitly disallowed  in settings.php
     if (variable_get('allow_open_namespace', TRUE)) {
@@ -288,7 +302,7 @@ class formClass {
           if (array_key_exists('config', $profile)) {
             $config_path = $profile['config'];
             if (isset($config_path) && $config_path != "") {
-              $display_options[$machine_name] .= " (". l("config", $config_path, array()) .")";
+              $display_options[$machine_name] .= " (" . l("config", $config_path, array()) . ")";
             }
           }
         }
@@ -322,14 +336,14 @@ class formClass {
       '#title' => t('Allow imagecache_external use for thumbnails in collection view'),
       '#default_value' => variable_get('fedora_repository_use_imagecache_external_in_collection_view', FALSE),
       '#description' => t('If enabled, the default collection list view (or ' .
-        'anywhere the function "@function" is used) will try to use ' .
-        'imagecache_external, defaulting to the "@preset" preset.  XSLTs may ' .
-        'be updated to use this function.',
-        array(
-          '@function' => '_fedora_repository_render_image()',
-          '@preset' => 'fedora_repository_collection_thumbnail',
-          '@xsl' => 'sparql_to_html.xsl',
-        )),
+          'anywhere the function "@function" is used) will try to use ' .
+          'imagecache_external, defaulting to the "@preset" preset.  XSLTs may ' .
+          'be updated to use this function.',
+          array(
+            '@function' => '_fedora_repository_render_image()',
+            '@preset' => 'fedora_repository_collection_thumbnail',
+            '@xsl' => 'sparql_to_html.xsl',
+      )),
     );
 
     $form['advanced']['fedora_control_group_control_during_ingest'] = array(
@@ -352,7 +366,7 @@ class formClass {
       '#type' => 'textfield',
       '#title' => t('Path to FITS executable'),
       '#description' => t("Path to FITS program on your server. It must be accessible by Drupal (i.e. apache user)."),
-      '#default_value' => variable_get('fits_path','/usr/local/bin/fits.sh'),
+      '#default_value' => variable_get('fits_path', '/usr/local/bin/fits.sh'),
     );
 
     //Export functionality
@@ -365,9 +379,13 @@ class formClass {
     );
 
     $form['#attributes'] = array('enctype' => "multipart/form-data");
+  $form['buttons']['submit'] = array('#type' => 'submit', '#value' => t('Save Configuration'));
+  $form['buttons']['reset'] = array('#type' => 'submit', '#value' => t('Reset to defaults'));
+  $form['#submit'][] = 'islandora_fedora_settings_form_submit';
+  $form['#theme'] = 'system_settings_form';
+  return ($form);
 
-
-    return system_settings_form($form);
+   // return system_settings_form($form);
   }
 
   /**
@@ -422,8 +440,7 @@ class formClass {
     }
 
     // Save the title
-    if ( $label != null )
-    {
+    if ($label != null) {
       $object = new Fedora_Item($form_values['pid']);
       $object->modify_object($label);
     }

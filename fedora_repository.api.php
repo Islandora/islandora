@@ -26,7 +26,7 @@ function hook_islandora_tabs($content_models, $pid, $page_number) {
   $tabset['A TAB'] = array(
     '#type' => 'tabpage',
     '#title' => t('A TITLE'),
-    '#content' => 'content')
+    '#content' => 'content'
   );
 
   return $tabset;

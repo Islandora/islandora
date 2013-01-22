@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  *   This file is the Drupal module file for fedora_repository.
@@ -10,10 +11,10 @@
  * Stores this info in the drupal variables table.
  * the name and pid can also be passed as url parameters
  */
-function fedora_repository_admin() {
+function fedora_repository_admin(&$form_state) {
   module_load_include('inc', 'fedora_repository', 'formClass');
   $admin_form = new formClass();
-  return $admin_form->createAdminForm();
+  return $admin_form->createAdminForm(&$form_state);
 }
 
 /**
@@ -325,7 +326,7 @@ function fedora_repository_purge_object_form(&$form_state, $pid, $referrer = NUL
     /* ALSO do $form definition here. Your final submit handler
      * (after user clicks Yes, I Confirm)
      * will only see $form_state info defined here.
-     * Form you create here passed as param1 to confirm_form*/
+     * Form you create here passed as param1 to confirm_form */
 
     // Had better luck leaving off last param 'name'.
     return confirm_form($form, 'Confirm Purge Object', $referrer, 'Are you sure you want to delete this object? This action cannot be undone.', 'Delete', 'Cancel');
@@ -531,7 +532,7 @@ function fedora_repository_purge_object_form_validate($form, &$form_state) {
   foreach ($content_models as $content_model) {
     if ($content_model->pid == 'islandora:collectionCModel') {
       $member_pids = get_related_items_as_array($pid, 'isMemberOfCollection', 10000, 0, FALSE);
-      if (is_array($member_pids) && ! empty($member_pids)) {
+      if (is_array($member_pids) && !empty($member_pids)) {
         form_set_error('new_collection_pid', t("Please purge all members of this collection before deleting the collection itself."));
         return;
       }
@@ -556,14 +557,14 @@ function fedora_repository_purge_object_form_submit($form, &$form_state) {
 
   if (!isset($form_state['storage']['confirm'])) {
     /* This will cause the form to be rebuilt,
-     * entering the confirm part of the form.*/
+     * entering the confirm part of the form. */
     $form_state['storage']['confirm'] = TRUE;
     // Along with this.
     $form_state['rebuild'] = TRUE;
   }
   else {
     /* This is where you do your processing after
-     * they have pressed the confirm button.*/
+     * they have pressed the confirm button. */
     $params = array(
       "pid" => $pid,
       "logMessage" => "Purged",
@@ -771,14 +772,14 @@ function fedora_repository_replace_stream_form_submit($form, &$form_state) {
   $dsLabel = $form_state['values']['dsLabel'];
 
   $streamUrl = ($file !== NULL) ?
-    file_create_url($file->filepath):
-    url($form_state['values']['reference'], array('absolute' => TRUE));
+      file_create_url($file->filepath) :
+      url($form_state['values']['reference'], array('absolute' => TRUE));
 
   // Remove the original file extension from the label and add the new one
   // use strrpos to get the last dot
   if (($indexOfDot = strrpos($dsLabel, '.')) !== FALSE) {
     $dsLabel = substr($dsLabel, 0, $indexOfDot) .
-      substr($streamUrl, strrpos($streamUrl, '.')); // Add the file extention to the end of the label.
+        substr($streamUrl, strrpos($streamUrl, '.')); // Add the file extention to the end of the label.
   }
 
   $dformat = $form_state['storage']['mime_type'];
@@ -901,7 +902,7 @@ function fedora_repository_edit_qdc_form_submit($form, &$form_state) {
       $client = $soap_helper->getSoapClient(variable_get('fedora_soap_manage_url', 'http://localhost:8080/fedora/wsdl?api=API-M'));
 
       /* Check the content model for a custom
-       * edit metadata form submit function.*/
+       * edit metadata form submit function. */
       if (isset($form_state['values']['pid'])) {
         module_load_include('inc', 'fedora_repository', 'ContentModel');
         if (($cm = ContentModel::loadFromObject($form_state['values']['pid'])) !== FALSE) {
@@ -1003,9 +1004,9 @@ function fedora_repository_islandora_tabs($content_models, $pid, $page_number) {
     }
     else {
       $cmodels_tabs[$content_model->pid] = array(
-          '#type' => 'tabpage',
-          '#title' => $content_model->name,
-          '#content' => $content_model_fieldset,
+        '#type' => 'tabpage',
+        '#title' => $content_model->name,
+        '#content' => $content_model_fieldset,
       );
     }
   }
@@ -1621,10 +1622,10 @@ function fedora_repository_imagecache_default_presets() {
 function _fedora_repository_render_image($tn_path, $imagecache_preset = 'fedora_repository_collection_thumbnail', $truncated_title = '', $title = '') {
   $thumbnail = NULL;
   if ($thumbnail === NULL &&
-    module_exists('imagecache_external') &&
-    is_callable('theme_imagecache_external_image') &&
-    variable_get('fedora_repository_use_imagecache_external_in_collection_view', FALSE) &&
-    imagecache_external_can_fetch($tn_path, TRUE)) {
+      module_exists('imagecache_external') &&
+      is_callable('theme_imagecache_external_image') &&
+      variable_get('fedora_repository_use_imagecache_external_in_collection_view', FALSE) &&
+      imagecache_external_can_fetch($tn_path, TRUE)) {
     $thumbnail = theme('imagecache_external_image', $imagecache_preset, $tn_path, $truncated_title, $title);
   }
   if ($thumbnail === NULL) {
@@ -1754,4 +1755,88 @@ function fedora_repository_fedora_repository_check_perm($op, $pid, $user) {
     // Neither allowing of forbidding, to allow other modules to override.
     return NULL;
   }
+}
+
+function update_fedora_url_div() {
+  $form = islandora_callback_prep();
+  $changed_elements = $form['fedora_ahah_wrapper'];
+  unset($changed_elements['#prefix'], $changed_elements['#suffix']);
+  $output = theme('status_messages') . drupal_render($changed_elements);
+  drupal_json(array(
+    'status' => TRUE,
+    'data' => $output,
+  ));
+}
+
+function islandora_callback_prep() {
+  $form_state = array('storage' => NULL, 'submitted' => FALSE, 'rebuild' => TRUE);
+  $form_build_id = $_POST['form_build_id'];
+  $form = form_get_cache($form_build_id, $form_state);
+  $args = $form['#parameters'];
+  $form_id = array_shift($args);
+  $form_state['post'] = $form['#post'] = $_POST;
+  // Enable the submit/validate handlers to determine whether AHAH-submittted.
+  $form_state['ahah_submission'] = TRUE;
+  $form['#programmed'] = $form['#redirect'] = FALSE;
+  drupal_process_form($form_id, $form, $form_state);
+  $form = drupal_rebuild_form($form_id, $form_state, $args, $form_build_id);
+  return $form;
+}
+
+function islandora_fedora_settings_form_submit($form, &$form_state) {
+
+  $op = isset($form_state['values']['op']) ? $form_state['values']['op'] : '';
+  if ($form_state['ahah_submission'] == TRUE) {
+    $form_state['rebuild'] = TRUE;
+    return;
+  }
+  if ($form_state['clicked_button']['#id'] != 'edit-submit' && $op != t('Reset to defaults')) {
+    $form_state['rebuild'] = TRUE;
+    return;
+  }
+
+
+  // Exclude unnecessary elements.
+  unset($form_state['values']['submit'], $form_state['values']['reset'], $form_state['values']['form_id'], $form_state['values']['op'], $form_state['values']['form_token'], $form_state['values']['form_build_id']);
+
+  foreach ($form_state['values'] as $key => $value) {
+    if ($op == t('Reset to defaults')) {
+      variable_del($key);
+    }
+    else {
+      if (is_array($value) && isset($form_state['values']['array_filter'])) {
+        $value = array_keys(array_filter($value));
+      }
+      variable_set($key, $value);
+    }
+  }
+
+  //set elements previously defined in config code.
+  //the elements are left in to allow for third party modules.
+  if ($op != t('Reset to defaults')) {
+    $fedora_base = variable_get('fedora_base_url', 'http://localhost:8080/fedora');
+    variable_set('fedora_soap_url', $fedora_base . '/wsdl?api=API-A');
+    variable_set('fedora_soap_manage_url', $fedora_base . '/wsdl?api=API-M');
+  }
+  if ($op == t('Reset to defaults')) {
+    drupal_set_message(t('The configuration options have been reset to their default values.'));
+  }
+  else {
+    drupal_set_message(t('The Islandora configuration options have been saved.'));
+  }
+
+  $root = variable_get('fedora_repository_pid', 'islandora:root');
+  islandora_guarantee_root_collection($root);
+  cache_clear_all();
+  drupal_rebuild_theme_registry();
+}
+
+function islandora_guarantee_root_collection($pid){
+  module_load_include('inc', 'fedora_repository', 'api/fedora_item');
+  $item = new Fedora_Item($pid);
+  if($item->exists()){
+    return;
+  }
+  $item = Fedora_item::ingest_new_item($pid, 'A', 'Islandora Root Collection', 'admin');
+  $item->add_relationship('hasModel', 'islandora:collectionCModel', FEDORA_MODEL_URI);
 }
