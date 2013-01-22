@@ -180,6 +180,10 @@ class formClass {
     module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
     module_load_include('inc', 'fedora_repository', 'ObjectHelper');
     $fedora_path = isset($form_state['values']['fedora_base_url']) ? $form_state['values']['fedora_base_url'] : variable_get('fedora_base_url', 'http://localhost:8080/fedora');
+    $parts = @parse_url($fedora_path);
+    if($parts &!isset($parts['scheme'])){
+      $fedora_path = "http://" . $fedora_path;
+    }
     $triplepath = "$fedora_path/risearch";
     $response = do_curl_ext($fedora_path . '/describe');
     $available = ($response != NULL) ? ($response[1] == 0) : FALSE;
