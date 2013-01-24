@@ -397,13 +397,26 @@ function islandora_prepare_new_object($namespace = NULL, $label = NULL, $datastr
     $mimetype = isset($ds['mimetype']) ? $ds['mimetype'] : 'text/xml';
     // Default 'Managed'
     $control_group = (isset($ds['control_group']) && in_array($ds['control_group'], array('X', 'M', 'R', 'E'))) ? $ds['control_group'] : 'M';
-    $datastream_file = url($ds['datastream_file'], array('absolute' => TRUE));
+   
+    $ds_uri = FALSE;
+    if (file_valid_uri($ds['datastream_file'])) {
+      $datastream_file = $ds['datastream_file'];
+      $ds_uri = TRUE;
+    }
+    else {
+      $datastream_file = url($ds['datastream_file'], array('absolute' => TRUE));
+    } 
     $datastream = $object->constructDatastream($dsid, $control_group);
     $datastream->label = $label;
     $datastream->mimetype = $mimetype;
     switch ($control_group) {
       case 'M':
-        $datastream->setContentFromUrl($datastream_file);
+        if ($ds_uri) {
+          $datastream->setContentFromFile($datastream_file);
+        }
+        else {
+          $datastream->setContentFromUrl($datastream_file);
+        }
         break;
       case 'X':
         $datastream->setContentFromString(file_get_contents($datastream_file));
