@@ -1,9 +1,9 @@
 <?php
+
 /**
  * @file
  * Fedora Item
  */
-
 define('RELS_EXT_URI', 'info:fedora/fedora-system:def/relations-external#');
 define("FEDORA_MODEL_URI", 'info:fedora/fedora-system:def/model#');
 define("ISLANDORA_PAGE_URI", 'info:islandora/islandora-system:def/pageinfo#');
@@ -25,7 +25,6 @@ class Fedora_Item {
   public $pid = NULL;
   public $objectProfile = NULL;
   public $ownerId = NULL;
-
   // A SimpleXML object to store a list of this item's datastreams.
   private $datastreams_list = NULL;
   public $datastreams = NULL;
@@ -200,7 +199,7 @@ class Fedora_Item {
       'label' => $datastream_label,
       'MIMEType' => $datastream_mimetype,
       'URL' => ($this->url() . '/' . $datastream_id . '/' .
-        drupal_urlencode($datastream_label)),);
+      drupal_urlencode($datastream_label)),);
 
     return $soap_result;
   }
@@ -338,7 +337,7 @@ RDF;
 
     // Casting a string to an array gives an array containing the string, and
     //   casting an array to an array does nothing.
-    foreach ((array)$object as $obj) {
+    foreach ((array) $object as $obj) {
       if ($literal_value == RELS_TYPE_URI && strpos($obj, $f_prefix) !== 0) {
         $obj = $f_prefix . $obj;
       }
@@ -399,7 +398,7 @@ RDF;
       $relsxml->documentElement->appendChild($description);
     }
 
-    foreach ((array)$object as $obj) {
+    foreach ((array) $object as $obj) {
       if ($literal_value == RELS_TYPE_URI && strpos($obj, $f_prefix) !== 0) {
         $obj = $f_prefix . $object;
       }
@@ -447,7 +446,7 @@ RDF;
           $rel = $rels->item($i - 1);
           // Foreach ($rels as $rel) { // moving forward like this caused iteration errors when something was deleted.
           if (
-            // If either no object is specified, or the object matches (in either the literal or URI case), remove this node from it's parent, and mark as changed.
+          // If either no object is specified, or the object matches (in either the literal or URI case), remove this node from it's parent, and mark as changed.
               empty($object) ||
               (($literal_value == RELS_TYPE_URI) && $rel->getAttributeNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'resource') == $object) ||
               (($literal_value == RELS_TYPE_PLAIN_LITERAL) && $rel->textContent == $object) ||
@@ -494,16 +493,16 @@ RDF;
           $rels = $desc->getElementsByTagNameNS($namespaceURI, $relationship);
           if (!empty($rels)) {
             // Iterate backwards so if we delete something our pointer doesn't get out of sync.
-            for ($i = $rels->length; $i>0; $i--) {
-              $rel = $rels->item($i-1);
+            for ($i = $rels->length; $i > 0; $i--) {
+              $rel = $rels->item($i - 1);
               //      foreach ($rels as $rel) { // moving forward like this caused iteration errors when something was deleted
               // If either no object is specified, or the object matches (in either the literal or URI case), remove this node from it's parent, and mark as changed.
               if (
-                empty($object) ||
-                (($literal_value == RELS_TYPE_URI) && $rel->getAttributeNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'resource') == $object) ||
-                (($literal_value == RELS_TYPE_PLAIN_LITERAL) && $rel->textContent == $object) ||
-                (($literal_value == RELS_TYPE_STRING) && $rel->getAttribute('rdf:datatype') == 'http://www.w3.org/2001/XMLSchema#string' && $rel->textContent == $object) ||
-                (($literal_value == RELS_TYPE_INT) && $rel->getAttribute('rdf:datatype') == 'http://www.w3.org/2001/XMLSchema#int' && intval($rel->textContent) == $object)) {
+                  empty($object) ||
+                  (($literal_value == RELS_TYPE_URI) && $rel->getAttributeNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'resource') == $object) ||
+                  (($literal_value == RELS_TYPE_PLAIN_LITERAL) && $rel->textContent == $object) ||
+                  (($literal_value == RELS_TYPE_STRING) && $rel->getAttribute('rdf:datatype') == 'http://www.w3.org/2001/XMLSchema#string' && $rel->textContent == $object) ||
+                  (($literal_value == RELS_TYPE_INT) && $rel->getAttribute('rdf:datatype') == 'http://www.w3.org/2001/XMLSchema#int' && intval($rel->textContent) == $object)) {
                 $rel->parentNode->removeChild($rel);
                 $modified = TRUE;
               }
@@ -1187,7 +1186,7 @@ RDF;
   function modify_object($label = '', $state = NULL, $ownerId = NULL, $logMessage = 'Modified by Islandora API', $quiet=TRUE) {
     $params = array(
       'pid' => $this->pid,
-       // Default to the current owner if none is provided..
+      // Default to the current owner if none is provided..
       'ownerId' => (($ownerId !== NULL) ?
           $ownerId :
           $this->ownerId),
@@ -1445,6 +1444,7 @@ RDF;
    *   The return value from the soap function if successful, NULL otherwise.
    */
   static function soap_call($function, $parameters, $quiet = FALSE) {
+    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
     if (!self::$connection_helper) {
       module_load_include('inc', 'fedora_repository', 'ConnectionHelper');
       self::$connection_helper = new ConnectionHelper();
@@ -1467,7 +1467,7 @@ RDF;
         return NULL;
       }
     } catch (Exception $e) {
-      if (!$quiet) {
+      if (!$quiet && user_access($VIEW_FEDORA_SOAP_ERROR_MESSAGES)) {
         preg_match('/org\.fcrepo\.server\.security\.xacml\.pep\.AuthzDeniedException/', $e->getMessage()) ?
                 drupal_set_message(t('Insufficient permissions to call SOAP function "%func".', array('%func' => $function)), 'error') :
                 drupal_set_message(t('Error trying to call SOAP function "%func". Check watchdog logs for more information.', array('%func' => $function)), 'error');
@@ -1595,4 +1595,5 @@ RDF;
 
     return $ownerId;
   }
+
 }
