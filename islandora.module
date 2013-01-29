@@ -37,14 +37,14 @@ define('FEDORA_MANAGE_PROPERTIES', 'manage object properties');
 // Hooks
 define('ISLANDORA_VIEW_HOOK', 'islandora_view_object');
 define('ISLANDORA_EDIT_HOOK', 'islandora_edit_object');
-define('ISLANDORA_PRE_INGEST_HOOK', 'islandora_ingest_pre_ingest');
-define('ISLANDORA_POST_INGEST_HOOK', 'islandora_ingest_post_ingest');
-define('ISLANDORA_PRE_PURGE_OBJECT_HOOK', 'islandora_pre_purge_object');
-define('ISLANDORA_POST_PURGE_OBJECT_HOOK', 'islandora_post_purge_object');
+// @todo Add Documentation.
+define('ISLANDORA_OBJECT_INGESTED_HOOK', 'islandora_object_ingested');
+define('ISLANDORA_OBJECT_MODIFIED_HOOK', 'islandora_object_modified');
+define('ISLANDORA_OBJECT_PURGED_HOOK', 'islandora_object_purged');
+define('ISLANDORA_DATASTREAM_INGESTED_HOOK', 'islandora_datastream_ingested');
+define('ISLANDORA_DATASTREAM_MODIFIED_HOOK', 'islandora_datastream_modified');
+define('ISLANDORA_DATASTREAM_PURGED_HOOK', 'islandora_datastream_purged');
 define('ISLANDORA_INGEST_STEP_HOOK', 'islandora_ingest_steps');
-define('ISLANDORA_PRE_PURGE_DATASTREAM_HOOK', 'islandora_pre_purge_datastream');
-define('ISLANDORA_POST_PURGE_DATASTREAM_HOOK', 'islandora_post_purge_datastream');
-define('ISLANDORA_EDIT_DATASTREAM_HOOK', 'islandora_edit_datastream');
 
 /**
  * Implements hook_menu().
@@ -541,7 +541,6 @@ function islandora_default_islandora_view_object($object) {
  *   A IslandoraTuque instance
  */
 function islandora_get_tuque_connection($user = NULL, $url = NULL) {
-  module_load_include('inc', 'islandora', 'includes/IslandoraTuque');
   $tuque = &drupal_static(__FUNCTION__);
   if (!$tuque) {
     if (IslandoraTuque::exists()) {
@@ -578,9 +577,7 @@ function islandora_object_load($object_id) {
   $tuque = islandora_get_tuque_connection();
   if ($tuque) {
     try {
-      $object = $tuque->repository->getObject(urldecode($object_id));
-      drupal_alter('islandora_object', $object);
-      return $object;
+      return $tuque->repository->getObject(urldecode($object_id));
     } catch (Exception $e) {
       if ($e->getCode() == '404') {
         return FALSE;
@@ -744,124 +741,33 @@ function islandora_islandora_undeletable_datastreams(array $models) {
 }
 
 /**
- * Ingest the given object into Fedora calling its pre/post hooks as well.
- *
- * @todo will be cleaned up in the future
+ * Ingest the given object.
  *
  * @param NewFedoraObject $object
  *   An ingestable FedoraObject.
  *
  * @return FedoraObject
- *   The ingested FedoraObject, after running the pre/post ingest hooks.
- *   Returns FALSE if the ingest failed.
+ *   The ingested FedoraObject.
  */
 function islandora_add_object(NewFedoraObject &$object) {
-  islandora_pre_add_object($object);
-  try {
-    $object->repository->ingestObject($object);
-    islandora_post_add_object($object);
-    return $object;
-  } catch (Exception $e) {
-    watchdog('islandora', 'Failed to ingest object: @pid</br>code: @code<br/>message: @msg', array(
-        '@pid' => $object->id,
-        '@code' => $e->getCode(),
-        '@msg' => $e->getMessage()), WATCHDOG_ERROR);
-  }
-  return FALSE;
+  return $object->repository->ingestObject($object);
 }
 
 /**
- * Calls the ISLANDORA_PRE_INGEST_HOOK hooks.
- *
- * @param NewFedoraObject $object
- *   An ingestable FedoraObject.
- */
-function islandora_pre_add_object(NewFedoraObject $object) {
-  module_load_include('inc', 'islandora', 'includes/utilities');
-  foreach (islandora_build_hook_list(ISLANDORA_PRE_INGEST_HOOK, $object->models) as $hook) {
-    module_invoke_all($hook, $object);
-  }
-}
-
-
-/**
- * Calls the ISLANDORA_POST_INGEST_HOOK hooks.
- *
- * @param FedoraObject $object
- *   A recently ingestable FedoraObject.
- */
-function islandora_post_add_object(FedoraObject $object) {
-  foreach (islandora_build_hook_list(ISLANDORA_POST_INGEST_HOOK, $object->models) as $hook) {
-    module_invoke_all($hook, $object);
-  }
-}
-
-/**
- * Deletes the given object into Fedora calling its pre/post hooks as well.
+ * Delete's or purges the given object.
  *
  * @param FedoraObject $object
  *   An object to delete.
  *
- * @return FedoraObject
+ * @return bool
  *   The ingested FedoraObject, after running the pre/post ingest hooks.
  */
 function islandora_delete_object(FedoraObject &$object) {
-  $object_id = $object->id;
-  $models = $object->models;
-  $action = islandora_pre_delete_object($object);
-  switch ($action) {
-    case 'blocked':
-      // Do nothing.
-      return FALSE;
-    case 'delete':
-      // Change the state to deleted.
-      $object->delete();
-      islandora_post_delete_object($object_id, $models);
-      return TRUE;
-    default:
-      // Purge
-      $object->repository->purgeObject($object_id);
-      islandora_post_delete_object($object_id, $models);
-      $object = NULL;
-      return TRUE;
-  }
+  return $object->repository->purgeObject($object->id);
 }
 
 /**
- * Calls the ISLANDORA_PRE_PURGE_OBJECT_HOOK hooks.
- *
- * @param FedoraObject $object
- *   The object that is about to be deleted.
- */
-function islandora_pre_delete_object(FedoraObject $object) {
-  module_load_include('inc', 'islandora', 'includes/utilities');
-  $results = array();
-  foreach (islandora_build_hook_list(ISLANDORA_PRE_PURGE_OBJECT_HOOK, $object->models) as $hook) {
-    $results = array_merge_recursive($results, module_invoke_all($hook, $object));
-  }
-  $action = (isset($results['block']) && $results['block']) ? 'block' : FALSE;
-  $action = (!$action && isset($results['delete']) && $results['delete']) ? 'delete' : $action;
-  $action = !$action ? 'purge' : $action;
-  return $action;
-}
-
-/**
- * Calls the ISLANDORA_POST_PURGE_OBJECT_HOOK hooks.
- *
- * @param string $object_id
- *   The object id of an the recently deleted object.
- * @param array $models
- *   The list of content models the delete object subsribed to.
- */
-function islandora_post_delete_object($object_id, array $models) {
-  module_load_include('inc', 'islandora', 'includes/utilities');
-  foreach (islandora_build_hook_list(ISLANDORA_POST_PURGE_OBJECT_HOOK, $models) as $hook) {
-    module_invoke_all($hook, $object_id, $models);
-  }
-}
-
-/**
- * Delete's/Purges the given datastream.
+ * Delete's or purges the given datastream.
  *
  * @throws Exception
  *  Which types are undefined, but more than likely because of the hooks
@@ -870,79 +776,12 @@ function islandora_post_delete_object($object_id, array $models) {
  * @param FedoraDatastream $datastream
  *   The datastream to delete.
  *
- * @return boolean
- *   TRUE is returned if the datastream was Deleted/Purged, FALSE if it was
- *   blocked.
+ * @return bool
+ *   TRUE if successful, FALSE otherwise.
  */
 function islandora_delete_datastream(FedoraDatastream &$datastream) {
-  $datastream_id = $datastream->id;
   $object = $datastream->parent;
-  $action = islandora_pre_delete_datastream($datastream);
-  switch ($action) {
-    case 'blocked':
-      // Do nothing.
-      return FALSE;
-    case 'delete':
-      // Change the state to deleted.
-      $object[$datastream_id]->state = 'D';
-      // @todo Differentiate between delete/purge in the hooks.
-      islandora_post_delete_datastream($object, $datastream_id);
-      return TRUE;
-    default:
-      // Purge
-      $object->purgeDatastream($datastream_id);
-      islandora_post_delete_datastream($object, $datastream_id);
-      $datastream = NULL;
-      return TRUE;
-  }
-}
-
-/**
- * The default behaviour is to 'purge' the datastream but this can be overridden
- * by modules that implement the 'islandora_pre_purge_datastream' hook.
- *
- * @todo make this an alter.
- *
- * The returned array can include a 'block' => TRUE
- * pair which will prevent the datastream from being deleted if it particularly
- * needed for a certain function. Returning 'delete' => TRUE will cause the
- * datastream to be put into a deleted state.
- *
- * @param FedoraDatastream $datastream
- *   The datastream to delete.
- *
- * @return string
- *   The action to take when deleting the given datastream, either 'purge',
- *   'delete', or 'block'.
- */
-function islandora_pre_delete_datastream(FedoraDatastream $datastream) {
-  module_load_include('inc', 'islandora', 'includes/utilities');
-  $results = array();
-  foreach (islandora_build_hook_list(ISLANDORA_PRE_PURGE_DATASTREAM_HOOK, $datastream->parent->models) as $hook) {
-    // Not sure this will work the greatest, probably an alter would be better..
-    $results = array_merge_recursive($results, module_invoke_all($hook, $datastream));
-  }
-  $action = (isset($results['block']) && $results['block']) ? 'block' : FALSE;
-  $action = (!$action && isset($results['delete']) && $results['delete']) ? 'delete' : $action;
-  $action = !$action ? 'purge' : $action;
-  return $action;
-}
-
-/**
- * Calls the post purge datastream hooks.
- *
- * @todo Should differentiate between purging/deleting.
- *
- * @param FedoraObject $object
- *   The parent object of the deleted datastream.
- * @param string $datastream_id
- *   The datastream id of the deleted datastream.
- */
-function islandora_post_delete_datastream(FedoraObject $object, $datastream_id) {
-  module_load_include('inc', 'islandora', 'includes/utilities');
-  foreach (islandora_build_hook_list(ISLANDORA_POST_PURGE_DATASTREAM_HOOK, $object->models) as $hook) {
-    module_invoke_all($hook, $object, $datastream_id);
-  }
+  return $object->purgeDatastream($datastream->id);
 }
 
 /**
