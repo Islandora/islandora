@@ -629,7 +629,7 @@ function theme_islandora_viewers_table($variables) {
  *   if no viewer is set.
  */
 
-function islandora_get_viewer($params = NULL, $variable_id = NULL, $fedora_object = null) {
+function islandora_get_viewer($params = NULL, $variable_id = NULL, $fedora_object = NULL) {
   // get viewer from settings
   $settings = variable_get($variable_id, array());
   // make sure a viewer is set
