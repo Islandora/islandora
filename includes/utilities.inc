@@ -433,7 +433,7 @@ function islandora_prepare_new_object($namespace = NULL, $label = NULL, $datastr
     $mimetype = isset($ds['mimetype']) ? $ds['mimetype'] : 'text/xml';
     // Default 'Managed'
     $control_group = (isset($ds['control_group']) && in_array($ds['control_group'], array('X', 'M', 'R', 'E'))) ? $ds['control_group'] : 'M';
-   
+
     $ds_uri = FALSE;
     if (file_valid_uri($ds['datastream_file'])) {
       $datastream_file = $ds['datastream_file'];
@@ -441,7 +441,7 @@ function islandora_prepare_new_object($namespace = NULL, $label = NULL, $datastr
     }
     else {
       $datastream_file = url($ds['datastream_file'], array('absolute' => TRUE));
-    } 
+    }
     $datastream = $object->constructDatastream($dsid, $control_group);
     $datastream->label = $label;
     $datastream->mimetype = $mimetype;
@@ -475,4 +475,43 @@ function islandora_display_repository_inaccessible_message() {
   $message = t('Could not connect to the repository. Please check the settings on the !link page.',
              array('!link' => $link));
   drupal_set_message($message, 'error', FALSE);
+}
+
+/**
+ * Create a message stating if the given executable is available.
+ *
+ * If the both the version and required version are given then only if the
+ * version is equal to or greater than the required version the executable
+ * will be considered correct.
+ *
+ * @param string $path
+ *   The absolute path to an executable to check for availability.
+ * @param string $version
+ *   The version of exectuable.
+ * @param string $required_version
+ *   The required version of exectuable.
+ *
+ * @return string
+ *   A message in html detailing if the given executable is accessible.
+ */
+function islandora_executable_available_message($path, $version = NULL, $required_version = NULL) {
+  $available = is_executable($path);
+  if ($available) {
+    $image = theme_image(array('path' => 'misc/watchdog-ok.png', 'attributes' => array()));
+    $message = t('Executable found at @path', array('@path' => $path));
+    if ($version) {
+      $message .= t('<br/>Version: @version', array('@version' => $version));
+    }
+    if ($required_version) {
+      $message .= t('<br/>Required Version: @version', array('@version' => $required_version));
+      if (version_compare($version, $required_version) < 0) {
+        $image = theme_image(array('path' => 'misc/watchdog-error.png', 'attributes' => array()));
+      }
+    }
+  }
+  else {
+    $image = theme_image(array('path' => 'misc/watchdog-error.png', 'attributes' => array()));
+    $message = t('Unable to locate executable at @path', array('@path' => $path));
+  }
+  return $image . $message;
 }
