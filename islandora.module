@@ -793,3 +793,65 @@ function islandora_cron() {
   module_load_include('inc', 'islandora', 'includes/islandora_authtokens');
   islandora_remove_expired_tokens();
 }
+
+/**
+ * Implements hook_entity_info().
+ *
+ * Some boiler-plate for Tokens (the module, not our authentication work-
+ * around).
+ */
+function islandora_entity_info() {
+  $entities = array();
+
+  $entities['islandora_object'] = array(
+    'label' => t('Islandora Object'),
+    'controller class' => 'IslandoraObjectEntityController',
+    'fieldable' => FALSE,
+    'entity keys' => array(
+      'id' => 'id',
+      'label' => 'label',
+    ),
+  );
+
+  return $entities;
+}
+
+/**
+ * Implements hook_entity_property_info().
+ *
+ * Details the tokens which will be available on the given object.
+ */
+function islandora_entity_property_info() {
+  $info = array();
+
+  $p = &$info['islandora_object']['properties'];
+
+  $p['id'] = array(
+    'type' => 'text',
+    'label' => t('ID'),
+    'description' => t('The identifier of the object.'),
+  );
+  $p['label'] = array(
+    'type' => 'text',
+    'label' => t('Object Label'),
+    'description' => t('The label of the object.'),
+  );
+  $p['owner'] = array(
+    'type' => 'text',
+    'label' => t('Object Owner'),
+    'description' => t('The name of the owner of the object.'),
+  );
+  $p['state'] = array(
+    'type' => 'text',
+    'label' => t('Object State'),
+    'description' => t('An initial representing the state of the object.'),
+  );
+  $p['models'] = array(
+    'type' => 'list<text>',
+    'label' => t('Content Models'),
+    'description' => t('The list of content models which the object has.'),
+  );
+
+  return $info;
+}
+

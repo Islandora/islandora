@@ -10,6 +10,7 @@ files[] = includes/mime_detect.inc
 files[] = includes/dublin_core.inc
 files[] = includes/islandora_tuque.inc
 files[] = includes/islandora_tuque_wrapper.inc
+files[] = includes/islandora_object.entity_controller.inc
 files[] = tests/islandora_web_test_case.inc
 files[] = tests/islandora_authtokens.test
 files[] = tests/islandora_hooks.test
