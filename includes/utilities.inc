@@ -515,3 +515,25 @@ function islandora_executable_available_message($path, $version = NULL, $require
   }
   return $image . $message;
 }
+
+/**
+ * Create a message stating if the given directory exists.
+ *
+ * @param string $path
+ *   The absolute path to an executable to check for availability.
+ *
+ * @return string
+ *   A message in HTML detailing if the given directory is exists.
+ */
+function islandora_directory_exists_message($path) {
+  $available = is_dir($path);
+  if ($available) {
+    $image = theme_image(array('path' => 'misc/watchdog-ok.png', 'attributes' => array()));
+    $message = t('Directory found at @path', array('@path' => $path));
+  }
+  else {
+    $image = theme_image(array('path' => 'misc/watchdog-error.png', 'attributes' => array()));
+    $message = t('Unable to locate directory at @path', array('@path' => $path));
+  }
+  return $image . $message;
+}
