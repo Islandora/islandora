@@ -58,10 +58,6 @@
  *
  */
 ?>
-<?php if (isset($islandora_object_label)): ?>
-  <?php drupal_set_title("$islandora_object_label"); ?>
-<?php endif; ?>
-
 <div class="islandora-object islandora">
   <h2><?php print t('Details'); ?></h2>
   <dl class="islandora-object-tn">

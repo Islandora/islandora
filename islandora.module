@@ -430,7 +430,10 @@ function islandora_object_manage_access_callback($perms, $object = NULL) {
  *   The HTML repersentation of the manage object page.
  */
 function islandora_edit_object(FedoraObject $object) {
+  module_load_include('inc', 'islandora', 'includes/breadcrumb');
   module_load_include('inc', 'islandora', 'includes/utilities');
+  drupal_set_title($object->label);
+  drupal_set_breadcrumb(islandora_get_breadcrumbs($object));
   $output = array();
   foreach (islandora_build_hook_list(ISLANDORA_EDIT_HOOK, $object->models) as $hook) {
     $temp = module_invoke_all($hook, $object);
@@ -491,6 +494,7 @@ function islandora_view_default_object() {
 function islandora_view_object(FedoraObject $object) {
   module_load_include('inc', 'islandora', 'includes/breadcrumb');
   module_load_include('inc', 'islandora', 'includes/utilities');
+  drupal_set_title($object->label);
   drupal_set_breadcrumb(islandora_get_breadcrumbs($object));
   // Optional pager parameters
   $page_number = (empty($_GET['page'])) ? '1' : $_GET['page'];
@@ -854,4 +858,3 @@ function islandora_entity_property_info() {
 
   return $info;
 }
-

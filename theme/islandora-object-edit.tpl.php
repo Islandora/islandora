@@ -20,7 +20,4 @@
  *
  */
 ?>
-
-<?php drupal_set_title($islandora_object->label); ?>
-
 <?php print (theme_table($variables['datastream_table'])); ?>
