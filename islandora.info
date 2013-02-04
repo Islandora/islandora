@@ -12,4 +12,5 @@ files[] = includes/IslandoraTuque.inc
 files[] = includes/IslandoraTuqueWrapper.inc
 files[] = tests/islandora_web_test_case.inc
 files[] = tests/islandora_authtokens.test
+files[] = tests/islandora_manage_permissions.test
 php = 5.3
