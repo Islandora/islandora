@@ -622,11 +622,14 @@ function theme_islandora_viewers_table($variables) {
  *   Array or string with data the module needs in order to render a full viewer
  * @param string $variable_id
  *   The id of the Drupal variable the viewer settings are saved in
+ * @param FedoraObject $fedora_object
+ *   The tuque object representing the fedora object being displayed
  * @return
  *   The callback to the viewer module. Returns a rendered viewer. Returns FALSE
  *   if no viewer is set.
  */
-function islandora_get_viewer($params = NULL, $variable_id = NULL) {
+
+function islandora_get_viewer($params = NULL, $variable_id = NULL, $fedora_object = NULL) {
   // get viewer from settings
   $settings = variable_get($variable_id, array());
   // make sure a viewer is set
@@ -636,10 +639,10 @@ function islandora_get_viewer($params = NULL, $variable_id = NULL) {
     if ($viewer_id AND $params !== NULL) {
       $callback = islandora_get_viewer_callback($viewer_id);
       // call callback function
-      return $callback($params);
+      return $callback($params, $fedora_object);
     }
   }
-  return NULL;
+  return FALSE;
 }
 
 /**

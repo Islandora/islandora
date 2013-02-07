@@ -20,3 +20,6 @@ tests/islandora_web_test_case.inc~
 theme/islandora-object.tpl.php~
 
 theme/islandora.theme.inc~
+
+tests/test_config.ini
+

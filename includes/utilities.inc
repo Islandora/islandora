@@ -112,29 +112,65 @@ function islandora_describe_repository($url = NULL) {
 }
 
 /**
- * Build a list of all the hooks to call.
+ * Build and invoke a list of hooks by combining the given hook and refinements.
  *
- * Concatenates the each pid (escaped) to the hook name, for calling in
- * module_invoke_all().
+ * The given hook will be called as MODULE_HOOK, and for each hook refinement
+ * as MODULE_REFINEMENT_HOOK. Any additional arguments passed to this function
+ * will be passed as arguments to module_invoke_all().
+ *
+ * @see islandora_build_hook_list()
+ *   To see how the hook list is generated.
  *
  * @param string $hook
  *   A hook to call.
- * @param array $pids
- *   An array of PIDs (probably content models).
+ * @param array $refinements
+ *   An array of strings, that will be escaped and concatinated with the given
+ *   hook. This will most likely be PIDs/DSIDs/Labels etc. We often refine our
+ *   hooks using an objects model.
+ * @param array $args
+ *   Any arguments to pass onto module_invoke_all().
  *
  * @return array
- *   An array with each PID escaped and concatenated with the base hook name,
- *   in addition to the base hook name at the end.
+ *   The merged results from all the hooks.
  */
-function islandora_build_hook_list($hook, $pids = array()) {
-  $hooks = array();
-
-  $pids = array_unique($pids);
-  foreach ($pids as $pid) {
-    $hooks[] = islandora_escape_pid_for_function($pid) . '_' . $hook;
+function islandora_invoke_hook_list($hook, array $refinements, array $args) {
+  $return = array();
+  foreach (islandora_build_hook_list($hook, $refinements) as $hook) {
+    array_unshift($args, $hook);
+    $result = call_user_func_array('module_invoke_all', $args);
+    $return = array_merge_recursive($return, $result);
+    array_shift($args);
   }
-  $hooks[] = $hook;
+  return $return;
+}
 
+/**
+ * Build a list of all the hooks to call.
+ *
+ * Concatenates each hook $refinement (escaped) to the hook name, for calling
+ * with module_invoke_all().
+ *
+ * Any non-valid PHP function characters in the given refinements are
+ * converted to "_" characters.
+ *
+ * @param string $hook
+ *   The base hook to concatenate.
+ * @param array $refinements
+ *   An array of strings, that will be escaped and concatinated with the given
+ *   hook. This will most likely be PIDs/DSIDs/Labels etc. We often refine our
+ *   hooks using an objects model.
+ *
+ * @return array
+ *   An array with each refinement escaped and concatenated with the base hook
+ *   name, in addition to the base hook name.
+ */
+function islandora_build_hook_list($hook, $refinements = array()) {
+  $refinements = array_unique($refinements);
+  $hooks = array($hook);
+  foreach ($refinements as $refinement) {
+    $refinement = preg_replace('/[^a-zA-Z0-9_]/', '_', $refinement);
+    $hooks[] = "{$refinement}_{$hook}";
+  }
   return $hooks;
 }
 
@@ -397,7 +433,7 @@ function islandora_prepare_new_object($namespace = NULL, $label = NULL, $datastr
     $mimetype = isset($ds['mimetype']) ? $ds['mimetype'] : 'text/xml';
     // Default 'Managed'
     $control_group = (isset($ds['control_group']) && in_array($ds['control_group'], array('X', 'M', 'R', 'E'))) ? $ds['control_group'] : 'M';
-   
+
     $ds_uri = FALSE;
     if (file_valid_uri($ds['datastream_file'])) {
       $datastream_file = $ds['datastream_file'];
@@ -405,7 +441,7 @@ function islandora_prepare_new_object($namespace = NULL, $label = NULL, $datastr
     }
     else {
       $datastream_file = url($ds['datastream_file'], array('absolute' => TRUE));
-    } 
+    }
     $datastream = $object->constructDatastream($dsid, $control_group);
     $datastream->label = $label;
     $datastream->mimetype = $mimetype;
@@ -439,4 +475,65 @@ function islandora_display_repository_inaccessible_message() {
   $message = t('Could not connect to the repository. Please check the settings on the !link page.',
              array('!link' => $link));
   drupal_set_message($message, 'error', FALSE);
+}
+
+/**
+ * Create a message stating if the given executable is available.
+ *
+ * If the both the version and required version are given then only if the
+ * version is equal to or greater than the required version the executable
+ * will be considered correct.
+ *
+ * @param string $path
+ *   The absolute path to an executable to check for availability.
+ * @param string $version
+ *   The version of exectuable.
+ * @param string $required_version
+ *   The required version of exectuable.
+ *
+ * @return string
+ *   A message in html detailing if the given executable is accessible.
+ */
+function islandora_executable_available_message($path, $version = NULL, $required_version = NULL) {
+  $available = is_executable($path);
+  if ($available) {
+    $image = theme_image(array('path' => 'misc/watchdog-ok.png', 'attributes' => array()));
+    $message = t('Executable found at @path', array('@path' => $path));
+    if ($version) {
+      $message .= t('<br/>Version: @version', array('@version' => $version));
+    }
+    if ($required_version) {
+      $message .= t('<br/>Required Version: @version', array('@version' => $required_version));
+      if (version_compare($version, $required_version) < 0) {
+        $image = theme_image(array('path' => 'misc/watchdog-error.png', 'attributes' => array()));
+      }
+    }
+  }
+  else {
+    $image = theme_image(array('path' => 'misc/watchdog-error.png', 'attributes' => array()));
+    $message = t('Unable to locate executable at @path', array('@path' => $path));
+  }
+  return $image . $message;
+}
+
+/**
+ * Create a message stating if the given directory exists.
+ *
+ * @param string $path
+ *   The absolute path to an executable to check for availability.
+ *
+ * @return string
+ *   A message in HTML detailing if the given directory is exists.
+ */
+function islandora_directory_exists_message($path) {
+  $available = is_dir($path);
+  if ($available) {
+    $image = theme_image(array('path' => 'misc/watchdog-ok.png', 'attributes' => array()));
+    $message = t('Directory found at @path', array('@path' => $path));
+  }
+  else {
+    $image = theme_image(array('path' => 'misc/watchdog-error.png', 'attributes' => array()));
+    $message = t('Unable to locate directory at @path', array('@path' => $path));
+  }
+  return $image . $message;
 }

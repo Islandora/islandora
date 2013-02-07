@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Policy xmlns="urn:oasis:names:tc:xacml:1.0:policy"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       PolicyId="permit-getDatastreamHistory-to-authenticated"
+       RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable">
+ <Description>Note that other policies may provide exceptions to this broad policy. This policy assumes api-m users have to be authenticated</Description>
+ <Target>
+   <Subjects>
+     <AnySubject/>
+   </Subjects>
+   <Resources>
+     <AnyResource/>
+   </Resources>
+   <Actions>
+     <Action>
+       <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+         <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">urn:fedora:names:fedora:2.1:action:id-getDatastreamHistory</AttributeValue>
+         <ActionAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
+				    AttributeId="urn:fedora:names:fedora:2.1:action:id"/>
+       </ActionMatch>
+     </Action>
+   </Actions>
+ </Target>
+ <Rule RuleId="1" Effect="Permit"/>
+</Policy>

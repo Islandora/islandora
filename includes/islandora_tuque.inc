@@ -78,7 +78,6 @@ class IslandoraTuque {
     }
 
     if (self::exists()) {
-      module_load_include('inc', 'islandora', 'includes/IslandoraTuqueWrapper');
       $this->connection = new IslandoraRepositoryConnection($url, $user_string, $pass_string);
       $this->connection->reuseConnection = TRUE;
       $this->api = new IslandoraFedoraApi($this->connection);
