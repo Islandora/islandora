@@ -37,7 +37,11 @@ function islandora_view_datastream(FedoraDatastream $datastream, $download = FAL
     header('Content-length: ' . $datastream->size);
   }
   if ($download) {
-    header("Content-Disposition: attachment; filename=\"{$datastream->label}\"");
+    // Browsers will not append all extensions.
+    $mime_detect = new MimeDetect();
+    $extension = $mime_detect->getExtension($datastream->mimetype);
+    $filename = $datastream->label . '.' . $extension;
+    header("Content-Disposition: attachment; filename=\"$filename\"");
   }
   drupal_page_is_cacheable(FALSE);
   // Try not to load the file into PHP memory!
