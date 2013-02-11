@@ -537,3 +537,24 @@ function islandora_directory_exists_message($path) {
   }
   return $image . $message;
 }
+
+/**
+ * Gets the default value for the given system_settings_form() element.
+ *
+ * Checks the $form_state for the default value if not it checks variable_get().
+ * Assumes #tree is FALSE. This is only really required for elements that utilize
+ * AJAX, as their value can change before the submit actually takes place.
+ *
+ * @param string $name
+ *   The name of the system settings form element.
+ * @param mixed $default_value
+ *   The default value for the system settings form element.
+ * @param array $form_state
+ *   The Drupal form state.
+ *
+ * @return mixed
+ *   The default value for use in a the system_settings_form().
+ */
+function islandora_system_settings_form_default_value($name, $default_value, array &$form_state) {
+  return isset($form_state['values'][$name]) ? $form_state['values'][$name] : variable_get($name, $default_value);
+}
