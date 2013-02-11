@@ -54,8 +54,8 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
    * Stores the content of the Drupal Filter for later restoration.
    */
   protected function backUpDrupalFilter() {
-    if (file_exists($this->configuration['filter_drupal_file'])) {
-      $this->originalDrupalFilterContent = file_get_contents($this->configuration['filter_drupal_file']);
+    if (file_exists($this->configuration['drupal_filter_file'])) {
+      $this->originalDrupalFilterContent = file_get_contents($this->configuration['drupal_filter_file']);
     }
     else {
       throw new Exception('Failed to find the required Drupal Filter configuration file.');
@@ -98,7 +98,7 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
    * Stores the content of the Drupal Filter for later restoration.
    */
   protected function restoreDrupalFilter() {
-    $file = $this->configuration['filter_drupal_file'];
+    $file = $this->configuration['drupal_filter_file'];
     if (isset($this->originalDrupalFilterContent)) {
       file_put_contents($file, $this->originalDrupalFilterContent);
     }
