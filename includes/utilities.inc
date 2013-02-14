@@ -2,18 +2,21 @@
 
 /**
  * @file
- * Contains islandora utility functions
+ * Utility functions.
  *
  * @todo this file should be broken out into other files.
  */
 
 /**
- * Convert bytes to human readable format
+ * Convert bytes to human readable format.
  *
  * XXX: Shouldn't Drupal's format_size() be preferred?
  *
- * @param integer bytes Size in bytes to convert
+ * @param int $bytes
+ *   Size in bytes to convert
+ *
  * @return string
+ *   Human readable size.
  */
 function islandora_convert_bytes_to_human_readable($bytes, $precision = 2) {
   $kilobyte = 1024;
@@ -48,12 +51,16 @@ function islandora_control_group_to_human_readable($control_group) {
   switch ($control_group) {
     case 'M':
       return '<b>M</b>anaged';
+
     case 'X':
       return 'Inline <b>X</b>ML';
+
     case 'R':
       return '<b>R</b>edirect';
+
     case 'E':
       return '<b>E</b>xternally Referenced';
+
     default:
       return $control_group;
   }
@@ -65,7 +72,7 @@ function islandora_control_group_to_human_readable($control_group) {
  * @param string $pid
  *   The object id to check.
  *
- * @return boolean
+ * @return bool
  *   TRUE if valid, FALSE otherwise.
  */
 function islandora_is_valid_pid($pid) {
@@ -78,7 +85,7 @@ function islandora_is_valid_pid($pid) {
  * @param string $dsid
  *   The datastream id to check.
  *
- * @return boolean
+ * @return bool
  *   TRUE if valid, FALSE otherwise.
  */
 function islandora_is_valid_dsid($dsid) {
@@ -92,7 +99,8 @@ function islandora_is_valid_dsid($dsid) {
  *
  * @param string $url
  *   A url to a Fedora repository, if NULL the default is used.
- * @return
+ *
+ * @return array
  *   Returns an array describing the repository. Returns FALSE if Fedora is down
  *   or if the url is incorrect.
  */
@@ -119,7 +127,6 @@ function islandora_describe_repository($url = NULL) {
  * will be passed as arguments to module_invoke_all().
  *
  * @see islandora_build_hook_list()
- *   To see how the hook list is generated.
  *
  * @param string $hook
  *   A hook to call.
@@ -182,7 +189,7 @@ function islandora_build_hook_list($hook, $refinements = array()) {
  */
 function islandora_escape_pid_for_function($pid) {
   // Apparently, case doesn't matter for function calls in PHP, so let's not
-  //   really worry about changing the case.
+  // really worry about changing the case.
   return str_replace(
     // Any PID characters which are not valid in the name of a PHP function.
     array(
@@ -217,10 +224,11 @@ function islandora_get_namespace($id) {
 }
 
 /**
- * Checks the given namespace or PID is/has an accessible namespace as defined
- * by the "islandora_pids_allowed" variable.
+ * Checks the given namespace/PID is/has an  accessible namespace.
  *
- * @param string $namespace
+ * Accessible is defined by the "islandora_pids_allowed" variable.
+ *
+ * @param string $id
  *   Either a PID or namespace to check for accessibility. Any string like those
  *   below are fine.
  *
@@ -230,7 +238,7 @@ function islandora_get_namespace($id) {
  *  'islandora:1234',
  * @endcode
  *
- * @return boolean
+ * @return bool
  *   TRUE if accessible, FALSE otherwise.
  */
 function islandora_namespace_accessible($id) {
@@ -243,8 +251,9 @@ function islandora_namespace_accessible($id) {
 }
 
 /**
- * Gets any objects that the given object has a
- * (isMemberOf, isMemberOfCollection) relationship with.
+ * Gets any objects that the given object has a parent relationship with.
+ *
+ * Parent relationships are defined as (isMemberOf, isMemberOfCollection).
  *
  * This function gets its info from the RELS-EXT directly rather than through an
  * risearch.
@@ -266,13 +275,15 @@ function islandora_get_parents_from_rels_ext(FedoraObject $object) {
     // @todo some logging would be nice, not sure what this throws.
     return array();
   }
-  $collections = array_map(function($o) { return islandora_object_load($o['object']['value']); }, $collections);
+  $map = function($o) {
+    return islandora_object_load($o['object']['value']);
+  };
+  $collections = array_map($map, $collections);
   return array_filter($collections);
 }
 
 /**
- * Checks what datastreams the object already has against its required
- * datastreams as defined by its content models, and returns their intersection.
+ * Gets the datastreams requirments that are missing.
  *
  * @param FedoraObject $object
  *   The object which models will be used to determine what datastreams it
@@ -294,20 +305,22 @@ function islandora_get_missing_datastreams_requirements(FedoraObject $object) {
 }
 
 /**
+ * Gets the required datastreams for the given object.
+ *
  * Checks the object's content model's for which datastream are expected to be
  * used with this object, as defined by the DS-COMPOSITE-MODEL datastreams.
  *
  * For duplicate datastreams in the models, the first model defines the
  * datastreams attributes regardless of what other models define.
  * This should be undefined behavior according to the documentation.
- * @see https://wiki.duraspace.org/display/FEDORA34/Fedora+Digital+Object+Model#FedoraDigitalObjectModel-ContentModelObjectCMODEL
+ *
+ * @link https://wiki.duraspace.org/display/FEDORA34/Fedora+Digital+Object+Model#FedoraDigitalObjectModel-ContentModelObjectCMODEL @endlink
+ *
+ * @see islandora_get_required_datastreams_from_content_model()
  *
  * @param FedoraObject $object
  *   The object which models will be used to determine what datastreams it
  *   should have.
- *
- * @see islandora_get_required_datastreams_from_content_model() from more
- *   details on the return value.
  *
  * @return array
  *   The DS-COMPOSITE-MODEL defined datastreams that are required for the given
@@ -336,14 +349,16 @@ function islandora_get_datastreams_requirements_from_models(array $models) {
       $dsids += islandora_get_datastreams_requirements_from_content_model($model);
     }
   }
-  // The AUDIT Datastream can not really be added, so it can't really be missing.
+  // The AUDIT Datastream can not really be added, so it can't really be
+  // missing.
   unset($dsids['AUDIT']);
   return $dsids;
 }
 
 /**
- * Checks the given content model for which datastreams are required for
- * subscribing objects, as defined by it's DS-COMPOSITE-MODEL datastream.
+ * Checks the given content model for which datastreams are required.
+ *
+ * As defined by it's DS-COMPOSITE-MODEL datastream.
  *
  * @todo Add support for fetching the schema information.
  *
@@ -380,7 +395,7 @@ function islandora_get_datastreams_requirements_from_content_model(FedoraObject 
     $dsids[$dsid] = array(
       'id' => $dsid,
       'mime' => $mime,
-      'optional' => ($optional == 'true') ? TRUE : FALSE
+      'optional' => ($optional == 'true') ? TRUE : FALSE,
     );
   }
   return $dsids;
@@ -432,8 +447,11 @@ function islandora_prepare_new_object($namespace = NULL, $label = NULL, $datastr
     $label = isset($ds['label']) ? $ds['label'] : '';
     $mimetype = isset($ds['mimetype']) ? $ds['mimetype'] : 'text/xml';
     // Default 'Managed'
-    $control_group = (isset($ds['control_group']) && in_array($ds['control_group'], array('X', 'M', 'R', 'E'))) ? $ds['control_group'] : 'M';
-
+    $control_group = 'M';
+    $groups = array('X', 'M', 'R', 'E');
+    if (isset($ds['control_group']) && in_array($ds['control_group'], $groups)) {
+      $control_group = $ds['control_group'];
+    }
     $ds_uri = FALSE;
     if (file_valid_uri($ds['datastream_file'])) {
       $datastream_file = $ds['datastream_file'];
@@ -454,6 +472,7 @@ function islandora_prepare_new_object($namespace = NULL, $label = NULL, $datastr
           $datastream->setContentFromUrl($datastream_file);
         }
         break;
+
       case 'X':
         $datastream->setContentFromString(file_get_contents($datastream_file));
         break;
@@ -464,7 +483,7 @@ function islandora_prepare_new_object($namespace = NULL, $label = NULL, $datastr
 }
 
 /**
- * Displays the repository is inaccessible message
+ * Displays the repository is inaccessible message.
  *
  * Use anywhere we want to ensure a consitent error message when the repository
  * is not accessible.

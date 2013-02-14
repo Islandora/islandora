@@ -2,9 +2,7 @@
 
 /**
  * @file
- *
- * This file contains the admin (confirmation) form and callback functions to
- * purge an object.
+ * The admin/confirmation form to purge an object.
  */
 
 /**
@@ -32,7 +30,7 @@ function islandora_delete_object_form(array $form, array &$form_state, FedoraObj
 }
 
 /**
- * Delete's the object in questionGives deloption of deleting or purging and object.
+ * Delete's the given object.
  *
  * @param array $form
  *   The Drupal form.

@@ -29,7 +29,7 @@ class IslandoraAuthtokensTestCase extends IslandoraWebTestCase {
    * Test redeeming invalid tokens.
    */
   public function testRedeemInvalidToken() {
-    module_load_include('inc', 'islandora', 'includes/islandora_authtokens');
+    module_load_include('inc', 'islandora', 'includes/authtokens');
     $token = islandora_get_object_token('test:pid', 'woot', 1);
     $this->assertTrue($token, 'Token was generated correctly.', 'Unit Tests');
     // Redeem a token that doesn't exist with real pid and dsid.
@@ -41,7 +41,7 @@ class IslandoraAuthtokensTestCase extends IslandoraWebTestCase {
    * Test redeeming valid tokens.
    */
   public function testRedeemValidToken() {
-    module_load_include('inc', 'islandora', 'includes/islandora_authtokens');
+    module_load_include('inc', 'islandora', 'includes/authtokens');
     // Change the current user.
     global $user;
     $user_backup = $user;
@@ -82,7 +82,7 @@ class IslandoraAuthtokensTestCase extends IslandoraWebTestCase {
 
     // Do some voodoo to get a token as the user we are connecting as
     // to do this we need to change the user we are logged in as.
-    module_load_include('inc', 'islandora', 'includes/islandora_authtokens');
+    module_load_include('inc', 'islandora', 'includes/authtokens');
     global $user;
     $backup = $user;
     $user = $account;

@@ -1,7 +1,8 @@
 <?php
+
 /**
  * @file
- *   This file contains all install related hooks.
+ * This file contains all install related hooks.
  */
 
 /**
@@ -26,9 +27,6 @@ function islandora_uninstall() {
 
 /**
  * Implements hook_schema().
- *
- * @return array
- *   The database schema for the module.
  */
 function islandora_schema() {
   $schema['islandora_authtokens'] = array(

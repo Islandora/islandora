@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Does rule type stuff,
+ */
+
+/**
  * Helper function to get reused "parameter" array.
  */
 function islandora_rules_relationship_parameter_array() {
@@ -8,8 +13,7 @@ function islandora_rules_relationship_parameter_array() {
     'subject' => array(
       'type' => 'islandora_object',
       'label' => t('Subject'),
-      'description' => t('An object of which we should check the ' .
-        'relationships (The "subject" of the relationship).'),
+      'description' => t('An object of which we should check the relationships (The "subject" of the relationship).'),
     ),
     'pred_uri' => array(
       'type' => 'text',
@@ -112,4 +116,3 @@ function islandora_object_remove_relationship($sub, $pred_uri, $pred, $object, $
 function islandora_object_add_relationship($sub, $pred_uri, $pred, $object, $type) {
   $sub->relationships->add($pred_uri, $pred, $object, $type);
 }
-

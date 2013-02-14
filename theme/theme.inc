@@ -2,18 +2,13 @@
 
 /**
  * @file
- *
  * This file contains all theme and preprocess functions.
  */
 
 /**
- * Preprocess the edit template
- *
- * @global string $base_url
- * @param array $variables
- *   theme variables for the edit template
+ * Implements hook_preprocess_theme().
  */
-function islandora_preprocess_islandora_default_edit(&$variables) {
+function islandora_preprocess_islandora_default_edit(array &$variables) {
   global $base_url;
   $islandora_object = $variables['islandora_object'];
   $datastreams = array();
@@ -32,27 +27,55 @@ function islandora_preprocess_islandora_default_edit(&$variables) {
   $rows = array();
   foreach ($islandora_object as $ds) {
     $rows[] = array(
-      array('class' => 'datastream-id', 'data' => l($ds->id, islandora_datastream_get_url($ds, 'view'))),
-      array('class' => 'datastream-label', 'data' => $ds->label),
-      array('class' => 'datastream-control', 'data' => islandora_control_group_to_human_readable($ds->controlGroup)),
-      array('class' => 'datastream-mime', 'data' => $ds->mimeType),
-      array('class' => 'datastream-size', 'data' => islandora_datastream_get_human_readable_size($ds)),
-      array('class' => 'datastream-download', 'data' => l(t('download'), islandora_datastream_get_url($ds, 'download'))),
-      array('class' => 'datstream-edit', 'data' => islandora_datastream_edit_get_link($ds)),
-      array('class' => 'datastream-delete', 'data' => islandora_datastream_get_delete_link($ds)),
+      array(
+        'class' => 'datastream-id',
+        'data' => l($ds->id, islandora_datastream_get_url($ds, 'view')),
+      ),
+      array(
+        'class' => 'datastream-label',
+        'data' => $ds->label,
+      ),
+      array(
+        'class' => 'datastream-control',
+        'data' => islandora_control_group_to_human_readable($ds->controlGroup),
+      ),
+      array(
+        'class' => 'datastream-mime',
+        'data' => $ds->mimeType,
+      ),
+      array(
+        'class' => 'datastream-size',
+        'data' => islandora_datastream_get_human_readable_size($ds),
+      ),
+      array(
+        'class' => 'datastream-download',
+        'data' => l(t('download'), islandora_datastream_get_url($ds, 'download')),
+      ),
+      array(
+        'class' => 'datstream-edit',
+        'data' => islandora_datastream_edit_get_link($ds),
+      ),
+      array(
+        'class' => 'datastream-delete',
+        'data' => islandora_datastream_get_delete_link($ds),
+      ),
     );
   }
   $caption = $islandora_object->label . ' - ' . $islandora_object->id;
-  $table = array('colgroups' => NULL, 'sticky' => TRUE, 'empty' => 'Error loading datastreams', 'caption' => $caption, 'header' => $header, 'rows' => $rows, 'attributes' => $table_attributes);
+  $table = array(
+    'colgroups' => NULL,
+    'sticky' => TRUE,
+    'empty' => 'Error loading datastreams',
+    'caption' => $caption,
+    'header' => $header,
+    'rows' => $rows,
+    'attributes' => $table_attributes,
+  );
   $variables['datastream_table'] = $table;
 }
 
-
 /**
- * Preprocess for the default view template
- *
- * @global string $base_url
- * @param array $variables
+ * Implements hook_preprocess_theme().
  */
 function islandora_preprocess_islandora_default(&$variables) {
   drupal_add_js('misc/form.js');
@@ -86,9 +109,10 @@ function islandora_preprocess_islandora_default(&$variables) {
   $variables['datastreams'] = $datastreams;
   try {
     $dc = $islandora_object['DC']->content;
-    $dc_object = DublinCore::import_from_xml_string($dc);
-    $dc_array = $dc_object->as_formatted_array();
-  } catch (Exception $e) {
+    $dc_object = DublinCore::importFromXMLString($dc);
+    $dc_array = $dc_object->asArray();
+  }
+  catch (Exception $e) {
     drupal_set_message(t('Error retrieving object %s %t', array('%s' => $islandora_object->id, '%t' => $e->getMessage())), 'error', FALSE);
   }
   $variables['dc_array'] = isset($dc_array) ? $dc_array : array();

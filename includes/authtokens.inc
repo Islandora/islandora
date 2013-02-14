@@ -1,9 +1,11 @@
 <?php
+
 /**
  * @file
- *   Library functions for handling authentication tokens.
- *   These are to be used when dealing with applications
- *   such as Djatoka that do not pass through credentials.
+ * Handles the generation and validation of authentication tokens.
+ *
+ * These are to be used when dealing with applications such as Djatoka that do
+ *  not pass through credentials.
  */
 
 // Token lifespan(seconds): after this duration the token expires.
@@ -12,6 +14,7 @@ define('TOKEN_TIMEOUT', 300);
 
 /**
  * Request Islandora to construct an object/datastream authentication token.
+ *
  * This token can later be turned in for access to the requested object or
  * datastream.
  *
@@ -19,7 +22,7 @@ define('TOKEN_TIMEOUT', 300);
  *   The Fedora PID to generate the token for.
  * @param string $dsid
  *   The Fedora datastream ID to generate the token for.
- * @param integer $uses
+ * @param int $uses
  *   Defaults to 1.
  *   The number of uses the token should be used for.  There are
  *   times when this should be greater than 1: ie. Djatoka needs
@@ -53,10 +56,11 @@ function islandora_get_object_token($pid, $dsid, $uses = 1) {
 }
 
 /**
- * Submit a token to islandora for authentication. Supply islandora with the
- * token and the object/datastream it is for and you will receive access if
- * authentication passes. Tokens can only be redeemed in a short window after
- * their creation.
+ * Submit a token to islandora for authentication.
+ *
+ * Supply islandora with the token and the object/datastream it is for and you
+ * will receive access if authentication passes. Tokens can only be redeemed
+ * in a short window after their creation.
  *
  * @param string $pid
  *   The PID of the object to retrieve.
@@ -72,7 +76,7 @@ function islandora_get_object_token($pid, $dsid, $uses = 1) {
 function islandora_validate_object_token($pid, $dsid, $token) {
   static $accounts = array();
 
-  if(!empty($accounts[$pid][$dsid][$token])) {
+  if (!empty($accounts[$pid][$dsid][$token])) {
     return $accounts[$pid][$dsid][$token];
   }
 

@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * The default object view.
  *
  * This is a template for objects that do not have a module to registered to
  * build their display.
@@ -55,7 +56,6 @@
  * foreach ($object as $ds) {
  * do something here
  * }
- *
  */
 ?>
 <div class="islandora-object islandora">

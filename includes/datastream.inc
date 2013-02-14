@@ -2,9 +2,7 @@
 
 /**
  * @file
- *
- * This file contains the admin form and callback functions for datastream
- * manipulations.
+ * Contains the admin form and callback functions for datastream manipulations.
  */
 
 /**
@@ -25,7 +23,7 @@ function islandora_download_datastream(FedoraDatastream $datastream) {
  *
  * @param FedoraDatastream $datastream
  *   The datastream to view/download.
- * @param boolean $download
+ * @param bool $download
  *   If TRUE the file is download to the user computer for viewing otherwise it
  *   will attempt to display in the browser natively.
  */
@@ -117,12 +115,14 @@ function islandora_edit_datastream(FedoraDatastream $datastream) {
       drupal_set_message(t('There are no edit methods specified for this datastream.'));
       drupal_goto("islandora/object/{$object->id}/manage/datastreams");
       break;
+
     case 1:
-      // One registry implementation, go there
+      // One registry implementation, go there.
       drupal_goto($edit_registry[0]['url']);
       break;
+
     default:
-      // Multiple edit routes registered
+      // Multiple edit routes registered.
       return islandora_edit_datastream_registry_render($edit_registry);
   }
 }

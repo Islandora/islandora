@@ -2,7 +2,6 @@
 
 /**
  * @file
- *
  * Ingest Menu callback hooks.
  */
 
@@ -57,7 +56,7 @@ function islandora_ingest_get_configuration() {
  * @param array $configuration
  *   The key value pairs that are used to build the multi-paged ingest process.
  *
- * @return boolean
+ * @return bool
  *   TRUE if the configuration is valid, FALSE otherwise.
  */
 function islandora_valid_ingest_configuration(array $configuration) {

@@ -2,9 +2,9 @@
 
 /**
  * @file
+ * Implements a simple class for working with Dublin Core data.
  *
- * Implements a simple class for working with Dublin Core data and exporting it
- * back to XML. Inspiration and design shamelessly stolen from the pyfedora
+ * Inspiration and design shamelessly stolen from the pyfedora
  * project at http://pypi.python.org/pypi/pyfedora/0.1.0
  */
 
@@ -33,34 +33,40 @@ class DublinCore {
   public $owner;
 
   /**
-   * Constructs a DublinCore object from a Fedora_Item object and populates the
-   * $dc array.
+   * Constructor.
    *
    * @param string $dc_xml
+   *   The Dublin Core XML.
    */
-  function DublinCore($dc_xml = NULL) {
+  public function __construct($dc_xml = NULL) {
     if (!empty($dc_xml)) {
-      $this->dc = self::import_from_xml_string($dc_xml);
+      $this->dc = self::importFromXMLString($dc_xml);
     }
   }
 
   /**
-   * Add Elements
-   * @param <type> $element_name
-   * @param <type> $value
+   * Add an element.
+   *
+   * @param string $element_name
+   *   The name of the element to add.
+   * @param string $value
+   *   The value of the element to add.
    */
-  function add_element($element_name, $value) {
+  public function addElement($element_name, $value) {
     if (is_string($value) && is_array($this->dc[$element_name])) {
       $this->dc[$element_name][] = $value;
     }
   }
 
   /**
-   * Replace the given DC element with the values in $values
-   * @param string $elemnt_name
-   * @param array $values
+   * Replace the given DC element with the given values.
+   *
+   * @param string $element_name
+   *   The name of the elements to set.
+   * @param mixed $values
+   *   The values of the set the elements too.
    */
-  function set_element($element_name, $values) {
+  public function setElement($element_name, $values) {
     if (is_array($values)) {
       $this->dc[$element_name] = $values;
     }
@@ -70,11 +76,12 @@ class DublinCore {
   }
 
   /**
-   * Serialize this object to XML and return it.
-   * @param type $with_preamble
-   * @return type
+   * Serialize this object as an XML string.
+   *
+   * @return string
+   *   The serialized XML.
    */
-  function as_xml($with_preamble = FALSE) {
+  public function asXML() {
     $dc_xml = new DomDocument();
     $oai_dc = $dc_xml->createElementNS('http://www.openarchives.org/OAI/2.0/oai_dc/', 'oai_dc:dc');
     $oai_dc->setAttribute('xmlns:dc', 'http://purl.org/dc/elements/1.1/');
@@ -95,18 +102,17 @@ class DublinCore {
   }
 
   /**
-   * Create dc from dict ( does nothing )
+   * Serializes this object as an array.
+   *
+   * @return array
+   *   The serialized object.
    */
-  static function create_dc_from_dict() {
-
-  }
-
-  function as_formatted_array() {
+  public function asArray() {
     $dc_array = array();
     foreach ($this as $element) {
       if (!empty($element)) {
         foreach ($element as $field => $values) {
-          // split value if the result value is an array
+          // Split value if the result value is an array.
           if (is_array($values)) {
             $value = '';
             $i = 0;
@@ -135,17 +141,19 @@ class DublinCore {
 
 
   /**
-   * Creates a new instance of the class by parsing dc_xml
+   * Creates a new instance of the class by parsing dc_xml.
    *
    * @param string $dc_xml
+   *   Dublin Core XML.
+   *
    * @return DublinCore
+   *   The instantiated object.
    */
-  static function import_from_xml_string($dc_xml) {
+  public static function importFromXMLString($dc_xml) {
     $dc_doc = new DomDocument();
     if ($dc_doc->loadXML($dc_xml)) {
       $oai_dc = $dc_doc->getElementsByTagNameNS('http://purl.org/dc/elements/1.1/', '*');
       $new_dc = new DublinCore();
-
       foreach ($oai_dc as $child) {
         if (isset($new_dc->dc[$child->nodeName])) {
           array_push($new_dc->dc[$child->nodeName], $child->nodeValue);

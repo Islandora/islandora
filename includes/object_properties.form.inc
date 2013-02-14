@@ -2,7 +2,6 @@
 
 /**
  * @file
- *
  * Contains admin form functions for editing an object's properties.
  */
 
@@ -25,18 +24,18 @@ function islandora_object_properties_form(array $form, array &$form_state, Fedor
   return array(
     'pid' => array(
       '#type' => 'hidden',
-      '#value' => $object->id
+      '#value' => $object->id,
     ),
     'object_label' => array(
       '#title' => t('Item Label'),
       '#default_value' => $object->label,
       '#required' => 'TRUE',
       '#description' => t('A Human readable label'),
-      // Double the normal length
+      // Double the normal length.
       '#size' => 120,
-      // Max length for a Fedora Label
+      // Max length for a Fedora Label.
       '#maxlength' => 255,
-      '#type' => 'textfield'
+      '#type' => 'textfield',
     ),
     // @todo Make this into an autocomplete field that list the users in the
     // system as well.
@@ -45,7 +44,7 @@ function islandora_object_properties_form(array $form, array &$form_state, Fedor
       '#default_value' => $object->owner,
       '#required' => FALSE,
       '#description' => t('The owner id'),
-      '#type' => 'textfield'
+      '#type' => 'textfield',
     ),
     'object_state' => array(
       '#title' => t('State'),
@@ -53,18 +52,18 @@ function islandora_object_properties_form(array $form, array &$form_state, Fedor
       '#required' => TRUE,
       '#description' => t('The items state one of active, inactive or deleted'),
       '#type' => 'select',
-      '#options' => array('A' => 'Active', 'I' => 'Inactive', 'D' => 'Deleted')
+      '#options' => array('A' => 'Active', 'I' => 'Inactive', 'D' => 'Deleted'),
     ),
     'submit' => array(
       '#type' => 'submit',
-      '#value' => 'Update Properties'
+      '#value' => 'Update Properties',
     ),
     'delete' => array(
       '#type' => 'submit',
       '#value' => t('Delete'),
       '#submit' => array('islandora_object_properties_form_delete'),
-      '#limit_validation_errors' => array(array('pid'))
-    )
+      '#limit_validation_errors' => array(array('pid')),
+    ),
   );
 }
 
@@ -85,7 +84,8 @@ function islandora_object_properties_form_submit(array $form, array &$form_state
     try {
       $object->owner = $owner;
       drupal_set_message(t('Successfully updated owner %s', array('%s' => $owner)));
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
       form_set_error('object_owner', t('Error updating owner %s', array('%s' => $e->getMessage())));
     }
   }
@@ -93,7 +93,8 @@ function islandora_object_properties_form_submit(array $form, array &$form_state
     try {
       $object->state = $state;
       drupal_set_message(t('Successfully updated state %s', array('%s' => $state)));
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
       form_set_error('object_state', t('Error updating state %s', array('%s' => $e->getMessage())));
     }
   }
@@ -101,7 +102,8 @@ function islandora_object_properties_form_submit(array $form, array &$form_state
     try {
       $object->label = $label;
       drupal_set_message(t('Successfully updated label %s', array('%s' => check_plain($label))));
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
       form_set_error(t('Error updating label %s', array('%s' => $e->getMessage())));
     }
   }

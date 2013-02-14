@@ -2,9 +2,7 @@
 
 /**
  * @file
- *
- * This file contains all admin and callback functions for solution pack
- * management.
+ * Admin and callback functions for solution pack management.
  */
 
 /**
@@ -36,8 +34,10 @@ function islandora_solution_packs_admin() {
 }
 
 /**
- * A solution pack form for the given module, it lists all the given objects and
- * their status, allowing the user to re-ingest them.
+ * A solution pack form for the given module.
+ *
+ * It lists all the given objects and their status, allowing the user to
+ * re-ingest them.
  *
  * @param array $form
  *   The Drupal form definition.
@@ -54,7 +54,7 @@ function islandora_solution_packs_admin() {
  * @return array
  *   The Drupal form definition.
  */
-function islandora_solution_pack_form(array $form, array &$form_state,  $solution_pack_module, $solution_pack_name, $objects = array()) {
+function islandora_solution_pack_form(array $form, array &$form_state, $solution_pack_module, $solution_pack_name, $objects = array()) {
   // The order is important in terms of severity of the status, where higher
   // index indicates the status is more serious, this will be used to determine
   // what messages get displayed to the user.
@@ -69,22 +69,22 @@ function islandora_solution_pack_form(array $form, array &$form_state,  $solutio
     'modified_datastream' => array(
       'solution_pack' => t('Some objects must be reinstalled. See objects list for details.'),
       'image' => $warning_image,
-      'button' => t("Reinstall objects")
+      'button' => t("Reinstall objects"),
     ),
     'out_of_date' => array(
       'solution_pack' => t('Some objects must be reinstalled. See objects list for details.'),
       'image' => $warning_image,
-      'button' => t("Reinstall objects")
+      'button' => t("Reinstall objects"),
     ),
     'missing_datastream' => array(
       'solution_pack' => t('Some objects must be reinstalled. See objects list for details.'),
       'image' => $warning_image,
-      'button' => t("Reinstall objects")
+      'button' => t("Reinstall objects"),
     ),
     'missing' => array(
-      'solution_pack' => t( 'Some objects are missing and must be installed. See objects list for details.'),
+      'solution_pack' => t('Some objects are missing and must be installed. See objects list for details.'),
       'image' => $warning_image,
-      'button' => t("Install objects")
+      'button' => t("Install objects"),
     ),
   );
   $status_severities = array_keys($status_info);
@@ -94,7 +94,8 @@ function islandora_solution_pack_form(array $form, array &$form_state,  $solutio
     $object_status = islandora_check_object_status($object);
     $object_status_info = $status_info[$object_status['status']];
     $object_status_severity = array_search($object_status['status'], $status_severities);
-    // The solution pack status severity will be the highest severity of the objects.
+    // The solution pack status severity will be the highest severity of
+    // the objects.
     $solution_pack_status_severity = max($solution_pack_status_severity, $object_status_severity);
     $exists = $object_status['status'] != 'missing';
     $label = $exists ? l($object->label, "islandora/object/{$object->id}") : $object->label;
@@ -129,22 +130,24 @@ function islandora_solution_pack_form(array $form, array &$form_state,  $solutio
       'install_status' => array(
         '#markup' => t('<strong>Object status:</strong> !image !status', array(
                      '!image' => $solution_pack_status_info['image'],
-                     '!status' => $solution_pack_status_info['solution_pack']
+                     '!status' => $solution_pack_status_info['solution_pack'],
                    )),
         '#prefix' => '<div class="islandora-solution-pack-install-status">',
         '#suffix' => '</div>',
       ),
       'table' => array(
         '#type' => 'item',
-        '#markup' => theme('table', array('header' => array(t('Label'), t('PID'), t('Status')), 'rows' => $table_rows))
+        '#markup' => theme('table', array(
+                     'header' => array(t('Label'), t('PID'), t('Status')),
+                     'rows' => $table_rows)),
       ),
       'submit' => array(
         '#type' => 'submit',
         '#name' => $solution_pack_module,
         '#value' => $solution_pack_status_info['button'],
         '#attributes' => array('class' => array('islandora-solution-pack-submit')),
-      )
-    )
+      ),
+    ),
   );
 }
 
@@ -175,8 +178,7 @@ function islandora_solution_pack_form_submit(array $form, array &$form_state) {
 }
 
 /**
- * Batch operation used by the solution pack forms to ingest/reingest required
- *  object(s)
+ * Batch operation to ingest/reingest required object(s).
  *
  * @param NewFedoraObject $object
  *   The object to ingest/reingest.
@@ -209,16 +211,20 @@ function islandora_solution_pack_batch_operation_reingest_object(NewFedoraObject
   drupal_set_message(t($msg, array(
         '@pid' => $pid,
         '@label' => $label,
-        '!object_link' => $object_link
+        '!object_link' => $object_link,
       )), $status);
 }
 
 /**
- * This is to be called from the solution pack's hook_install()
- * and hook_uninstall() functions. It provides a convient way to have a
- * solution pack's required objects ingested at install time.
+ * Install the given solution pack.
  *
- * @param string $module_name
+ * This is to be called from the solution pack's hook_install() and
+ * hook_uninstall() functions.
+ *
+ * It provides a convient way to have a solution pack's required objects
+ * ingested at install time.
+ *
+ * @param string $module
  *   The name of the module that is calling this function in its
  *   install/unistall hooks.
  * @param string $op
@@ -248,7 +254,7 @@ function islandora_install_solution_pack($module, $op = 'install') {
     drupal_set_message(st($msg, array(
           '@module' => $module_name,
           '!config_link' => $config_link,
-          '@admin_link' => $admin_link
+          '@admin_link' => $admin_link,
         )), 'error');
     return;
   }
@@ -264,7 +270,7 @@ function islandora_install_solution_pack($module, $op = 'install') {
   foreach ($objects as $object) {
     $query = $connection->api->a->findObjects('query', 'pid=' . $object->id);
     $already_exists = !empty($query['results']);
-    $label =  $object->label;
+    $label = $object->label;
     $object_link = l($label, "islandora/object/{$object->id}");
     if ($already_exists) {
       $object_status = islandora_check_object_status($object);
@@ -313,28 +319,28 @@ function islandora_uninstall_solution_pack($module) {
   if (!islandora_describe_repository()) {
     $msg = '@module: Did not uninstall any objects. Could not connect to the ';
     $msg .= 'repository. Please check the settings on the !config_link page ';
-    $msg .=  'and uninstall the required objects manually if necessary.';
+    $msg .= 'and uninstall the required objects manually if necessary.';
     drupal_set_message(st($msg, array(
           '@module' => $module_name,
-          '!config_link' => $config_link
+          '!config_link' => $config_link,
         )), 'error');
     return;
   }
   $connection = islandora_get_tuque_connection();
   $required_objects = module_invoke($module, 'islandora_required_objects', $connection);
   $objects = $required_objects[$module]['objects'];
-  $existing_objects = array_filter($objects, function($o) use($connection) {
-                        $param = "pid={$o->id}";
-                        $query = $connection->api->a->findObjects('query', $param);
-                        return !empty($query['results']);
-                      }
-  );
+  $filter = function($o) use($connection) {
+    $param = "pid={$o->id}";
+    $query = $connection->api->a->findObjects('query', $param);
+    return !empty($query['results']);
+  };
+  $existing_objects = array_filter($objects, $filter);
   foreach ($existing_objects as $object) {
     $msg = '@module: Did not remove !object_link. It may be used by other sites.';
     $object_link = l($object->label, "islandora/object/{$object->id}");
     drupal_set_message(st($msg, array(
           '!object_link' => $object_link,
-          '@module' => $module_name
+          '@module' => $module_name,
         )), 'warning');
   }
 }
@@ -364,10 +370,16 @@ function islandora_check_object_status(NewFedoraObject $object_definition) {
   $datastream_diff = array_diff($expected_datastreams, $existing_datastreams);
   if (!empty($datastream_diff)) {
     $status_friendly = format_plural(count($datastream_diff), 'Missing Datastream: %dsids.', 'Missing Datastreams: %dsids.', array('%dsids' => implode(', ', $datastream_diff)));
-    return array('status' => 'missing_datastream', 'status_friendly' => $status_friendly, 'data' => $datastream_diff);
+    return array(
+      'status' => 'missing_datastream',
+      'status_friendly' => $status_friendly,
+      'data' => $datastream_diff,
+    );
   }
 
-  $is_xml_datastream = function($ds) { return $ds->mimetype == 'text/xml'; };
+  $is_xml_datastream = function($ds) {
+    return $ds->mimetype == 'text/xml';
+  };
   $xml_datastreams = array_filter(iterator_to_array($object_definition), $is_xml_datastream);
   $out_of_date_datastreams = array();
   foreach ($xml_datastreams as $ds) {
@@ -380,7 +392,11 @@ function islandora_check_object_status(NewFedoraObject $object_definition) {
 
   if (count($out_of_date_datastreams)) {
     $status_friendly = format_plural(count($out_of_date_datastreams), 'Datastream out of date: %dsids.', 'Datastreams out of date: %dsids.', array('%dsids' => implode(', ', $out_of_date_datastreams)));
-    return array('status' => 'out_of_date', 'status_friendly' => $status_friendly, 'data' => $out_of_date_datastreams);
+    return array(
+      'status' => 'out_of_date',
+      'status_friendly' => $status_friendly,
+      'data' => $out_of_date_datastreams,
+    );
   }
 
   // This is a pretty heavy function, but I'm not sure a better way. If we have
@@ -418,9 +434,12 @@ function islandora_check_object_status(NewFedoraObject $object_definition) {
   }
   if (count($modified_datastreams)) {
     $status_friendly = format_plural(count($modified_datastreams), 'Modified Datastream: %dsids.', 'Modified Datastreams: %dsids.', array('%dsids' => implode(', ', $modified_datastreams)));
-    return array('status' => 'modified_datastream', 'data' => $modified_datastreams, 'status_friendly' => $status_friendly);
+    return array(
+      'status' => 'modified_datastream',
+      'data' => $modified_datastreams,
+      'status_friendly' => $status_friendly,
+    );
   }
-
 
   // If not anything else we can assume its up to date.
   return array('status' => 'up_to_date', 'status_friendly' => t('Up-to-date'));
@@ -448,26 +467,21 @@ function islandora_check_object_status(NewFedoraObject $object_definition) {
  * @param string $model
  *   The table will be populated with viewers supporting this content model
  *
- * @return
+ * @return array
  *   A form api array which defines a themed table to select a viewer.
  */
 function islandora_viewers_form($variable_id = NULL, $mimetype = NULL, $model = NULL) {
   $form = array();
-  // get viewers
   $viewers = islandora_get_viewers($mimetype, $model);
   if (!empty($viewers)) {
-    // add option for no viewer
     $no_viewer = array();
     $no_viewer['none'] = array(
       'label' => t('None'),
-      'description' => t('Don\'t use a viewer for this solution pack.'),
+      'description' => t("Don't use a viewer for this solution pack."),
     );
-    // merge to viewers array
     $viewers = array_merge_recursive($no_viewer, $viewers);
   }
-  // get viewer settings
   $viewers_config = variable_get($variable_id, array());
-  // viewer
   $form['viewers'] = array(
     '#type' => 'fieldset',
     '#title' => t('Viewers'),
@@ -476,43 +490,33 @@ function islandora_viewers_form($variable_id = NULL, $mimetype = NULL, $model = 
   );
 
   if (!empty($viewers)) {
-    // viewers table
     $form['viewers'][$variable_id] = array(
       '#type' => 'item',
       '#title' => t('Select a viewer'),
       '#description' => t('Preferred viewer for your solution pack. These may be provided by third-party modules.'),
-      // This attribute is important to return the submitted values in a deeper
-      // nested arrays in
       '#tree' => TRUE,
       '#theme' => 'islandora_viewers_table',
     );
 
-    // table loop
     foreach ($viewers as $name => $profile) {
-
       $options[$name] = '';
-        // machine name
       $form['viewers'][$variable_id]['name'][$name] = array(
         '#type' => 'hidden',
         '#value' => $name,
       );
-      // label
       $form['viewers'][$variable_id]['label'][$name] = array(
         '#type' => 'item',
         '#markup' => $profile['label'],
       );
-      // description
       $form['viewers'][$variable_id]['description'][$name] = array(
         '#type' => 'item',
         '#markup' => $profile['description'],
       );
-      // configuration url
       $form['viewers'][$variable_id]['configuration'][$name] = array(
         '#type' => 'item',
         '#markup' => (isset($profile['configuration']) AND $profile['configuration'] != '') ? l(t('configure'), $profile['configuration']) : '',
       );
     }
-    // radios
     $form['viewers'][$variable_id]['default'] = array(
       '#type' => 'radios',
       '#options' => isset($options) ? $options : array(),
@@ -520,11 +524,9 @@ function islandora_viewers_form($variable_id = NULL, $mimetype = NULL, $model = 
     );
   }
   else {
-    // No viewers found
     $form['viewers'][$variable_id . '_no_viewers'] = array(
       '#markup' => t('No viewers detected.'),
     );
-    // remove viewers variable
     variable_del($variable_id);
   }
   return $form;
@@ -541,20 +543,19 @@ function islandora_viewers_form($variable_id = NULL, $mimetype = NULL, $model = 
  * be listed.
  *
  * @param string $mimetype
- *  Specify a mimetype to return only viewers that support this certain
- *  mimetype.
+ *   Specify a mimetype to return only viewers that support this certain
+ *   mimetype.
  * @param string $content_model
- *  Specify a content model to return only viewers that support the content
- *  model.
+ *   Specify a content model to return only viewers that support the content
+ *   model.
  *
  * @return array
- *  Viewer definitions, or FALSE if none are found.
+ *   Viewer definitions, or FALSE if none are found.
  */
 function islandora_get_viewers($mimetype = NULL, $content_model = NULL) {
   $viewers = array();
-  // get all viewers
   $defined_viewers = module_invoke_all('islandora_viewer_info');
-  // filter viewers by mimetype
+  // Filter viewers by MIME type.
   foreach ($defined_viewers as $key => $value) {
     $value['mimetype'] = isset($value['mimetype']) ? $value['mimetype'] : array();
     $value['model'] = isset($value['model']) ? $value['model'] : array();
@@ -569,54 +570,39 @@ function islandora_get_viewers($mimetype = NULL, $content_model = NULL) {
 }
 
 /**
- * Theme function for the admin primary display table
- *
- * @param type $variables
- *   render element: $form
- *   Contains the form array
- * @return
- *   rendered form element
- *
- *  @see islandora_large_image_admin()
+ * Implements theme_hook().
  */
 function theme_islandora_viewers_table($variables) {
-  // set form
   $form = $variables['form'];
   $rows = array();
-
   foreach ($form['name'] as $key => $element) {
-    // Do not take form control structures.
     if (is_array($element) && element_child($key)) {
-      // set rows
       $row = array();
       $row[] = array('data' => drupal_render($form['default'][$key]));
       $row[] = array('data' => drupal_render($form['label'][$key]));
       $row[] = array('data' => drupal_render($form['description'][$key]));
       $row[] = array('data' => drupal_render($form['configuration'][$key]));
-
-      // add to rows
       $rows[] = array('data' => $row);
     }
   }
-
-  // Individual table headers.
-  // default | label | description | configuration
   $header = array();
   $header[] = array('data' => t('Default'));
   $header[] = array('data' => t('Label'));
   $header[] = array('data' => t('Description'));
   $header[] = array('data' => t('Configuration'));
 
-  // render form
   $output = '';
-  $output .= theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'islandora-viewers-table')));
+  $output .= theme('table', array(
+               'header' => $header,
+               'rows' => $rows,
+               'attributes' => array('id' => 'islandora-viewers-table'),
+             ));
   $output .= drupal_render_children($form);
-
   return $output;
 }
 
 /**
- * Gather information and return a rendered viewer
+ * Gather information and return a rendered viewer.
  *
  * @param array/string $params
  *   Array or string with data the module needs in order to render a full viewer
@@ -624,21 +610,17 @@ function theme_islandora_viewers_table($variables) {
  *   The id of the Drupal variable the viewer settings are saved in
  * @param FedoraObject $fedora_object
  *   The tuque object representing the fedora object being displayed
- * @return
+ *
+ * @return string
  *   The callback to the viewer module. Returns a rendered viewer. Returns FALSE
  *   if no viewer is set.
  */
-
 function islandora_get_viewer($params = NULL, $variable_id = NULL, $fedora_object = NULL) {
-  // get viewer from settings
   $settings = variable_get($variable_id, array());
-  // make sure a viewer is set
   if (!empty($settings) AND $settings['default'] !== 'none') {
-    // get callback function
     $viewer_id = islandora_get_viewer_id($variable_id);
     if ($viewer_id AND $params !== NULL) {
       $callback = islandora_get_viewer_callback($viewer_id);
-      // call callback function
       return $callback($params, $fedora_object);
     }
   }
@@ -649,8 +631,9 @@ function islandora_get_viewer($params = NULL, $variable_id = NULL, $fedora_objec
  * Get id of the enabled viewer.
  *
  * @param string $variable_id
- *   The id of the Drupal variable the viewer settings are saved in
- * @return
+ *   The ID of the Drupal variable the viewer settings are saved in
+ *
+ * @return string
  *   The enabled viewer id. Returns FALSE if no viewer config is set.
  */
 function islandora_get_viewer_id($variable_id) {
@@ -665,8 +648,9 @@ function islandora_get_viewer_id($variable_id) {
  * Get callback function for a viewer.
  *
  * @param string $viewer_id
- *   The ID of a viewer
- * @return
+ *   The ID of a viewer.
+ *
+ * @return string
  *   The callback function as a string as defined by the viewer.
  */
 function islandora_get_viewer_callback($viewer_id = NULL) {

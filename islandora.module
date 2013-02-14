@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * Defines all the hooks this module implements.
  *
  * islandora.module: defines paths (drupal menu items) as entry points and acts
  *  as a hub for dispatching tasks to other modules.
@@ -22,10 +23,10 @@
  * along with the program.  If not, see <http ://www.gnu.org/licenses/>.
  */
 
-// Common datastreams
+// Common datastreams.
 define('DS_COMP_STREAM', 'DS-COMPOSITE-MODEL');
 
-// Permissions
+// Permissions.
 define('FEDORA_VIEW_OBJECTS', 'view fedora repository objects');
 define('FEDORA_MANAGE_DATASTREAMS', 'view fedora repository datastreams');
 define('FEDORA_METADATA_EDIT', 'edit fedora metadata');
@@ -34,7 +35,7 @@ define('FEDORA_INGEST', 'ingest fedora objects');
 define('FEDORA_PURGE', 'delete fedora objects and datastreams');
 define('FEDORA_MANAGE_PROPERTIES', 'manage object properties');
 
-// Hooks
+// Hooks.
 define('ISLANDORA_VIEW_HOOK', 'islandora_view_object');
 define('ISLANDORA_EDIT_HOOK', 'islandora_edit_object');
 // @todo Add Documentation.
@@ -108,7 +109,8 @@ function islandora_menu() {
     'page arguments' => array(2),
     'type' => MENU_LOCAL_TASK,
     'access callback' => 'islandora_object_manage_access_callback',
-    'access arguments' => array(array(FEDORA_MANAGE_DATASTREAMS, FEDORA_MANAGE_PROPERTIES, FEDORA_ADD_DS), 2),
+    'access arguments' => array(
+      array(FEDORA_MANAGE_DATASTREAMS, FEDORA_MANAGE_PROPERTIES, FEDORA_ADD_DS), 2),
   );
   $items['islandora/object/%islandora_object/manage/datastreams'] = array(
     'title' => 'Datastreams',
@@ -141,7 +143,7 @@ function islandora_menu() {
     'page arguments' => array('islandora_add_datastream_form', 2),
     'type' => MENU_LOCAL_ACTION,
     'access callback' => 'islandora_object_access_callback',
-    'access arguments' => array(FEDORA_ADD_DS, 2)
+    'access arguments' => array(FEDORA_ADD_DS, 2),
   );
   $items['islandora/object/%islandora_object/manage/datastreams/add/autocomplete'] = array(
     'file' => 'includes/add_datastream.form.inc',
@@ -149,7 +151,7 @@ function islandora_menu() {
     'page arguments' => array(2),
     'type' => MENU_CALLBACK,
     'access callback' => 'islandora_object_access_callback',
-    'access arguments' => array(FEDORA_ADD_DS, 2)
+    'access arguments' => array(FEDORA_ADD_DS, 2),
   );
   $items['islandora/object/%islandora_object/datastream/%islandora_datastream'] = array(
     'title' => 'View datastream',
@@ -225,19 +227,19 @@ function islandora_admin_paths() {
  */
 function islandora_theme() {
   return array(
-    // default object template
+    // Default object template.
     'islandora_default' => array(
-      'file' => 'theme/islandora.theme.inc',
+      'file' => 'theme/theme.inc',
       'template' => 'theme/islandora-object',
       'variables' => array('islandora_object' => NULL),
     ),
-    // default edit page
+    // Default edit page.
     'islandora_default_edit' => array(
-      'file' => 'theme/islandora.theme.inc',
+      'file' => 'theme/theme.inc',
       'template' => 'theme/islandora-object-edit',
       'variables' => array('islandora_object' => NULL),
     ),
-    // admin table for solution pack viewer selection
+    // Admin table for solution pack viewer selection.
     'islandora_viewers_table' => array(
       'file' => 'includes/solution_packs.inc',
       'render element' => 'form',
@@ -252,31 +254,31 @@ function islandora_permission() {
   return array(
     FEDORA_VIEW_OBJECTS => array(
       'title' => t('View repository objects'),
-      'description' => t('View objects in the repository. Note: Fedora XACML security policies may override this permission.')
+      'description' => t('View objects in the repository. Note: Fedora XACML security policies may override this permission.'),
     ),
     FEDORA_MANAGE_DATASTREAMS => array(
       'title' => t('Manage repository object datastreams'),
-      'description' => t('Manage datastreams of objects in the repository. Note: Fedora XACML security policies may override this permission.')
+      'description' => t('Manage datastreams of objects in the repository. Note: Fedora XACML security policies may override this permission.'),
     ),
     FEDORA_ADD_DS => array(
       'title' => t('Add datastreams to repository objects'),
-      'description' => t('Add datastreams to objects in the repository. Note: Fedora XACML security policies may override this position.')
+      'description' => t('Add datastreams to objects in the repository. Note: Fedora XACML security policies may override this position.'),
     ),
     FEDORA_METADATA_EDIT => array(
       'title' => t('Edit metadata'),
-      'description' => t('Edit metadata for objects in the repository.')
+      'description' => t('Edit metadata for objects in the repository.'),
     ),
     FEDORA_INGEST => array(
       'title' => t('Create new repository objects'),
-      'description' => t('Create new objects in the repository.')
+      'description' => t('Create new objects in the repository.'),
     ),
     FEDORA_PURGE => array(
       'title' => t('Permanently remove objects from the repository'),
-      'description' => t('Permanently remove objects from the repository.')
+      'description' => t('Permanently remove objects from the repository.'),
     ),
     FEDORA_MANAGE_PROPERTIES => array(
       'title' => t('Manage object properties'),
-      'description' => t('Modify object labels, owner IDs, and states.')
+      'description' => t('Modify object labels, owner IDs, and states.'),
     ),
   );
 }
@@ -295,14 +297,10 @@ function islandora_forms($form_id) {
 }
 
 /**
- * Checks whether the user can access the given object with the given
- * permission.
+ * Checks whether the user can access the given object.
  *
  * Checks for object existance, accessiblitly, namespace permissions,
  * and user permissions
- *
- * @see islandora_object_load() To find potential solutions to enable
- *   page not found errors.
  *
  * @param string $perm
  *   User permission to test for.
@@ -310,7 +308,7 @@ function islandora_forms($form_id) {
  *   The object to test, if NULL given the object doesn't exist or is
  *   inaccessible.
  *
- * @return boolean
+ * @return bool
  *   TRUE if the user is allowed to access this object, FALSE otherwise.
  */
 function islandora_object_access_callback($perm, $object = NULL) {
@@ -325,14 +323,10 @@ function islandora_object_access_callback($perm, $object = NULL) {
 }
 
 /**
- * Checks whether the user can access the given object and datastream with
- * the given permission.
+ * Checks whether the user can access the given object and datastream.
  *
  * Checks for object existance, accessiblitly, namespace permissions,
  * and user permissions
- *
- * @see islandora_object_load() To find potential solutions to enable page
- *   not found errors.
  *
  * @param string $perm
  *   The user permission to test for.
@@ -345,7 +339,7 @@ function islandora_object_access_callback($perm, $object = NULL) {
  * @param StdObject $account
  *   The account to test permissions as or NULL for current user.
  *
- * @return boolean
+ * @return bool
  *   TRUE if the user is allowed to access this object, FALSE otherwise.
  */
 function islandora_object_datastream_access_callback($perm, $object = NULL, $datastream = NULL, $account = NULL) {
@@ -354,9 +348,9 @@ function islandora_object_datastream_access_callback($perm, $object = NULL, $dat
 }
 
 /**
- * Checks whether the user can access the given object and datastream with
- * the given permission. This function will validate and use a token if one
- * is provided in the _GET array.
+ * Checks whether the user can access the given object and datastream.
+ *
+ * This function will validate and use a token if present in the GET parameters.
  *
  * Checks for object existance, accessiblitly, namespace permissions,
  * and user permissions
@@ -380,14 +374,10 @@ function islandora_object_datastream_tokened_access_callback($perm, $object = NU
 }
 
 /**
- * Checks whether the user can access the given object's manage tab
- * with the given array of permissions.
+ * Checks whether the user can access the given object's manage tab.
  *
  * Checks for object existance, accessiblitly, namespace permissions,
  * and user permissions
- *
- * @see islandora_object_load() To find potential solutions to enable
- *   page not found errors.
  *
  * @param array $perms
  *   Array of user permission to test for.
@@ -395,7 +385,7 @@ function islandora_object_datastream_tokened_access_callback($perm, $object = NU
  *   The object to test, if NULL given the object doesn't exist or is
  *   inaccessible.
  *
- * @return boolean
+ * @return bool
  *   TRUE if the user is allowed to access this object, FALSE otherwise.
  */
 function islandora_object_manage_access_callback($perms, $object = NULL) {
@@ -496,7 +486,7 @@ function islandora_view_object(FedoraObject $object) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   drupal_set_title($object->label);
   drupal_set_breadcrumb(islandora_get_breadcrumbs($object));
-  // Optional pager parameters
+  // Optional pager parameters.
   $page_number = (empty($_GET['page'])) ? '1' : $_GET['page'];
   $page_size = (empty($_GET['pagesize'])) ? '10' : $_GET['pagesize'];
   $output = array();
@@ -532,13 +522,13 @@ function islandora_default_islandora_view_object($object) {
 }
 
 /**
- *  Just a wrapper around fetchings the IslandoraTuque object, with some very
- *  basic error logging.
+ * Just a wrapper around fetchings the IslandoraTuque object.
  *
- * @param $user
+ * Includes some very basic error logging.
+ *
+ * @param object $user
  *   The user to connect as.
- *
- * @param $url
+ * @param string $url
  *   The URL to connect to.
  *
  * @return IslandoraTuque
@@ -550,7 +540,8 @@ function islandora_get_tuque_connection($user = NULL, $url = NULL) {
     if (IslandoraTuque::exists()) {
       try {
         $tuque = new IslandoraTuque($user, $url);
-      } catch (Exception $e) {
+      }
+      catch (Exception $e) {
         drupal_set_message(t('Unable to connect to the repository %e', array('%e' => $e)), 'error');
       }
     }
@@ -562,8 +553,10 @@ function islandora_get_tuque_connection($user = NULL, $url = NULL) {
 }
 
 /**
- * A helper function to get a connection and return an object for objects
- * specified in the menu path as '%islandora_object'.
+ * Loads the object from the given ID if possible.
+ *
+ * Often used to get a connection and return an object for the one specified in
+ * the menu path as '%islandora_object'.
  *
  * @param string $object_id
  *   The pid of an object in the menu path identified by '%islandora_object'.
@@ -582,7 +575,8 @@ function islandora_object_load($object_id) {
   if ($tuque) {
     try {
       return $tuque->repository->getObject(urldecode($object_id));
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
       if ($e->getCode() == '404') {
         return FALSE;
       }
@@ -599,6 +593,8 @@ function islandora_object_load($object_id) {
 }
 
 /**
+ * Load the the object using a token if passed as a GET parameter.
+ *
  * A helper function to get a connection and return an object using a token
  * for authentication.
  *
@@ -615,7 +611,7 @@ function islandora_tokened_object_load($object_id, $map) {
   if (array_key_exists('token', $_GET)) {
     $token = filter_input(INPUT_GET, 'token', FILTER_SANITIZE_STRING);
     if ($token) {
-      module_load_include('inc', 'islandora', 'includes/islandora_authtokens');
+      module_load_include('inc', 'islandora', 'includes/authtokens');
       $token_user = islandora_validate_object_token($object_id, $map[4], $token);
       $token_user = $token_user ? user_load($token_user->uid) : NULL;
       islandora_get_tuque_connection($token_user);
@@ -625,6 +621,8 @@ function islandora_tokened_object_load($object_id, $map) {
 }
 
 /**
+ * Fetches a datastream object.
+ *
  * This datastream load must take in arguments in a different
  * order than the usual islandora_datastream_load.  This is because
  * the function islandora_tokened_object_load needs DSID. It uses
@@ -642,13 +640,16 @@ function islandora_tokened_object_load($object_id, $map) {
  *
  * @return FedoraDatastream
  *   A datastream from Fedora.
- *   @see islandora_datastream_load
+ *
+ * @see islandora_datastream_load
  */
 function islandora_tokened_datastream_load($datastream_id, $map) {
   return islandora_datastream_load($datastream_id, $map[2]);
 }
 
 /**
+ * Fetches a datastream object.
+ *
  * A helper function to get an datastream specified as '%islandora_datastream'
  * for the object specified in the menu path as '%islandora_object'.
  *
@@ -677,28 +678,34 @@ function islandora_datastream_load($datastream_id, $object_id) {
 }
 
 /**
+ * Fetches the given datastream version from its datastream.
+ *
  * Content model, collection view and collection policy datastreams may now
  * optionally define a version number in their top-level XML element as an
  * attribute, as in:
  *   <content_model name="Collection" version="2" ...
  *
- * @param object $item
+ * @param FedoraObject $object
+ *   The Object the datastream belongs to.
  * @param string $dsid
+ *   The ID of the datastream.
  * @param string $datastream_file
- * @return
- *   int, or NULL if no version attribute was found.
+ *   The datastream's content.
+ *
+ * @return int
+ *   The datastreams version if found, NULL otherwise.
  */
-function islandora_get_islandora_datastream_version($item = NULL, $dsid = NULL, $datastream_file = NULL) {
+function islandora_get_islandora_datastream_version($object = NULL, $dsid = NULL, $datastream_file = NULL) {
   $return = NULL;
-  // @TODO, need better check for $item
-  if ($item && $item[$dsid]) {
-    $doc = simplexml_load_string($item[$dsid]->content);
+  // @TODO, need better check for $object
+  if ($object && $object[$dsid]) {
+    $doc = simplexml_load_string($object[$dsid]->content);
   }
   elseif (!empty($datastream_file)) {
     $doc = simplexml_load_file($datastream_file);
   }
 
-  if (!empty($doc) && $version = (int)$doc->attributes()->version) {
+  if (!empty($doc) && $version = (int) $doc->attributes()->version) {
     $return = $version;
   }
 
@@ -710,18 +717,18 @@ function islandora_get_islandora_datastream_version($item = NULL, $dsid = NULL, 
  */
 function islandora_islandora_required_objects(IslandoraTuque $connection) {
   $module_path = drupal_get_path('module', 'islandora');
-  // Root Collection
+  // Root Collection.
   $root_collection = $connection->repository->constructObject('islandora:root');
   $root_collection->owner = 'fedoraAdmin';
   $root_collection->label = 'Top-level Collection';
   $root_collection->models = 'islandora:collectionCModel';
-  // Collection Policy Datastream
+  // Collection Policy Datastream.
   $datastream = $root_collection->constructDatastream('COLLECTION_POLICY', 'X');
   $datastream->label = 'Collection policy';
   $datastream->mimetype = 'text/xml';
   $datastream->setContentFromFile("$module_path/xml/islandora_collection_policy.xml", FALSE);
   $root_collection->ingestDatastream($datastream);
-  // TN Datastream
+  // TN Datastream.
   $datastream = $root_collection->constructDatastream('TN', 'M');
   $datastream->label = 'Thumbnail';
   $datastream->mimetype = 'image/png';
@@ -731,9 +738,9 @@ function islandora_islandora_required_objects(IslandoraTuque $connection) {
     'islandora' => array(
       'title' => 'Islandora',
       'objects' => array(
-        $root_collection
-      )
-    )
+        $root_collection,
+      ),
+    ),
   );
 }
 
@@ -789,12 +796,10 @@ function islandora_delete_datastream(FedoraDatastream &$datastream) {
 }
 
 /**
- * Implements hook_cron()
- *
- * Removes expired authentication tokens.
+ * Implements hook_cron().
  */
 function islandora_cron() {
-  module_load_include('inc', 'islandora', 'includes/islandora_authtokens');
+  module_load_include('inc', 'islandora', 'includes/authtokens');
   islandora_remove_expired_tokens();
 }
 
