@@ -1,9 +1,9 @@
 <?php
 
-
-
 /**
  * @file
+ * Class for determining MIME types and file extensions.
+ *
  * This class inspired by Chris Jean's work, here:
  * http://chrisjean.com/2009/02/14/generating-mime-type-in-php-is-not-magic/
  *
@@ -19,7 +19,6 @@
  *
  * Drupal 7 will have better mime handlers.  See:
  * http://api.drupal.org/api/function/file_default_mimetype_mapping/7
- *
  */
 
 class MimeDetect {
@@ -199,7 +198,7 @@ class MimeDetect {
   protected $etcMimeTypes = '/etc/mime.types';
 
   /**
-   * Construtor
+   * Construtor.
    */
   public function __construct() {
 
@@ -213,12 +212,11 @@ class MimeDetect {
   }
 
   /**
-   * description: returns a mimetype associated with the file extension of
-   * $filename
+   * Gets MIME type associated with the give file's extension.
    *
    * @param string $filename
    *   The filename
-   * @param boolean $debug
+   * @param bool $debug
    *   Returns a debug array.
    *
    * @return mixed
@@ -263,12 +261,15 @@ class MimeDetect {
   }
 
   /**
-   * function: get_extension
-   * description: returns *one* valid file extension for a given $mime_type
+   * Gets one valid file extension for a given MIME type.
    *
-   * @param type $mime_type
-   * @param type $debug
-   * @return type
+   * @param string $mime_type
+   *   The MIME type.
+   * @param bool $debug
+   *   Generated debug information?
+   *
+   * @return string
+   *   The file extensions associated with the given MIME type.
    */
   public function getExtension($mime_type, $debug = FALSE) {
 
@@ -296,11 +297,14 @@ class MimeDetect {
   }
 
   /**
-   * function: systemMimetypeExtensions
-   * description: populates an internal array of mimetype/extension associations
-   * from the system mime.types file, or a local mime.types if one is found (see
-   * __constuctor).
-   * return: array of mimetype => extension
+   * Gets an associative array of MIME type and extension associations.
+   *
+   * Users the system mime.types file, or a local mime.types if one is found
+   * @see MIMEDetect::__constuctor()
+   *
+   * @return array
+   *   An associative array where the keys are MIME types and the values
+   *   extensions.
    */
   protected function systemMimetypeExtensions() {
     $out = array();
@@ -328,11 +332,14 @@ class MimeDetect {
   }
 
   /**
-   * function: systemMimetypeExtensions
-   * description: populates an internal array of mimetype/extension associations
-   * from the system mime.types file, or a local mime.types if one is found (see
-   * __constuctor).
-   * return: array of extension => mimetype
+   * Gets a associative array of extensions and MIME types.
+   *
+   * Users the system mime.types file, or a local mime.types if one is found
+   * @see MIMEDetect::__constuctor()
+   *
+   * @return array
+   *   An associative array where the keys are extensions and the values
+   *   MIME types.
    */
   protected function systemExtensionMimetypes() {
     $out = array();
@@ -340,15 +347,18 @@ class MimeDetect {
       $file = fopen($this->etcMimeTypes, 'r');
       while (($line = fgets($file)) !== FALSE) {
         $line = trim(preg_replace('/#.*/', '', $line));
-        if (!$line)
+        if (!$line) {
           continue;
+        }
         $parts = preg_split('/\s+/', $line);
-        if (count($parts) == 1)
+        if (count($parts) == 1) {
           continue;
+        }
         // A single part means a mimetype without extensions, which we ignore.
         $type = array_shift($parts);
-        foreach ($parts as $part)
+        foreach ($parts as $part) {
           $out[$part] = $type;
+        }
       }
       fclose($file);
     }
@@ -356,4 +366,3 @@ class MimeDetect {
   }
 
 }
-

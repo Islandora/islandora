@@ -2,9 +2,7 @@
 
 /**
  * @file
- *
- * This file contains the admin (confirmation) form and callback functions to
- * delete/purge a datastream.
+ * The admin/confirmation form to delete/purge a datastream.
  */
 
 /**
@@ -32,19 +30,18 @@ function islandora_delete_datastream_form(array $form, array &$form_state, Fedor
 }
 
 /**
- * Submit handler for the delete datastream form. Purges/Delete's the given
- * FedoraDatastream if possible.
+ * Submit handler for the delete datastream form.
+ *
+ * Purges/Delete's the given FedoraDatastream if possible.
  *
  * The ISLANDORA_PRE_PURGE_DATASTREAM_HOOK will query other modules as to
  * whether the given FedoraDatastream
  * should be: blocked from purging; state set to 'Deleted'; or purged.
  *
- * @see islandora_delete_datastream().
- *
- * @param string $object_id
- *   ID of the object
- * @param string $datastream_id
- *   ID of the datastream
+ * @param array $form
+ *   The Drupal form.
+ * @param array $form_state
+ *   The Drupal form state.
  */
 function islandora_delete_datastream_form_submit(array $form, array &$form_state) {
   $datastream = $form_state['datastream'];
@@ -53,14 +50,22 @@ function islandora_delete_datastream_form_submit(array $form, array &$form_state
   $deleted = FALSE;
   try {
     $deleted = islandora_delete_datastream($datastream);
-  } catch (Exception $e) {
-    drupal_set_message(t('Error deleting %s datastream from object %o %e', array('%s' => $datastream_id, '%o' => $object->label, '%e' => $e->getMessage())), 'error');
+  }
+  catch (Exception $e) {
+    drupal_set_message(t('Error deleting %s datastream from object %o %e', array(
+          '%s' => $datastream_id,
+          '%o' => $object->label,
+          '%e' => $e->getMessage())), 'error');
   }
   if ($deleted) {
-    drupal_set_message(t('%d datastream sucessfully deleted from Islandora object %o', array('%d' => $datastream_id, '%o' =>  $object->label)));
+    drupal_set_message(t('%d datastream sucessfully deleted from Islandora object %o', array(
+          '%d' => $datastream_id,
+          '%o' => $object->label)));
   }
   else {
-    drupal_set_message(t('Error deleting %s datastream from object %o', array('%s' => $datastream_id, '%o' => $object->label)), 'error');
+    drupal_set_message(t('Error deleting %s datastream from object %o', array(
+          '%s' => $datastream_id,
+          '%o' => $object->label)), 'error');
   }
   $form_state['redirect'] = "islandora/object/{$object->id}";
 }

@@ -2,13 +2,12 @@
 
 /**
  * @file
- *
  * This file contains a class to include the Tuque php library.
  */
 
 $islandora_module_path = drupal_get_path('module', 'islandora');
 
-//do this until we expost these in a module or library
+// Do this until we expose these in a module or library.
 @include_once 'sites/all/libraries/tuque/Datastream.php';
 @include_once 'sites/all/libraries/tuque/FedoraApi.php';
 @include_once 'sites/all/libraries/tuque/FedoraApiSerializer.php';
@@ -59,7 +58,15 @@ class IslandoraTuque {
    */
   public $repository = NULL;
 
-  function __construct($user = NULL, $url = NULL) {
+  /**
+   * Constructor.
+   *
+   * @param array $user
+   *   A Drupal user.
+   * @param string $url
+   *   The url to the fedora instance.
+   */
+  public function __construct($user = NULL, $url = NULL) {
     if (!isset($user)) {
       global $user;
     }
@@ -86,14 +93,23 @@ class IslandoraTuque {
     }
   }
 
-  static function exists() {
+  /**
+   * Checks if the Connection class exists.
+   *
+   * @returns bool
+   *   TRUE if the Connection class exists FALSE otherwise.
+   */
+  public static function exists() {
     return class_exists('RepositoryConnection');
   }
 
-  static function getError() {
+  /**
+   * Displays and error for use when Tuque is not installed.
+   */
+  public static function getError() {
     $islandora_doc_link = l(t('Islandora documentation'), 'https://wiki.duraspace.org/display/ISLANDORA/Islandora');
     $tuque_link = l(t('Tuque Fedora API'), 'http://github.com/islandora/tuque');
-    $message = t('Islandora requires the !tuque_url. Please install in /sites/all/libraries/tuque before continuing. See the !islandora_url.', array( '!tuque_url' => $tuque_link, '!islandora_url' => $islandora_doc_link));
+    $message = t('Islandora requires the !tuque_url. Please install in /sites/all/libraries/tuque before continuing. See the !islandora_url.', array('!tuque_url' => $tuque_link, '!islandora_url' => $islandora_doc_link));
     drupal_set_message(filter_xss($message), 'error', FALSE);
   }
 }

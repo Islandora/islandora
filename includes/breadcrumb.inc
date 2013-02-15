@@ -2,16 +2,16 @@
 
 /**
  * @file
- *
  * This file contains functions to create breadcrumbs on Islandora object pages.
  */
 
 /**
- * Get an array of links to be passed to drupal_set_breadcrumb(). This is used
- * for generating the bread-crumbs for the view object page.
+ * Get an array of links to be passed to drupal_set_breadcrumb().
  *
- * Each link in the bread-crumbs represents a member of the given objects ancestry
- * which is identified by any of the following RELS-EXT terms
+ * This is used for generating the bread-crumbs for the view object page.
+ *
+ * Each link in the bread-crumbs represents a member of the given objects
+ * ancestry which is identified by any of the following RELS-EXT terms
  * (isMemberOf,isMemberOfCollection,isPartOf).
  *
  * @param FedoraObject $object
@@ -51,8 +51,8 @@ function islandora_get_breadcrumbs($object) {
  *   The fedora repository.
  */
 function islandora_get_breadcrumbs_recursive($pid, array &$breadcrumbs, FedoraRepository $repository) {
-  // Before executing the query, we hve a base case of accessing the
-  // top-level collection
+  // Before executing the query, we have a base case of accessing the top-level
+  // collection.
   static $max_level = 10;
   static $level = -1;
 

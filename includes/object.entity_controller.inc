@@ -1,13 +1,30 @@
 <?php
 
 /**
- * Very basic entity controller...
+ * @file
+ * Very basic entity controller.
  */
+
 class IslandoraObjectEntityController implements DrupalEntityControllerInterface {
-  public function __construct($entityType) {
+
+  /**
+   * Constructor.
+   *
+   * @param string $entity_type
+   *   The type of entity.
+   */
+  public function __construct($entity_type) {
     // No-op...
   }
 
+  /**
+   * Load all the entities.
+   *
+   * @param array $ids
+   *   The ID's of the entities.
+   * @param array $conditions
+   *   The conditions to apply.
+   */
   public function load($ids = array(), $conditions = array()) {
     if (!empty($conditions)) {
       throw new Exception('Conditions not implemented.');
@@ -24,8 +41,13 @@ class IslandoraObjectEntityController implements DrupalEntityControllerInterface
     return $loaded;
   }
 
+  /**
+   * Reset the cache.
+   *
+   * @param array $ids
+   *   The ID's of the entities.
+   */
   public function resetCache(array $ids = NULL) {
-    // no-op
+    // no-op.
   }
 }
-

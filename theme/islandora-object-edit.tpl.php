@@ -2,9 +2,7 @@
 
 /**
  * @file
- *
- * islandora-object-edit.tpl.php: This is a template for objects that do not
- * have a module to registered to build their display.
+ * The default manage datastreams view for objects.
  *
  * islandora_object is a fedora tuque Object
  *    $object->label
@@ -17,7 +15,6 @@
  * and each element has an array of values.
  * dc.title can have none, one or many titles
  * this is the case for all dc elements.
- *
  */
 ?>
 <?php print (theme_table($variables['datastream_table'])); ?>
