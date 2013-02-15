@@ -577,3 +577,58 @@ function islandora_directory_exists_message($path) {
 function islandora_system_settings_form_default_value($name, $default_value, array &$form_state) {
   return isset($form_state['values'][$name]) ? $form_state['values'][$name] : variable_get($name, $default_value);
 }
+
+/**
+ * Returns basic information about DS-COMPOSITE-MODEL
+ *
+ * @param string $pid
+ *  pid of content model containing DS_COMP stream
+ * @return array
+ *   array of values in the following form
+ *
+ * [DC] => Array
+ *       (
+ *           [mimetype] => text/xml
+ *       )
+ *
+ *   [MODS] => Array
+ *       (
+ *           [optional] => true
+ *           [mimetype] => text/xml
+ *       )
+ *
+ *   [RELS-EXT] => Array
+ *       (
+ *           [mimetype] => application/rdf+xml
+ *       )
+ *
+ *   [RELS-INT] => Array
+ *       (
+ *           [optional] => true
+ *           [mimetype] => application/rdf+xml
+ *      )
+ *
+ */
+
+function islandora_get_comp_ds_mappings($pid) {
+  $cm_object = islandora_object_load($pid);
+  if (!isset($cm_object) || !isset($cm_object['DS-COMPOSITE-MODEL'])) {
+    return FALSE;
+  }
+  $datastream = $cm_object['DS-COMPOSITE-MODEL'];
+  $ds_comp_stream = $datastream->content;
+  $sxml = new SimpleXMLElement($ds_comp_stream);
+  $mappings = array();
+  foreach ($sxml->dsTypeModel as $ds) {
+    $dsid = (string) $ds['ID'];
+    $optional = (string) $ds['optional'];
+    foreach ($ds->form as $form) {
+      $mime = (string) $form['MIME'];
+      if ($optional) {
+        $mappings[$dsid]['optional'] = $optional;
+      }
+      $mappings[$dsid]['mimetype'] = $mime;
+    }
+  }
+  return $mappings;
+}

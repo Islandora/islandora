@@ -12,19 +12,20 @@
  *   HTML representing the mult-page ingest form.
  */
 function islandora_ingest_callback() {
-  $configuration = islandora_ingest_get_configuration();
-  if ($configuration === FALSE) {
-    drupal_set_message(t('Invalid ingest configuration.'), 'error');
+  module_load_include('inc', 'islandora', 'includes/ingest.form');
+  try {
+    $configuration = islandora_ingest_get_configuration();
+    return drupal_get_form('islandora_ingest_form', $configuration);
+  }
+  catch(Exception $e) {
     $redirect = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '<front>';
     // Redirect back to referer or top level collection.
     drupal_goto($redirect);
   }
-  module_load_include('inc', 'islandora', 'includes/ingest.form');
-  return drupal_get_form('islandora_ingest_form', $configuration);
 }
 
 /**
- * Fetches/validates the ingest configuration from the $_GET parameters.
+ * Fetches the ingest configuration from the $_GET parameters.
  *
  * Generic parameters as accepted by all ingest processes, other modules may
  * add to this list.
@@ -44,22 +45,5 @@ function islandora_ingest_get_configuration() {
   foreach ($convert_to_array_keys as $key) {
     $configuration[$key] = explode(',', $configuration[$key]);
   }
-  // @todo add hook for manipulating/validating the configuration.
-  return islandora_valid_ingest_configuration($configuration) ? $configuration : FALSE;
-}
-
-/**
- * Validates the given ingest configuration.
- *
- * At the moment it requires that models and collections are present.
- *
- * @param array $configuration
- *   The key value pairs that are used to build the multi-paged ingest process.
- *
- * @return bool
- *   TRUE if the configuration is valid, FALSE otherwise.
- */
-function islandora_valid_ingest_configuration(array $configuration) {
-  // @todo Add more robust validation, add watchdog logs, etc.
-  return isset($configuration['models']) && isset($configuration['collections']);
+  return $configuration;
 }
