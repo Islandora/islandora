@@ -43,6 +43,7 @@ function islandora_view_datastream(FedoraDatastream $datastream, $download = FAL
   }
   drupal_page_is_cacheable(FALSE);
   // Try not to load the file into PHP memory!
+  ob_end_flush();
   $datastream->getContent('php://output');
   exit();
 }
