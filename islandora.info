@@ -13,5 +13,6 @@ files[] = includes/tuque_wrapper.inc
 files[] = includes/object.entity_controller.inc
 files[] = tests/web_test_case.inc
 files[] = tests/authtokens.test
+files[] = tests/islandora_manage_permissions.test
 files[] = tests/hooks.test
 php = 5.3
