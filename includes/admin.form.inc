@@ -19,6 +19,11 @@
 function islandora_repository_admin(array $form, array &$form_state) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   drupal_add_css(drupal_get_path('module', 'islandora') . '/css/islandora.admin.css');
+  
+  if (!class_exists('XSLTProcessor', FALSE)) {
+    $link = l(t('PHP XSL extension'), 'http://us2.php.net/manual/en/book.xsl.php', array('attributes' => array('target'=>'_blank')));
+    drupal_set_message(t('The !xsllink is required. Check your installed PHP extensions and php.ini file.', array('!xsllink' => $link)),'error');
+  }
 
   $form = array();
   if (isset($form_state['values']['islandora_base_url'])) {
