@@ -1,0 +1,78 @@
+<?php
+
+class IslandoraPermissionsTestCase extends IslandoraWebTestCase {
+  
+  public static function getInfo() {
+    return array(
+      'name' => 'Islandora Manage Permissions',
+      'description' => 'Ensure the manage tab is shown based on the corrent permissions.',
+      'group' => 'Islandora',
+    );
+  }
+
+  public function setUp() {
+    parent::setUp(array('islandora'));
+  }
+
+  public function testManagePermissions() {
+
+
+    // permission FEDORA_VIEW_OBJECTS
+    // create a user with permission
+    $user = $this->drupalCreateUser(array(FEDORA_VIEW_OBJECTS));
+     // log the user in
+    $this->drupalLogin($user);
+    $this->clickLink(t('Islandora Repository'));
+    $this->assertNoLink('Manage', 'Manage tab is not on current page.');
+    
+    
+    // permission FEDORA_VIEW_OBJECTS, FEDORA_MANAGE_PROPERTIES
+    $user = $this->drupalCreateUser(array(FEDORA_VIEW_OBJECTS, FEDORA_MANAGE_PROPERTIES));
+     // log the user in
+    $this->drupalLogin($user);
+    $this->clickLink(t('Islandora Repository'));
+    $this->assertLink('Manage', 0, 'Manage tab is on current page.');
+    $this->clickLink(t('Manage'));
+    $this->assertLink('Properties', 0, 'Properties tab is on current page.');
+    $this->assertNoLink('Datastreams', 'Datastreams tab is not on current page.');
+    $this->assertNoLink('Collection','Collection tab is not on current page.');
+
+    
+    // permission FEDORA_VIEW_OBJECTS, FEDORA_ADD_DS
+    $user = $this->drupalCreateUser(array(FEDORA_VIEW_OBJECTS, FEDORA_ADD_DS));
+     // log the user in
+    $this->drupalLogin($user);
+    $this->clickLink(t('Islandora Repository'));
+    $this->assertLink('Manage', 0, 'Manage tab is on current page.');
+    $this->clickLink(t('Manage'));
+    $this->assertLink('Datastreams', 0, 'Datastreams tab is on current page.');
+    $this->assertNoLink('Properties', 'Properties tab is not on current page.');
+    $this->assertNoLink('Collection','Collection tab is not on current page.');
+    
+    
+    // permission FEDORA_VIEW_OBJECTS, FEDORA_METADATA_EDIT
+    $user = $this->drupalCreateUser(array(FEDORA_VIEW_OBJECTS, FEDORA_METADATA_EDIT));
+     // log the user in
+   $this->drupalLogin($user);
+    $this->clickLink(t('Islandora Repository'));
+    $this->assertLink('Manage', 0, 'Manage tab is on current page.');
+    $this->clickLink(t('Manage'));
+    $this->assertLink('Datastreams', 0, 'Datastreams tab is on current page.');
+    $this->assertNoLink('Properties', 'Properties tab is not on current page.');
+    $this->assertNoLink('Collection','Collection tab is not on current page.');
+    
+    
+    // permission FEDORA_VIEW_OBJECTS, FEDORA_PURGE
+    $user = $this->drupalCreateUser(array(FEDORA_VIEW_OBJECTS, FEDORA_PURGE));
+     // log the user in
+    $this->drupalLogin($user);
+    $this->clickLink(t('Islandora Repository'));
+    $this->assertLink('Manage', 0, 'Manage tab is on current page.');
+    $this->clickLink(t('Manage'));
+    $this->assertLink('Datastreams', 0, 'Datastreams tab is on current page.');
+    $this->assertNoLink('Properties', 'Properties tab is not on current page.');
+    $this->assertNoLink('Collection','Collection tab is not on current page.');
+       
+  }
+
+ }
