@@ -33,6 +33,17 @@ function hook_islandora_tabs($content_models, $pid, $page_number) {
 }
 
 /**
+ * Implements hook_islandora_tabs_alter().
+ * This fires after the tabs have been populated.
+ *
+ * @param array $tabs
+ *   The tab set to be altered.
+ */
+function hook_islandora_tabs_alter($tabs) {
+  $tabs['fedora_object_details']['altered']['#value'] = '<H5>ALTERED</H5>';
+}
+
+/**
  * Implements hook_postprocess_solution_pack().
  * This hook fires after the batch job to ingest a solution pack finishes.
  *
