@@ -14,4 +14,5 @@ files[] = includes/object.entity_controller.inc
 files[] = tests/web_test_case.inc
 files[] = tests/authtokens.test
 files[] = tests/hooks.test
+files[] = tests/islandora_manage_permissions.test
 php = 5.3
