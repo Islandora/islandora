@@ -28,7 +28,6 @@ define('DS_COMP_STREAM', 'DS-COMPOSITE-MODEL');
 
 // Permissions.
 define('FEDORA_VIEW_OBJECTS', 'view fedora repository objects');
-define('FEDORA_MANAGE_DATASTREAMS', 'view fedora repository datastreams');
 define('FEDORA_METADATA_EDIT', 'edit fedora metadata');
 define('FEDORA_ADD_DS', 'add fedora datastreams');
 define('FEDORA_INGEST', 'ingest fedora objects');
@@ -38,6 +37,12 @@ define('FEDORA_MANAGE_PROPERTIES', 'manage object properties');
 // Hooks.
 define('ISLANDORA_VIEW_HOOK', 'islandora_view_object');
 define('ISLANDORA_EDIT_HOOK', 'islandora_edit_object');
+define('ISLANDORA_OVERVIEW_HOOK', 'islandora_overview_object');
+define('ISLANDORA_PRE_INGEST_HOOK', 'islandora_ingest_pre_ingest');
+define('ISLANDORA_POST_INGEST_HOOK', 'islandora_ingest_post_ingest');
+define('ISLANDORA_PRE_PURGE_OBJECT_HOOK', 'islandora_pre_purge_object');
+define('ISLANDORA_POST_PURGE_OBJECT_HOOK', 'islandora_post_purge_object');
+
 // @todo Add Documentation.
 define('ISLANDORA_OBJECT_INGESTED_HOOK', 'islandora_object_ingested');
 define('ISLANDORA_OBJECT_MODIFIED_HOOK', 'islandora_object_modified');
@@ -105,18 +110,40 @@ function islandora_menu() {
   );
   $items['islandora/object/%islandora_object/manage'] = array(
     'title' => 'Manage',
-    'page callback' => 'islandora_edit_object',
+    'page callback' => 'islandora_manage_overview_object',
     'page arguments' => array(2),
     'type' => MENU_LOCAL_TASK,
     'access callback' => 'islandora_object_manage_access_callback',
     'access arguments' => array(
-      array(FEDORA_MANAGE_DATASTREAMS, FEDORA_MANAGE_PROPERTIES, FEDORA_ADD_DS), 2),
+      array(
+        FEDORA_MANAGE_PROPERTIES,
+        FEDORA_METADATA_EDIT,
+        FEDORA_ADD_DS,
+        FEDORA_PURGE,
+      ), 2),
   );
+
+  $items['islandora/object/%islandora_object/manage/overview'] = array(
+    'title' => 'Overview',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -20,
+  );
+
   $items['islandora/object/%islandora_object/manage/datastreams'] = array(
     'title' => 'Datastreams',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'type' => MENU_LOCAL_TASK,
+    'page callback' => 'islandora_edit_object',
+    'page arguments' => array(2),
+    'access callback' => 'islandora_object_manage_access_callback',
+    'access arguments' => array(
+      array(
+        FEDORA_METADATA_EDIT,
+        FEDORA_ADD_DS,
+        FEDORA_PURGE,
+      ), 2),
     'weight' => -10,
   );
+
   $items['islandora/object/%islandora_object/manage/properties'] = array(
     'title' => 'Properties',
     'page callback' => 'drupal_get_form',
@@ -255,10 +282,6 @@ function islandora_permission() {
     FEDORA_VIEW_OBJECTS => array(
       'title' => t('View repository objects'),
       'description' => t('View objects in the repository. Note: Fedora XACML security policies may override this permission.'),
-    ),
-    FEDORA_MANAGE_DATASTREAMS => array(
-      'title' => t('Manage repository object datastreams'),
-      'description' => t('Manage datastreams of objects in the repository. Note: Fedora XACML security policies may override this permission.'),
     ),
     FEDORA_ADD_DS => array(
       'title' => t('Add datastreams to repository objects'),
@@ -402,6 +425,48 @@ function islandora_object_manage_access_callback($perms, $object = NULL) {
   }
 
   return $has_access && is_object($object) && islandora_namespace_accessible($object->id);
+}
+
+/**
+ * Renders the given objects manage overview page.
+ *
+ * @param FedoraObject $object
+ *   The object to manage.
+ *
+ * @return string
+ *   The HTML repersentation of the manage object page.
+ */
+function islandora_manage_overview_object(FedoraObject $object) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  $output = array();
+  foreach (islandora_build_hook_list(ISLANDORA_OVERVIEW_HOOK, $object->models) as $hook) {
+    $temp = module_invoke_all($hook, $object);
+    if (!empty($temp)) {
+      $output = array_merge_recursive($output, $temp);
+    }
+  }
+  if (empty($output)) {
+    // Add in the default, if we did not get any results.
+    $output = islandora_default_islandora_manage_overview_object($object);
+  }
+  arsort($output);
+  drupal_alter(ISLANDORA_OVERVIEW_HOOK, $object, $output);
+  return implode('', $output);
+}
+
+/**
+ * Renders the default manage object page for the given object.
+ *
+ * @param FedoraObject $object
+ *   The object used to render the manage object page.
+ *
+ * @return array
+ *   The default rendering of the object manage page, indexed at
+ *   'Default Edit output'.
+ */
+function islandora_default_islandora_manage_overview_object(FedoraObject $object) {
+  $output = theme('islandora_default_overview', array('islandora_object' => $object));
+  return array('Default overview output' => $output);
 }
 
 /**
