@@ -43,7 +43,6 @@ abstract class IslandoraTestCase extends DrupalWebTestCase {
       'access content',
       'add fedora datastreams',
       'edit fedora meta data',
-      'edit tags datastream',
       'ingest new fedora objects',
       'purge objects and datastreams',
       'view fedora collection',
