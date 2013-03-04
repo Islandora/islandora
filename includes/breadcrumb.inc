@@ -78,6 +78,7 @@ function islandora_get_breadcrumbs_recursive($pid, array &$breadcrumbs, FedoraRe
                         and $parentObject <fedora-model:state> <info:fedora/fedora-system:def/model#Active>
                       )
                       minus $content <mulgara:is> <info:fedora/fedora-system:FedoraObject-3.0>
+                      minus $parentObject <mulgara:is> <info:fedora/' . $pid . '>
                       order by $title desc';
     $results = $repository->ri->itqlQuery($query_string);
 
