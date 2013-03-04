@@ -38,8 +38,14 @@ function hook_islandora_tabs($content_models, $pid, $page_number) {
  *
  * @param array $tabs
  *   The tab set to be altered.
+ * @param array $params
+ *   $params = array(
+ *     'content_models' => $content_models,
+ *     'pid' => $pid,
+ *     'page' => $page_number,
+ *   );
  */
-function hook_islandora_tabs_alter($tabs) {
+function hook_islandora_tabs_alter($tabs, $params) {
   $tabs['fedora_object_details']['altered']['#value'] = '<H5>ALTERED</H5>';
 }
 
