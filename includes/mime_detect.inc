@@ -139,6 +139,7 @@ class MimeDetect {
     'txt' => 'text/plain',
     // images:
     "bmp" => "image/bmp",
+    'dng' => 'image/x-adobe-dng',
     "gif" => "image/gif",
     "ief" => "image/ief",
     "jpeg" => "image/jpeg",
