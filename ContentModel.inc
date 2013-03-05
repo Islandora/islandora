@@ -1065,32 +1065,36 @@ class ContentModel extends XMLDatastream {
         if (strtolower($ingest_form->getAttribute('hide_file_chooser')) == 'TRUE') {
           $form['indicator']['ingest-file-location']['#type'] = 'hidden';
         }
-      }
-      $dsid = $ingest_form->getAttribute('dsid');
 
-      $method = $ingest_form->getElementsByTagName('form_builder_method')->item(0);
-      $module = $method->getAttribute('module');
-      $path = drupal_get_path('module', !empty($module) ? $module : 'fedora_repository') . '/' . $method->getAttribute('file');
-      if (!file_exists($path)) {
-        self::$errors[] = 'Build Ingest Form: file \'' . $path . '\' does not exist.';
-      }
-      else {
-        @require_once($path);
-        $className = $method->getAttribute('class');
-        $methodName = ($method->getAttribute('method'));
-        if (!class_exists($className)) {
-          self::$errors[] = 'Build Ingest Form: class \'' . $className . ' does not exist.';
+        $dsid = $ingest_form->getAttribute('dsid');
+
+        $method = $ingest_form->getElementsByTagName('form_builder_method')->item(0);
+        $module = $method->getAttribute('module');
+        $path = drupal_get_path('module', !empty($module) ? $module : 'fedora_repository') . '/' . $method->getAttribute('file');
+        if (!file_exists($path)) {
+          self::$errors[] = 'Build Ingest Form: file \'' . $path . '\' does not exist.';
         }
         else {
-          $class = new $className;
-          $elements_array = $this->getIngestFormElements();
-          if (method_exists($class, $methodName)) {
-            $ret = $class->$methodName($form, $elements_array, $form_state);
+          @require_once($path);
+          $className = $method->getAttribute('class');
+          $methodName = ($method->getAttribute('method'));
+          if (!class_exists($className)) {
+            self::$errors[] = 'Build Ingest Form: class \'' . $className . ' does not exist.';
           }
           else {
-            self::$errors[] = 'Build Ingest Form: method \'' . $className . '->' . $methodName . '\' does not exist.';
+            $class = new $className;
+            $elements_array = $this->getIngestFormElements();
+            if (method_exists($class, $methodName)) {
+              $ret = $class->$methodName($form, $elements_array, $form_state);
+            }
+            else {
+              self::$errors[] = 'Build Ingest Form: method \'' . $className . '->' . $methodName . '\' does not exist.';
+            }
           }
         }
+      }
+      else {
+        self::$errors[] = 'No XML form association exists.';
       }
     }
     return $ret;

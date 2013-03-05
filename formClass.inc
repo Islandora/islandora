@@ -235,7 +235,7 @@ class formClass {
       '#default_value' => $triplepath,
       '#description' => t('The url of the Fedora server\'s Triplestore.  Change this only if you have set up an external triplestore'),
       '#required' => TRUE,
-      
+
     );
 
 
@@ -588,15 +588,17 @@ class formClass {
           drupal_set_message($error, 'error');
         }
       }
-      $form['collection_pid'] = array(
-        '#type' => 'hidden',
-        '#value' => $collection_pid
-      );
-      $form['submit'] = array(
-        '#type' => 'submit',
-        '#submit' => array('fedora_repository_ingest_form_submit'),
-        '#value' => t('Ingest')
-      );
+      else {
+        $form['collection_pid'] = array(
+          '#type' => 'hidden',
+          '#value' => $collection_pid
+        );
+        $form['submit'] = array(
+          '#type' => 'submit',
+          '#submit' => array('fedora_repository_ingest_form_submit'),
+          '#value' => t('Ingest')
+        );
+      }
     }
     return $form;
   }
