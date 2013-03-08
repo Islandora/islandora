@@ -560,9 +560,10 @@ function islandora_directory_exists_message($path) {
 /**
  * Gets the default value for the given system_settings_form() element.
  *
- * Checks the $form_state for the default value if not it checks variable_get().
- * Assumes #tree is FALSE. This is only really required for elements that utilize
- * AJAX, as their value can change before the submit actually takes place.
+ * Checks the $form_state for the default value if not it checks
+ * variable_get(). Assumes #tree is FALSE. This is only really required
+ * for elements that utilize AJAX, as their value can change before the
+ * submit actually takes place.
  *
  * @param string $name
  *   The name of the system settings form element.
@@ -579,10 +580,11 @@ function islandora_system_settings_form_default_value($name, $default_value, arr
 }
 
 /**
- * Returns basic information about DS-COMPOSITE-MODEL
+ * Returns basic information about DS-COMPOSITE-MODEL.
  *
  * @param string $pid
- *  pid of content model containing DS_COMP stream
+ *   PID of content model containing DS_COMP stream.
+ *
  * @return array
  *   array of values in the following form
  *
@@ -607,9 +609,7 @@ function islandora_system_settings_form_default_value($name, $default_value, arr
  *           [optional] => true
  *           [mimetype] => application/rdf+xml
  *      )
- *
  */
-
 function islandora_get_comp_ds_mappings($pid) {
   $cm_object = islandora_object_load($pid);
   if (!isset($cm_object) || !isset($cm_object['DS-COMPOSITE-MODEL'])) {
@@ -631,4 +631,45 @@ function islandora_get_comp_ds_mappings($pid) {
     }
   }
   return $mappings;
+}
+
+/**
+ * Checks that the given/current account has all the given permissions.
+ *
+ * @param array $perms
+ *   The permissions to check.
+ * @param mixed $account
+ *   (optional) The account to check, if not given use currently logged in user.
+ *
+ * @return bool
+ *   TRUE if the account has all the given permissions, FALSE otherwise.
+ */
+function islandora_user_access_all(array $perms, $account = NULL) {
+  foreach ($perms as $perm) {
+    if (!user_access($perm, $account)) {
+      return FALSE;
+    }
+  }
+  return TRUE;
+}
+
+/**
+ * Checks that the given/current account has at one of the given permissions.
+ *
+ * @param array $perms
+ *   The permissions to check.
+ * @param mixed $account
+ *   (optional) The account to check, if not given use currently logged in user.
+ *
+ * @return bool
+ *   TRUE if the account has at least one of the given permissions, FALSE
+ *   otherwise.
+ */
+function islandora_user_access_any(array $perms, $account = NULL) {
+  foreach ($perms as $perm) {
+    if (user_access($perm, $account)) {
+      return TRUE;
+    }
+  }
+  return FALSE;
 }
