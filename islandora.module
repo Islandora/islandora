@@ -850,10 +850,18 @@ function islandora_add_object(NewFedoraObject &$object) {
  *   An object to delete.
  *
  * @return bool
- *   The ingested FedoraObject, after running the pre/post ingest hooks.
+ *   TRUE if successful, FALSE otherwise.
  */
 function islandora_delete_object(FedoraObject &$object) {
-  return $object->repository->purgeObject($object->id);
+  try {
+    $object->repository->purgeObject($object->id);
+    $object = NULL;
+    return TRUE;
+  }
+  catch(Exception $e) {
+    // Exception message gets logged in Tuque Wrapper.
+    return FALSE;
+  }
 }
 
 /**
