@@ -228,6 +228,15 @@ function islandora_menu() {
     'access arguments' => array(FEDORA_PURGE, 2, 4),
     'load arguments' => array(2),
   );
+  $items['islandora/object/%islandora_object/print'] = array(
+    'title' => 'Print Object',
+    'page callback' => 'islandora_print_object',
+    'page arguments' => array(2),
+    'type' => MENU_CALLBACK,
+    'access callback' => 'islandora_object_access_callback',
+    'access arguments' => array(FEDORA_VIEW_OBJECTS, 2),
+    'load arguments' => array(2),
+  );
   $items['islandora/ingest'] = array(
     'title' => 'Add an Object',
     'page callback' => 'islandora_ingest_callback',
@@ -270,6 +279,11 @@ function islandora_theme() {
     'islandora_viewers_table' => array(
       'file' => 'includes/solution_packs.inc',
       'render element' => 'form',
+    ),
+    // Print object view.
+    'islandora_object_print' => array(
+      'file' => 'theme/theme.inc',
+      'variables' => array('object' => NULL, 'content' => array()),
     ),
   );
 }
@@ -927,4 +941,21 @@ function islandora_entity_property_info() {
   );
 
   return $info;
+}
+
+/**
+ * Renders the print page for the given object.
+ *
+ * Modules can either implement preprocess functions to append content onto the
+ * 'content' variable, or override the display by providing a theme suggestion.
+ *
+ * @param FedoraObject $object
+ *   The object.
+ *
+ * @return array
+ *   A renderable array.
+ */
+function islandora_print_object(FedoraObject $object) {
+  drupal_set_title($object->label);
+  return theme('islandora_object_print', array('object' => $object));
 }

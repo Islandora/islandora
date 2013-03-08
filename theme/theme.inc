@@ -123,3 +123,41 @@ function islandora_preprocess_islandora_default(&$variables) {
     $variables['islandora_thumbnail_url'] = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/TN/view';
   }
 }
+
+/**
+ * Implements hook_preprocess_theme().
+ */
+function islandora_preprocess_islandora_object_print(array &$variables) {
+  // Apply the print CSS in non print context.
+  $only_print_media = function($o) {
+    return $o['media'] == 'print';
+  };
+  $css = array_filter(drupal_add_css(), $only_print_media);
+  foreach ($css as $data => $options) {
+    $options['media'] = 'all';
+    drupal_add_css($data, $options);
+  }
+  // Allow modules to define their own theme suggestions for the given object.
+  // Suggestions are defined as islandora_object_print__CMODEL__PID. For
+  // example for the image object islandora:1234.
+  // islandora_object_print__islandora_imagecmodel
+  // islandora_object_print__islandora_imagecmodel__islandora_1234
+  // would be valid theme suggestions. This step up does not support objects
+  // with multiple content models in which each content model provides a theme
+  // suggestion.
+  $object = $variables['object'];
+  $pid = strtolower(preg_replace('/[^a-zA-Z0-9_]/', '_', $object->id));
+  $models = array_diff($object->models, array('fedora-system:FedoraObject-3.0'));
+  foreach ($models as $model) {
+    $model = strtolower(preg_replace('/[^a-zA-Z0-9_]/', '_', $model));
+    $suggestions = theme_get_suggestions(array($model, $pid), 'islandora_object_print');
+    $variables['theme_hook_suggestions'] = array_merge($variables['theme_hook_suggestions'], $suggestions);
+  }
+}
+
+/**
+ * Implements theme_hook().
+ */
+function theme_islandora_object_print(array &$variables) {
+  return drupal_render($variables['content']);
+}
