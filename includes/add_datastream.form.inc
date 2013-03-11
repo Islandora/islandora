@@ -32,7 +32,7 @@ function islandora_add_datastream_form(array $form, array &$form_state, FedoraOb
     '#attributes' => array(
       'enctype' => 'multipart/form-data',
     ),
-    'fieldset' => array(
+    'dsid' => array(
       '#type' => 'fieldset',
       '#title' => 'Add a datastream',
       '#collapsible' => FALSE,

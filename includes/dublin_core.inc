@@ -151,7 +151,8 @@ class DublinCore {
    */
   public static function importFromXMLString($dc_xml) {
     $dc_doc = new DomDocument();
-    if ($dc_doc->loadXML($dc_xml)) {
+    // a fix for the potential error of a missing DC (patching a possible fcrepo4 error)
+    if (!empty($dc_xml) && $dc_doc->loadXML($dc_xml)) {
       $oai_dc = $dc_doc->getElementsByTagNameNS('http://purl.org/dc/elements/1.1/', '*');
       $new_dc = new DublinCore();
       foreach ($oai_dc as $child) {

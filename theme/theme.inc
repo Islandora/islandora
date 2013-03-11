@@ -108,9 +108,19 @@ function islandora_preprocess_islandora_default(&$variables) {
   }
   $variables['datastreams'] = $datastreams;
   try {
-    $dc = $islandora_object['DC']->content;
-    $dc_object = DublinCore::importFromXMLString($dc);
-    $dc_array = $dc_object->asArray();
+    //pp,jm added missing value checks for fcrepo4
+    $datastream = $islandora_object['DC'];
+    if (isset($datastream)) {
+      $dc = $datastream->content;
+      $dc_object = DublinCore::importFromXMLString($dc);
+
+      if (isset($dc_object)) {
+        $dc_array = $dc_object->asArray();
+      }
+      else {
+        $dc_array = array();
+      }
+    }
   }
   catch (Exception $e) {
     drupal_set_message(t('Error retrieving object %s %t', array('%s' => $islandora_object->id, '%t' => $e->getMessage())), 'error', FALSE);
