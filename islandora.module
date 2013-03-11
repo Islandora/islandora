@@ -120,6 +120,7 @@ function islandora_menu() {
         FEDORA_METADATA_EDIT,
         FEDORA_ADD_DS,
         FEDORA_PURGE,
+        FEDORA_INGEST
       ), 2),
   );
 
