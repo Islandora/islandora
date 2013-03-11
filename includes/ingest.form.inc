@@ -31,8 +31,15 @@
  *   The form definition of the current step.
  */
 function islandora_ingest_form(array $form, array &$form_state, array $configuration) {
-  islandora_ingest_form_init_form_state_storage($form_state, $configuration);
-  return islandora_ingest_form_execute_step($form, $form_state);
+  try {
+    islandora_ingest_form_init_form_state_storage($form_state, $configuration);
+    return islandora_ingest_form_execute_step($form, $form_state);
+  }
+  catch(Exception $e) {
+    drupal_set_message($e->getMessage(), 'error');
+    return array(array(
+        '#markup' => l(t('Back'), 'javascript:window.history.back();', array('external' => TRUE))));
+  }
 }
 
 /**
@@ -42,21 +49,16 @@ function islandora_ingest_form(array $form, array &$form_state, array $configura
  *
  * @todo Add hook for manipulating/validating the configuration.
  *
+ * @see islandora_ingest_form()
+ *
  * @throws InvalidArgumentException
  *
  * @param array $configuration
  *   The key value pairs that are used to build the multi-paged ingest process.
- *
- * @see islandora_ingest_form()
- *
- * @return bool
- *   TRUE if the configuration is valid, FALSE otherwise.
  */
-function islandora_ingest_form_validiate_configuration(array $configuration) {
+function islandora_ingest_form_validate_configuration(array $configuration) {
   if (empty($configuration['models'])) {
-    $message = t('Ingest configuration not vaild, no models were given');
-    drupal_set_message($message, 'error');
-    throw new InvalidArgumentException($message);
+    throw new InvalidArgumentException('Ingest configuration not vaild, no models were given');
   }
 }
 
@@ -71,8 +73,8 @@ function islandora_ingest_form_validiate_configuration(array $configuration) {
  */
 function islandora_ingest_form_init_form_state_storage(array &$form_state, array $configuration) {
   if (empty($form_state['islandora'])) {
-    // Validate the configuration before using it.
-    islandora_ingest_form_validiate_configuration($configuration);
+    // Validate the configuration before we use it.
+    islandora_ingest_form_validate_configuration($configuration);
     $object = islandora_ingest_form_prepare_new_object($configuration);
     $form_state['islandora'] = array(
       'step_id' => NULL,
@@ -233,12 +235,19 @@ function islandora_ingest_form_decrement_step(array &$form_state) {
  *   The list of key/value pairs of configuration.
  */
 function islandora_ingest_get_approximate_steps(array $configuration) {
-  $fake_form_state = array(
+  try {
+    islandora_ingest_form_validate_configuration($configuration);
+  }
+  catch(InvalidArgumentException $e) {
+    // Don't log or display exception.
+    return array();
+  }
+  $stubbed_form_state = array(
     'islandora' => array(
       'shared_storage' => $configuration,
     ),
   );
-  $steps = islandora_ingest_form_get_steps($fake_form_state);
+  $steps = islandora_ingest_form_get_steps($stubbed_form_state);
   drupal_static_reset('islandora_ingest_form_get_steps');
   return $steps;
 }
