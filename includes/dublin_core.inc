@@ -151,7 +151,7 @@ class DublinCore {
    */
   public static function importFromXMLString($dc_xml) {
     $dc_doc = new DomDocument();
-    if ($dc_doc->loadXML($dc_xml)) {
+    if (!empty($dc_xml) && $dc_doc->loadXML($dc_xml)) {
       $oai_dc = $dc_doc->getElementsByTagNameNS('http://purl.org/dc/elements/1.1/', '*');
       $new_dc = new DublinCore();
       foreach ($oai_dc as $child) {
@@ -161,9 +161,7 @@ class DublinCore {
       }
       return $new_dc;
     }
-    else {
-      return NULL;
-    }
+    return NULL;
   }
 
 }

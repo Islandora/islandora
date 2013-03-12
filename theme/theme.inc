@@ -107,20 +107,16 @@ function islandora_preprocess_islandora_default(&$variables) {
     }
   }
   $variables['datastreams'] = $datastreams;
-  try {
-    $dc = $islandora_object['DC']->content;
-    $dc_object = DublinCore::importFromXMLString($dc);
+  // Objects in fcrepo4 don't always contain a DC datastream.
+  if (isset($islandora_object['DC'])) {
+    $dc_object = DublinCore::importFromXMLString($islandora_object['DC']->content);
     $dc_array = $dc_object->asArray();
-  }
-  catch (Exception $e) {
-    drupal_set_message(t('Error retrieving object %s %t', array('%s' => $islandora_object->id, '%t' => $e->getMessage())), 'error', FALSE);
   }
   $variables['dc_array'] = isset($dc_array) ? $dc_array : array();
   $variables['islandora_dublin_core'] = isset($dc_object) ? $dc_object : NULL;
   $variables['islandora_object_label'] = $islandora_object->label;
-  global $base_url;
   if (isset($islandora_object['TN'])) {
-    $variables['islandora_thumbnail_url'] = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/TN/view';
+    $variables['islandora_thumbnail_url'] = url("islandora/object/{$islandora_object->id}/datastream/TN/view");
   }
 }
 
