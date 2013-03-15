@@ -295,11 +295,15 @@ function islandora_ingest_form_execute_step(array $form, array &$form_state) {
  * @return array
  *   The stepified drupal form definition for the given step.
  */
-function islandora_ingest_form_stepify(array $form, array &$form_state) {
+function islandora_ingest_form_stepify(array $form, array &$form_state, $step) {
   $first_step = islandora_ingest_form_on_first_step($form_state);
   $last_step = islandora_ingest_form_on_last_step($form_state);
   $form['prev'] = $first_step ? NULL : islandora_ingest_form_previous_button($form_state);
   $form['next'] = $last_step ? islandora_ingest_form_ingest_button($form_state) : islandora_ingest_form_next_button($form_state);
+
+  // Allow for a hook_form_FORM_ID_alter().
+  drupal_alter(array('form_' . $step['form_id'], 'form'), $form, $form_state, $step['form_id']);
+
   return $form;
 }
 
