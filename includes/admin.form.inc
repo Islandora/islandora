@@ -108,6 +108,13 @@ function islandora_repository_admin(array $form, array &$form_state) {
     '#required' => TRUE,
   );
 
+  $form['islandora_tabs']['islandora_general']['islandora_uuid_generate'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('UUID PID Generation'),
+    '#default_value' => variable_get('islandora_uuid_generate', FALSE),
+    '#description' => t('Generate Fedora object PIDs with UUID v4 ID'),
+  );
+
   $form['islandora_tabs']['islandora_namespace'] = array(
     '#type' => 'fieldset',
     '#title' => t('Namespaces'),
