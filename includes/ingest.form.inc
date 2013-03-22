@@ -497,6 +497,10 @@ function islandora_ingest_form_ingest_button(array &$form_state) {
 function islandora_ingest_form_submit(array $form, array &$form_state) {
   foreach ($form_state['islandora']['objects'] as $object) {
     try {
+      if (variable_get('islandora_uuid_generate', FALSE)) {
+        $pid_parts = explode(':', $object->id);
+        $object->id = $object->repository->getNextIdentifier($pid_parts[0], TRUE);
+      }
       islandora_add_object($object);
       $form_state['redirect'] = "islandora/object/{$object->id}";
     }
