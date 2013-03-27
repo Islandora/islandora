@@ -1,110 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="islandora" default="build">
- <target name="build"
-   depends="prepare,lint,doxygen,phploc,pdepend,phpcs-ci,phpcpd,phpcb"/>
+ <target name="build" depends="clean,prepare,lint,phploc,code_sniff,phpcpd,pdepend,doxygen,phpcb,test" />
 
- <target name="clean" description="Cleanup build artifacts">
-  <delete dir="${basedir}/build/api"/>
-  <delete dir="${basedir}/build/code-browser"/>
-  <delete dir="${basedir}/build/coverage"/>
-  <delete dir="${basedir}/build/logs"/>
-  <delete dir="${basedir}/build/pdepend"/>
- </target>
+  <target name="clean" description="Cleanup build artifacts">
+      <delete dir="${basedir}/build/test" />
+      <delete dir="${basedir}/build/logs" />
+      <delete dir="${basedir}/build/pdepend" />
+      <delete dir="${basedir}/build/api" />
+      <delete dir="${basedir}/build/code-browser" />
+  </target>
 
- <target name="prepare" depends="clean"
-         description="Prepare for build">
-  <mkdir dir="${basedir}/build/api"/>
-  <mkdir dir="${basedir}/build/code-browser"/>
-  <mkdir dir="${basedir}/build/coverage"/>
-  <mkdir dir="${basedir}/build/logs"/>
-  <mkdir dir="${basedir}/build/pdepend"/>
- </target>
+  <target name="prepare" description="Prepares workspace for artifacts" >
+    <mkdir dir="${basedir}/build/test" />
+    <mkdir dir="${basedir}/build/logs" />
+    <mkdir dir="${basedir}/build/pdepend" />
+    <mkdir dir="${basedir}/build/api" />
+    <mkdir dir="${basedir}/build/code-browser" />
+  </target>
 
- <target name="lint">
-  <apply executable="php" failonerror="true">
-   <arg value="-l" />
+  <target name="lint" description="Perform syntax check of sourcecode files">
+    <apply executable="php" failonerror="true">
+      <arg value="-l" />
 
-   <fileset dir="${basedir}">
-    <include name="**/*.php" />
-    <modified />
-   </fileset>
-  </apply>
- </target>
+      <fileset dir="${basedir}">
+        <include name="**/*.php" />
+        <include name="**/*.inc" />
+        <include name="**/*.module" />
+        <include name="**/*.install" />
+        <include name="**/*.test" />
+        <modified />
+      </fileset>
+    </apply>
+  </target>
 
- <target name="phploc" description="Measure project size using PHPLOC">
-  <exec executable="phploc">
-   <arg value="--log-csv" />
-   <arg value="${basedir}/build/logs/phploc.csv" />
-   <arg path="${basedir}" />
-  </exec>
- </target>
+  <target name="phploc" description="Measure project size using PHPLOC">
+    <exec executable="phploc">
+      <arg line="--log-csv ${basedir}/build/logs/phploc.csv --exclude build --exclude css --exclude images --exclude xml --names *.php,*.module,*.inc,*.test,*.install ${basedir}" />
+    </exec>
+  </target>
 
- <target name="pdepend"
-         description="Calculate software metrics using PHP_Depend">
-  <exec executable="pdepend">
-   <arg value="--jdepend-xml=${basedir}/build/logs/jdepend.xml" />
-   <arg value="--jdepend-chart=${basedir}/build/pdepend/dependencies.svg" />
-   <arg value="--overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg" />
-   <arg path="${basedir}" />
-  </exec>
- </target>
+  <target name="code_sniff" description="Checks the code for Drupal coding standard violations" >
+    <exec executable="phpcs">
+        <arg line="--standard=Drupal --report=checkstyle --report-file=${basedir}/build/logs/checkstyle.xml --extensions=php,inc,test,module,install --ignore=build/,xml/,images/,css/ ${basedir}" />
+    </exec>
+  </target>
 
- <target name="phpcs"
-         description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
-  <exec executable="phpcs">
-   <arg value="--standard=Drupal" />
-   <arg value="--extensions=php" />
-   <arg value="--ignore=build/" />
-   <arg path="${basedir}" />
-  </exec>
- </target>
+  <target name="phpcpd" description="Copy/Paste code detection">
+    <exec executable="phpcpd">
+      <arg line="--log-pmd ${basedir}/build/logs/pmd-cpd.xml --exclude build --exclude css --exclude images --exclude xml --names *.php,*.module,*.inc,*.test,*.install ${basedir}" />
+    </exec>
+  </target>
 
- <target name="phpcs-ci"
-         description="Find coding standard violations using PHP_CodeSniffer creating a log file for the continuous integration server">
-  <exec executable="phpcs" output="/dev/null">
-   <arg value="--report=checkstyle" />
-   <arg value="--extensions=php" />
-   <arg value="--ignore=build/" />
-   <arg value="--report-file=${basedir}/build/logs/checkstyle.xml" />
-   <arg value="--standard=Drupal" />
-   <arg path="${basedir}" />
-  </exec>
- </target>
+  <target name="pdepend" description="Calculate software metrics using PHP_Depend">
+    <exec executable="pdepend">
+      <arg line="--jdepend-xml=${basedir}/build/logs/jdepend.xml --jdepend-chart=${basedir}/build/pdepend/dependencies.svg --overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg ${basedir}"/>
+    </exec>
+  </target>
 
- <target name="phpcpd" description="Find duplicate code using PHPCPD">
-  <exec executable="phpcpd">
-   <arg value="--log-pmd" />
-   <arg value="${basedir}/build/logs/pmd-cpd.xml" />
-   <arg path="${basedir}" />
-  </exec>
- </target>
+  <target name="doxygen" description="Generate API documentation with doxygen" depends="prepare">
+    <exec executable="bash">
+        <arg line='-c "sed -i s/PROJECT_NUMBER\ \ \ \ \ \ \ \ \ =/PROJECT_NUMBER\ \ \ \ \ \ \ \ \ =\ `git log -1 --pretty=format:%h`/ build/Doxyfile"'/>
+    </exec>
+    <exec executable="doxygen">
+      <arg line="${basedir}/build/Doxyfile" />
+    </exec>
+    <exec executable="git">
+      <arg line="checkout ${basedir}/build/Doxyfile"/>
+    </exec>
+  </target>
 
- <target name="doxygen" description="Generate API documentation with doxygen" depends="prepare">
-  <echo file="${basedir}/build/Doxyfile" append="true" message="PROJECT_NUMBER = "/>
-  <exec executable="git" output="${basedir}/build/Doxyfile" append="true">
-    <arg value="log" />
-    <arg value="-1" />
-    <arg value="--pretty=format:%h" />
-  </exec>
-  <exec executable="doxygen">
-   <arg path="${basedir}/build/Doxyfile" />
-  </exec>
-  <exec executable="git">
-    <arg value="checkout" />
-    <arg path="${basedir}/build/Doxyfile" />
-  </exec>
- </target>
+  <target name="phpcb" description="Aggregate tool output with PHP_CodeBrowser">
+    <exec executable="phpcb">
+        <arg line="--log ${basedir}/build/logs --source ${basedir} --output ${basedir}/build/code-browser"/>
+    </exec>
+  </target>
 
- <target name="phpcb"
-         description="Aggregate tool output with PHP_CodeBrowser">
-  <exec executable="phpcb">
-   <arg value="--log" />
-   <arg path="${basedir}/build/logs" />
-   <arg value="--source" />
-   <arg path="${basedir}" />
-   <arg value="--output" />
-   <arg path="${basedir}/build/code-browser" />
-  </exec>
- </target>
+  <target name="test">
+    <exec executable="bash">
+        <arg line='-c "php ../../../../scripts/run-tests.sh --xml ${basedir}/build/test Islandora"' />
+    </exec>
+  </target>
 </project>
