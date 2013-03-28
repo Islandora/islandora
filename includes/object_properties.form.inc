@@ -30,7 +30,7 @@ function islandora_object_properties_form(array $form, array &$form_state, Fedor
       '#title' => t('Item Label'),
       '#default_value' => $object->label,
       '#required' => 'TRUE',
-      '#description' => t('A Human readable label'),
+      '#description' => t('A human-readable label'),
       // Double the normal length.
       '#size' => 120,
       // Max length for a Fedora Label.
@@ -43,14 +43,14 @@ function islandora_object_properties_form(array $form, array &$form_state, Fedor
       '#title' => t('Owner'),
       '#default_value' => $object->owner,
       '#required' => FALSE,
-      '#description' => t('The owner id'),
+      '#description' => t('The owner\'s account name'),
       '#type' => 'textfield',
     ),
     'object_state' => array(
       '#title' => t('State'),
       '#default_value' => $object->state,
       '#required' => TRUE,
-      '#description' => t('The items state one of active, inactive or deleted'),
+      '#description' => t('The object\'s state (active, inactive or deleted)'),
       '#type' => 'select',
       '#options' => array('A' => 'Active', 'I' => 'Inactive', 'D' => 'Deleted'),
     ),

@@ -39,7 +39,7 @@ function islandora_add_datastream_form(array $form, array &$form_state, FedoraOb
       '#collapsed' => FALSE,
       'dsid' => array(
         '#title' => 'Datastream ID',
-        '#description' => t("An ID for this stream that is unique to this object. Must start with a letter and contain only alphanumeric characters and dashes and underscores. Datastreams that are defined by the content model don't currently exist: <b>@unused_dsids</b>.", array('@unused_dsids' => $unused_datastreams)),
+        '#description' => t("An ID for this stream that is unique to this object. Must start with a letter and contain only alphanumeric characters, dashes and underscores. The following datastreams are defined by this content model but don't currently exist: <b>@unused_dsids</b>.", array('@unused_dsids' => $unused_datastreams)),
       ),
       '#type' => 'textfield',
       '#size' => 64,
@@ -57,7 +57,7 @@ function islandora_add_datastream_form(array $form, array &$form_state, FedoraOb
       '#required' => TRUE,
       '#size' => 64,
       '#maxlength' => 64,
-      '#description' => t('A Human readable label'),
+      '#description' => t('A human-readable label'),
       '#type' => 'textfield',
       '#element_validate' => array('islandora_add_datastream_form_field_does_not_contain_a_forward_slash'),
     ),

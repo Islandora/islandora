@@ -146,7 +146,7 @@ function islandora_repository_admin(array $form, array &$form_state) {
       '#type' => 'textfield',
       '#title' => t('PID namespaces allowed in this Drupal install'),
       '#default_value' => variable_get('islandora_pids_allowed', 'default: demo: changeme: ilives: islandora-book: books: newspapers: '),
-      '#description' => t('A space separated list of PID namespaces that users are permitted to access from this Drupal installation. <br /> This could be more than a simple namespace ie demo:mydemos. <br /> islandora: is reserved and is always allowed.'),
+      '#description' => t('A list of PID namespaces, separated by spaces, that users are permitted to access from this Drupal installation. <br /> This could be more than a simple namespace, e.g. <b>demo:mydemos</b>. <br /> The namespace <b>islandora:</b> is reserved, and is always allowed.'),
       '#weight' => 0,
     );
   }
