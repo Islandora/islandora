@@ -144,7 +144,8 @@ function islandora_ingest_form_get_step(array &$form_state, $step_id = NULL) {
 function islandora_ingest_form_get_current_step_id(array &$form_state) {
   if (empty($form_state['islandora']['step_id'])) {
     $steps = islandora_ingest_form_get_steps($form_state);
-    return array_shift(array_keys($steps));
+    $keys = array_keys($steps);
+    return array_shift($keys);
   }
   return $form_state['islandora']['step_id'];
 }
