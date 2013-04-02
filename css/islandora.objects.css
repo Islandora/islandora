@@ -1,0 +1,39 @@
+/**
+ * @file
+ * Styles for rendering grids/lists of objects.
+ */
+.islandora-objects-display-switch {
+  float: right;
+}
+.islandora-objects-grid-item {
+  display: inline-block;
+  width: 20%;
+  min-width: 100px;
+  min-height: 180px;
+  display: -moz-inline-stack;
+  display: inline-block;
+  vertical-align: top;
+  margin: 1.5em 1.84%;
+  zoom: 1;
+  *display: inline;
+  _height: 180px;
+}
+.islandora-objects-list-item {
+  padding-bottom: 1.5em;
+  border-bottom: 1px solid #ddd;
+}
+.islandora-objects-list-item .islandora-object-thumb {
+  clear: left;
+  float: left;
+  padding: 3px 0 0;
+  text-align: center;
+  width: 100px;
+}
+.islandora-objects-list-item .islandora-object-caption, .islandora-objects-list-item .islandora-object-description {
+  margin: 0 0 0 130px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+.islandora-object-thumb img {
+  width: 100%;
+}

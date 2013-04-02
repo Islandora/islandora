@@ -286,6 +286,29 @@ function islandora_theme() {
       'file' => 'theme/theme.inc',
       'variables' => array('object' => NULL, 'content' => array()),
     ),
+    // Render a bunch of objects as either a grid or a list.
+    'islandora_objects' => array(
+      'file' => 'theme/theme.inc',
+      'template' => 'theme/islandora-objects',
+      'variables' => array(
+        'objects' => NULL,
+        'display' => NULL,
+        'page_size' => 20,
+        'limit' => 10,
+      ),
+    ),
+    // Render a bunch of objects as a grid.
+    'islandora_objects_grid' => array(
+      'file' => 'theme/theme.inc',
+      'template' => 'theme/islandora-objects-grid',
+      'variables' => array('objects' => NULL),
+    ),
+    // Render a bunch of objects as a list.
+    'islandora_objects_list' => array(
+      'file' => 'theme/theme.inc',
+      'template' => 'theme/islandora-objects-list',
+      'variables' => array('objects' => NULL),
+    ),
   );
 }
 
