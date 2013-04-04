@@ -1,0 +1,4 @@
+language: php
+branches:
+  only:
+    - 7.x
