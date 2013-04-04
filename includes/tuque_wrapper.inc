@@ -36,7 +36,7 @@ $islandora_module_path = drupal_get_path('module', 'islandora');
  */
 function islandora_alter_object(AbstractFedoraObject $object, array &$context) {
   module_load_include('inc', 'islandora', 'includes/utilities');
-  drupal_alter(islandora_build_hook_list('islandora_object', $object->models) ,$object, $context);
+  drupal_alter(islandora_build_hook_list('islandora_object', $object->models), $object, $context);
 }
 
 /**

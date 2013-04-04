@@ -18,7 +18,8 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
     // Always enable islandora.
     $args[] = 'islandora';
     parent::setUp($args);
-    // Its possible test are running before class autoloading
+
+    // Its possible test are running before class autoloading.
     module_load_include('inc', 'islandora', 'includes/tuque');
     module_load_include('inc', 'islandora', 'includes/tuque_wrapper');
 

@@ -13,6 +13,7 @@ export CATALINA_HOME='.'
 cd $HOME
 pyrus channel-discover pear.drush.org
 pyrus install drush/drush
+pyrus install pear/PHP_CodeSniffer
 phpenv rehash
 drush dl --yes drupal
 cd drupal-*
@@ -22,6 +23,8 @@ ln -s $TRAVIS_BUILD_DIR sites/all/modules/islandora
 mv sites/all/modules/islandora/tests/travis.test_config.ini sites/all/modules/islandora/tests/test_config.ini
 mkdir sites/all/libraries
 ln -s $HOME/tuque sites/all/libraries/tuque
+drush dl --yes coder
+drush en --yes coder_review
 drush en --yes simpletest
 drush en --user=1 --yes islandora
 drush cc all
