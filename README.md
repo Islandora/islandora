@@ -1,16 +1,10 @@
-CONTENTS OF THIS FILE
----------------------
+BUILD STATUS
+------------
+Current build status:
+[![Build Status](https://travis-ci.org/Islandora/islandora.png?branch=7.x)](https://travis-ci.org/Islandora/islandora)
 
- * summary
- * requirements
- * installation
- * configuration
- * customization
- * troubleshooting
- * faq
- * contact
- * sponsors
-
+CI Server:
+http://jenkins.discoverygarden.ca:8080
 
 SUMMARY
 -------
