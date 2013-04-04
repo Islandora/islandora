@@ -1,0 +1,14 @@
+language: php
+php:
+  - 5.3.3
+  - 5.4
+branches:
+  only:
+    - 7.x
+env:
+  - FEDORA_VERSION="3.5"
+before_install:
+  - $TRAVIS_BUILD_DIR/tests/travis_setup.sh
+  - cd $HOME/drupal-*
+script: 
+  - drush test-run --uri=http://localhost:8081 Islandora

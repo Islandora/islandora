@@ -18,6 +18,10 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
     // Always enable islandora.
     $args[] = 'islandora';
     parent::setUp($args);
+    // Its possible test are running before class autoloading
+    module_load_include('inc', 'islandora', 'includes/tuque');
+    module_load_include('inc', 'islandora', 'includes/tuque_wrapper');
+
     $this->configuration = $this->getTestConfiguration();
     if ($this->configuration['use_drupal_filter']) {
       $this->backUpDrupalFilter();

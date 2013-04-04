@@ -32,7 +32,7 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
    * @see IslandoraWebTestCase::setUp()
    */
   public function setUp() {
-    parent::setUp('islandora_hooks_test', 'devel');
+    parent::setUp('islandora_hooks_test');
     $this->repository = $this->admin->repository;
     $this->purgeTestObjects();
   }
