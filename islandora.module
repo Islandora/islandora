@@ -245,6 +245,14 @@ function islandora_menu() {
     'type' => MENU_SUGGESTED_ITEM,
     'access arguments' => array(FEDORA_INGEST),
   );
+  $items['islandora/object/%islandora_object/download_clip'] = array(
+    'page callback' => 'islandora_download_clip',
+    'page arguments' => array(2),
+    'type' => MENU_CALLBACK,
+    'access callback' => 'islandora_object_access_callback',
+    'access arguments' => array(FEDORA_VIEW_OBJECTS, 2),
+    'load arguments' => array(2),
+  );
   return $items;
 }
 
@@ -1069,7 +1077,29 @@ function islandora_entity_property_info() {
  * @return array
  *   A renderable array.
  */
-function islandora_print_object(FedoraObject $object) {
+function islandora_print_object(AbstractObject $object) {
   drupal_set_title($object->label);
   return theme('islandora_object_print', array('object' => $object));
+}
+
+/**
+ * Menu callback downloads the given clip.
+ */
+function islandora_download_clip(AbstractObject $object) {
+  if (isset($_GET['clip'])) {
+    $is_https = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on';
+    $http_protocol = $is_https ? 'https' : 'http';
+    $url = $http_protocol . '://' . $_SERVER['HTTP_HOST'] . $_GET['clip'];
+    $filename = $object->label;
+    header("Content-Disposition: attachment; filename=\"{$filename}.jpg\"");
+    header("Content-type: image/jpeg");
+    header("Content-Transfer-Encoding: binary");
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    $response = curl_exec($ch);
+    curl_close($ch);
+  }
+  exit();
 }
