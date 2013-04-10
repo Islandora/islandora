@@ -12,8 +12,11 @@ export CATALINA_HOME='.'
 ./bin/startup.sh
 cd $HOME
 pyrus channel-discover pear.drush.org
+pyrus channel-discover pear.phpqatools.org
+pyrus channel-discover pear.netpirates.net
 pyrus install drush/drush
 pyrus install pear/PHP_CodeSniffer
+pyrus install pear.phpunit.de/phpcpd
 phpenv rehash
 drush dl --yes drupal
 cd drupal-*
