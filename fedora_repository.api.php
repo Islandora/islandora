@@ -152,3 +152,23 @@ function hook_fedora_repository_can_ingest($collection_pid) {
 function hook_fedora_repository_check_perm($op, $pid = NULL, $as_user = NULL) {
   return NULL;
 }
+
+/**
+ * Implements hook_islandora_object_event().
+ *
+ * This hook allows modules to listen to most object events; anything that goes through
+ * Fedora_Item::soap_call will be passed to hook implementers.
+ *
+ * Implementing code should be constructed to avoid infinite loops if cascading functions.
+ *
+ * @param $function
+ *   The SOAP function that has been called.
+ * @param $parameters
+ *   The parameters sent to the SOAP call.
+ * @param $result
+ *   The result of the SOAP call.
+ */
+function hook_islandora_object_event($function, $parameters, $result) {
+  // Respond to a SOAP event.
+}
+

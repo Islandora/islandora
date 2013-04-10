@@ -1475,6 +1475,7 @@ RDF;
       watchdog('fedora_repository', 'Error Trying to call SOAP function "%func". Exception: @e in @f(@l)\n@t', array('%func' => $function, '@e' => $e->getMessage(), '@f' => $e->getFile(), '@l' => $e->getLine(), '@t' => $e->getTraceAsString()), NULL, WATCHDOG_ERROR);
       return NULL;
     }
+    module_invoke_all('islandora_object_event', $function, $parameters, $result);
     return $result;
   }
 
