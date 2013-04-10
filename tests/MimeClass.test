@@ -10,8 +10,8 @@
 //file_mimetype_mapping wasn't getting loaded. 
 //the solution was to include it in the test
 
-$path = "/drupal7/includes/file.mimetypes.inc";
-require_once $_SERVER['DOCUMENT_ROOT'] . $path;
+$path = "/includes/file.mimetypes.inc";
+require_once DRUPAL_ROOT . $path;
 
 class MimeClassTestCase extends DrupalWebTestCase {
   protected $privileged_user;
