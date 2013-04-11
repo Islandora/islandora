@@ -9,10 +9,11 @@ env:
   - FEDORA_VERSION="3.5"
 before_install:
   - export ISLANDORA_DIR=$TRAVIS_BUILD_DIR
-  - $TRAVIS_BUILD_DIR/tests/travis_setup.sh
+  - $TRAVIS_BUILD_DIR/tests/scripts/travis_setup.sh
   - cd $HOME/drupal-*
 script:
   - ant -buildfile sites/all/modules/islandora/build.xml lint
+  - $ISLANDORA_DIR/tests/scripts/line_endings.sh sites/all/modules/islandora
   - drush dcs sites/all/modules/islandora
   - phpcpd --names *.module,*.inc,*.test sites/all/modules/islandora
   - drush test-run --uri=http://localhost:8081 Islandora
