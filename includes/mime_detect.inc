@@ -1,126 +1,130 @@
 <?php
-
-
 /**
  * @file
- *
  * Replacement for the original islandora MimeClass.
  * Does essentially the same thing, just using the built in drupal 7
  * mime system.
  *
  * A nice added bonus is that this new class will put a note in watchdog when
  * it encounters a filetype it doesnt know.
- *
  */
 
 class MimeDetect {
 
-  private $mime_types;
-  private $ext_types;
+  const DEFAULT_MIMETYPE = 'application/octet-stream';
+  const DEFAULT_EXTENSION = 'bin';
+
+  protected $mimeTypes;
+  protected $extTypes;
 
   /**
-   * Construtor
+   * Construtor.
    */
   public function __construct() {
-    //Drupal returns the mimetype list as a double assoc array with two entries:
-    //mimetypes: Integer array of mimetypes
-    //extensions: Assoc array of extensions
+    // Mimetype list returned as a double assoc array with two entries:
+    // Mimetypes: Integer array of mimetypes
+    // Extensions: Assoc array of extensions
     //
-    //The extension array can be used as a key to get the value in the mimetypes
-    //array.
-    //
-    //Example  if $extensions['png'] == 5, then $mimetypes[5] = 'image/png'
-    //we want to combine this into 1 array for easy access.
-
+    // Extension array can be used as a key to get mimetypes
+    // Example if $extensions['png'] == 5, then
+    // $mimetypes[5] = 'image/png'
+    // We want to combine this into 1 array for easy access.
     $temp = file_mimetype_mapping();
 
     $temp_mime_types = $temp['mimetypes'];
     $temp_mime_ext = $temp['extensions'];
 
-    //free the memory in temp since we don't need it anymore
+    // Free the memory in temp since we don't need it anymore.
     unset($temp);
 
-    //combine the two arrays into one.
-    foreach ($temp_mime_ext as $key => $val ) {
+    // Combine the two arrays into one.
+    foreach ($temp_mime_ext as $key => $val) {
       $this->mime_types[$key] = $temp_mime_types[$val];
     }
 
-    //flip the mime_type array to make the ext array
+    // Flip the mime_type array to make the ext array.
     $this->ext_types = array_flip($this->mime_types);
   }
 
   /**
-   * function: getType
-   * description: An alias to get_mimetype,
-   * for backwards-compatibility with our old mimetype class.
+   * For backwards-compatibility with our old mimetype class.
    *
-   * @param type $filename
-   * @return type
-  */
-    function getType($filename) {
-      return $this->getMimetype($filename);
+   * @param string $filename
+   *   Filename to convert to mimetype.
+   *
+   * @return data
+   *   Returns a string with the mimetype for the file.
+   */
+  public function getType($filename) {
+    return $this->getMimetype($filename);
   }
 
   /**
-   * function: get_mimetype
-   * description: returns a mimetype associated with the
-   *   file extension of $filename
+   * Returns a mimetype associated with the file extension of $filename.
    *
-   * @param type $filename
-   * @param type $debug
+   * @param string $filename
+   *   The filename we want the mime type of.
+   *
+   * @param bool $debug
+   *   Enable or disable debug output mode.
+   *  
    * @return string
-   *   mimetype associated with the file extension of $filename
+   *   Mimetype associated with the file extension of $filename.
    */
   public function getMimetype($filename, $debug = FALSE) {
-    //the file extension will be the last index in the exploded string
-    $ext = @end(explode('.' , $filename));
+    // The file extension will be the last index in the exploded string.
+    $ext = @end(explode('.', $filename));
     $ext = strtolower($ext);
 
-    //check the array for a predetermined mime type. If not found, add a warning
-    //to the watch dog and use the system command to get a value
+    // Check the array for a predetermined mime type.
+    // If type not found, add a warning to watchdog.
     if (!empty($this->mime_types[$ext])) {
       if (TRUE === $debug) {
         $return_type = $this->mime_types[$ext];
         return array('mime_type' => $return_type, 'method' => 'from_array');
       }
-    
+
       return $this->mime_types[$ext];
     }
     else {
-      //this file was not in the drupal mime system.
-      //add a line to the watchdog informing us of this incident
+      // This file was not in the drupal mime system.
+      // Add a line to the watchdog informing us of this incident.
       $err_msg = 'Found a file extension not covered in the drupal mime func:';
-      watchdog('MimeClass', $err_msg . $ext );
+      watchdog('MimeClass', $err_msg . $ext);
     }
 
-    //by default return application octet stream
+    // By default return application octet stream.
     if (TRUE == $debug) {
       return array('mime_type' => 'application/octet-stream', 'method' => 'last_resort');
     }
-      
+
     return 'application/octet-stream';
   }
 
   /**
-   * function: get_extension
-   * description: returns *one* valid file extension for a given $mime_type
+   * Returns *one* valid file extension for a given $mime_type.
    *
-   * @param type $mime_type
-   * @param type $debug
-   * @return type
+   * @param string $type
+   *   String containing the mimetype
+   *
+   * @param bool $debug
+   *   Toggle debug mode on/off
+   *
+   * @return string
+   *   Return the file extension
    */
   public function getExtension($type, $debug = FALSE) {
-    
+
     if (!empty($this->ext_types[$type])) {
       if (TRUE == $debug) {
         return array('extension' => $this->ext_types[$type], 'method' => 'from_array');
-        }
+      }
       return $this->ext_types[$type];
     }
-    else{
-      //return bin by default... this could cause errors if handled incorrectly
-      //and probably should return false or -1 or something to be handled 
-      //client side.
+    else {
+      // Return bin by default. This could cause errors.
+      // Function should return false or -1 or something to be handled.
+      // Client side.
       if (TRUE == $debug) {
         return array('extension' => 'bin', 'method' => 'last_resort');
       }
@@ -129,4 +133,3 @@ class MimeDetect {
   }
 
 }
-
