@@ -8,6 +8,7 @@ branches:
 env:
   - FEDORA_VERSION="3.5"
 before_install:
+  - export ISLANDORA_DIR=$TRAVIS_BUILD_DIR
   - $TRAVIS_BUILD_DIR/tests/travis_setup.sh
   - cd $HOME/drupal-*
 script:
