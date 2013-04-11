@@ -238,13 +238,6 @@ function islandora_menu() {
     'access arguments' => array(FEDORA_VIEW_OBJECTS, 2),
     'load arguments' => array(2),
   );
-  $items['islandora/ingest'] = array(
-    'title' => 'Add an Object',
-    'page callback' => 'islandora_ingest_callback',
-    'file' => 'includes/ingest.menu.inc',
-    'type' => MENU_SUGGESTED_ITEM,
-    'access arguments' => array(FEDORA_INGEST),
-  );
   $items['islandora/object/%islandora_object/download_clip'] = array(
     'page callback' => 'islandora_download_clip',
     'page arguments' => array(2),
