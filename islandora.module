@@ -676,7 +676,8 @@ function islandora_view_object(FedoraObject $object) {
   $page_number = (empty($_GET['page'])) ? '1' : $_GET['page'];
   $page_size = (empty($_GET['pagesize'])) ? '10' : $_GET['pagesize'];
   $output = array();
-  foreach (islandora_build_hook_list(ISLANDORA_VIEW_HOOK, $object->models) as $hook) {
+  $hooks = islandora_build_hook_list(ISLANDORA_VIEW_HOOK, $object->models);
+  foreach ($hooks as $hook) {
     // @todo Remove page number and size from this hook, implementers of the
     // hook should use drupal page handling directly.
     $temp = module_invoke_all($hook, $object, $page_number, $page_size);
@@ -689,7 +690,7 @@ function islandora_view_object(FedoraObject $object) {
     $output = islandora_default_islandora_view_object($object);
   }
   arsort($output);
-  drupal_alter(ISLANDORA_VIEW_HOOK, $object, $output);
+  drupal_alter($hooks, $object, $output);
   return implode('', $output);
 }
 
