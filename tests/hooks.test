@@ -32,7 +32,7 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
    * @see IslandoraWebTestCase::setUp()
    */
   public function setUp() {
-    parent::setUp('islandora_hooks_test', 'devel');
+    parent::setUp('islandora_hooks_test');
     $this->repository = $this->admin->repository;
     $this->purgeTestObjects();
   }
@@ -67,7 +67,7 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
         $object->label = "Don't Block";
         $this->repository->purgeObject($object->id);
       }
-      catch(Exception $e) {
+      catch (Exception $e) {
         // Meh... Either it didn't exist or the purge failed.
       }
     }
@@ -95,7 +95,7 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
       $this->fail('Blocked ingest should throw an Exception.');
       $this->repository->purgeObject($object->id);
     }
-    catch(Exception $e) {
+    catch (Exception $e) {
       $this->pass('Ingest blocked and exception thrown.');
       $this->assert($_SESSION['islandora_hooks']['alter'][ISLANDORA_OBJECT_INGESTED_HOOK], 'Called "hook_islandora_object_alter" when blocking ingesting via FedoraRepository::ingestObject.');
       $this->assertFalse($_SESSION['islandora_hooks']['hook'][ISLANDORA_OBJECT_INGESTED_HOOK], 'Did not called ISLANDORA_OBJECT_INGESTED_HOOK when blocking ingesting via FedoraRepository::ingestObject.');
@@ -115,7 +115,7 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
       $object->label = 'block';
       $this->fail('Blocked modify should throw an Exception.');
     }
-    catch(Exception $e) {
+    catch (Exception $e) {
       $this->pass('Modify blocked and exception thrown.');
       $this->assertNotEqual($object->label, 'block', 'Modification did not stick.');
       $this->assert($_SESSION['islandora_hooks']['alter'][ISLANDORA_OBJECT_MODIFIED_HOOK], 'Called "hook_islandora_object_alter" when blocking modifying via set magic functions.');
@@ -149,7 +149,7 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
       $this->repository->purgeObject($object->id);
       $this->fail('Blocked modify should throw an Exception.');
     }
-    catch(Exception $e) {
+    catch (Exception $e) {
       $this->pass('Modify blocked and exception thrown.');
       $this->assert($_SESSION['islandora_hooks']['alter'][ISLANDORA_OBJECT_PURGED_HOOK], 'Called "hook_islandora_object_alter" when blocking purge via FedoraRepository::purgeObject.');
       $this->assertFalse($_SESSION['islandora_hooks']['hook'][ISLANDORA_OBJECT_PURGED_HOOK], 'Called ISLANDORA_OBJECT_PURGED_HOOK when blocking purge via FedoraRepository::purgeObject.');
@@ -191,7 +191,7 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
       $ds->label = 'block';
       $this->fail('Blocked modify should throw an Exception.');
     }
-    catch(Exception $e) {
+    catch (Exception $e) {
       $this->pass('Modify blocked and exception thrown.');
       $this->assert($_SESSION['islandora_hooks']['alter'][ISLANDORA_DATASTREAM_MODIFIED_HOOK], 'Called "hook_islandora_datastream_alter" when blocking modifying via set magic functions.');
       $this->assertFALSE($_SESSION['islandora_hooks']['hook'][ISLANDORA_DATASTREAM_MODIFIED_HOOK], 'Called ISLANDORA_DATASTREAM_MODIFIED_HOOK when blocking modifying via set magic functions.');
