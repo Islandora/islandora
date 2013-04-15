@@ -966,7 +966,7 @@ function islandora_delete_object(FedoraObject &$object) {
     $object = NULL;
     return TRUE;
   }
-  catch(Exception $e) {
+  catch (Exception $e) {
     // Exception message gets logged in Tuque Wrapper.
     return FALSE;
   }

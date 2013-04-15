@@ -205,7 +205,7 @@ class IslandoraFedoraApiM extends FedoraApiM {
       }
       return $ret;
     }
-    catch(Exception $e) {
+    catch (Exception $e) {
       watchdog('islandora', 'Failed to modify datastream @dsid from @pid</br>code: @code<br/>message: @msg', array(
           '@pid' => $pid,
           '@dsid' => $dsid,
@@ -239,7 +239,7 @@ class IslandoraFedoraApiM extends FedoraApiM {
       }
       return $ret;
     }
-    catch(Exception $e) {
+    catch (Exception $e) {
       watchdog('islandora', 'Failed to modify object: @pid</br>code: @code<br/>message: @msg', array(
           '@pid' => $pid,
           '@code' => $e->getCode(),
@@ -281,7 +281,7 @@ class IslandoraFedoraApiM extends FedoraApiM {
           return $ret;
       }
     }
-    catch(Exception $e) {
+    catch (Exception $e) {
       watchdog('islandora', 'Failed to purge datastream @dsid from @pid</br>code: @code<br/>message: @msg', array(
           '@pid' => $pid,
           '@dsid' => $dsid,
@@ -325,7 +325,7 @@ class IslandoraFedoraApiM extends FedoraApiM {
           return $ret;
       }
     }
-    catch(Exception $e) {
+    catch (Exception $e) {
       watchdog('islandora', 'Failed to purge object @pid</br>code: @code<br/>message: @msg', array(
           '@pid' => $pid,
           '@code' => $e->getCode(),

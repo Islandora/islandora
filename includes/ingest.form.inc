@@ -35,7 +35,7 @@ function islandora_ingest_form(array $form, array &$form_state, array $configura
     islandora_ingest_form_init_form_state_storage($form_state, $configuration);
     return islandora_ingest_form_execute_step($form, $form_state);
   }
-  catch(Exception $e) {
+  catch (Exception $e) {
     drupal_set_message($e->getMessage(), 'error');
     return array(array(
         '#markup' => l(t('Back'), 'javascript:window.history.back();', array('external' => TRUE))));
@@ -242,7 +242,7 @@ function islandora_ingest_get_approximate_steps(array $configuration) {
   try {
     islandora_ingest_form_validate_configuration($configuration);
   }
-  catch(InvalidArgumentException $e) {
+  catch (InvalidArgumentException $e) {
     // Don't log or display exception.
     return array();
   }
