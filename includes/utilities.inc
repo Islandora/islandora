@@ -380,18 +380,13 @@ function islandora_get_datastreams_requirements_from_models(array $models) {
  *   determine what datastreams are required.
  *
  * @return array
- *   The DS-COMPOSITE-MODEL defined datastreams that are required for the given
- *   object.
- *
- * @code
- *   array(
- *     'DC' => array(
- *       'id' => 'DC',
- *       'mime' => 'text/xml',
- *       'optional' => FALSE,
- *     )
- *   )
- * @endcode
+ *   An associative array mapping datastream IDs to associative arrays
+ *   containing the values parsed from the DS-COMPOSITE-MODEL on the given
+ *   object--of the form:
+ *   - DSID: A datastream ID being described.
+ *     - "id": A string containing ID of the datastream.
+ *     - "mime": A array containing MIME-types the stream may have.
+ *     - "optional": A boolean indicating if the given stream is optional.
  */
 function islandora_get_datastreams_requirements_from_content_model(FedoraObject $object) {
   if (empty($object[DS_COMP_STREAM])) {
@@ -621,33 +616,24 @@ function islandora_system_settings_form_default_value($name, $default_value, arr
 /**
  * Returns basic information about DS-COMPOSITE-MODEL.
  *
+ * @deprecated
+ *   The pre-existing--and more flexible--
+ *   islandora_get_datastreams_requirements_from_content_model() should be
+ *   preferred, as it addresses the case where a stream can be allowed to have
+ *   one of a set of mimetypes (this functions appears to only return the last
+ *   declared mimetype for a given datastream).
+ *
  * @param string $pid
- *   PID of content model containing DS_COMP stream.
+ *   The PID of content model containing DS_COMP stream.
  *
  * @return array
- *   array of values in the following form
- *
- * [DC] => Array
- *       (
- *           [mimetype] => text/xml
- *       )
- *
- *   [MODS] => Array
- *       (
- *           [optional] => true
- *           [mimetype] => text/xml
- *       )
- *
- *   [RELS-EXT] => Array
- *       (
- *           [mimetype] => application/rdf+xml
- *       )
- *
- *   [RELS-INT] => Array
- *       (
- *           [optional] => true
- *           [mimetype] => application/rdf+xml
- *      )
+ *   An associative array mapping datastream IDs to an associative array
+ *   representing the parsed DS-COMPOSITE-MODEL of the form:
+ *   - DSID: A string containing the datastream ID.
+ *     - "mimetype": A string containing the last mimetype declared for the
+ *       given datastream ID.
+ *     - "optional": An optional boolean indicating that the given datastream
+ *       is optional.
  */
 function islandora_get_comp_ds_mappings($pid) {
   $cm_object = islandora_object_load($pid);

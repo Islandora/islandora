@@ -90,7 +90,7 @@ class IslandoraPermissionsTestCase extends IslandoraWebTestCase {
    */
   public function testAccessFunctions() {
     $object = islandora_object_load(variable_get('islandora_repository_pid', 'islandora:root'));
-    // Test islandora_user_access();
+    // Test islandora_user_access().
     // Test no object/permissions.
     $ret = islandora_user_access(NULL, array());
     $this->assertFalse($ret, 'User access denied when no object/permissions are provided.');
