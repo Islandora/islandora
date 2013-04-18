@@ -304,7 +304,7 @@ function hook_islandora_datastream_modified(FedoraObject $object, FedoraDatastre
 }
 
 /**
- * Notify modules that the given datastream was ingested.
+ * Notify modules that the given datastream was modified.
  *
  * @see hook_islandora_datastream_modified()
  */
@@ -386,15 +386,26 @@ function hook_islandora_undeletable_datastreams(array $models) {
  * @return array
  *   An associative array of associative arrays which define each step in the
  *   ingest process.  Each step should consist of a unique name mapped to an
- *   array of properties (keys) including:
- *   - type: The type of step.  Currently, only "form" is implemented.
- *   - weight: The "weight" of this step--heavier(/"larger") values sink to the
- *     end of the process while smaller(/"lighter") values are executed first.
+ *   array of properties (keys) which take different paramaters based upon type:
+ *   - type: Type of step.  Only "form" and "callback" are implemented so far.
+ *   Required "form" type specific parameters:
  *   - form_id: The form building function to call to get the form structure
  *     for this step.
  *   - args: An array of arguments to pass to the form building function.
- *   And may optionally include both:
+ *   Required "callback" type specific parameters:
+ *   - do_function: An associate array including:
+ *       - 'function': The callback function to be called.
+ *       - 'args': An array of arguments to pass to the callback function.
+ *   - undo_function: An associate array including:
+ *       - 'function': The callback function to be called to reverse the
+ *          executed action in the ingest steps.
+ *       - 'args': An array of arguments to pass to the callback function.
+ *   Shared parameters between both types:
+ *   - weight: The "weight" of this step--heavier(/"larger") values sink to the
+ *     end of the process while smaller(/"lighter") values are executed first.
+ *   Both types may optionally include:
  *   - module: A module from which we want to load an include.
+ *   "Form" type may optionally include:
  *   - file: A file to include (relative to the module's path, including the
  *     file's extension).
  */
@@ -405,6 +416,18 @@ function hook_islandora_ingest_steps(array $form_state) {
       'weight' => 1,
       'form_id' => 'my_cool_form',
       'args' => array('arg_one', 'numero deux'),
+    ),
+    'my_cool_step_callback' => array(
+      'type' => 'callback',
+      'weight' => 2,
+      'do_function' => array(
+        'function' => 'my_cool_execute_function',
+        'args' => array('arg_one', 'numero deux'),
+      ),
+      'undo_function' => array(
+        'function' => 'my_cool_undo_function',
+        'args' => array('arg_one', 'numero deux'),
+      ),
     ),
   );
 }
