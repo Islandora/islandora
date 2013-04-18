@@ -484,11 +484,10 @@ function islandora_prepare_new_object($namespace = NULL, $label = NULL, $datastr
         // set datastream_file by url for the given scheme. Https (SSL) can
         // cause this to fail, and trigger an output log in watchdog.
         $datastream_file = url($ds['datastream_file'], array('absolute' => TRUE));
-        watchdog('islandora', 'Attempting to ingest %file in islandora_prepare_new_object(), ' .
-                              ' but it does not appear to be readable. We will pass the path through' .
-                              ' url(), and pass along as such.',
-                              array('%file' => $datastream_file),
-                              WATCHDOG_WARNING);
+        watchdog('islandora',
+                 'Attempting to ingest %file in islandora_prepare_new_object(), but it does not appear to be readable. We will pass the path through url(), and pass along as such.',
+                 array('%file' => $datastream_file),
+                 WATCHDOG_WARNING);
       }
     }
 

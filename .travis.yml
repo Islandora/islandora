@@ -14,6 +14,6 @@ before_install:
 script:
   - ant -buildfile sites/all/modules/islandora/build.xml lint
   - $ISLANDORA_DIR/tests/scripts/line_endings.sh sites/all/modules/islandora
-  - drush dcs sites/all/modules/islandora
+  - drush coder-review --reviews=production,security,style,i18n,potx,sniffer islandora
   - phpcpd --names *.module,*.inc,*.test sites/all/modules/islandora
   - drush test-run --uri=http://localhost:8081 Islandora
