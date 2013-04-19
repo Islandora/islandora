@@ -84,7 +84,40 @@ function islandora_ingest_form_init_form_state_storage(array &$form_state, array
       'shared_storage' => $configuration,
       'step_storage' => array(),
     );
+    // Must be called after $form_state['islandora'] is initialized, otherwise,
+    // the values in 'islandora' would not be availible to the step hooks.
+    $form_state['islandora']['step_id'] = islandora_ingest_form_get_first_step_id($form_state);
   }
+}
+
+/**
+ * Get the first step ID.
+ *
+ * @param array $form_state
+ *   The Drupal form state.
+ *
+ * @return string
+ *   The 'id' of the very first step.
+ */
+function islandora_ingest_form_get_first_step_id(array &$form_state) {
+  $steps = islandora_ingest_form_get_steps($form_state);
+  $keys = array_keys($steps);
+  return array_shift($keys);
+}
+
+/**
+ * Get the last step ID.
+ *
+ * @param array $form_state
+ *   The Drupal form state.
+ *
+ * @return string
+ *   The 'id' of the very last step.
+ */
+function islandora_ingest_form_get_last_step_id(array &$form_state) {
+  $steps = islandora_ingest_form_get_steps($form_state);
+  $keys = array_keys($steps);
+  return array_pop($keys);
 }
 
 /**
@@ -115,13 +148,12 @@ function islandora_ingest_form_prepare_new_object(array $configuration) {
 /**
  * Gets the given/current step.
  *
- * The current step is returned if no step ID is given. If the current step is
- * not defined it's assume to be the first step.
+ * If the current step is not defined it's assumed that all steps have executed.
  *
  * @param array $form_state
  *   The Drupal form state.
  * @param string $step_id
- *   The ID of the step.
+ *   The ID of the step. The current step is returned if no step ID is given.
  *
  * @return array
  *   The given/current step if found, NULL otherwise.
@@ -138,7 +170,7 @@ function islandora_ingest_form_get_step(array &$form_state, $step_id = NULL) {
 /**
  * Gets the next step.
  *
- * If the current step is not defined, its assumed to be the first step.
+ * If the current step is not defined it's assumed that all steps have executed.
  *
  * @param array $form_state
  *   The Drupal form state.
@@ -151,16 +183,13 @@ function islandora_ingest_form_get_step(array &$form_state, $step_id = NULL) {
 function islandora_ingest_form_get_next_step(array &$form_state, array $step = NULL) {
   $step = isset($step) ? $step : islandora_ingest_form_get_step($form_state);
   $next_step_id = islandora_ingest_form_get_next_step_id($form_state, $step['id']);
-  if ($next_step_id) {
-    return islandora_ingest_form_get_step($form_state, $next_step_id);
-  }
-  return NULL;
+  return isset($next_step_id) ? islandora_ingest_form_get_step($form_state, $next_step_id) : NULL;
 }
 
 /**
  * Gets the previous step.
  *
- * If the current step is not defined, its assumed to be the first step.
+ * If the current step is not defined it's assumed that all steps have executed.
  *
  * @param array $form_state
  *   The Drupal form state.
@@ -172,17 +201,14 @@ function islandora_ingest_form_get_next_step(array &$form_state, array $step = N
  */
 function islandora_ingest_form_get_previous_step(array &$form_state, array $step = NULL) {
   $step = isset($step) ? $step : islandora_ingest_form_get_step($form_state);
-  $next_step_id = islandora_ingest_form_get_previous_step_id($form_state, $step['id']);
-  if ($next_step_id) {
-    return islandora_ingest_form_get_step($form_state, $next_step_id);
-  }
-  return NULL;
+  $previous_step_id = islandora_ingest_form_get_previous_step_id($form_state, $step['id']);
+  return isset($previous_step_id) ? islandora_ingest_form_get_step($form_state, $previous_step_id) : NULL;
 }
 
 /**
  * Gets the ID of the current step.
  *
- * If a current step is not defined, its assumed to be the first step.
+ * If the current step is not defined it's assumed that all steps have executed.
  *
  * @param array $form_state
  *   The Drupal form state.
@@ -191,18 +217,13 @@ function islandora_ingest_form_get_previous_step(array &$form_state, array $step
  *   The step ID.
  */
 function islandora_ingest_form_get_current_step_id(array &$form_state) {
-  if (empty($form_state['islandora']['step_id'])) {
-    $steps = islandora_ingest_form_get_steps($form_state);
-    $keys = array_keys($steps);
-    return array_shift($keys);
-  }
   return $form_state['islandora']['step_id'];
 }
 
 /**
  * Gets the ID of the next step.
  *
- * If a current step is not defined, its assumed to be the first step.
+ * If the current step is not defined it's assumed that all steps have executed.
  *
  * @param array $form_state
  *   The Drupal form state.
@@ -227,7 +248,8 @@ function islandora_ingest_form_get_next_step_id(array &$form_state, $step_id = N
 /**
  * Gets the ID of the previous step.
  *
- * If a current step is not defined, its assumed to be the first step.
+ * If the current step is not defined it's assumed that all steps have executed.
+ * In such cases the last step will be returned.
  *
  * @param array $form_state
  *   The Drupal form state.
@@ -240,6 +262,11 @@ function islandora_ingest_form_get_next_step_id(array &$form_state, $step_id = N
  */
 function islandora_ingest_form_get_previous_step_id(array &$form_state, $step_id = NULL) {
   $step_id = isset($step_id) ? $step_id : islandora_ingest_form_get_current_step_id($form_state);
+  // If the current step is not defined it's assumed that all steps have
+  // executed. So return the very last step.
+  if ($step_id == NULL) {
+    return islandora_ingest_form_get_last_step_id($form_state);
+  }
   $step_ids = array_keys(islandora_ingest_form_get_steps($form_state));
   $index = array_search($step_id, $step_ids);
   if ($index !== FALSE && --$index >= 0) {
@@ -259,11 +286,9 @@ function islandora_ingest_form_increment_step(array &$form_state) {
   // of the current step could have added/removed a step.
   drupal_static_reset('islandora_ingest_form_get_steps');
   $next_step_id = islandora_ingest_form_get_next_step_id($form_state);
-  if (isset($next_step_id)) {
-    islandora_ingest_form_stash_info($form_state);
-    $form_state['islandora']['step_id'] = $next_step_id;
-    islandora_ingest_form_grab_info($form_state);
-  }
+  islandora_ingest_form_stash_info($form_state);
+  $form_state['islandora']['step_id'] = $next_step_id;
+  islandora_ingest_form_grab_info($form_state);
 }
 
 /**
@@ -274,6 +299,7 @@ function islandora_ingest_form_increment_step(array &$form_state) {
  */
 function islandora_ingest_form_decrement_step(array &$form_state) {
   $previous_step_id  = islandora_ingest_form_get_previous_step_id($form_state);
+  // Don't decrement passed the first step.
   if (isset($previous_step_id)) {
     islandora_ingest_form_stash_info($form_state);
     $form_state['islandora']['step_id'] = $previous_step_id;
@@ -346,7 +372,17 @@ function islandora_ingest_form_execute_step(array $form, array &$form_state, $st
 }
 
 /**
- * Assumes the given $step is a 'form' step.
+ * Execute the given 'form' step.
+ *
+ * Assumes the given step is a 'form' step.
+ *
+ * @param array $form
+ *   The Drupal form.
+ * @param array $form_state
+ *   The Drupal form state.
+ *
+ * @return array
+ *   The form definition of the given step.
  */
 function islandora_ingest_form_execute_form_step(array $form, array &$form_state, array $step) {
   $args = array($form, &$form_state);
@@ -356,7 +392,14 @@ function islandora_ingest_form_execute_form_step(array $form, array &$form_state
 }
 
 /**
- * Assumes the given $step is a 'callback' step.
+ * Execute the given 'callback' step and any consecutive 'callback' steps.
+ *
+ * Assumes the given step is a 'callback' step.
+ *
+ * @param array $form
+ *   The Drupal form.
+ * @param array $form_state
+ *   The Drupal form state.
  */
 function islandora_ingest_form_execute_consecutive_callback_steps(array $form, array &$form_state, array $step) {
   do {
@@ -367,7 +410,14 @@ function islandora_ingest_form_execute_consecutive_callback_steps(array $form, a
 }
 
 /**
- * Assumes the given $step is a 'callback' step.
+ * Execute the given 'callback' step.
+ *
+ * Assumes the given step is a 'callback' step.
+ *
+ * @param array $form
+ *   The Drupal form.
+ * @param array $form_state
+ *   The Drupal form state.
  */
 function islandora_ingest_form_execute_callback_step(array $form, array &$form_state, array $step) {
   $args = array(&$form_state);
@@ -376,7 +426,14 @@ function islandora_ingest_form_execute_callback_step(array $form, array &$form_s
 }
 
 /**
+ * Undo the given 'callback' step and any consecutive 'callback' steps.
+ *
  * Assumes the given $step is a 'callback' step.
+ *
+ * @param array $form
+ *   The Drupal form.
+ * @param array $form_state
+ *   The Drupal form state.
  */
 function islandora_ingest_form_undo_consecutive_callback_steps(array $form, array &$form_state, array $step) {
   do {
@@ -387,7 +444,14 @@ function islandora_ingest_form_undo_consecutive_callback_steps(array $form, arra
 }
 
 /**
+ * Undo the given 'callback' step.
+ *
  * Assumes the given $step is a 'callback' step.
+ *
+ * @param array $form
+ *   The Drupal form.
+ * @param array $form_state
+ *   The Drupal form state.
  */
 function islandora_ingest_form_undo_callback_step(array $form, array &$form_state, array $step) {
   $args = array(&$form_state);
@@ -426,11 +490,7 @@ function islandora_ingest_form_stepify(array $form, array &$form_state, $step) {
  *   TRUE if we are currently on the first step, FALSE otherwise.
  */
 function islandora_ingest_form_on_first_form_step(array &$form_state) {
-  $step = NULL;
-  do {
-    $step = islandora_ingest_form_get_previous_step($form_state, $step);
-  } while (isset($step) && $step['type'] != 'form');
-  return !$step;
+  return !islandora_ingest_form_get_previous_form_step($form_state);
 }
 
 /**
@@ -443,11 +503,41 @@ function islandora_ingest_form_on_first_form_step(array &$form_state) {
  *   TRUE if we are currently on the last step, FALSE otherwise.
  */
 function islandora_ingest_form_on_last_form_step(array &$form_state) {
+  return !islandora_ingest_form_get_next_form_step($form_state);
+}
+
+/**
+ * Get the previous form step relative to the current step.
+ *
+ * @param array $form_state
+ *   The Drupal form state.
+ *
+ * @return array
+ *   The previous form step if one exists, NULL otherwise.
+ */
+function islandora_ingest_form_get_previous_form_step(array &$form_state) {
+  $step = NULL;
+  do {
+    $step = islandora_ingest_form_get_previous_step($form_state, $step);
+  } while (isset($step) && $step['type'] != 'form');
+  return $step;
+}
+
+/**
+ * Get the next form step relative to the current step.
+ *
+ * @param array $form_state
+ *   The Drupal form state.
+ *
+ * @return array
+ *   The next form step if one exists, NULL otherwise.
+ */
+function islandora_ingest_form_get_next_form_step(array &$form_state) {
   $step = NULL;
   do {
     $step = islandora_ingest_form_get_next_step($form_state, $step);
   } while (isset($step) && $step['type'] != 'form');
-  return !$step;
+  return $step;
 }
 
 /**
@@ -462,17 +552,12 @@ function islandora_ingest_form_on_last_form_step(array &$form_state) {
  *   The previous button for the ingest form.
  */
 function islandora_ingest_form_previous_button(array &$form_state) {
-  // Before we move back to the previous step we should tell the previous step
+  // Before we move back to the previous step we should tell the previous steps
   // to undo whatever its submit handler did.
-  $prev_step = islandora_ingest_form_get_previous_step($form_state);
-  if ($prev_step['type'] == 'form') {
-    $form_id = $prev_step['form_id'];
-    $submit_callback = $form_id . '_undo_submit';
-    $submit = function_exists($submit_callback) ? array($submit_callback, 'islandora_ingest_form_previous_submit') : array('islandora_ingest_form_previous_submit');
-  }
-  else {
-    $submit = array('islandora_ingest_form_previous_submit');
-  }
+  $prev_form_step = islandora_ingest_form_get_previous_form_step($form_state);
+  $form_id = $prev_form_step['form_id'];
+  $submit_callback = $form_id . '_undo_submit';
+  $submit = function_exists($submit_callback) ? array($submit_callback, 'islandora_ingest_form_previous_submit') : array('islandora_ingest_form_previous_submit');
   return array(
     '#type' => 'submit',
     '#value' => t('Previous'),
@@ -691,7 +776,8 @@ function &islandora_ingest_form_get_step_storage(array &$form_state, $step_id = 
     }
     return $form_state['islandora']['step_storage'][$step_id];
   }
-  return NULL;
+  $undefined_step_storage = array();
+  return $undefined_step_storage;
 }
 
 /**
