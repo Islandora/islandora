@@ -57,9 +57,10 @@ function islandora_get_breadcrumbs_recursive($pid, FedoraRepository $repository,
 
   $root = variable_get('islandora_repository_pid', 'islandora:root');
   if ($pid == $root) {
+    $item = menu_get_item('islandora');
     return array(
       l(t('Home'), '<front>'),
-      l(menu_get_active_title(), 'islandora'),
+      l($item['title'], 'islandora'),
     );
   }
   else {
