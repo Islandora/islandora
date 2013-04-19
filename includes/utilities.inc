@@ -204,13 +204,13 @@ function islandora_escape_pid_for_function($pid) {
   // Apparently, case doesn't matter for function calls in PHP, so let's not
   // really worry about changing the case.
   return str_replace(
-    // Any PID characters which are not valid in the name of a PHP function.
-    array(
-      ':',
-      '-',
-    ),
-    '_',
-    $pid
+  // Any PID characters which are not valid in the name of a PHP function.
+      array(
+        ':',
+        '-',
+      ),
+      '_',
+      $pid
   );
 }
 
@@ -525,8 +525,9 @@ function islandora_display_repository_inaccessible_message() {
   $text = t('Islandora configuration');
   $link = l($text, 'admin/islandora/configure', array('attributes' => array('title' => $text)));
   $message = t('Could not connect to the repository. Please check the settings on the !link page.',
-    array('!link' => $link));
+  array('!link' => $link));
   drupal_set_message(check_plain($message), 'error', FALSE);
+
 }
 
 /**
@@ -729,14 +730,24 @@ function islandora_get_allowed_namespaces() {
 function islandora_get_content_models($ignore_system_namespace = TRUE) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   $tuque = islandora_get_tuque_connection();
-  $query = 'select $object $label from <#ri>
-          where ($object <fedora-model:label> $label
-          and ($object <fedora-model:hasModel> <info:fedora/fedora-system:ContentModel-3.0>
-          or $object <fedora-rels-ext:isMemberOfCollection> <info:fedora/islandora:ContentModelsCollection>)
-          and $object <fedora-model:state> <info:fedora/fedora-system:def/model#Active>)
-          order by $label';
+  $query = "PREFIX fm: <" . FEDORA_MODEL_URI . ">
+            PREFIX fr: <" . FEDORA_RELS_EXT_URI . ">
+            SELECT ?object ?label
+            FROM <#ri>
+            WHERE {
+              {?object fm:hasModel <info:fedora/fedora-system:ContentModel-3.0>;
+                       fm:state fm:Active
+              }
+            UNION{
+                ?object fr:isMemberOfCollection <info:fedora/islandora:ContentModelsCollection>;
+                fm:state fm:Active
+              }
+            OPTIONAL{
+                 ?object fm:label ?label
+            }
+           }";
   $content_models = array();
-  $results = $tuque->repository->ri->itqlQuery($query, 'unlimited');
+  $results = $tuque->repository->ri->sparqlQuery($query, 'unlimited');
   foreach ($results as $result) {
     $content_model = $result['object']['value'];
     $label = $result['label']['value'];
@@ -748,4 +759,61 @@ function islandora_get_content_models($ignore_system_namespace = TRUE) {
     }
   }
   return $content_models;
+}
+
+/**
+ * Returns Drupal tableselect element allowing selection of Content Models.
+ *
+ * @param string $drupal_variable
+ *   the name of the Drupal variable holding selected content models
+ *   Content models held in this variable will appear at the top of
+ *   the displayed list
+ * @param array $default_values_array
+ *   default values to display if $drupal_variable is unset
+ *
+ * @return array
+ *   Drupal form element allowing content model selection
+ */
+function islandora_content_model_select_table_form_element($drupal_variable, $default_values_array = array('')) {
+  $defaults = array();
+  $rows = array();
+  $content_models = array();
+  $options = islandora_get_content_models(TRUE);
+  foreach ($options as $option) {
+    $content_models[$option['pid']] = $option['label'];
+  }
+
+  $selected = array_values(variable_get($drupal_variable, $default_values_array));
+  $comparator = function ($a, $b) use ($selected) {
+    $a_val = $b_val = 0;
+    if (in_array($a, $selected)) {
+      $a_val = 1;
+    }
+    if (in_array($b, $selected)) {
+      $b_val = 1;
+    }
+    return $b_val - $a_val;
+  };
+  uksort($content_models, $comparator);
+  foreach ($content_models as $pid => $label) {
+    $rows[$pid] = array(
+      'pid' => $pid,
+      'title' => $label,
+    );
+    $defaults[$pid] = in_array($pid, $selected);
+  }
+  $header = array(
+    'pid' => array('data' => t('PID')),
+    'title' => array('data' => t('Content Model')),
+  );
+  // Build and return table element.
+  $element = array(
+    '#type' => 'tableselect',
+    '#header' => $header,
+    '#options' => $rows,
+    '#default_value' => $defaults,
+    '#empty' => t("There are no content models in this Fedora Repository."),
+  );
+
+  return $element;
 }
