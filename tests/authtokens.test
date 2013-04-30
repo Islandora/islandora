@@ -5,6 +5,10 @@
  * Test Authentication Tokens.
  */
 
+/**
+ * IslandoraAuthtokensTestCase
+ * @islandora
+ */
 class IslandoraAuthtokensTestCase extends IslandoraWebTestCase {
 
   /**

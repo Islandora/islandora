@@ -790,7 +790,8 @@ function islandora_object_load($object_id) {
  *   Used to extract the Fedora object's DSID at $map[4].
  *
  * @return FedoraObject
- *   A token authenticated object. @see islandora_object_load
+ *   A token authenticated object.
+ * @see islandora_object_load()
  */
 function islandora_tokened_object_load($object_id, $map) {
   if (array_key_exists('token', $_GET)) {
@@ -819,14 +820,15 @@ function islandora_tokened_object_load($object_id, $map) {
  * islandora_tokened_datastream_load(DSID, DSID, PID)
  *
  * @param mixed $datastream_id
- *   %islandora_tokened_datastream @see islandora_datastream_load
+ *   The datastream Identifier
+ * @see islandora_datastream_load()
  * @param array $map
  *   Used to extract the Fedora object's PID at $map[2].
  *
  * @return FedoraDatastream
  *   A datastream from Fedora.
  *
- * @see islandora_datastream_load
+ * @see islandora_datastream_load()
  */
 function islandora_tokened_datastream_load($datastream_id, $map) {
   return islandora_datastream_load($datastream_id, $map[2]);

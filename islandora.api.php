@@ -115,7 +115,7 @@ function hook_islandora_edit_object_alter(&$object, &$rendered) {
  *     The key value pairs repersent what values will be changed. The params
  *     will match the same params as passed to FedoraApiM::modifyObject().
  *
- * @see FedoraApiM::modifyObject()
+ * @see FedoraApiM.modifyObject()
  */
 function hook_islandora_object_alter(AbstractFedoraObject $object, array &$context) {
 }
@@ -164,7 +164,7 @@ function hook_CMODEL_PID_islandora_object_alter(AbstractFedoraObject $object, ar
  *     The key value pairs repersent what values will be changed. The params
  *     will match the same params as passed to FedoraApiM::modifyDatastream().
  *
- * @see FedoraApiM::modifyDatastream()
+ * @see FedoraApiM.modifyDatastream()
  */
 function hook_islandora_datastream_alter(AbstractFedoraObject $object, AbstractFedoraDatastream $datastream, array &$context) {
 }

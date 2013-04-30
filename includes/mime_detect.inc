@@ -21,6 +21,10 @@
  * http://api.drupal.org/api/function/file_default_mimetype_mapping/7
  */
 
+/**
+ * MimeDetect class
+ * @author discoverygarden
+ */
 class MimeDetect {
 
   protected $protectedMimeTypes = array(
@@ -301,7 +305,7 @@ class MimeDetect {
    * Gets an associative array of MIME type and extension associations.
    *
    * Users the system mime.types file, or a local mime.types if one is found
-   * @see MIMEDetect::__constuctor()
+   * @see MIMEDetect.__construct()
    *
    * @return array
    *   An associative array where the keys are MIME types and the values
@@ -336,7 +340,7 @@ class MimeDetect {
    * Gets a associative array of extensions and MIME types.
    *
    * Users the system mime.types file, or a local mime.types if one is found
-   * @see MIMEDetect::__constuctor()
+   * @see MIMEDetect.__construct()
    *
    * @return array
    *   An associative array where the keys are extensions and the values

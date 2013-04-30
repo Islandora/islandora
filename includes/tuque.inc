@@ -28,6 +28,10 @@ $islandora_module_path = drupal_get_path('module', 'islandora');
 @include_once "$islandora_module_path/libraries/tuque/Repository.php";
 @include_once "$islandora_module_path/libraries/tuque/FedoraRelationships.php";
 
+/**
+ * IslandoraTuque
+ * @author discoverygarden
+ */
 class IslandoraTuque {
 
   /**

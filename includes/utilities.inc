@@ -764,4 +764,3 @@ function islandora_get_content_models($ignore_system_namespace = TRUE) {
   }
   return $content_models;
 }
-
