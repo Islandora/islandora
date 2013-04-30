@@ -187,30 +187,48 @@ function islandora_solution_pack_form_submit(array $form, array &$form_state) {
  */
 function islandora_solution_pack_batch_operation_reingest_object(NewFedoraObject $object, array &$context) {
   $existing_object = islandora_object_load($object->id);
+  $deleted = FALSE;
   if ($existing_object) {
     $deleted = islandora_delete_object($existing_object);
     if (!$deleted) {
       $object_link = l($existing_object->label, "islandora/object/{$existing_object->id}");
-      drupal_set_message(t('Failed to purge existing object !object_link.', array(
+      drupal_set_message(filter_xss(t('Failed to purge existing object !object_link.', array(
             '!object_link' => $object_link,
-          )), 'error');
+          ))), 'error');
       // Failed to purge don't attempt to ingest.
       return;
     }
   }
+
   // Object was deleted or did not exist.
   $pid = $object->id;
   $label = $object->label;
-  $action = $deleted ? 'reinstalled' : 'installed';
   $object_link = l($label, "islandora/object/{$pid}");
   $object = islandora_add_object($object);
-  $msg = $object ? "Successfully $action !object_link." : "Failed to $action @label identified by @pid.";
+  $params = array(
+    '@pid' => $pid,
+    '@label' => $label,
+    '!object_link' => $object_link,
+  );
+
+  $msg = '';
+  if ($object) {
+    if ($deleted) {
+      $msg = t('Successfully reinstalled !object_link.', $params);
+    }
+    else {
+      $msg = t('Successfully installed !object_link.', $params);
+    }
+  }
+  elseif ($deleted) {
+    $msg = t('Failed to reinstall @label, identified by @pid.', $params);
+  }
+  else {
+    $msg = t('Failed to install @label, identified by @pid.', $params);
+  }
+
   $status = $object ? 'status' : 'error';
-  drupal_set_message(t($msg, array(
-        '@pid' => $pid,
-        '@label' => $label,
-        '!object_link' => $object_link,
-      )), $status);
+  drupal_set_message(filter_xss($msg), $status);
 }
 
 /**
@@ -237,33 +255,37 @@ function islandora_install_solution_pack($module, $op = 'install') {
     islandora_uninstall_solution_pack($module);
     return;
   }
+
+  $t = get_t();
+
+  // Some general replacements.
+  $admin_link = l($t('Solution Pack admin'), 'admin/islandora/solution_packs');
+  $config_link = l($t('Islandora configuration'), 'admin/islandora/configure');
+  $t_params = array(
+    '@module' => $module,
+    '!config_link' => $config_link,
+    '!admin_link' => $admin_link,
+  );
+
   module_load_include('module', 'islandora', 'islandora');
   module_load_include('inc', 'islandora', 'includes/utilities');
   module_load_include('module', $module, $module);
   $info_file = drupal_get_path('module', $module) . "/{$module}.info";
   $info_array = drupal_parse_info_file($info_file);
   $module_name = $info_array['name'];
-  $admin_link = l(t('Solution Pack admin'), 'admin/islandora/solution_packs');
-  $config_link = l(t('Islandora configuration'), 'admin/islandora/configure');
   if (!islandora_describe_repository()) {
-    $msg = '@module: Did not install any objects. Could not connect to the ';
-    $msg .= 'repository. Please check the settings on the !config_link page ';
-    $msg .= 'and install the required objects manually on the !admin_link page.';
-    drupal_set_message(st($msg, array(
-          '@module' => $module_name,
-          '!config_link' => $config_link,
-          '@admin_link' => $admin_link,
-        )), 'error');
+    $msg = $t('@module: Did not install any objects. Could not connect to the repository. Please check the settings on the !config_link page and install the required objects manually on the !admin_link page.', $t_params);
+    drupal_set_message(filter_xss($msg), 'error');
     return;
   }
   $connection = islandora_get_tuque_connection();
   $required_objects = module_invoke($module, 'islandora_required_objects', $connection);
   $objects = $required_objects[$module]['objects'];
   $status_messages = array(
-    'up_to_date' => 'The object already exists and is up-to-date',
-    'missing_datastream' => 'The object already exists but is missing a datastream. Please reinstall the object on the !admin_link page',
-    'out_of_date' => 'The object already exists but is out-of-date. Please update the object on the !admin_link page',
-    'modified_datastream' => 'The object already exists but datastreams are modified. Please reinstall the object on the !admin_link page',
+    'up_to_date' => $t('The object already exists and is up-to-date.', $t_params),
+    'missing_datastream' => $t('The object already exists but is missing a datastream. Please reinstall the object on the !admin_link page.', $t_params),
+    'out_of_date' => $t('The object already exists but is out-of-date. Please update the object on the !admin_link page.', $t_params),
+    'modified_datastream' => $t('The object already exists but datastreams are modified. Please reinstall the object on the !admin_link page.', $t_params),
   );
   foreach ($objects as $object) {
     $query = $connection->api->a->findObjects('query', 'pid=' . $object->id);
@@ -272,26 +294,25 @@ function islandora_install_solution_pack($module, $op = 'install') {
     $object_link = l($label, "islandora/object/{$object->id}");
     if ($already_exists) {
       $object_status = islandora_check_object_status($object);
-      $status_msg = $status_messages[$object_status['status']];
-      drupal_set_message(st("@module: Did not install !object_link. $status_msg.", array(
-            '@module' => $module_name,
+      $here_params = array(
+        '!summary' => $t("@module: Did not install !object_link.", array(
             '!object_link' => $object_link,
-            '!admin_link' => $admin_link,
-          )), 'warning');
+          ) + $t_params),
+        '!description' => $status_messages[$object_status['status']],
+      );
+      drupal_set_message(filter_xss(format_string('!summary !description', $here_params)), 'warning');
     }
     else {
       $object = islandora_add_object($object);
       if ($object) {
-        drupal_set_message(t('@module: Successfully installed. !object_link.', array(
-            '@module' => $module_name,
+        drupal_set_message(filter_xss($t('@module: Successfully installed. !object_link.', array(
             '!object_link' => $object_link,
-          )), 'status');
+          ) + $t_params)), 'status');
       }
       else {
-        drupal_set_message(t('@module: Failed to install. @label.', array(
-              '@module' => $module_name,
+        drupal_set_message($t('@module: Failed to install. @label.', array(
               '@label' => $label,
-            )), 'warning');
+            ) + $t_params), 'warning');
       }
     }
   }
@@ -307,21 +328,20 @@ function islandora_install_solution_pack($module, $op = 'install') {
  *    directly for each solution pack.
  */
 function islandora_uninstall_solution_pack($module) {
+  $t = get_t();
   module_load_include('module', 'islandora', 'islandora');
   module_load_include('inc', 'islandora', 'includes/utilities');
   module_load_include('module', $module, $module);
-  $config_link = l(t('Islandora configuration'), 'admin/islandora/configure');
+  $config_link = l($t('Islandora configuration'), 'admin/islandora/configure');
   $info_file = drupal_get_path('module', $module) . "/{$module}.info";
   $info_array = drupal_parse_info_file($info_file);
   $module_name = $info_array['name'];
   if (!islandora_describe_repository()) {
-    $msg = '@module: Did not uninstall any objects. Could not connect to the ';
-    $msg .= 'repository. Please check the settings on the !config_link page ';
-    $msg .= 'and uninstall the required objects manually if necessary.';
-    drupal_set_message(st($msg, array(
-          '@module' => $module_name,
-          '!config_link' => $config_link,
-        )), 'error');
+    $msg = $t('@module: Did not uninstall any objects. Could not connect to the repository. Please check the settings on the !config_link page and uninstall the required objects manually if necessary.', array(
+      '@module' => $module_name,
+      '!config_link' => $config_link,
+    ));
+    drupal_set_message(filter_xss($msg), 'error');
     return;
   }
   $connection = islandora_get_tuque_connection();
@@ -334,12 +354,13 @@ function islandora_uninstall_solution_pack($module) {
   };
   $existing_objects = array_filter($objects, $filter);
   foreach ($existing_objects as $object) {
-    $msg = '@module: Did not remove !object_link. It may be used by other sites.';
     $object_link = l($object->label, "islandora/object/{$object->id}");
-    drupal_set_message(st($msg, array(
-          '!object_link' => $object_link,
-          '@module' => $module_name,
-        )), 'warning');
+    $msg = $t('@module: Did not remove !object_link. It may be used by other sites.', array(
+      '!object_link' => $object_link,
+      '@module' => $module_name,
+    ));
+
+    drupal_set_message(filter_xss($msg), 'warning');
   }
 }
 

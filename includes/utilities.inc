@@ -204,13 +204,13 @@ function islandora_escape_pid_for_function($pid) {
   // Apparently, case doesn't matter for function calls in PHP, so let's not
   // really worry about changing the case.
   return str_replace(
-    // Any PID characters which are not valid in the name of a PHP function.
-    array(
-      ':',
-      '-',
-    ),
-    '_',
-    $pid
+  // Any PID characters which are not valid in the name of a PHP function.
+      array(
+        ':',
+        '-',
+      ),
+      '_',
+      $pid
   );
 }
 
@@ -380,18 +380,13 @@ function islandora_get_datastreams_requirements_from_models(array $models) {
  *   determine what datastreams are required.
  *
  * @return array
- *   The DS-COMPOSITE-MODEL defined datastreams that are required for the given
- *   object.
- *
- * @code
- *   array(
- *     'DC' => array(
- *       'id' => 'DC',
- *       'mime' => 'text/xml',
- *       'optional' => FALSE,
- *     )
- *   )
- * @endcode
+ *   An associative array mapping datastream IDs to associative arrays
+ *   containing the values parsed from the DS-COMPOSITE-MODEL on the given
+ *   object--of the form:
+ *   - DSID: A datastream ID being described.
+ *     - "id": A string containing ID of the datastream.
+ *     - "mime": A array containing MIME-types the stream may have.
+ *     - "optional": A boolean indicating if the given stream is optional.
  */
 function islandora_get_datastreams_requirements_from_content_model(FedoraObject $object) {
   if (empty($object[DS_COMP_STREAM])) {
@@ -465,20 +460,43 @@ function islandora_prepare_new_object($namespace = NULL, $label = NULL, $datastr
     if (isset($ds['control_group']) && in_array($ds['control_group'], $groups)) {
       $control_group = $ds['control_group'];
     }
-    $ds_uri = FALSE;
+
+    $as_file = FALSE;
     if (file_valid_uri($ds['datastream_file'])) {
+      // A local file with as a Drupal file/stream wrapper URI.
       $datastream_file = $ds['datastream_file'];
-      $ds_uri = TRUE;
+      $as_file = TRUE;
+    }
+    elseif (is_readable($ds['datastream_file'])) {
+      // A local file as a filesystem path.
+      $datastream_file = drupal_realpath($ds['datastream_file']);
+      $as_file = TRUE;
     }
     else {
-      $datastream_file = url($ds['datastream_file'], array('absolute' => TRUE));
+      $scheme = parse_url($ds['datastream_file'], PHP_URL_SCHEME);
+      if (in_array($scheme, stream_get_wrappers())) {
+        // A URI which gets handled by one of the PHP-native stream wrappers.
+        $datastream_file = $ds['datastream_file'];
+        $as_file = TRUE;
+      }
+      else {
+        // Schema does not match available php stream wrapper. Attempt to
+        // set datastream_file by url for the given scheme. Https (SSL) can
+        // cause this to fail, and trigger an output log in watchdog.
+        $datastream_file = url($ds['datastream_file'], array('absolute' => TRUE));
+        watchdog('islandora',
+                 'Attempting to ingest %file in islandora_prepare_new_object(), but it does not appear to be readable. We will pass the path through url(), and pass along as such.',
+                 array('%file' => $datastream_file),
+                 WATCHDOG_WARNING);
+      }
     }
+
     $datastream = $object->constructDatastream($dsid, $control_group);
     $datastream->label = $label;
     $datastream->mimetype = $mimetype;
     switch ($control_group) {
       case 'M':
-        if ($ds_uri) {
+        if ($as_file) {
           $datastream->setContentFromFile($datastream_file);
         }
         else {
@@ -490,8 +508,10 @@ function islandora_prepare_new_object($namespace = NULL, $label = NULL, $datastr
         $datastream->setContentFromString(file_get_contents($datastream_file));
         break;
     }
+
     $object->ingestDatastream($datastream);
   }
+
   return $object;
 }
 
@@ -505,8 +525,9 @@ function islandora_display_repository_inaccessible_message() {
   $text = t('Islandora configuration');
   $link = l($text, 'admin/islandora/configure', array('attributes' => array('title' => $text)));
   $message = t('Could not connect to the repository. Please check the settings on the !link page.',
-             array('!link' => $link));
-  drupal_set_message($message, 'error', FALSE);
+  array('!link' => $link));
+  drupal_set_message(check_plain($message), 'error', FALSE);
+
 }
 
 /**
@@ -595,33 +616,24 @@ function islandora_system_settings_form_default_value($name, $default_value, arr
 /**
  * Returns basic information about DS-COMPOSITE-MODEL.
  *
+ * @deprecated
+ *   The pre-existing--and more flexible--
+ *   islandora_get_datastreams_requirements_from_content_model() should be
+ *   preferred, as it addresses the case where a stream can be allowed to have
+ *   one of a set of mimetypes (this functions appears to only return the last
+ *   declared mimetype for a given datastream).
+ *
  * @param string $pid
- *   PID of content model containing DS_COMP stream.
+ *   The PID of content model containing DS_COMP stream.
  *
  * @return array
- *   array of values in the following form
- *
- * [DC] => Array
- *       (
- *           [mimetype] => text/xml
- *       )
- *
- *   [MODS] => Array
- *       (
- *           [optional] => true
- *           [mimetype] => text/xml
- *       )
- *
- *   [RELS-EXT] => Array
- *       (
- *           [mimetype] => application/rdf+xml
- *       )
- *
- *   [RELS-INT] => Array
- *       (
- *           [optional] => true
- *           [mimetype] => application/rdf+xml
- *      )
+ *   An associative array mapping datastream IDs to an associative array
+ *   representing the parsed DS-COMPOSITE-MODEL of the form:
+ *   - DSID: A string containing the datastream ID.
+ *     - "mimetype": A string containing the last mimetype declared for the
+ *       given datastream ID.
+ *     - "optional": An optional boolean indicating that the given datastream
+ *       is optional.
  */
 function islandora_get_comp_ds_mappings($pid) {
   $cm_object = islandora_object_load($pid);
@@ -718,14 +730,24 @@ function islandora_get_allowed_namespaces() {
 function islandora_get_content_models($ignore_system_namespace = TRUE) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   $tuque = islandora_get_tuque_connection();
-  $query = 'select $object $label from <#ri>
-          where ($object <fedora-model:label> $label
-          and ($object <fedora-model:hasModel> <info:fedora/fedora-system:ContentModel-3.0>
-          or $object <fedora-rels-ext:isMemberOfCollection> <info:fedora/islandora:ContentModelsCollection>)
-          and $object <fedora-model:state> <info:fedora/fedora-system:def/model#Active>)
-          order by $label';
+  $query = "PREFIX fm: <" . FEDORA_MODEL_URI . ">
+            PREFIX fr: <" . FEDORA_RELS_EXT_URI . ">
+            SELECT ?object ?label
+            FROM <#ri>
+            WHERE {
+              {?object fm:hasModel <info:fedora/fedora-system:ContentModel-3.0>;
+                       fm:state fm:Active
+              }
+            UNION{
+                ?object fr:isMemberOfCollection <info:fedora/islandora:ContentModelsCollection>;
+                fm:state fm:Active
+              }
+            OPTIONAL{
+                 ?object fm:label ?label
+            }
+           }";
   $content_models = array();
-  $results = $tuque->repository->ri->itqlQuery($query, 'unlimited');
+  $results = $tuque->repository->ri->sparqlQuery($query, 'unlimited');
   foreach ($results as $result) {
     $content_model = $result['object']['value'];
     $label = $result['label']['value'];
@@ -737,4 +759,61 @@ function islandora_get_content_models($ignore_system_namespace = TRUE) {
     }
   }
   return $content_models;
+}
+
+/**
+ * Returns Drupal tableselect element allowing selection of Content Models.
+ *
+ * @param string $drupal_variable
+ *   the name of the Drupal variable holding selected content models
+ *   Content models held in this variable will appear at the top of
+ *   the displayed list
+ * @param array $default_values_array
+ *   default values to display if $drupal_variable is unset
+ *
+ * @return array
+ *   Drupal form element allowing content model selection
+ */
+function islandora_content_model_select_table_form_element($drupal_variable, $default_values_array = array('')) {
+  $defaults = array();
+  $rows = array();
+  $content_models = array();
+  $options = islandora_get_content_models(TRUE);
+  foreach ($options as $option) {
+    $content_models[$option['pid']] = $option['label'];
+  }
+
+  $selected = array_values(variable_get($drupal_variable, $default_values_array));
+  $comparator = function ($a, $b) use ($selected) {
+    $a_val = $b_val = 0;
+    if (in_array($a, $selected)) {
+      $a_val = 1;
+    }
+    if (in_array($b, $selected)) {
+      $b_val = 1;
+    }
+    return $b_val - $a_val;
+  };
+  uksort($content_models, $comparator);
+  foreach ($content_models as $pid => $label) {
+    $rows[$pid] = array(
+      'pid' => $pid,
+      'title' => $label,
+    );
+    $defaults[$pid] = in_array($pid, $selected);
+  }
+  $header = array(
+    'pid' => array('data' => t('PID')),
+    'title' => array('data' => t('Content Model')),
+  );
+  // Build and return table element.
+  $element = array(
+    '#type' => 'tableselect',
+    '#header' => $header,
+    '#options' => $rows,
+    '#default_value' => $defaults,
+    '#empty' => t("There are no content models in this Fedora Repository."),
+  );
+
+  return $element;
 }

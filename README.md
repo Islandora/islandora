@@ -1,16 +1,10 @@
-CONTENTS OF THIS FILE
----------------------
+BUILD STATUS
+------------
+Current build status:
+[![Build Status](https://travis-ci.org/Islandora/islandora.png?branch=7.x)](https://travis-ci.org/Islandora/islandora)
 
- * summary
- * requirements
- * installation
- * configuration
- * customization
- * troubleshooting
- * faq
- * contact
- * sponsors
-
+CI Server:
+http://jenkins.discoverygarden.ca
 
 SUMMARY
 -------
@@ -41,7 +35,7 @@ should be copied into the Fedora global XACML policies folder. This will allow
 CONFIGURATION
 -------------
 
-The islandora_drupal_filter passes the username of 'anonymous' through to 
+The islandora_drupal_filter passes the username of 'anonymous' through to
 Fedora for unauthenticated Drupal Users.  A user with the name of 'anonymous'
 may have XACML policies applied to them that are meant to be applied to Drupal
 users that are not logged in or vice-versa.  This is a potential security issue
@@ -53,6 +47,7 @@ Drupal's cron will can be ran to remove expired authentication tokens.
 CUSTOMIZATION
 -------------
 
+[Customize ingest forms](http://github.com/Islandora/islandora/wiki/Multi-paged-Ingest-Forms)
 
 TROUBLESHOOTING
 ---------------

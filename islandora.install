@@ -10,13 +10,14 @@
  */
 function islandora_requirements($phase) {
   $requirements = array();
-  // Ensure translations don't break at install time
+
+  // Ensure translations don't break at install time.
   $t = get_t();
 
   if (!class_exists('XSLTProcessor', FALSE)) {
     $requirements['islandora_xsltprocessor']['title'] = $t('Islandora XSLTProcessor Prerequisite');
     $requirements['islandora_xsltprocessor']['value'] = $t('Not installed');
-    $link = l($t('PHP XSL extension'), 'http://us2.php.net/manual/en/book.xsl.php', array('attributes' => array('target'=>'_blank')));
+    $link = l($t('PHP XSL extension'), 'http://us2.php.net/manual/en/book.xsl.php', array('attributes' => array('target' => '_blank')));
     $requirements['islandora_xsltprocessor']['description'] = $t('The !xsllink is required. Check your installed PHP extensions and php.ini file.', array('!xsllink' => $link));
     $requirements['islandora_xsltprocessor']['severity'] = REQUIREMENT_ERROR;
   }

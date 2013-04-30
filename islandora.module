@@ -120,7 +120,7 @@ function islandora_menu() {
         FEDORA_METADATA_EDIT,
         FEDORA_ADD_DS,
         FEDORA_PURGE,
-        FEDORA_INGEST
+        FEDORA_INGEST,
       ), 2),
   );
 
@@ -238,12 +238,13 @@ function islandora_menu() {
     'access arguments' => array(FEDORA_VIEW_OBJECTS, 2),
     'load arguments' => array(2),
   );
-  $items['islandora/ingest'] = array(
-    'title' => 'Add an Object',
-    'page callback' => 'islandora_ingest_callback',
-    'file' => 'includes/ingest.menu.inc',
-    'type' => MENU_SUGGESTED_ITEM,
-    'access arguments' => array(FEDORA_INGEST),
+  $items['islandora/object/%islandora_object/download_clip'] = array(
+    'page callback' => 'islandora_download_clip',
+    'page arguments' => array(2),
+    'type' => MENU_CALLBACK,
+    'access callback' => 'islandora_object_access_callback',
+    'access arguments' => array(FEDORA_VIEW_OBJECTS, 2),
+    'load arguments' => array(2),
   );
   return $items;
 }
@@ -285,6 +286,29 @@ function islandora_theme() {
     'islandora_object_print' => array(
       'file' => 'theme/theme.inc',
       'variables' => array('object' => NULL, 'content' => array()),
+    ),
+    // Render a bunch of objects as either a grid or a list.
+    'islandora_objects' => array(
+      'file' => 'theme/theme.inc',
+      'template' => 'theme/islandora-objects',
+      'variables' => array(
+        'objects' => NULL,
+        'display' => NULL,
+        'page_size' => 20,
+        'limit' => 10,
+      ),
+    ),
+    // Render a bunch of objects as a grid.
+    'islandora_objects_grid' => array(
+      'file' => 'theme/theme.inc',
+      'template' => 'theme/islandora-objects-grid',
+      'variables' => array('objects' => NULL),
+    ),
+    // Render a bunch of objects as a list.
+    'islandora_objects_list' => array(
+      'file' => 'theme/theme.inc',
+      'template' => 'theme/islandora-objects-list',
+      'variables' => array('objects' => NULL),
     ),
   );
 }
@@ -332,6 +356,88 @@ function islandora_forms($form_id) {
     );
   }
   return $forms;
+}
+
+/**
+ * Checks whether the user can access the given object.
+ *
+ * Checks for repository access, object/datastream existance, namespace access,
+ * user permissions, content models.
+ *
+ * Will check the given user or the user repersented by the GET token parameter,
+ * failing that it will use the global user.
+ *
+ * @global $user
+ *
+ * @param mixed $object
+ *   The FedoraObject or FedoraDatastream to test for accessibility, if NULL
+ *   is given the object is assumed to not exist or be inaccessible.
+ * @param array $permissions
+ *   The required user permissions.
+ * @param array $content_models
+ *   The required content models.
+ * @param bool $access_any
+ *   (optional) TRUE to grant access if any single requirement is met from both
+ *   the permissions and content models parameters. FALSE if all requirements
+ *   must be met from both the permissions and content model parameters.
+ * @param object $account
+ *   (optional) The account to check, if not given check the GET parameters for
+ *   a token to restore the user. If no GET parameter is present use currently
+ *   logged in user.
+ *
+ * @return bool
+ *   TRUE if the user is allowed to access this object/datastream, FALSE
+ *   otherwise.
+ */
+function islandora_user_access($object, array $permissions, $content_models = array(), $access_any = TRUE, $account = NULL) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  $is_repository_accessible = &drupal_static(__FUNCTION__);
+  // If the repository is inaccessible then access always fails.
+  if (!isset($is_repository_accessible)) {
+    $is_repository_accessible = islandora_describe_repository();
+    if (!$is_repository_accessible) {
+      // Only display the inaccessible message once.
+      islandora_display_repository_inaccessible_message();
+      return FALSE;
+    }
+  }
+  if (!$is_repository_accessible || !is_object($object)) {
+    return FALSE;
+  }
+  // Determine the user account to test against.
+  if (!isset($account)) {
+    $token = filter_input(INPUT_GET, 'token', FILTER_SANITIZE_STRING);
+    if ($token) {
+      module_load_include('inc', 'islandora', 'includes/authtokens');
+      $user = islandora_validate_object_token($object->id, $datastream->id, $token);
+      if ($user) {
+        $account = user_load($user->uid);
+      }
+    }
+    else {
+      global $user;
+      $account = $user;
+    }
+  }
+  // Determine what has been passed as $object.
+  if (is_subclass_of($object, 'FedoraObject')) {
+    $object = $object;
+  }
+  elseif (is_subclass_of($object, 'FedoraDatastream')) {
+    $datastream = $object;
+    $object = $datastream->parent;
+  }
+  // Check for access.
+  $accessible_namespace = islandora_namespace_accessible($object->id);
+  if ($access_any) {
+    $has_required_permissions = islandora_user_access_any($permissions, $account);
+    $has_required_content_models = empty($content_models) ? TRUE : count(array_intersect($object->models, $content_models)) > 0;
+  }
+  else {
+    $has_required_permissions = islandora_user_access_all($permissions, $account);
+    $has_required_content_models = count(array_diff($content_models, $object->models)) == 0;
+  }
+  return $accessible_namespace && $has_required_permissions && $has_required_content_models;
 }
 
 /**
@@ -570,7 +676,8 @@ function islandora_view_object(FedoraObject $object) {
   $page_number = (empty($_GET['page'])) ? '1' : $_GET['page'];
   $page_size = (empty($_GET['pagesize'])) ? '10' : $_GET['pagesize'];
   $output = array();
-  foreach (islandora_build_hook_list(ISLANDORA_VIEW_HOOK, $object->models) as $hook) {
+  $hooks = islandora_build_hook_list(ISLANDORA_VIEW_HOOK, $object->models);
+  foreach ($hooks as $hook) {
     // @todo Remove page number and size from this hook, implementers of the
     // hook should use drupal page handling directly.
     $temp = module_invoke_all($hook, $object, $page_number, $page_size);
@@ -583,7 +690,7 @@ function islandora_view_object(FedoraObject $object) {
     $output = islandora_default_islandora_view_object($object);
   }
   arsort($output);
-  drupal_alter(ISLANDORA_VIEW_HOOK, $object, $output);
+  drupal_alter($hooks, $object, $output);
   return implode('', $output);
 }
 
@@ -859,7 +966,7 @@ function islandora_delete_object(FedoraObject &$object) {
     $object = NULL;
     return TRUE;
   }
-  catch(Exception $e) {
+  catch (Exception $e) {
     // Exception message gets logged in Tuque Wrapper.
     return FALSE;
   }
@@ -964,7 +1071,29 @@ function islandora_entity_property_info() {
  * @return array
  *   A renderable array.
  */
-function islandora_print_object(FedoraObject $object) {
+function islandora_print_object(AbstractObject $object) {
   drupal_set_title($object->label);
   return theme('islandora_object_print', array('object' => $object));
+}
+
+/**
+ * Menu callback downloads the given clip.
+ */
+function islandora_download_clip(AbstractObject $object) {
+  if (isset($_GET['clip'])) {
+    $is_https = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on';
+    $http_protocol = $is_https ? 'https' : 'http';
+    $url = $http_protocol . '://' . $_SERVER['HTTP_HOST'] . $_GET['clip'];
+    $filename = $object->label;
+    header("Content-Disposition: attachment; filename=\"{$filename}.jpg\"");
+    header("Content-type: image/jpeg");
+    header("Content-Transfer-Encoding: binary");
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    $response = curl_exec($ch);
+    curl_close($ch);
+  }
+  exit();
 }

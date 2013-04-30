@@ -27,6 +27,9 @@ DOXYFILE_ENCODING      = UTF-8
 
 PROJECT_NAME           = Islandora 7.x
 
+# Put the git hash here using sed before generating the documentation.
+PROJECT_NUMBER         =
+
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute)
 # base path where the generated documentation will be put.
 # If a relative path is entered, it will be relative to the location
