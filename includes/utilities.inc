@@ -817,3 +817,36 @@ function islandora_content_model_select_table_form_element($drupal_variable, $de
 
   return $element;
 }
+
+/**
+ * Convience function for generating a E_USER_DEPRECATED message.
+ *
+ * To utilitize this function pass the results to trigger_error() like so:
+ *
+ * @code
+ *   $message = islandora_deprecated('7.x-1.1', t('Use more cowbell.'))
+ *   trigger_error(check_plain($message), E_USER_DEPRECATED)
+ * @endcode
+ *
+ * @param string $release
+ *   The release the calling function was depreciated in.
+ * @param string $solution
+ *   A message describing an alternative solution to the deprecated function.
+ *   It's assumed to be already passed though the t() function.
+ *
+ * @return string
+ *   The deprecated message.
+ */
+function islandora_deprecated($release, $solution = NULL) {
+  $bt = debug_backtrace();
+  assert($bt[0]['function'] == __FUNCTION__);
+  $function = $bt[1]['function'];
+  $message = t('@function() has been deprecated. As of @release, please update your code before the next release.', array(
+               '@function' => $function,
+               '@release' => $release,
+             ));
+  if (isset($solution)) {
+    $message .= "<br/>\n" . $solution;
+  }
+  return $message;
+}

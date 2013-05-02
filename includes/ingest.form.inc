@@ -6,6 +6,25 @@
  */
 
 /**
+ * Checks if the given configuration can be used to display the ingest form.
+ *
+ * @param array $configuration
+ *   The list of key/value pairs of configuration.
+ *
+ * @return bool
+ *   TRUE if the give configuration defines one or more form steps, FALSE
+ *   otherwise.
+ */
+function islandora_ingest_can_display_ingest_form(array $configuration) {
+  $form_state = array();
+  islandora_ingest_form_init_form_state_storage($form_state, $configuration);
+  $form_steps = islandora_ingest_form_get_form_steps($form_state);
+  // Forget the stubbed steps for the remainder of this request.
+  drupal_static_reset('islandora_ingest_form_get_steps');
+  return count($form_steps) > 0;
+}
+
+/**
  * Ingest form build function.
  *
  * Initializes the form state, and builds the initial list of steps, excutes
@@ -45,26 +64,6 @@ function islandora_ingest_form(array $form, array &$form_state, array $configura
 }
 
 /**
- * Validates the given ingest configuration.
- *
- * At the moment it only requires that models are present.
- *
- * @todo Add hook for manipulating/validating the configuration.
- *
- * @see islandora_ingest_form()
- *
- * @throws InvalidArgumentException
- *
- * @param array $configuration
- *   The key value pairs that are used to build the multi-paged ingest process.
- */
-function islandora_ingest_form_validate_configuration(array $configuration) {
-  if (empty($configuration['models'])) {
-    throw new InvalidArgumentException('Ingest configuration not vaild, no models were given');
-  }
-}
-
-/**
  * Initializes the form_state storage for use in the ingest multi-page forms.
  *
  * @param array $form_state
@@ -75,12 +74,15 @@ function islandora_ingest_form_validate_configuration(array $configuration) {
  */
 function islandora_ingest_form_init_form_state_storage(array &$form_state, array $configuration) {
   if (empty($form_state['islandora'])) {
-    // Validate the configuration before we use it.
-    islandora_ingest_form_validate_configuration($configuration);
-    $object = islandora_ingest_form_prepare_new_object($configuration);
+    $objects = isset($configuration['objects']) ? $configuration['objects'] : array();
+    if (empty($objects)) {
+      $objects[] = islandora_ingest_form_prepare_new_object($configuration);
+    }
+    // No need to persist the 'objects' within the configuration.
+    unset($configuration['objects']);
     $form_state['islandora'] = array(
       'step_id' => NULL,
-      'objects' => array($object),
+      'objects' => $objects,
       'shared_storage' => $configuration,
       'step_storage' => array(),
     );
@@ -132,6 +134,8 @@ function islandora_ingest_form_get_last_step_id(array &$form_state) {
 function islandora_ingest_form_prepare_new_object(array $configuration) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   if (empty($configuration['object'])) {
+    $message = islandora_deprecated('Please use "objects" as the default ingest form configuration property.');
+    trigger_error(check_plain($message), E_USER_DEPRECATED);
     // ID is more specific than namespace so it will take precedence.
     $id = isset($configuration['namespace']) ? $configuration['namespace'] : 'islandora';
     $id = isset($configuration['id']) ? $configuration['id'] : $id;
@@ -305,35 +309,6 @@ function islandora_ingest_form_decrement_step(array &$form_state) {
     $form_state['islandora']['step_id'] = $previous_step_id;
     islandora_ingest_form_grab_info($form_state);
   }
-}
-
-/**
- * Build a list of steps given only configuration.
- *
- * XXX: This is used to give an indication of whether there are any steps for a
- *   given configuration.
- *
- * @param array $configuration
- *   The list of key/value pairs of configuration.
- */
-function islandora_ingest_get_approximate_steps(array $configuration) {
-  try {
-    // @todo, we need to expand the configuration before we can validate it?
-    // I think this need some thinking.
-    islandora_ingest_form_validate_configuration($configuration);
-  }
-  catch (InvalidArgumentException $e) {
-    // Don't log or display exception.
-    return array();
-  }
-  $stubbed_form_state = array(
-    'islandora' => array(
-      'shared_storage' => $configuration,
-    ),
-  );
-  $steps = islandora_ingest_form_get_steps($stubbed_form_state);
-  drupal_static_reset('islandora_ingest_form_get_steps');
-  return $steps;
 }
 
 /**
@@ -853,4 +828,40 @@ function islandora_ingest_form_get_steps(array &$form_state) {
   }
   uasort($steps, 'drupal_sort_weight');
   return $steps;
+}
+
+/**
+ * Filter the ingest steps to only steps of type 'form'.
+ *
+ * @param array $form_state
+ *   The Drupal form state.
+ *
+ * @return array
+ *   The list of sorted ingest form steps as defined by all implementers
+ *   of ISLANDORA_INGEST_STEP_HOOK.
+ */
+function islandora_ingest_form_get_form_steps(array &$form_state) {
+  $steps = islandora_ingest_form_get_steps($form_state);
+  $form_step_filter = function($o) {
+    return $o['type'] == 'form';
+  };
+  return array_filter($steps, $form_step_filter);
+}
+
+/**
+ * Filter the ingest steps to only steps of type 'form'.
+ *
+ * @param array $form_state
+ *   The Drupal form state.
+ *
+ * @return array
+ *   The list of sorted ingest callback steps as defined by all implementers
+ *   of ISLANDORA_INGEST_STEP_HOOK.
+ */
+function islandora_ingest_form_get_callback_steps(array &$form_state) {
+  $steps = islandora_ingest_form_get_steps($form_state);
+  $callback_step_filter = function($o) {
+    return $o['type'] == 'callback';
+  };
+  return array_filter($steps, $callback_step_filter);
 }
