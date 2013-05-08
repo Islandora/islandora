@@ -80,6 +80,8 @@ function islandora_ingest_form_init_form_state_storage(array &$form_state, array
     }
     // No need to persist the 'objects' within the configuration.
     unset($configuration['objects']);
+    // Required for step hooks.
+    $configuration['models'] = isset($configuration['models']) ? $configuration['models'] : array();
     $form_state['islandora'] = array(
       'step_id' => NULL,
       'objects' => $objects,
