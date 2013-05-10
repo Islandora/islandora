@@ -33,4 +33,4 @@ drush en --yes simpletest
 drush en --yes potx
 drush en --user=1 --yes islandora
 drush cc all
-sleep 4
+sleep 20
