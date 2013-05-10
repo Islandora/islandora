@@ -71,6 +71,10 @@ function islandora_invoke_datastream_hooks($hook, array $models, $dsid) {
   return islandora_invoke_hook_list($hook, $refinements, array_slice(func_get_args(), 3));
 }
 
+/**
+ * IslandoraFedoraRepository
+ * @author discoverygarden
+ */
 class IslandoraFedoraRepository extends FedoraRepository {
   protected $queryClass = 'IslandoraRepositoryQuery';
   protected $newObjectClass = 'IslandoraNewFedoraObject';
@@ -79,7 +83,7 @@ class IslandoraFedoraRepository extends FedoraRepository {
   /**
    * Ingest the given object.
    *
-   * @see FedoraRepository::ingestObject()
+   * @see FedoraRepository.ingestObject()
    */
   public function ingestObject(NewFedoraObject &$object) {
     $context = array(
@@ -112,12 +116,20 @@ class IslandoraFedoraRepository extends FedoraRepository {
 
 class IslandoraRepositoryQuery extends RepositoryQuery {}
 
+/**
+ * IslandoraNewFedoraObject
+ * @author discoverygarden
+ */
 class IslandoraNewFedoraObject extends NewFedoraObject {
   protected $newFedoraDatastreamClass = 'IslandoraNewFedoraDatastream';
   protected $fedoraDatastreamClass = 'IslandoraFedoraDatastream';
   protected $fedoraRelsExtClass = 'IslandoraFedoraRelsExt';
 }
 
+/**
+ * IslandoraFedoraObject
+ * @author discoverygarden
+ */
 class IslandoraFedoraObject extends FedoraObject {
   protected $newFedoraDatastreamClass = 'IslandoraNewFedoraDatastream';
   protected $fedoraDatastreamClass = 'IslandoraFedoraDatastream';
@@ -126,7 +138,7 @@ class IslandoraFedoraObject extends FedoraObject {
   /**
    * Ingest the given datastream.
    *
-   * @see FedoraObject::ingestDatastream()
+   * @see FedoraObject.ingestDatastream()
    */
   public function ingestDatastream(&$datastream) {
     $object = $datastream->parent;
@@ -156,12 +168,16 @@ class IslandoraFedoraObject extends FedoraObject {
 
 class IslandoraRepositoryConnection extends RepositoryConnection {}
 
+/**
+ * IslandoraFedoraApi
+ * @author discoverygarden
+ */
 class IslandoraFedoraApi extends FedoraApi {
 
   /**
    * Instantiate a IslandoraFedoraApi object.
    *
-   * @see FedoraApi::__construct()
+   * @see FedoraApi.__construct()
    */
   public function __construct(IslandoraRepositoryConnection $connection, FedoraApiSerializer $serializer = NULL) {
     if (!$serializer) {
@@ -173,6 +189,10 @@ class IslandoraFedoraApi extends FedoraApi {
   }
 }
 
+/**
+ * IslandoraFedoraApiM
+ * @author discoverygarden
+ */
 class IslandoraFedoraApiM extends FedoraApiM {
 
   /**
@@ -183,7 +203,7 @@ class IslandoraFedoraApiM extends FedoraApiM {
    * @throws Exception
    *   If the modify datastream request was block by some module.
    *
-   * @see FedoraApiM::modifyDatastream
+   * @see FedoraApiM.modifyDatastream()
    */
   public function modifyDatastream($pid, $dsid, $params = array()) {
     $object = islandora_object_load($pid);
@@ -218,7 +238,7 @@ class IslandoraFedoraApiM extends FedoraApiM {
   /**
    * Update Fedora Object parameters.
    *
-   * @see FedoraApiM::modifyObject
+   * @see FedoraApiM.modifyObject
    */
   public function modifyObject($pid, $params = NULL) {
     $object = islandora_object_load($pid);
@@ -251,7 +271,7 @@ class IslandoraFedoraApiM extends FedoraApiM {
   /**
    * Purge a datastream from from Fedora.
    *
-   * @see FedoraApiM::purgeDatastream
+   * @see FedoraApiM.purgeDatastream
    */
   public function purgeDatastream($pid, $dsid, $params = array()) {
     $object = islandora_object_load($pid);
@@ -294,7 +314,7 @@ class IslandoraFedoraApiM extends FedoraApiM {
   /**
    * Purge an object.
    *
-   * @see FedoraApiM::purgeObject
+   * @see FedoraApiM.purgeObject
    */
   public function purgeObject($pid, $log_message = NULL) {
     $object = islandora_object_load($pid);
@@ -338,16 +358,28 @@ class IslandoraFedoraApiM extends FedoraApiM {
 
 class IslandoraSimpleCache extends SimpleCache {}
 
+/**
+ * IslandoraNewFedoraDatastream
+ * @author discoverygarden
+ */
 class IslandoraNewFedoraDatastream extends NewFedoraDatastream {
   protected $fedoraRelsIntClass = 'IslandoraFedoraRelsInt';
   protected $fedoraDatastreamVersionClass = 'IslandoraFedoraDatastreamVersion';
 }
 
+/**
+ * IslandoraFedoraDatastream
+ * @author discoverygarden
+ */
 class IslandoraFedoraDatastream extends FedoraDatastream {
   protected $fedoraRelsIntClass = 'IslandoraFedoraRelsInt';
   protected $fedoraDatastreamVersionClass = 'IslandoraFedoraDatastreamVersion';
 }
 
+/**
+ * IslandoraFedoraDatastreamVersion
+ * @author discoverygarden
+ */
 class IslandoraFedoraDatastreamVersion extends FedoraDatastreamVersion {
   protected $fedoraRelsIntClass = 'IslandoraFedoraRelsInt';
   protected $fedoraDatastreamVersionClass = 'IslandoraFedoraDatastreamVersion';

@@ -5,12 +5,16 @@
  * Tests islandora permissions, and permission related funcitons.
  */
 
+/**
+ * IslandoraPermissionsTestCase
+ * @islandora
+ */
 class IslandoraPermissionsTestCase extends IslandoraWebTestCase {
 
   /**
    * Gets info to display to describe this test.
    *
-   * @see IslandoraWebTestCase::getInfo()
+   * @see IslandoraWebTestCase.getInfo()
    */
   public static function getInfo() {
     return array(
@@ -23,7 +27,7 @@ class IslandoraPermissionsTestCase extends IslandoraWebTestCase {
   /**
    * Prepares enviroment for testing.
    *
-   * @see IslandoraWebTestCase::setUp()
+   * @see IslandoraWebTestCase.setUp()
    */
   public function setUp() {
     parent::setUp(array('islandora'));

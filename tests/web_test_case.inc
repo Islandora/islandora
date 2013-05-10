@@ -5,12 +5,16 @@
  * Defines the class IslandoraWebTestCase, which allows tests to access Fedora.
  */
 
+/**
+ * IslandoraWebTestCase
+ * @author discoverygarden
+ */
 class IslandoraWebTestCase extends DrupalWebTestCase {
 
   /**
    * Sets up the Drupal filter to access this test Drupal instances database.
    *
-   * @see DrupalWebTestCase::setUp()
+   * @see DrupalWebTestCase.setUp()
    */
   public function setUp() {
     $args = func_get_args();
@@ -116,7 +120,7 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
   /**
    * Restores the original Drupal filter, frees any allocated resources.
    *
-   * @see DrupalWebTestCase::tearDown()
+   * @see DrupalWebTestCase.tearDown()
    */
   public function tearDown() {
     if ($this->configuration['use_drupal_filter']) {

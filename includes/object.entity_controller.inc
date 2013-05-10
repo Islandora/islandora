@@ -5,6 +5,10 @@
  * Very basic entity controller.
  */
 
+/**
+ * IslandoraObjectEntityController Class
+ * @author discoverygarden
+ */
 class IslandoraObjectEntityController implements DrupalEntityControllerInterface {
 
   /**

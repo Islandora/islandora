@@ -11,12 +11,16 @@
  * To make sense of these tests reference islandora_hooks_test.module.
  */
 
+/**
+ * IslandoraHooksTestCase
+ * @islandora
+ */
 class IslandoraHooksTestCase extends IslandoraWebTestCase {
 
   /**
    * Gets info to display to describe this test.
    *
-   * @see IslandoraWebTestCase::getInfo()
+   * @see IslandoraWebTestCase.getInfo()
    */
   public static function getInfo() {
     return array(
@@ -29,7 +33,7 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
   /**
    * Creates an admin user and a connection to a fedora repository.
    *
-   * @see IslandoraWebTestCase::setUp()
+   * @see IslandoraWebTestCase.setUp()
    */
   public function setUp() {
     parent::setUp('islandora_hooks_test');
@@ -40,7 +44,7 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
   /**
    * Free any objects/resources created for this test.
    *
-   * @see IslandoraWebTestCase::tearDown()
+   * @see IslandoraWebTestCase.tearDown()
    */
   public function tearDown() {
     $this->purgeTestObjects();
