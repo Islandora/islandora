@@ -99,6 +99,21 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
     $this->admin->repository = $connection->repository;
     return $this->admin;
   }
+
+  /**
+   * Creates a temporary Drupal user with administrative privileges.
+   *
+   * @param array $permissions
+   *   An optional set of different permissions to use (leave blank for all).
+   */
+  public function createDrupalAdminUser(array $permissions = array()) {
+    $roles = user_roles();
+    $index = array_search('administrator', $roles);
+    $user = $this->drupalCreateUser($permissions);
+    $user->roles[$index] = 'administrator';
+    return user_save($user);
+  }
+
   /**
    * Stores the content of the Drupal Filter for later restoration.
    */
@@ -111,6 +126,23 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
       // Remove if there was never an original.
       drupal_unlink($file);
     }
+  }
+
+  /**
+   * Gets the list of object PIDs owned by a user from the test database.
+   *
+   * @param string $user
+   *   The user whose PIDs we want to grab
+   *
+   * @return array $objectpids
+   *   Array storing PIDs found
+   */
+  public function getPidListFromUser($user) {
+    $connection_info = Database::getConnectionInfo('default');
+    $dbname = $connection_info['default']['database'];
+    $query = "SELECT pid FROM $dbname.doFields WHERE ownerID = '$user'";
+    $objectpids = db_query($query);
+    return $objectpids;
   }
 
   /**
