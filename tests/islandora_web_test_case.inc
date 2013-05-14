@@ -160,7 +160,7 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
    * @return AbstractObject
    *   The pid of the object or FALSE if a PID is not found.
    */
-  public function getPidFromPath($path) {
+  public function getObjectFromPath($path) {
     $path_parts = explode('/', $path);
     $array_length = count($path_parts);
     for ($i = 0; $i < $array_length; $i++) {
