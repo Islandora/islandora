@@ -22,7 +22,8 @@
  * You should have received a copy of the GNU General Public License
  * along with the program.  If not, see <http ://www.gnu.org/licenses/>.
  */
-
+// @todo we need to fix these coder warnings when we are making api changes
+// @ignore :10
 // Common datastreams.
 define('DS_COMP_STREAM', 'DS-COMPOSITE-MODEL');
 
