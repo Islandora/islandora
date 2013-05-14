@@ -273,7 +273,7 @@ function islandora_ingest_form_get_previous_step_id(array &$form_state, $step_id
   if ($step_id == NULL) {
     return islandora_ingest_form_get_last_step_id($form_state);
   }
-  $step_ids = array_keys(islandora_ingest_form_get_steps($form_state));
+  $step_ids = array_keys($form_state['islandora']['step_storage']);
   $index = array_search($step_id, $step_ids);
   if ($index !== FALSE && --$index >= 0) {
     return $step_ids[$index];
