@@ -8,10 +8,10 @@
 /**
  * Callback to download the given datastream to the users computer.
  *
- * @param FedoraDatastream $datastream
+ * @param AbstractDatastream $datastream
  *   The datastream to download.
  */
-function islandora_download_datastream(FedoraDatastream $datastream) {
+function islandora_download_datastream(AbstractDatastream $datastream) {
   islandora_view_datastream($datastream, TRUE);
 }
 
@@ -21,13 +21,13 @@ function islandora_download_datastream(FedoraDatastream $datastream) {
  * @note
  *  This function calls exit().
  *
- * @param FedoraDatastream $datastream
+ * @param AbstractDatastream $datastream
  *   The datastream to view/download.
  * @param bool $download
  *   If TRUE the file is download to the user computer for viewing otherwise it
  *   will attempt to display in the browser natively.
  */
-function islandora_view_datastream(FedoraDatastream $datastream, $download = FALSE) {
+function islandora_view_datastream(AbstractDatastream $datastream, $download = FALSE) {
   header_remove('Cache-Control');
   header_remove('Expires');
   header('Content-type: ' . $datastream->mimetype);
@@ -51,14 +51,14 @@ function islandora_view_datastream(FedoraDatastream $datastream, $download = FAL
 /**
  * Get the human readable size of the given datastream.
  *
- * @param FedoraDatastream $datastream
+ * @param AbstractDatastream $datastream
  *   The datastream to check.
  *
  * @return string
  *   A human readable size of the given datastream, or '-' if the size could not
  *   be determined.
  */
-function islandora_datastream_get_human_readable_size(FedoraDatastream $datastream) {
+function islandora_datastream_get_human_readable_size(AbstractDatastream $datastream) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   $size_is_calculatable = $datastream->controlGroup == 'M' || $datastream->controlGroup == 'X';
   return $size_is_calculatable ? islandora_convert_bytes_to_human_readable($datastream->size) : '-';
@@ -67,23 +67,23 @@ function islandora_datastream_get_human_readable_size(FedoraDatastream $datastre
 /**
  * Get either the 'view' or 'download' url for the given datastream if possible.
  *
- * @param FedoraDatastream $datastream
+ * @param AbstractDatastream $datastream
  *   The datastream to generated the url to.
  *
  * @return string
  *   either the 'view' or 'download' url for the given datastream.
  */
-function islandora_datastream_get_url(FedoraDatastream $datastream, $type = 'download') {
+function islandora_datastream_get_url(AbstractDatastream $datastream, $type = 'download') {
   return $datastream->controlGroup == 'R' ? $datastream->url : "islandora/object/{$datastream->parent->id}/datastream/{$datastream->id}/$type";
 }
 
 /**
  * Gets the delete link.
  *
- * @param FedoraDatastream $datastream
+ * @param AbstractDatastream $datastream
  *   The datastream to generated the url to.
  */
-function islandora_datastream_get_delete_link(FedoraDatastream $datastream) {
+function islandora_datastream_get_delete_link(AbstractDatastream $datastream) {
   $datastreams = module_invoke_all('islandora_undeletable_datastreams', $datastream->parent->models);
   $can_delete = !in_array($datastream->id, $datastreams);
   return $can_delete ? l(t('delete'), "islandora/object/{$datastream->parent->id}/datastream/{$datastream->id}/delete") : '';
@@ -92,10 +92,10 @@ function islandora_datastream_get_delete_link(FedoraDatastream $datastream) {
 /**
  * Gets the edit link.
  *
- * @param FedoraDatastream $datastream
+ * @param AbstractDatastream $datastream
  *   The datastream to generated the url to.
  */
-function islandora_datastream_edit_get_link(FedoraDatastream $datastream) {
+function islandora_datastream_edit_get_link(AbstractDatastream $datastream) {
   $edit_registry = module_invoke_all('islandora_edit_datastream_registry', $datastream->parent, $datastream);
   $can_edit = count($edit_registry) > 0 && user_access(FEDORA_METADATA_EDIT);
   return $can_edit ? l(t('edit'), "islandora/object/{$datastream->parent->id}/datastream/{$datastream->id}/edit") : '';
@@ -104,10 +104,10 @@ function islandora_datastream_edit_get_link(FedoraDatastream $datastream) {
 /**
  * Display the edit datastream page.
  *
- * @param FedoraDatastream $datastream
+ * @param AbstractDatastream $datastream
  *   The datastream to edit.
  */
-function islandora_edit_datastream(FedoraDatastream $datastream) {
+function islandora_edit_datastream(AbstractDatastream $datastream) {
   $edit_registry = module_invoke_all('islandora_edit_datastream_registry', $datastream->parent, $datastream);
   $edit_count = count($edit_registry);
   switch ($edit_count) {

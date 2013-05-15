@@ -370,7 +370,7 @@ function islandora_forms($form_id) {
  * @global $user
  *
  * @param mixed $object
- *   The FedoraObject or FedoraDatastream to test for accessibility, if NULL
+ *   The AbstractObject or AbstractDatastream to test for accessibility, if NULL
  *   is given the object is assumed to not exist or be inaccessible.
  * @param array $permissions
  *   The required user permissions.
@@ -448,7 +448,7 @@ function islandora_user_access($object, array $permissions, $content_models = ar
  *
  * @param string $perm
  *   User permission to test for.
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object to test, if NULL given the object doesn't exist or is
  *   inaccessible.
  *
@@ -474,10 +474,10 @@ function islandora_object_access_callback($perm, $object = NULL) {
  *
  * @param string $perm
  *   The user permission to test for.
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object to test, if NULL given the object doesn't exist or is
  *   inaccessible.
- * @param FedoraDatastream $datastream
+ * @param AbstractDatastream $datastream
  *   The datastream to test, if NULL given the datastream doesn't exist
  *   or is inaccessible.
  * @param StdObject $account
@@ -525,7 +525,7 @@ function islandora_object_datastream_tokened_access_callback($perm, $object = NU
  *
  * @param array $perms
  *   Array of user permission to test for.
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object to test, if NULL given the object doesn't exist or is
  *   inaccessible.
  *
@@ -551,13 +551,13 @@ function islandora_object_manage_access_callback($perms, $object = NULL) {
 /**
  * Renders the given objects manage overview page.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object to manage.
  *
  * @return string
  *   The HTML repersentation of the manage object page.
  */
-function islandora_manage_overview_object(FedoraObject $object) {
+function islandora_manage_overview_object(AbstractObject $object) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   $output = array();
   foreach (islandora_build_hook_list(ISLANDORA_OVERVIEW_HOOK, $object->models) as $hook) {
@@ -578,14 +578,14 @@ function islandora_manage_overview_object(FedoraObject $object) {
 /**
  * Renders the default manage object page for the given object.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object used to render the manage object page.
  *
  * @return array
  *   The default rendering of the object manage page, indexed at
  *   'Default Edit output'.
  */
-function islandora_default_islandora_manage_overview_object(FedoraObject $object) {
+function islandora_default_islandora_manage_overview_object(AbstractObject $object) {
   $output = theme('islandora_default_overview', array('islandora_object' => $object));
   return array('Default overview output' => $output);
 }
@@ -599,13 +599,13 @@ function islandora_default_islandora_manage_overview_object(FedoraObject $object
  * If no modules implement 'ISLANDORA_EDIT_HOOK' then this function returns the
  *  default manage view.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object to manage.
  *
  * @return string
  *   The HTML repersentation of the manage object page.
  */
-function islandora_edit_object(FedoraObject $object) {
+function islandora_edit_object(AbstractObject $object) {
   module_load_include('inc', 'islandora', 'includes/breadcrumb');
   module_load_include('inc', 'islandora', 'includes/utilities');
   drupal_set_title($object->label);
@@ -629,14 +629,14 @@ function islandora_edit_object(FedoraObject $object) {
 /**
  * Renders the default manage object page for the given object.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object used to render the manage object page.
  *
  * @return array
  *   The default rendering of the object manage page, indexed at
  *   'Default Edit output'.
  */
-function islandora_default_islandora_edit_object(FedoraObject $object) {
+function islandora_default_islandora_edit_object(AbstractObject $object) {
   $output = theme('islandora_default_edit', array('islandora_object' => $object));
   return array('Default Edit output' => $output);
 }
@@ -661,13 +661,13 @@ function islandora_view_default_object() {
  * If no modules implement the hook then the default view object page
  *  will be rendered.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object to view.
  *
  * @return string
  *   The html repersentation of this object.
  */
-function islandora_view_object(FedoraObject $object) {
+function islandora_view_object(AbstractObject $object) {
   module_load_include('inc', 'islandora', 'includes/breadcrumb');
   module_load_include('inc', 'islandora', 'includes/utilities');
   drupal_set_title($object->label);
@@ -697,7 +697,7 @@ function islandora_view_object(FedoraObject $object) {
 /**
  * Renders the default view object page for the given object.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object used to render the view object page.
  *
  * @return array
@@ -849,7 +849,7 @@ function islandora_tokened_datastream_load($datastream_id, $map) {
  *
  * @param mixed $object_id
  *   The object to load the datastream from.  This can be a Fedora PID or
- *   an instantiated IslandoraFedoraObject as it implements __toString()
+ *   an instantiated IslandoraAbstractObject as it implements __toString()
  *   returning the PID.
  *
  * @return FedoraDatastream
@@ -872,7 +872,7 @@ function islandora_datastream_load($datastream_id, $object_id) {
  * attribute, as in:
  *   <content_model name="Collection" version="2" ...
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The Object the datastream belongs to.
  * @param string $dsid
  *   The ID of the datastream.
@@ -941,26 +941,26 @@ function islandora_islandora_undeletable_datastreams(array $models) {
 /**
  * Ingest the given object.
  *
- * @param NewFedoraObject $object
+ * @param AbstractObject $object
  *   An ingestable FedoraObject.
  *
  * @return FedoraObject
  *   The ingested FedoraObject.
  */
-function islandora_add_object(NewFedoraObject &$object) {
+function islandora_add_object(AbstractObject &$object) {
   return $object->repository->ingestObject($object);
 }
 
 /**
  * Delete's or purges the given object.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   An object to delete.
  *
  * @return bool
  *   TRUE if successful, FALSE otherwise.
  */
-function islandora_delete_object(FedoraObject &$object) {
+function islandora_delete_object(AbstractObject &$object) {
   try {
     $object->repository->purgeObject($object->id);
     $object = NULL;
@@ -979,13 +979,13 @@ function islandora_delete_object(FedoraObject &$object) {
  *  Which types are undefined, but more than likely because of the hooks
  *  there will be several kinds.
  *
- * @param FedoraDatastream $datastream
+ * @param AbstractDatastream $datastream
  *   The datastream to delete.
  *
  * @return bool
  *   TRUE if successful, FALSE otherwise.
  */
-function islandora_delete_datastream(FedoraDatastream &$datastream) {
+function islandora_delete_datastream(AbstractDatastream &$datastream) {
   $object = $datastream->parent;
   return $object->purgeDatastream($datastream->id);
 }
@@ -1065,7 +1065,7 @@ function islandora_entity_property_info() {
  * Modules can either implement preprocess functions to append content onto the
  * 'content' variable, or override the display by providing a theme suggestion.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object.
  *
  * @return array

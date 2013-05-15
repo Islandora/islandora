@@ -12,13 +12,13 @@
  *   The Drupal form.
  * @param array $form_state
  *   The Drupal form state.
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object whose properties this form will modify.
  *
  * @return array
  *   The drupal form definition.
  */
-function islandora_object_properties_form(array $form, array &$form_state, FedoraObject $object) {
+function islandora_object_properties_form(array $form, array &$form_state, AbstractObject $object) {
   drupal_set_title($object->label);
   $form_state['object'] = $object;
   return array(

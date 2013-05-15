@@ -8,7 +8,7 @@
 /**
  * Implements hook_islandora_object_alter().
  */
-function islandora_hooks_test_islandora_object_alter(AbstractFedoraObject $object, array &$context) {
+function islandora_hooks_test_islandora_object_alter(AbstractObject $object, array &$context) {
   switch ($context['action']) {
     case 'ingest':
       if ($object->id == 'test:testIngestedObjectHook') {
@@ -54,7 +54,7 @@ function islandora_hooks_test_islandora_object_alter(AbstractFedoraObject $objec
 /**
  * Implements hook_islandora_object_alter().
  */
-function islandora_hooks_test_islandora_datastream_alter(AbstractFedoraObject $object, AbstractFedoraDatastream $datastream, array &$context) {
+function islandora_hooks_test_islandora_datastream_alter(AbstractObject $object, AbstractDatastream $datastream, array &$context) {
   switch ($context['action']) {
     case 'ingest':
       if ($object->id == 'test:testIngestedDatastreamHook') {
@@ -100,7 +100,7 @@ function islandora_hooks_test_islandora_datastream_alter(AbstractFedoraObject $o
 /**
  * Implements hook_islandora_object_ingested().
  */
-function islandora_hooks_test_islandora_object_ingested(FedoraObject $object) {
+function islandora_hooks_test_islandora_object_ingested(AbstractObject $object) {
   if ($object->id == 'test:testIngestedObjectHook') {
     $_SESSION['islandora_hooks']['hook'][ISLANDORA_OBJECT_INGESTED_HOOK] = TRUE;
   }
@@ -109,7 +109,7 @@ function islandora_hooks_test_islandora_object_ingested(FedoraObject $object) {
 /**
  * Implements hook_islandora_object_modified().
  */
-function islandora_hooks_test_islandora_object_modified(FedoraObject $object) {
+function islandora_hooks_test_islandora_object_modified(AbstractObject $object) {
   if ($object->id == 'test:testModifiedObjectHook') {
     $_SESSION['islandora_hooks']['hook'][ISLANDORA_OBJECT_MODIFIED_HOOK] = TRUE;
   }
@@ -127,7 +127,7 @@ function islandora_hooks_test_islandora_object_purged($pid) {
 /**
  * Implements hook_islandora_datastream_ingested().
  */
-function islandora_hooks_test_islandora_datastream_ingested(FedoraObject $object, FedoraDatastream $datastream) {
+function islandora_hooks_test_islandora_datastream_ingested(AbstractObject $object, AbstractDatastream $datastream) {
   if ($object->id == 'test:testIngestedDatastreamHook' && $datastream->id == "TEST") {
     $_SESSION['islandora_hooks']['hook'][ISLANDORA_DATASTREAM_INGESTED_HOOK] = TRUE;
   }
@@ -136,7 +136,7 @@ function islandora_hooks_test_islandora_datastream_ingested(FedoraObject $object
 /**
  * Implements hook_islandora_datastream_modified().
  */
-function islandora_hooks_test_islandora_datastream_modified(FedoraObject $object, FedoraDatastream $datastream) {
+function islandora_hooks_test_islandora_datastream_modified(AbstractObject $object, AbstractDatastream $datastream) {
   if ($object->id == 'test:testModifiedDatastreamHook' && $datastream->id == "TEST") {
     $_SESSION['islandora_hooks']['hook'][ISLANDORA_DATASTREAM_MODIFIED_HOOK] = TRUE;
   }
@@ -145,7 +145,7 @@ function islandora_hooks_test_islandora_datastream_modified(FedoraObject $object
 /**
  * Implements hook_islandora_datastream_purged().
  */
-function islandora_hooks_test_islandora_datastream_purged(FedoraObject $object, $dsid) {
+function islandora_hooks_test_islandora_datastream_purged(AbstractObject $object, $dsid) {
   if ($object->id == 'test:testPurgedDatastreamHook' && $dsid == "TEST") {
     $_SESSION['islandora_hooks']['hook'][ISLANDORA_DATASTREAM_PURGED_HOOK] = TRUE;
   }

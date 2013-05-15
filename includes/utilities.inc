@@ -271,14 +271,14 @@ function islandora_namespace_accessible($id) {
  * This function gets its info from the RELS-EXT directly rather than through an
  * risearch.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object whose parents will be returned.
  *
  * @return array
  *   An array of FedoraObject's that the given object has a
  *   (isMemberOf, isMemberOfCollection) relationship with.
  */
-function islandora_get_parents_from_rels_ext(FedoraObject $object) {
+function islandora_get_parents_from_rels_ext(AbstractObject $object) {
   try {
     $collections = array_merge(
       $object->relationships->get(FEDORA_RELS_EXT_URI, 'isMemberOfCollection'),
@@ -298,7 +298,7 @@ function islandora_get_parents_from_rels_ext(FedoraObject $object) {
 /**
  * Gets the datastreams requirments that are missing.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object which models will be used to determine what datastreams it
  *   should have.
  *
@@ -306,7 +306,7 @@ function islandora_get_parents_from_rels_ext(FedoraObject $object) {
  *   The DS-COMPOSITE-MODEL defined datastreams that are required for the given
  *   object, but not already present.
  */
-function islandora_get_missing_datastreams_requirements(FedoraObject $object) {
+function islandora_get_missing_datastreams_requirements(AbstractObject $object) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   $datastreams = islandora_get_datastreams_requirements($object);
   foreach ($datastreams as $dsid => $requirements) {
@@ -331,7 +331,7 @@ function islandora_get_missing_datastreams_requirements(FedoraObject $object) {
  *
  * @see islandora_get_required_datastreams_from_content_model()
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object which models will be used to determine what datastreams it
  *   should have.
  *
@@ -339,7 +339,7 @@ function islandora_get_missing_datastreams_requirements(FedoraObject $object) {
  *   The DS-COMPOSITE-MODEL defined datastreams that are required for the given
  *   object.
  */
-function islandora_get_datastreams_requirements(FedoraObject $object) {
+function islandora_get_datastreams_requirements(AbstractObject $object) {
   return islandora_get_datastreams_requirements_from_models($object->models);
 }
 
@@ -375,7 +375,7 @@ function islandora_get_datastreams_requirements_from_models(array $models) {
  *
  * @todo Add support for fetching the schema information.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The content model whose DS-COMPOSITE-MODEL datastream will be used to
  *   determine what datastreams are required.
  *
@@ -388,7 +388,7 @@ function islandora_get_datastreams_requirements_from_models(array $models) {
  *     - "mime": A array containing MIME-types the stream may have.
  *     - "optional": A boolean indicating if the given stream is optional.
  */
-function islandora_get_datastreams_requirements_from_content_model(FedoraObject $object) {
+function islandora_get_datastreams_requirements_from_content_model(AbstractObject $object) {
   if (empty($object[DS_COMP_STREAM])) {
     return array();
   }

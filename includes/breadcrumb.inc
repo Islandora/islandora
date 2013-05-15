@@ -14,7 +14,7 @@
  * ancestry which is identified by any of the following RELS-EXT terms
  * (isMemberOf,isMemberOfCollection,isPartOf).
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   An object whose ancestry will be mapped to bread-crumbs.
  *
  * @see drupal_set_breadcrumb()
