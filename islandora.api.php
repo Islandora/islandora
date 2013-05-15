@@ -8,7 +8,7 @@
 /**
  * Generate a repository objects view.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object to display
  * @param object $user
  *   The user accessing the object.
@@ -29,7 +29,7 @@ function hook_islandora_view_object($object, $user, $page_number, $page_size) {
  * Content models PIDs have colons and hyphens changed to underscores, to
  * create the hook name.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   A Tuque FedoraObject
  *
  * @return array
@@ -42,8 +42,8 @@ function hook_CMODEL_PID_islandora_view_object($object) {
 /**
  * Alter display output after it has been generated.
  *
- * @param FedoraObject $object
- *   A Tuque FedoraObject being operated on.
+ * @param AbstractObject $object
+ *   A Tuque AbstractObject being operated on.
  * @param array $rendered
  *   The array of rendered views.
  */
@@ -55,8 +55,8 @@ function hook_islandora_view_object_alter(&$object, &$rendered) {
  *
  * @see hook_islandora_view_object_alter()
  *
- * @param FedoraObject $object
- *   A Tuque FedoraObject being operated on.
+ * @param AbstractObject $object
+ *   A Tuque AbstractObject being operated on.
  * @param array $rendered
  *   The array of rendered views.
  */
@@ -66,7 +66,7 @@ function hook_CMODEL_PID_islandora_view_object_alter(&$object, &$rendered) {
 /**
  * Generate an object's management display.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   A Tuque FedoraObject
  *
  * @return array
@@ -81,7 +81,7 @@ function hook_islandora_edit_object($object) {
  * Content models PIDs have colons and hyphens changed to underscores, to
  * create the hook name.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   A Tuque FedoraObject
  *
  * @return array
@@ -93,7 +93,7 @@ function hook_CMODEL_PID_islandora_edit_object($object) {
 /**
  * Allow management display output to be altered.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   A Tuque FedoraObject
  * @param array $rendered
  *   an arr of rendered views
@@ -110,7 +110,7 @@ function hook_islandora_edit_object_alter(&$object, &$rendered) {
  * Changing object properties such as "label", or "state", are considered
  * modifications, where as manipulating an object's datstreams are not.
  *
- * @param AbstractFedoraObject $object
+ * @param AbstractObject $object
  *   The object to alter.
  * @param array $context
  *   An associative array containing:
@@ -130,7 +130,7 @@ function hook_islandora_edit_object_alter(&$object, &$rendered) {
  *
  * @see FedoraApiM::modifyObject()
  */
-function hook_islandora_object_alter(AbstractFedoraObject $object, array &$context) {
+function hook_islandora_object_alter(AbstractObject $object, array &$context) {
 }
 
 /**
@@ -138,7 +138,7 @@ function hook_islandora_object_alter(AbstractFedoraObject $object, array &$conte
  *
  * @see hook_islandora_object_alter()
  */
-function hook_CMODEL_PID_islandora_object_alter(AbstractFedoraObject $object, array &$context) {
+function hook_CMODEL_PID_islandora_object_alter(AbstractObject $object, array &$context) {
 }
 
 /**
@@ -151,15 +151,15 @@ function hook_CMODEL_PID_islandora_object_alter(AbstractFedoraObject $object, ar
  * immediately, instead it will be triggered for all datastreams at the time
  * of the NewFedoraObject's ingest.
  *
- * Purging datastreams from a NewFedoraObject will not trigger this alter hook
+ * Purging datastreams from a AbstractObject will not trigger this alter hook
  * at all.
  *
  * Changing datastream's properties such as "label", or "state", are considered
  * modifications, as well as changing the datastreams content.
  *
- * @param AbstractFedoraObject $object
+ * @param AbstractObject $object
  *   The object to the datastream belong to.
- * @param AbstractFedoraDatastream $datastream
+ * @param AbstractDatastream $datastream
  *   The datastream to alter.
  * @param array $context
  *   An associative array containing:
@@ -179,7 +179,7 @@ function hook_CMODEL_PID_islandora_object_alter(AbstractFedoraObject $object, ar
  *
  * @see FedoraApiM::modifyDatastream()
  */
-function hook_islandora_datastream_alter(AbstractFedoraObject $object, AbstractFedoraDatastream $datastream, array &$context) {
+function hook_islandora_datastream_alter(AbstractObject $object, AbstractDatastream $datastream, array &$context) {
 }
 
 /**
@@ -187,7 +187,7 @@ function hook_islandora_datastream_alter(AbstractFedoraObject $object, AbstractF
  *
  * @see hook_islandora_datastream_alter()
  */
-function hook_CMODEL_PID_DSID_islandora_datastream_alter(AbstractFedoraObject $object, AbstractFedoraDatastream $datastream, array &$context) {
+function hook_CMODEL_PID_DSID_islandora_datastream_alter(AbstractObject $object, AbstractDatastream $datastream, array &$context) {
 }
 
 /**
@@ -200,10 +200,10 @@ function hook_CMODEL_PID_DSID_islandora_datastream_alter(AbstractFedoraObject $o
  * If ingested directly via the FedoraApiM object this will not be called as we
  * don't have access to the ingested object at that time.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object that was ingested.
  */
-function hook_islandora_object_ingested(FedoraObject $object) {
+function hook_islandora_object_ingested(AbstractObject $object) {
 }
 
 /**
@@ -211,7 +211,7 @@ function hook_islandora_object_ingested(FedoraObject $object) {
  *
  * @see hook_islandora_object_ingested()
  */
-function hook_CMODEL_PID_islandora_object_ingested(FedoraObject $object) {
+function hook_CMODEL_PID_islandora_object_ingested(AbstractObject $object) {
 }
 
 /**
@@ -222,13 +222,13 @@ function hook_CMODEL_PID_islandora_object_ingested(FedoraObject $object) {
  * Changing object properties such as "label", or "state", are considered
  * modifications, where as manipulating an object's datstreams are not.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object that was ingested.
  *
  * @todo We should also include what changes were made in a additional
  *   parameter.
  */
-function hook_islandora_object_modified(FedoraObject $object) {
+function hook_islandora_object_modified(AbstractObject $object) {
 }
 
 /**
@@ -236,7 +236,7 @@ function hook_islandora_object_modified(FedoraObject $object) {
  *
  * @see hook_islandora_object_modified()
  */
-function hook_CMODEL_PID_islandora_object_modified(FedoraObject $object) {
+function hook_CMODEL_PID_islandora_object_modified(AbstractObject $object) {
 }
 
 /**
@@ -268,12 +268,12 @@ function hook_CMODEL_PID_islandora_object_purged($pid) {
  * If ingested directly via the FedoraApiM object this will not be called as we
  * don't have access to the ingested datastream at that time.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object the datastream belongs to.
- * @param FedoraDatastream $datastream
+ * @param AbstractDatastream $datastream
  *   The ingested datastream.
  */
-function hook_islandora_datastream_ingested(FedoraObject $object, FedoraDatastream $datastream) {
+function hook_islandora_datastream_ingested(AbstractObject $object, AbstractDatastream $datastream) {
 }
 
 /**
@@ -281,7 +281,7 @@ function hook_islandora_datastream_ingested(FedoraObject $object, FedoraDatastre
  *
  * @see hook_islandora_object_ingested()
  */
-function hook_CMODEL_PID_DSID_islandora_datastream_ingested(FedoraObject $object, FedoraDatastream $datastream) {
+function hook_CMODEL_PID_DSID_islandora_datastream_ingested(AbstractObject $object, AbstractDatastream $datastream) {
 }
 
 /**
@@ -292,15 +292,15 @@ function hook_CMODEL_PID_DSID_islandora_datastream_ingested(FedoraObject $object
  * Changing datastream properties such as "label", or "state", are considered
  * modifications, as well as the datastreams content.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object the datastream belongs to.
- * @param FedoraDatastream $datastream
+ * @param AbstractDatastream $datastream
  *   The datastream that was ingested.
  *
  * @todo We should also include what changes were made in a additional
  *   parameter.
  */
-function hook_islandora_datastream_modified(FedoraObject $object, FedoraDatastream $datastream) {
+function hook_islandora_datastream_modified(AbstractObject $object, AbstractDatastream $datastream) {
 }
 
 /**
@@ -308,7 +308,7 @@ function hook_islandora_datastream_modified(FedoraObject $object, FedoraDatastre
  *
  * @see hook_islandora_datastream_modified()
  */
-function hook_CMODEL_PID_islandora_datastream_modified(FedoraObject $object, FedoraDatastream $datastream) {
+function hook_CMODEL_PID_islandora_datastream_modified(AbstractObject $object, AbstractDatastream $datastream) {
 }
 
 /**
@@ -317,12 +317,12 @@ function hook_CMODEL_PID_islandora_datastream_modified(FedoraObject $object, Fed
  * This hook is called after an datastream has been successfully purged, or
  * when its state has been changed to "Deleted".
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object the datastream belonged to.
  * @param string $dsid
  *   The ID of the datastream that was purged/deleted.
  */
-function hook_islandora_datastream_purged(FedoraObject $object, $dsid) {
+function hook_islandora_datastream_purged(AbstractObject $object, $dsid) {
 }
 
 /**
@@ -330,13 +330,13 @@ function hook_islandora_datastream_purged(FedoraObject $object, $dsid) {
  *
  * @see hook_islandora_datastream_purged()
  */
-function hook_CMODEL_PID_islandora_datastream_purged(FedoraObject $object, $dsid) {
+function hook_CMODEL_PID_islandora_datastream_purged(AbstractObject $object, $dsid) {
 }
 
 /**
  * Register a datastream edit route/form.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object to check.
  * @param string $dsid
  *   todo
