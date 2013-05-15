@@ -194,6 +194,11 @@ class MimeDetect {
     'bin' => 'application/octet-stream',
   );
   protected $protectedFileExtensions;
+  protected $extensionExceptions = array(
+    // XXX: Deprecated... Only here due to old 'tif' => 'image/tif' mapping...
+    // The correct MIMEtype is 'image/tiff'.
+    'image/tif' => 'tif',
+  );
   protected $systemTypes;
   protected $systemExts;
   protected $etcMimeTypes = '/etc/mime.types';
@@ -205,6 +210,7 @@ class MimeDetect {
 
     // Populate the reverse shortlist:
     $this->protectedFileExtensions = array_flip($this->protectedMimeTypes);
+    $this->protectedFileExtensions += $this->extensionExceptions;
 
     // Pick up a local mime.types file if it is available.
     if (is_readable('mime.types')) {
