@@ -78,6 +78,12 @@ function islandora_ingest_form_init_form_state_storage(array &$form_state, array
     if (empty($objects)) {
       $objects[] = islandora_ingest_form_prepare_new_object($configuration);
     }
+    // Make sure the models actually exist
+    foreach ($configuration['models'] as $key => $model) {
+      if (!islandora_object_load($model)) {
+        unset($configuration['models'][$key]);
+      }
+    }
     // No need to persist the 'objects' within the configuration.
     unset($configuration['objects']);
     // Required for step hooks.
@@ -534,7 +540,7 @@ function islandora_ingest_form_previous_button(array &$form_state) {
   $prev_form_step = islandora_ingest_form_get_previous_form_step($form_state);
   $form_id = $prev_form_step['form_id'];
   $submit_callback = $form_id . '_undo_submit';
-  $submit = function_exists($submit_callback) ? array($submit_callback, 'islandora_ingest_form_previous_submit') : array('islandora_ingest_form_previous_submit');
+  $submit = function_exists($submit_callback) ? array('islandora_ingest_form_previous_submit', $submit_callback) : array('islandora_ingest_form_previous_submit');
   return array(
     '#type' => 'submit',
     '#value' => t('Previous'),
@@ -731,7 +737,7 @@ function &islandora_ingest_form_get_objects(array &$form_state) {
  */
 function islandora_ingest_form_get_object(array &$form_state) {
   $objects = &islandora_ingest_form_get_objects($form_state);
-  return current($objects);
+  return reset($objects);
 }
 
 /**
