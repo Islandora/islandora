@@ -26,7 +26,7 @@ ln -s $ISLANDORA_DIR sites/all/modules/islandora
 mv sites/all/modules/islandora/tests/travis.test_config.ini sites/all/modules/islandora/tests/test_config.ini
 mkdir sites/all/libraries
 ln -s $HOME/tuque sites/all/libraries/tuque
-drush dl --yes coder
+drush dl --yes --dev coder
 drush dl --yes potx
 drush en --yes coder_review
 drush en --yes simpletest
