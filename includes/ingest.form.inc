@@ -78,7 +78,7 @@ function islandora_ingest_form_init_form_state_storage(array &$form_state, array
     if (empty($objects)) {
       $objects[] = islandora_ingest_form_prepare_new_object($configuration);
     }
-    // Make sure the models actually exist
+    // Make sure the models actually exist.
     foreach ($configuration['models'] as $key => $model) {
       if (!islandora_object_load($model)) {
         unset($configuration['models'][$key]);
