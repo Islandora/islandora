@@ -52,6 +52,9 @@ define('ISLANDORA_DATASTREAM_MODIFIED_HOOK', 'islandora_datastream_modified');
 define('ISLANDORA_DATASTREAM_PURGED_HOOK', 'islandora_datastream_purged');
 define('ISLANDORA_INGEST_STEP_HOOK', 'islandora_ingest_steps');
 
+// Autocomplete paths.
+define('ISLANDORA_CONTENT_MODELS_AUTOCOMPLETE', 'islandora/autocomplete/content-models');
+
 /**
  * Implements hook_menu().
  *
@@ -245,6 +248,15 @@ function islandora_menu() {
     'access callback' => 'islandora_object_access_callback',
     'access arguments' => array(FEDORA_VIEW_OBJECTS, 2),
     'load arguments' => array(2),
+  );
+  $items[ISLANDORA_CONTENT_MODELS_AUTOCOMPLETE] = array(
+    'title' => 'Autocomplete callback',
+    'description' => 'Autocomplete a Fedora content model PID.',
+    'file' => 'includes/content_model.autocomplete.inc',
+    'page callback' => 'islandora_content_model_autocomplete',
+    'page arguments' => array(3),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_CALLBACK,
   );
   return $items;
 }
