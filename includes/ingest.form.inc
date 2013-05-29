@@ -142,8 +142,8 @@ function islandora_ingest_form_get_last_step_id(array &$form_state) {
 function islandora_ingest_form_prepare_new_object(array $configuration) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   if (empty($configuration['object'])) {
-    $message = islandora_deprecated('Please use "objects" as the default ingest form configuration property.');
-    trigger_error(check_plain($message), E_USER_DEPRECATED);
+    $message = islandora_deprecated('7.x-1.2', t('Please use "objects" as the default ingest form configuration property.'));
+    trigger_error(filter_xss($message), E_USER_DEPRECATED);
     // ID is more specific than namespace so it will take precedence.
     $id = isset($configuration['namespace']) ? $configuration['namespace'] : 'islandora';
     $id = isset($configuration['id']) ? $configuration['id'] : $id;

@@ -636,6 +636,9 @@ function islandora_system_settings_form_default_value($name, $default_value, arr
  *       is optional.
  */
 function islandora_get_comp_ds_mappings($pid) {
+  $message = islandora_deprecated('7.x-1.2', t('Refactor to use the more flexible islandora_get_datastreams_requirements_from_content_model().'));
+  trigger_error(filter_xss($message), E_USER_DEPRECATED);
+
   $cm_object = islandora_object_load($pid);
   if (!isset($cm_object) || !isset($cm_object['DS-COMPOSITE-MODEL'])) {
     return FALSE;
@@ -825,7 +828,7 @@ function islandora_content_model_select_table_form_element($drupal_variable, $de
  *
  * @code
  *   $message = islandora_deprecated('7.x-1.1', t('Use more cowbell.'))
- *   trigger_error(check_plain($message), E_USER_DEPRECATED)
+ *   trigger_error(filter_xss($message), E_USER_DEPRECATED)
  * @endcode
  *
  * @param string $release
