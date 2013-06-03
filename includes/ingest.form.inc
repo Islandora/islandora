@@ -78,6 +78,7 @@ function islandora_ingest_form_init_form_state_storage(array &$form_state, array
     if (empty($objects)) {
       $objects[] = islandora_ingest_form_prepare_new_object($configuration);
     }
+    $configuration['models'] = isset($configuration['models']) ? $configuration['models'] : array();
     // Make sure the models actually exist.
     foreach ($configuration['models'] as $key => $model) {
       if (!islandora_object_load($model)) {
@@ -87,7 +88,6 @@ function islandora_ingest_form_init_form_state_storage(array &$form_state, array
     // No need to persist the 'objects' within the configuration.
     unset($configuration['objects']);
     // Required for step hooks.
-    $configuration['models'] = isset($configuration['models']) ? $configuration['models'] : array();
     $form_state['islandora'] = array(
       'step_id' => NULL,
       'objects' => $objects,
@@ -370,7 +370,15 @@ function islandora_ingest_form_execute_step(array $form, array &$form_state, $st
 function islandora_ingest_form_execute_form_step(array $form, array &$form_state, array $step) {
   $args = array($form, &$form_state);
   $args = isset($step['args']) ? array_merge($args, $step['args']) : $args;
+  $shared_storage = islandora_ingest_form_get_shared_storage($form_state);
+  // Build the form step.
   $form = call_user_func_array($step['form_id'], $args);
+  // Since the list of steps depends on the shared storage we will rebuild the
+  // list of steps if the shared storage has changed. This must be done before
+  // stepifying, so the prev/next buttons get updated.
+  if ($shared_storage != islandora_ingest_form_get_shared_storage($form_state)) {
+    drupal_static_reset('islandora_ingest_form_get_steps');
+  }
   return islandora_ingest_form_stepify($form, $form_state, $step);
 }
 
@@ -456,6 +464,10 @@ function islandora_ingest_form_undo_callback_step(array $form, array &$form_stat
 function islandora_ingest_form_stepify(array $form, array &$form_state, $step) {
   $first_form_step = islandora_ingest_form_on_first_form_step($form_state);
   $last_form_step = islandora_ingest_form_on_last_form_step($form_state);
+  $form['form_step_id'] = array(
+    '#type' => 'hidden',
+    '#value' => islandora_ingest_form_get_current_step_id($form_state),
+  );
   $form['prev'] = $first_form_step ? NULL : islandora_ingest_form_previous_button($form_state);
   $form['next'] = $last_form_step ? islandora_ingest_form_ingest_button($form_state) : islandora_ingest_form_next_button($form_state);
   // Allow for a hook_form_FORM_ID_alter().

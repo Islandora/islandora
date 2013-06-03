@@ -1,0 +1,166 @@
+<?php
+
+/**
+ * @file
+ * Implements hooks that get tested by islandora_hooks.test
+ */
+
+/**
+ * Implements hook menu.
+ */
+function islandora_ingest_test_menu() {
+  return array(
+    'test/ingest' => array(
+      'title' => 'Ingest Form',
+      'page callback' => 'islandora_ingest_test_ingest',
+      'type' => MENU_LOCAL_ACTION,
+      'access callback' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Render the ingest form.
+ */
+function islandora_ingest_test_ingest() {
+  $connection = islandora_get_tuque_connection();
+  $object = $connection->repository->constructObject('test:test');
+  $object->label = 'New Object';
+  $configuration = array(
+    'objects' => array($object),
+  );
+  module_load_include('inc', 'islandora', 'includes/ingest.form');
+  return drupal_get_form('islandora_ingest_form', $configuration);
+}
+
+/**
+ * Implements hook_islandora_ingest_steps().
+ */
+function islandora_ingest_test_islandora_ingest_steps(array &$form_state) {
+  return array(
+    'islandora_ingest_test' => array(
+      'type' => 'form',
+      'form_id' => 'islandora_ingest_test_set_label_form',
+      'weight' => -50,
+      'module' => 'islandora_ingest_test',
+    ),
+  );
+}
+
+/**
+ * Implements hook_MODEL_PID_islandora_ingest_steps().
+ */
+function islandora_ingest_test_test_testcmodel_islandora_ingest_steps(array &$form_state) {
+  return array(
+    'islandora_ingest_test_testcmodel' => array(
+      'type' => 'form',
+      'form_id' => 'islandora_ingest_test_testcmodel_form',
+      'weight' => -30,
+      'module' => 'islandora_ingest_test',
+    ),
+  );
+}
+
+/**
+ * Implements hook_MODEL_PID_islandora_ingest_steps().
+ */
+function islandora_ingest_test_test_testcmodel2_islandora_ingest_steps(array &$form_state) {
+  return array(
+    'islandora_ingest_test_testcmodel2' => array(
+      'type' => 'form',
+      'form_id' => 'islandora_ingest_test_testcmodel2_form',
+      'weight' => -40,
+      'module' => 'islandora_ingest_test',
+    ),
+  );
+}
+
+/**
+ * Sets the label of the ingestable object.
+ *
+ * @param array $form
+ *   The Drupal form.
+ * @param array $form_state
+ *   The Drupal form state.
+ *
+ * @return array
+ *   The Drupal form definition.
+ */
+function islandora_ingest_test_set_label_form(array $form, array &$form_state) {
+  $models = array('test:nomorestepscmodel', 'test:testcmodel', 'test:testcmodel2');
+  $model = isset($form_state['values']['model']) ? $form_state['values']['model'] : reset($models);
+  $shared_storage = &islandora_ingest_form_get_shared_storage($form_state);
+  $shared_storage['models'] = array($model);
+  return array(
+    '#prefix' => '<div id="islandora-select-content-model-wrapper">',
+    '#suffix' => '</div>',
+    'label' => array(
+      '#type' => 'textfield',
+      '#title' => t('Label'),
+    ),
+    'model' => array(
+      '#type' => 'select',
+      '#title' => t('Select a Content Model to Ingest'),
+      '#options' => array_combine($models, $models),
+      '#default' => $model,
+      '#ajax' => array(
+        'callback' => 'islandora_ingest_test_model_ajax_callback',
+        'wrapper' => 'islandora-select-content-model-wrapper',
+        'method' => 'replace',
+        'effect' => 'fade',
+      ),
+    ),
+  );
+}
+
+/**
+ * Updates the model field.
+ */
+function islandora_ingest_test_model_ajax_callback(array $form, array &$form_state) {
+  return $form;
+}
+
+/**
+ * Sets the label of the ingestable object.
+ *
+ * @param array $form
+ *   The Drupal form.
+ * @param array $form_state
+ *   The Drupal form state.
+ */
+function islandora_ingest_test_set_label_form_submit(array $form, array &$form_state) {
+  $object = islandora_ingest_form_get_object($form_state);
+  $object->label = $form_state['values']['label'];
+  unset($object->models);
+  $object->models = array($form_state['values']['model']);
+}
+
+/**
+ * Test the First content model.
+ */
+function islandora_ingest_test_testcmodel_form(array $form, array &$form_state) {
+  return array(
+  );
+}
+
+/**
+ * Test the CModel submit.
+ */
+function islandora_ingest_test_testcmodel_form_submit(array $form, array &$form_state) {
+
+}
+
+/**
+ * Test the second content model.
+ */
+function islandora_ingest_test_testcmodel2_form(array $form, array &$form_state) {
+  return array(
+  );
+}
+
+/**
+ * Test the CModel submit.
+ */
+function islandora_ingest_test_testcmodel2_form_submit(array $form, array &$form_state) {
+
+}
