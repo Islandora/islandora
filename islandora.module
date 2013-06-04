@@ -1109,3 +1109,20 @@ function islandora_download_clip(AbstractObject $object) {
   }
   exit();
 }
+
+/**
+ * Implements hook_file_mimetype_mapping_alter().
+ *
+ * Grab custom islandora mime type list
+ * and add any missing ext/mimes to the drupal mapping
+ */
+function islandora_file_mimetype_mapping_alter(&$mapping) {
+  $mime_detect = new MimeDetect();
+  $types = $mime_detect->getMimeTypes();
+  $diff = array_diff_key($types, $mapping['extensions']);
+  foreach ($diff as $ext => $mime) {
+    $mapping['mimetypes'][] = $mime;
+    end($mapping['mimetypes']);
+    $mapping['extensions'][$ext] = key($mapping['mimetypes']);
+  }
+}
