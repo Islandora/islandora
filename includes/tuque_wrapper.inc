@@ -9,27 +9,28 @@
  */
 
 $islandora_module_path = drupal_get_path('module', 'islandora');
+set_include_path(get_include_path() . PATH_SEPARATOR . 'sites/all/libraries/tuque' . PATH_SEPARATOR . "$islandora_module_path/libraries/tuque/");
 
-// @todo this until we expost these in a module or library
-@include_once 'sites/all/libraries/tuque/Datastream.php';
-@include_once 'sites/all/libraries/tuque/FedoraApi.php';
-@include_once 'sites/all/libraries/tuque/FedoraApiSerializer.php';
-@include_once 'sites/all/libraries/tuque/Object.php';
-@include_once 'sites/all/libraries/tuque/RepositoryConnection.php';
+// Do this until we expose these in a module or library.
+@include_once 'sites/all/libraries/tuque/implementations/fedora3/Datastream.php';
+@include_once 'sites/all/libraries/tuque/implementations/fedora3/FedoraApi.php';
+@include_once 'sites/all/libraries/tuque/implementations/fedora3/FedoraApiSerializer.php';
+@include_once 'sites/all/libraries/tuque/implementations/fedora3/Object.php';
+@include_once 'sites/all/libraries/tuque/implementations/fedora3/RepositoryConnection.php';
+@include_once 'sites/all/libraries/tuque/implementations/fedora3/Repository.php';
+@include_once 'sites/all/libraries/tuque/implementations/fedora3/FedoraRelationships.php';
 @include_once 'sites/all/libraries/tuque/Cache.php';
 @include_once 'sites/all/libraries/tuque/RepositoryException.php';
-@include_once 'sites/all/libraries/tuque/Repository.php';
-@include_once 'sites/all/libraries/tuque/FedoraRelationships.php';
 
-@include_once "$islandora_module_path/libraries/tuque/Datastream.php";
-@include_once "$islandora_module_path/libraries/tuque/FedoraApi.php";
-@include_once "$islandora_module_path/libraries/tuque/FedoraApiSerializer.php";
-@include_once "$islandora_module_path/libraries/tuque/Object.php";
-@include_once "$islandora_module_path/libraries/tuque/RepositoryConnection.php";
+@include_once "$islandora_module_path/libraries/tuque/implementations/fedora3/Datastream.php";
+@include_once "$islandora_module_path/libraries/tuque/implementations/fedora3/FedoraApi.php";
+@include_once "$islandora_module_path/libraries/tuque/implementations/fedora3/FedoraApiSerializer.php";
+@include_once "$islandora_module_path/libraries/tuque/implementations/fedora3/Object.php";
+@include_once "$islandora_module_path/libraries/tuque/implementations/fedora3/RepositoryConnection.php";
+@include_once "$islandora_module_path/libraries/tuque/implementations/fedora3/Repository.php";
+@include_once "$islandora_module_path/libraries/tuque/implementations/fedora3/FedoraRelationships.php";
 @include_once "$islandora_module_path/libraries/tuque/Cache.php";
 @include_once "$islandora_module_path/libraries/tuque/RepositoryException.php";
-@include_once "$islandora_module_path/libraries/tuque/Repository.php";
-@include_once "$islandora_module_path/libraries/tuque/FedoraRelationships.php";
 
 /**
  * Allow modules to alter an object before a mutable event occurs.
