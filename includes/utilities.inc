@@ -256,8 +256,8 @@ function islandora_get_namespace($id) {
  */
 function islandora_namespace_accessible($id) {
   if (variable_get('islandora_namespace_restriction_enforced', FALSE)) {
-    $namespace = islandora_get_namespace($id) . ':';
-    $allowed_namespaces = explode(" ", variable_get('islandora_pids_allowed', 'default: demo: changeme: islandora: ilives: islandora-book: books: newspapers: '));
+    $namespace = islandora_get_namespace($id);
+    $allowed_namespaces = islandora_get_allowed_namespaces();
     return in_array($namespace, $allowed_namespaces);
   }
   return TRUE;
@@ -712,7 +712,13 @@ function islandora_get_allowed_namespaces() {
   $matches = array();
   $allowed_namespaces = variable_get('islandora_pids_allowed', 'default: demo: changeme: islandora:');
   preg_match_all('/([A-Za-z0-9-\.]+):/', $allowed_namespaces, $matches);
-  return $matches[1];
+  $accessible_namespaces = $matches[1];
+  // Ensure that the "islandora" namespace is explicitly allowed
+  // no matter what happens.
+  if (!in_array('islandora', $accessible_namespaces)) {
+    $accessible_namespaces[] = 'islandora';
+  }
+  return $accessible_namespaces;
 }
 
 /**
