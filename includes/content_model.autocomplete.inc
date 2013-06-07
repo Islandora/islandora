@@ -28,35 +28,13 @@ function islandora_content_model_autocomplete($string) {
  * Gets a map of form names suitable for use as select #options.
  */
 function islandora_get_content_model_names() {
-  $results = islandora_query_content_models();
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  $results = islandora_get_content_models();
   $ret = array();
   foreach ($results as $result) {
-    $ret[$result['model']['value']] = "{$result['label']['value']} ({$result['model']['value']})";
+    $ret[$result['pid']] = "{$result['label']} ({$result['pid']})";
   }
   return $ret;
-}
-
-/**
- * Perform a resource index query to determine get a list of content models.
- *
- * Only returns content models with at least one subscribing object.
- *
- * @return array
- *   An array of RI results, as given by the Tuque RI query interface.
- */
-function islandora_query_content_models() {
-  $connection = islandora_get_tuque_connection();
-  if ($connection) {
-    $query = 'select $model $label from <#ri> where
-            $model <fedora-model:hasModel> <info:fedora/fedora-system:ContentModel-3.0> and $model <fedora-model:label> $label
-            minus $model <mulgara:is><info:fedora/fedora-system:FedoraObject-3.0>
-            minus $model <mulgara:is><info:fedora/fedora-system:ContentModel-3.0>
-            minus $model <mulgara:is><info:fedora/fedora-system:ServiceDefinition-3.0>
-            minus $model <mulgara:is><info:fedora/fedora-system:ServiceDeployment-3.0>';
-    $results = $connection->repository->ri->itqlQuery($query);
-    return $results;
-  }
-  return array();
 }
 
 /**
