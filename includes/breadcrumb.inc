@@ -58,13 +58,17 @@ function islandora_get_breadcrumbs_recursive($pid, FedoraRepository $repository,
   $root = variable_get('islandora_repository_pid', 'islandora:root');
   if ($pid == $root) {
     $title = 'Islandora Repository';
-    $trail = menu_get_active_trail();
-    foreach ($trail as $key => $item) {
-      if ($item['link_path'] == 'islandora') {
-        $title = $item['link_title'];
-        break;
-      }
+    $mlid = db_select('menu_links', 'ml')
+      ->condition('ml.link_path', 'islandora')
+      ->fields('ml', array('mlid'))
+      ->execute()
+      ->fetchField();
+
+    if ($mlid) {
+      $link = menu_link_load($mlid);
+      $title = (isset($link['title']) ? $link['title'] : $title);
     }
+
     return array(
       l(t('Home'), '<front>'),
       l($title, 'islandora'),
