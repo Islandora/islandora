@@ -19,7 +19,9 @@
  *   The drupal form definition.
  */
 function islandora_object_properties_form(array $form, array &$form_state, AbstractObject $object) {
+  module_load_include('inc', 'islandora', 'includes/breadcrumb');
   drupal_set_title($object->label);
+  drupal_set_breadcrumb(islandora_get_breadcrumbs($object));
   $form_state['object'] = $object;
   return array(
     'pid' => array(

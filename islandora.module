@@ -619,7 +619,10 @@ function islandora_object_manage_access_callback($perms, $object = NULL) {
  *   The HTML repersentation of the manage object page.
  */
 function islandora_manage_overview_object(AbstractObject $object) {
+  module_load_include('inc', 'islandora', 'includes/breadcrumb');
   module_load_include('inc', 'islandora', 'includes/utilities');
+  drupal_set_title($object->label);
+  drupal_set_breadcrumb(islandora_get_breadcrumbs($object));
   $output = array();
   foreach (islandora_build_hook_list(ISLANDORA_OVERVIEW_HOOK, $object->models) as $hook) {
     $temp = module_invoke_all($hook, $object);
