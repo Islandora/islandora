@@ -1,0 +1,149 @@
+<?php
+
+/**
+ * @file
+ * Tests to see if the hooks get called when appropriate.
+ *
+ * In the test module 'islandora_hooked_access_test' there are implementations
+ * of hooks being tested. These implementations modifies the session, and
+ * that's how we test if the hook gets called.
+ *
+ * To make sense of these tests reference islandora_hooked_access_test.module.
+ */
+
+class IslandoraHookedAccessTestCase extends IslandoraWebTestCase {
+
+  /**
+   * Gets info to display to describe this test.
+   *
+   * @see IslandoraWebTestCase::getInfo()
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Islandora Hooked Access Callback',
+      'description' => 'Ensure that the hooked access callback returns appropriate results.',
+      'group' => 'Islandora',
+    );
+  }
+
+  /**
+   * Creates an admin user and a connection to a fedora repository.
+   *
+   * @see IslandoraWebTestCase::setUp()
+   */
+  public function setUp() {
+    parent::setUp('islandora_hooked_access_test');
+    $this->repository = $this->admin->repository;
+    $this->objects = array(
+      'test:testAccessHook',
+    );
+    $this->op = FEDORA_VIEW_OBJECTS;
+    $this->other_op = FEDORA_INGEST;
+    $this->denied_op = FEDORA_PURGE;
+    $this->purgeTestObjects();
+    $this->dsid = 'asdf';
+    $this->createTestObjects();
+    $this->object = $this->repository->getObject('test:testAccessHook');
+  }
+
+  /**
+   * Free any objects/resources created for this test.
+   *
+   * @see IslandoraWebTestCase::tearDown()
+   */
+  public function tearDown() {
+    $this->purgeTestObjects();
+    unset($this->repository);
+    unset($_SESSION['islandora_hooked_access_test']);
+    parent::tearDown();
+  }
+
+  /**
+   * Create the test object(s) to use during the test.
+   */
+  public function createTestObjects() {
+    foreach ($this->objects as $object_id) {
+      $object = $this->repository->constructObject($object_id);
+      $object->label = $object_id;
+
+      $datastream = $object->constructDatastream($this->dsid, 'M');
+      $datastream->label = 'fdsa';
+      $datastream->mimetype = 'text/plain';
+      $datastream->content = 'Some kinda awesome content stuffs...';
+
+      $object->ingestDatastream($datastream);
+      $this->repository->ingestObject($object);
+    }
+  }
+
+  /**
+   * Purge any objects created by the test's in this class.
+   */
+  public function purgeTestObjects() {
+    foreach ($this->objects as $object) {
+      try {
+        $object = $this->repository->getObject($object);
+        $this->repository->purgeObject($object->id);
+      }
+      catch (Exception $e) {
+        // Meh... Either it didn't exist or the purge failed.
+      }
+    }
+  }
+
+  /**
+   * Deny an object permission check without an object.
+   */
+  public function testDenyBadObject() {
+    $this->assertFalse(islandora_object_access($this->op, 'this is not an object'), 'Deny bad objects.');
+  }
+
+  /**
+   * Deny a datastream permission check without a datastream.
+   */
+  public function testDenyBadDatastream() {
+    $this->assertFalse(islandora_datastream_access($this->op, 'this is not a datastream'), 'Deny bad datastreams.');
+  }
+
+  /**
+   * Allow operation on object.
+   */
+  public function testAllowObject() {
+    $user = $this->drupalCreateUser(array($this->op));
+
+    $_SESSION['islandora_hooked_access_test'] = array(
+      $this->op,
+      $this->object,
+      $user,
+    );
+    $this->assertTrue(islandora_object_access($this->op, $this->object, $user), 'Allow object access.');
+  }
+
+  /**
+   * Allow operation on datastream.
+   */
+  public function testAllowDatastream() {
+    $user = $this->drupalCreateUser(array($this->op));
+
+    $_SESSION['islandora_hooked_access_test'] = array(
+      $this->op,
+      $this->object['asdf'],
+      $user,
+    );
+    $this->assertTrue(islandora_datastream_access($this->op, $this->object['asdf'], $user), 'Allow datastream access.');
+  }
+
+  /**
+   * Deny an operation which was not explicitly allowed on an object.
+   */
+  public function testDenyObjectExplicit() {
+    $this->assertFalse(islandora_object_access($this->denied_op, $this->object), 'Explicit denial of object access.');
+  }
+
+  /**
+   * Deny an operation which was not explicitly allowed on a datastream.
+   */
+  public function testDenyDatastreamExplicit() {
+    $this->assertFalse(islandora_datastream_access($this->denied_op, $this->object['asdf']), 'Explicit denial of datastream access.');
+  }
+}

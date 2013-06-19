@@ -29,7 +29,9 @@ function islandora_preprocess_islandora_default_edit(array &$variables) {
     $rows[] = array(
       array(
         'class' => 'datastream-id',
-        'data' => l($ds->id, islandora_datastream_get_url($ds, 'view')),
+        'data' => theme('islandora_datastream_view_link', array(
+          'datastream' => $ds,
+        )),
       ),
       array(
         'class' => 'datastream-label',
@@ -49,15 +51,21 @@ function islandora_preprocess_islandora_default_edit(array &$variables) {
       ),
       array(
         'class' => 'datastream-download',
-        'data' => l(t('download'), islandora_datastream_get_url($ds, 'download')),
+        'data' => theme('islandora_datastream_download_link', array(
+          'datastream' => $ds,
+        )),
       ),
       array(
         'class' => 'datstream-edit',
-        'data' => islandora_datastream_edit_get_link($ds),
+        'data' => theme('islandora_datastream_edit_link', array(
+          'datastream' => $ds,
+        )),
       ),
       array(
         'class' => 'datastream-delete',
-        'data' => islandora_datastream_get_delete_link($ds),
+        'data' => theme('islandora_datastream_delete_link', array(
+          'datastream' => $ds,
+        )),
       ),
     );
   }
@@ -95,7 +103,9 @@ function islandora_preprocess_islandora_default(&$variables) {
       $download_path = islandora_datastream_get_url($ds, 'download');
       $datastreams[$id]['id'] = $id;
       $datastreams[$id]['label'] = $label;
-      $datastreams[$id]['label_link'] = l($label, $download_path);
+      $datastreams[$id]['label_link'] = islandora_datastream_access(FEDORA_VIEW_OBJECTS, $ds) ?
+        l($label, $download_path) :
+        $label;
       $datastreams[$id]['download_url'] = $download_path;
       $datastreams[$id]['mimetype'] = $ds->mimetype;
       $datastreams[$id]['size'] = islandora_datastream_get_human_readable_size($ds);
@@ -108,14 +118,14 @@ function islandora_preprocess_islandora_default(&$variables) {
   }
   $variables['datastreams'] = $datastreams;
   // Objects in fcrepo4 don't always contain a DC datastream.
-  if (isset($islandora_object['DC'])) {
+  if (isset($islandora_object['DC']) && islandora_datastream_access(FEDORA_VIEW_OBJECTS, $islandora_object['DC'])) {
     $dc_object = DublinCore::importFromXMLString($islandora_object['DC']->content);
     $dc_array = $dc_object->asArray();
   }
   $variables['dc_array'] = isset($dc_array) ? $dc_array : array();
   $variables['islandora_dublin_core'] = isset($dc_object) ? $dc_object : NULL;
   $variables['islandora_object_label'] = $islandora_object->label;
-  if (isset($islandora_object['TN'])) {
+  if (isset($islandora_object['TN']) && islandora_datastream_access(FEDORA_VIEW_OBJECTS, $islandora_object['TN'])) {
     $variables['islandora_thumbnail_url'] = url("islandora/object/{$islandora_object->id}/datastream/TN/view");
   }
 }
@@ -197,12 +207,16 @@ function islandora_preprocess_islandora_objects(array &$variables) {
     $o = islandora_object_load($o);
     $url = "islandora/object/{$o->id}";
     $link_options = array('html' => TRUE, 'attributes' => array('title' => $o->label));
-    $img = theme_image(array('path' => url("$url/datastream/TN/view"), 'attributes' => array()));
+    $img = islandora_datastream_access(FEDORA_VIEW_OBJECTS, $o['TN']) ?
+      theme('image', array('path' => url("$url/datastream/TN/view"), 'attributes' => array())) :
+      '';
     $description = NULL;
-    $dc = DublinCore::importFromXMLString($o['DC']->content);
-    if ($dc) {
-      $dc = $dc->asArray();
-      $description = $dc['dc:description']['value'];
+    if (isset($o['DC']) && islandora_datastream_access(FEDORA_VIEW_OBJECTS, $o['DC'])) {
+      $dc = DublinCore::importFromXMLString($o['DC']->content);
+      if ($dc) {
+        $dc = $dc->asArray();
+        $description = $dc['dc:description']['value'];
+      }
     }
     return array(
       'label' => $o->label,
@@ -217,4 +231,76 @@ function islandora_preprocess_islandora_objects(array &$variables) {
   $variables['content'] = theme($theme, array('objects' => $objects));
   $module_path = drupal_get_path('module', 'islandora');
   drupal_add_css("$module_path/css/islandora.objects.css");
+}
+
+/**
+ * Renders a link to allow downloading of a datatream.
+ *
+ * @param array $vars
+ *   An array containing:
+ *   - datastream: An AbstractDatastream for which to generate a download link.
+ */
+function theme_islandora_datastream_download_link(array $vars) {
+  $datastream = $vars['datastream'];
+  module_load_include('inc', 'islandora', 'includes/utilities');
+
+  $label = t('download');
+  return islandora_datastream_access(FEDORA_VIEW_OBJECTS, $datastream) ?
+    l($label, islandora_datastream_get_url($datastream, 'download')) :
+    '';
+}
+
+/**
+ * Renders a link to allow viewing of a datatream.
+ *
+ * @param array $vars
+ *   An array containing:
+ *   - datastream: An AbstractDatastream for which to generate a view link.
+ */
+function theme_islandora_datastream_view_link(array $vars) {
+  $datastream = $vars['datastream'];
+  module_load_include('inc', 'islandora', 'includes/utilities');
+
+  $label = check_plain($datastream->label);
+  return islandora_datastream_access(FEDORA_VIEW_OBJECTS, $datastream) ?
+    l($label, islandora_datastream_get_url($datastream, 'view')) :
+    $label;
+}
+
+/**
+ * Renders a link to allow deleting of a datatream.
+ *
+ * @param array $vars
+ *   An array containing:
+ *   - datastream: An AbstractDatastream for which to generate a delete link.
+ */
+function theme_islandora_datastream_delete_link(array $vars) {
+  $datastream = $vars['datastream'];
+
+  $datastreams = module_invoke_all('islandora_undeletable_datastreams', $datastream->parent->models);
+
+  $can_delete = !in_array($datastream->id, $datastreams) && islandora_datastream_access(FEDORA_PURGE, $datastream);
+
+  return $can_delete ?
+    l(t('delete'), "islandora/object/{$datastream->parent->id}/datastream/{$datastream->id}/delete") :
+    '';
+}
+
+/**
+ * Renders a link to allow editing of a datatream.
+ *
+ * @param array $vars
+ *   An array containing:
+ *   - datastream: An AbstractDatastream for which to generate a edit link.
+ */
+function theme_islandora_datastream_edit_link(array $vars) {
+  $datastream = $vars['datastream'];
+
+  $edit_registry = module_invoke_all('islandora_edit_datastream_registry', $datastream->parent, $datastream);
+
+  $can_edit = count($edit_registry) > 0 && islandora_datastream_access(FEDORA_METADATA_EDIT, $datastream);
+
+  return $can_edit ?
+    l(t('edit'), "islandora/object/{$datastream->parent->id}/datastream/{$datastream->id}/edit") :
+    '';
 }

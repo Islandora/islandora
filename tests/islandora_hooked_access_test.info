@@ -1,0 +1,7 @@
+name = Islandora Hooked Access Callback testing
+description = Tests callback hooks. Do not enable.
+core = 7.x
+package = Testing
+hidden = TRUE
+files[] = islandora_hooks_test.module
+dependencies[] = islandora

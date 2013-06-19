@@ -15,5 +15,6 @@ files[] = tests/islandora_web_test_case.inc
 files[] = tests/authtokens.test
 files[] = tests/hooks.test
 files[] = tests/ingest.test
+files[] = tests/hooked_access.test
 files[] = tests/islandora_manage_permissions.test
 php = 5.3
