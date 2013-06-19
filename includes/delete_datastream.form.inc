@@ -12,13 +12,13 @@
  *   The Drupal form.
  * @param array $form_state
  *   The Drupal form state.
- * @param FedoraDatastream $datastream
+ * @param AbstractDatastream $datastream
  *   The datastream to be deleted.
  *
  * @return array
  *   The drupal form definition.
  */
-function islandora_delete_datastream_form(array $form, array &$form_state, FedoraDatastream $datastream) {
+function islandora_delete_datastream_form(array $form, array &$form_state, AbstractDatastream $datastream) {
   $form_state['datastream'] = $datastream;
   return confirm_form($form,
     t('Are you sure you want to delete the %dsid datastream?', array('%dsid' => $datastream->id)),
@@ -32,7 +32,7 @@ function islandora_delete_datastream_form(array $form, array &$form_state, Fedor
 /**
  * Submit handler for the delete datastream form.
  *
- * Purges/Delete's the given FedoraDatastream if possible.
+ * Purges/Delete's the given AbstractDatastream if possible.
  *
  * The ISLANDORA_PRE_PURGE_DATASTREAM_HOOK will query other modules as to
  * whether the given FedoraDatastream

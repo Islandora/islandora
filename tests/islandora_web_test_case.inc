@@ -28,7 +28,7 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
       $this->backUpDrupalFilter();
       $this->setUpDrupalFilter();
     }
-    $this->createAdminUser();
+    $this->admin = $this->createAdminUser();
   }
 
   /**
@@ -90,15 +90,44 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
    * Creates the a full fedora admin user with a repository connection.
    */
   protected function createAdminUser() {
-    $this->admin = new stdClass();
-    $this->admin->uid = 1;
-    $this->admin->name = $this->configuration['admin_user'];
-    $this->admin->pass = $this->configuration['admin_pass'];
+    $roles = user_roles();
+    $index = array_search('administrator', $roles);
+    $user = $this->drupalCreateUser();
+    $user->roles[$index] = 'administrator';
+    $user->name = $this->configuration['admin_user'];
+    $user->pass = $this->configuration['admin_pass'];
+    $user = user_save($user);
     $url = variable_get('islandora_base_url', $this->configuration['fedora_url']);
-    $connection = islandora_get_tuque_connection($this->admin, $url);
-    $this->admin->repository = $connection->repository;
-    return $this->admin;
+    $connection = islandora_get_tuque_connection($user, $url);
+    $user->repository = $connection->repository;
+    return $user;
   }
+
+  /**
+   * Logs in the given user, handles the special case where the user is admin.
+   *
+   * @see DrupalWebTestCase::drupalLogin()
+   */
+  protected function drupalLogin(stdClass $account) {
+    if ($account->uid == $this->admin->uid) {
+      // Create password for Drupal.
+      $edit = array('pass' => user_password());
+      $account = user_save($account, $edit);
+      // Raw password is used to login.
+      $account->pass_raw = $edit['pass'];
+      // We must login before changing the password for fedora.
+      parent::drupalLogin($account);
+      $account->name = $this->configuration['admin_user'];
+      $account->pass = $this->configuration['admin_pass'];
+      // Save the fedora admin credentials for later GET/POST requests.
+      $account = user_save($account);
+    }
+    else {
+      parent::drupalLogin($account);
+    }
+  }
+
+
   /**
    * Stores the content of the Drupal Filter for later restoration.
    */
@@ -125,5 +154,85 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
     unset($this->admin);
     unset($this->configuration);
     parent::tearDown();
+  }
+
+  /**
+   * Asserts that the given datastreams exist on the object.
+   *
+   * @param AbstractObject $object
+   *   The PID of the object
+   * @param array $datastreams
+   *   An array of strings containing  datastream names
+   */
+  public function assertDatastreams($object, array $datastreams) {
+    if (!is_object($object)) {
+      $this->fail("Failed. Object passed in is invalid.");
+      return;
+    }
+
+    foreach ($datastreams as $datastream) {
+      if (isset($object[$datastream])) {
+        $this->pass("Loaded datastream {$datastream} from PID {$object->id}");
+      }
+      else {
+        $this->fail("Failed to load datastream {$datastream} from PID {$object->id}");
+      }
+    }
+  }
+
+  /**
+   * Gets a tuque object from a path.
+   *
+   * @param string $path
+   *   A full or partial path to an islandora object.
+   *
+   * @return AbstractObject
+   *   The pid of the object or FALSE if a PID is not found.
+   */
+  public function getObjectFromPath($path) {
+    $path_parts = explode('/', $path);
+    $array_length = count($path_parts);
+    for ($i = 0; $i < $array_length; $i++) {
+      if ($path_parts[$i] == 'islandora' && isset($path_parts[$i + 1]) && $path_parts[$i + 1] == 'object') {
+        if (isset($path_parts[$i + 2])) {
+          return islandora_object_load(urldecode($path_parts[$i + 2]));
+        }
+      }
+    }
+    $this->fail("Failed to parse path : $path.");
+    return FALSE;
+  }
+
+  /**
+   * Deletes an object using the PID. This does the deletion using the UI.
+   *
+   * @param string $pid
+   *   The PID of the collection to be deleted
+   */
+  public function deleteObject($pid) {
+    $current_user = $this->loggedInUser;
+    $user = $this->drupalCreateUser(array(
+      'manage object properties',
+      'delete fedora objects and datastreams',
+      'view fedora repository objects',
+    ));
+
+    $this->drupalLogin($user);
+
+    $path = 'islandora/object/' . $pid . '/manage/properties';
+    $edit = array();
+    $this->drupalPost($path, $edit, t('Delete'));
+    $this->drupalPost($this->url, $edit, t('Delete'));
+    $object = islandora_object_load($pid);
+
+    $this->drupalGet("islandora/object/$pid");
+    $this->assertResponse(404, "Object $pid successfully deleted.");
+
+    if ($current_user) {
+      $this->drupalLogin($current_user);
+    }
+    else {
+      $this->drupalLogout();
+    }
   }
 }

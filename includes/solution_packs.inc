@@ -180,12 +180,12 @@ function islandora_solution_pack_form_submit(array $form, array &$form_state) {
 /**
  * Batch operation to ingest/reingest required object(s).
  *
- * @param NewFedoraObject $object
+ * @param AbstractObject $object
  *   The object to ingest/reingest.
  * @param array $context
  *   The context of this batch operation.
  */
-function islandora_solution_pack_batch_operation_reingest_object(NewFedoraObject $object, array &$context) {
+function islandora_solution_pack_batch_operation_reingest_object(AbstractObject $object, array &$context) {
   $existing_object = islandora_object_load($object->id);
   $deleted = FALSE;
   if ($existing_object) {
@@ -367,7 +367,7 @@ function islandora_uninstall_solution_pack($module) {
 /**
  * Function to check the status of an object against an object model array.
  *
- * @param NewFedoraObject $object_definition
+ * @param AbstractObject $object_definition
  *   A new fedora object that defines what the object should contain.
  *
  * @return string
@@ -378,7 +378,7 @@ function islandora_uninstall_solution_pack($module) {
  * @see islandora_solution_pack_form()
  * @see islandora_install_solution_pack()
  */
-function islandora_check_object_status(NewFedoraObject $object_definition) {
+function islandora_check_object_status(AbstractObject $object_definition) {
   $existing_object = islandora_object_load($object_definition->id);
   if (!$existing_object) {
     return array('status' => 'missing', 'status_friendly' => t('Missing'));
@@ -627,7 +627,7 @@ function theme_islandora_viewers_table($variables) {
  *   Array or string with data the module needs in order to render a full viewer
  * @param string $variable_id
  *   The id of the Drupal variable the viewer settings are saved in
- * @param FedoraObject $fedora_object
+ * @param AbstractObject $fedora_object
  *   The tuque object representing the fedora object being displayed
  *
  * @return string

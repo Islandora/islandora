@@ -148,7 +148,7 @@ class MimeDetect {
     "jp2" => "image/jp2",
     "png" => "image/png",
     "tiff" => "image/tiff",
-    "tif" => "image/tif",
+    "tif" => "image/tiff",
     "djvu" => "image/vnd.djvu",
     "djv" => "image/vnd.djvu",
     "wbmp" => "image/vnd.wap.wbmp",
@@ -194,6 +194,11 @@ class MimeDetect {
     'bin' => 'application/octet-stream',
   );
   protected $protectedFileExtensions;
+  protected $extensionExceptions = array(
+    // XXX: Deprecated... Only here due to old 'tif' => 'image/tif' mapping...
+    // The correct MIMEtype is 'image/tiff'.
+    'image/tif' => 'tif',
+  );
   protected $systemTypes;
   protected $systemExts;
   protected $etcMimeTypes = '/etc/mime.types';
@@ -205,6 +210,7 @@ class MimeDetect {
 
     // Populate the reverse shortlist:
     $this->protectedFileExtensions = array_flip($this->protectedMimeTypes);
+    $this->protectedFileExtensions += $this->extensionExceptions;
 
     // Pick up a local mime.types file if it is available.
     if (is_readable('mime.types')) {
@@ -364,6 +370,16 @@ class MimeDetect {
       fclose($file);
     }
     return $out;
+  }
+
+  /**
+   * Gets MIME type array.
+   *
+   * @return array
+   *   Returns associative array with exts and mimetypes.
+   */
+  public function getMimeTypes() {
+    return $this->protectedMimeTypes;
   }
 
 }

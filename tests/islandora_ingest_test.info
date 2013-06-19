@@ -1,0 +1,7 @@
+name = Islandora Testing
+description = Required for testing islandora web-test case.
+core = 7.x
+package = Testing
+hidden = TRUE
+dependencies[] = islandora
+files[] = islandora_test.module

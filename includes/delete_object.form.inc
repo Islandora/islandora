@@ -12,13 +12,13 @@
  *   The Drupal form.
  * @param array $form_state
  *   The Drupal form state.
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object to be deleted.
  *
  * @return array
  *   The drupal form definition.
  */
-function islandora_delete_object_form(array $form, array &$form_state, FedoraObject $object) {
+function islandora_delete_object_form(array $form, array &$form_state, AbstractObject $object) {
   $form_state['object'] = $object;
   return confirm_form($form,
     t('Are you sure you want to delete %title?', array('%title' => $object->label)),

@@ -256,8 +256,8 @@ function islandora_get_namespace($id) {
  */
 function islandora_namespace_accessible($id) {
   if (variable_get('islandora_namespace_restriction_enforced', FALSE)) {
-    $namespace = islandora_get_namespace($id) . ':';
-    $allowed_namespaces = explode(" ", variable_get('islandora_pids_allowed', 'default: demo: changeme: islandora: ilives: islandora-book: books: newspapers: '));
+    $namespace = islandora_get_namespace($id);
+    $allowed_namespaces = islandora_get_allowed_namespaces();
     return in_array($namespace, $allowed_namespaces);
   }
   return TRUE;
@@ -271,14 +271,14 @@ function islandora_namespace_accessible($id) {
  * This function gets its info from the RELS-EXT directly rather than through an
  * risearch.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object whose parents will be returned.
  *
  * @return array
  *   An array of FedoraObject's that the given object has a
  *   (isMemberOf, isMemberOfCollection) relationship with.
  */
-function islandora_get_parents_from_rels_ext(FedoraObject $object) {
+function islandora_get_parents_from_rels_ext(AbstractObject $object) {
   try {
     $collections = array_merge(
       $object->relationships->get(FEDORA_RELS_EXT_URI, 'isMemberOfCollection'),
@@ -298,7 +298,7 @@ function islandora_get_parents_from_rels_ext(FedoraObject $object) {
 /**
  * Gets the datastreams requirments that are missing.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object which models will be used to determine what datastreams it
  *   should have.
  *
@@ -306,7 +306,7 @@ function islandora_get_parents_from_rels_ext(FedoraObject $object) {
  *   The DS-COMPOSITE-MODEL defined datastreams that are required for the given
  *   object, but not already present.
  */
-function islandora_get_missing_datastreams_requirements(FedoraObject $object) {
+function islandora_get_missing_datastreams_requirements(AbstractObject $object) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   $datastreams = islandora_get_datastreams_requirements($object);
   foreach ($datastreams as $dsid => $requirements) {
@@ -331,7 +331,7 @@ function islandora_get_missing_datastreams_requirements(FedoraObject $object) {
  *
  * @see islandora_get_required_datastreams_from_content_model()
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object which models will be used to determine what datastreams it
  *   should have.
  *
@@ -339,7 +339,7 @@ function islandora_get_missing_datastreams_requirements(FedoraObject $object) {
  *   The DS-COMPOSITE-MODEL defined datastreams that are required for the given
  *   object.
  */
-function islandora_get_datastreams_requirements(FedoraObject $object) {
+function islandora_get_datastreams_requirements(AbstractObject $object) {
   return islandora_get_datastreams_requirements_from_models($object->models);
 }
 
@@ -375,7 +375,7 @@ function islandora_get_datastreams_requirements_from_models(array $models) {
  *
  * @todo Add support for fetching the schema information.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The content model whose DS-COMPOSITE-MODEL datastream will be used to
  *   determine what datastreams are required.
  *
@@ -388,7 +388,7 @@ function islandora_get_datastreams_requirements_from_models(array $models) {
  *     - "mime": A array containing MIME-types the stream may have.
  *     - "optional": A boolean indicating if the given stream is optional.
  */
-function islandora_get_datastreams_requirements_from_content_model(FedoraObject $object) {
+function islandora_get_datastreams_requirements_from_content_model(AbstractObject $object) {
   if (empty($object[DS_COMP_STREAM])) {
     return array();
   }
@@ -636,6 +636,9 @@ function islandora_system_settings_form_default_value($name, $default_value, arr
  *       is optional.
  */
 function islandora_get_comp_ds_mappings($pid) {
+  $message = islandora_deprecated('7.x-1.2', t('Refactor to use the more flexible islandora_get_datastreams_requirements_from_content_model().'));
+  trigger_error(filter_xss($message), E_USER_DEPRECATED);
+
   $cm_object = islandora_object_load($pid);
   if (!isset($cm_object) || !isset($cm_object['DS-COMPOSITE-MODEL'])) {
     return FALSE;
@@ -709,7 +712,13 @@ function islandora_get_allowed_namespaces() {
   $matches = array();
   $allowed_namespaces = variable_get('islandora_pids_allowed', 'default: demo: changeme: islandora:');
   preg_match_all('/([A-Za-z0-9-\.]+):/', $allowed_namespaces, $matches);
-  return $matches[1];
+  $accessible_namespaces = $matches[1];
+  // Ensure that the "islandora" namespace is explicitly allowed
+  // no matter what happens.
+  if (!in_array('islandora', $accessible_namespaces)) {
+    $accessible_namespaces[] = 'islandora';
+  }
+  return $accessible_namespaces;
 }
 
 /**
@@ -816,4 +825,37 @@ function islandora_content_model_select_table_form_element($drupal_variable, $de
   );
 
   return $element;
+}
+
+/**
+ * Convience function for generating a E_USER_DEPRECATED message.
+ *
+ * To utilitize this function pass the results to trigger_error() like so:
+ *
+ * @code
+ *   $message = islandora_deprecated('7.x-1.1', t('Use more cowbell.'))
+ *   trigger_error(filter_xss($message), E_USER_DEPRECATED)
+ * @endcode
+ *
+ * @param string $release
+ *   The release the calling function was depreciated in.
+ * @param string $solution
+ *   A message describing an alternative solution to the deprecated function.
+ *   It's assumed to be already passed though the t() function.
+ *
+ * @return string
+ *   The deprecated message.
+ */
+function islandora_deprecated($release, $solution = NULL) {
+  $bt = debug_backtrace();
+  assert($bt[0]['function'] == __FUNCTION__);
+  $function = $bt[1]['function'];
+  $message = t('@function() has been deprecated. As of @release, please update your code before the next release.', array(
+               '@function' => $function,
+               '@release' => $release,
+             ));
+  if (isset($solution)) {
+    $message .= "<br/>\n" . $solution;
+  }
+  return $message;
 }

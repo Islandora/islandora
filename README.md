@@ -23,7 +23,11 @@ https://jira.duraspace.org/browse/ISLANDORA
 
 REQUIREMENTS
 ------------
-
+The Tuque library must be installed to use Islandora. It can be found here:
+http://github.com/Islandora/tuque
+It is expected to be in one of two paths:
+ - sites/all/libraries/tuque (libraries directory may need to be created) 
+ - islandora_folder/libraries/tuque
 
 INSTALLATION
 ------------

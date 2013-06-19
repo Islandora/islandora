@@ -80,7 +80,7 @@ function islandora_rules_action_info() {
 /**
  * Checks that there is a relationship match on the given object.
  *
- * Takes a subject (either a FedoraObject or a FedoraDatastream), as well as
+ * Takes a subject (either a AbstractObject or a FedoraDatastream), as well as
  * the parameters for FedoraRelsExt::get() or FedoraRelsInt::get(), to try to
  * find a match.
  *
@@ -94,7 +94,7 @@ function islandora_object_has_relationship($sub, $pred_uri, $pred, $object, $typ
 /**
  * Remove a relationship from the given object.
  *
- * Takes a subject (either a FedoraObject or a FedoraDatastream), as well as
+ * Takes a subject (either a AbstractObject or a FedoraDatastream), as well as
  * the parameters for FedoraRelsExt::remove() or FedoraRelsInt::remove(), to
  * try to find a match.
  *
@@ -107,7 +107,7 @@ function islandora_object_remove_relationship($sub, $pred_uri, $pred, $object, $
 /**
  * Add a relationship to the given object.
  *
- * Takes a subject (either a FedoraObject or a FedoraDatastream), as well as
+ * Takes a subject (either a AbstractObject or a FedoraDatastream), as well as
  * the parameters for FedoraRelsExt::add() or FedoraRelsInt::add(), and adds
  * the represented relationship.
  *

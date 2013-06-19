@@ -1,0 +1,118 @@
+<?php
+
+/**
+ * @file
+ * Tests to see if the hooks get called when appropriate.
+ *
+ * In the test module 'islandora_hooks_test' there are implementations
+ * of hooks being tested. These implementations modifies the session, and
+ * that's how we test if the hook gets called.
+ *
+ * To make sense of these tests reference islandora_hooks_test.module.
+ */
+
+class IslandoraIngestsTestCase extends IslandoraWebTestCase {
+
+  /**
+   * Gets info to display to describe this test.
+   *
+   * @see IslandoraWebTestCase::getInfo()
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Islandora Ingestion',
+      'description' => 'Ensure that the ingest forms function correctly.',
+      'group' => 'Islandora',
+    );
+  }
+
+  /**
+   * Creates an admin user and a connection to a fedora repository.
+   *
+   * @see IslandoraWebTestCase::setUp()
+   */
+  public function setUp() {
+    parent::setUp('islandora_ingest_test');
+    $this->repository = $this->admin->repository;
+    $this->purgeTestObjects();
+
+  }
+
+  /**
+   * Free any objects/resources created for this test.
+   *
+   * @see IslandoraWebTestCase::tearDown()
+   */
+  public function tearDown() {
+    $this->purgeTestObjects();
+    unset($this->repository);
+    parent::tearDown();
+  }
+
+  /**
+   * Purge any objects created by the test's in this class.
+   */
+  public function purgeTestObjects() {
+    $objects = array(
+      'test:test',
+    );
+    foreach ($objects as $object) {
+      try {
+        $object = $this->repository->getObject($object);
+        $this->repository->purgeObject($object->id);
+      }
+      catch (Exception $e) {
+        // Meh... Either it didn't exist or the purge failed.
+      }
+    }
+  }
+
+  /**
+   * Test Ingest Steps.
+   */
+  public function testIngest() {
+    // Login the Admin user.
+    $this->drupalLogin($this->admin);
+    // First step in form.
+    $this->drupalGet('test/ingest');
+    // Default model selected, has no additional steps.
+    $this->assertFieldByName('ingest', 'Ingest');
+    // Select a model with additional steps.
+    $edit = array(
+      'model' => 'test:testcmodel',
+    );
+    $this->drupalPostAJAX(NULL, $edit, 'model');
+    // Form now reflexts multiple steps.
+    $this->assertFieldByName('label', '');
+    $this->assertFieldByName('next', 'Next');
+    // Move to next step.
+    $edit = array(
+      'label' => 'foobar',
+      'model' => 'test:testcmodel',
+    );
+    $this->drupalPost(NULL, $edit, t('Next'));
+    $this->assertFieldByName('form_step_id', 'islandora_ingest_test_testcmodel');
+    $this->assertFieldByName('ingest', 'Ingest');
+    // Move back to first step.
+    $this->drupalPost(NULL, array(), t('Previous'));
+    // Try a different model that has an additional step.
+    $edit = array(
+      'model' => 'test:testcmodel2',
+    );
+    $this->drupalPostAJAX(NULL, $edit, 'model');
+    $edit = array(
+      'label' => 'foobar',
+      'model' => 'test:testcmodel2',
+    );
+    $this->drupalPost(NULL, $edit, t('Next'));
+    $this->assertFieldByName('form_step_id', 'islandora_ingest_test_testcmodel2');
+    $this->assertFieldByName('ingest', 'Ingest');
+    // Ingest the thing.
+    $this->drupalPost(NULL, array(), t('Ingest'));
+    // Test that the thing got made.
+    $object = islandora_object_load('test:test');
+    $this->assertEqual($object->label, 'foobar', 'Ingest Object matches submitted form values.');
+    $this->assertEqual($object->models, array('test:testcmodel2', 'fedora-system:FedoraObject-3.0'), 'Ingest Object matches submitted form values.');
+  }
+
+}
