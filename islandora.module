@@ -1319,3 +1319,17 @@ function islandora_datastream_access($op, $datastream, $user = NULL) {
 
   return $cache[$op][$datastream->parent->id][$datastream->id][$user->uid];
 }
+
+/**
+ * Implements hook_islandora_basic_collection_get_query_filters().
+ */
+function islandora_islandora_basic_collection_get_query_filters() {
+  $enforced = variable_get('islandora_namespace_restriction_enforced', FALSE);
+  if ($enforced) {
+    $namespace_array = islandora_get_allowed_namespaces();
+    $namespace_sparql = implode('|', $namespace_array);
+    return format_string('regex(str(?object), "info:fedora/(!namespaces):")', array(
+      '!namespaces' => $namespace_sparql,
+    ));
+  }
+}
