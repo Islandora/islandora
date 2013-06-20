@@ -261,7 +261,7 @@ function theme_islandora_datastream_view_link(array $vars) {
   $datastream = $vars['datastream'];
   module_load_include('inc', 'islandora', 'includes/utilities');
 
-  $label = check_plain($datastream->label);
+  $label = check_plain($datastream->id);
   return islandora_datastream_access(FEDORA_VIEW_OBJECTS, $datastream) ?
     l($label, islandora_datastream_get_url($datastream, 'view')) :
     $label;
