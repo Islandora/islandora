@@ -94,7 +94,8 @@ function islandora_menu() {
     'access arguments' => array(FEDORA_VIEW_OBJECTS),
   );
   $items['islandora/object/%islandora_object'] = array(
-    'title' => 'Repository',
+    'title callback' => 'islandora_drupal_title',
+    'title arguments' => array(2),
     'page callback' => 'islandora_view_object',
     'page arguments' => array(2),
     'type' => MENU_NORMAL_ITEM,
@@ -755,6 +756,25 @@ function islandora_view_object(AbstractObject $object) {
   return implode('', $output);
 }
 
+
+/**
+ * Title callback for drupal title.
+ *
+ * Changes the drupal title to be the objects label.
+ * models that their modules want to provide a view for.
+ *
+ * @param AbstractObject $object
+ *   The object to view.
+ *
+ * @return string
+ *   The objects label.
+ */
+function islandora_drupal_title(AbstractObject $object) {
+  module_load_include('inc', 'islandora', 'includes/breadcrumb');
+  drupal_set_breadcrumb(islandora_get_breadcrumbs($object));
+
+  return $object->label;
+}
 /**
  * Renders the default view object page for the given object.
  *
