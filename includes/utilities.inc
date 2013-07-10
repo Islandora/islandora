@@ -865,3 +865,48 @@ function islandora_deprecated($release, $solution = NULL) {
   }
   return $message;
 }
+
+/**
+ * Transform recursively-merged array of strings to renderable arrays.
+ *
+ * Renderable arrays are passed-through as-is.
+ *
+ * Previously, functions/hooks like islandora_view_object would return an
+ * associative array with string values containing markup. These values were
+ * then imploded into one large piece of markup. Here, we transform this older
+ * structure which was generated into a renderable array, because renderable
+ * arrays are awesome!
+ *
+ * @param array $markup_array
+ *   An associative array of which the values are either a string or an array
+ *   of strings, which we transform to renderable markup elements (by
+ *   reference).
+ */
+function islandora_as_renderable_array(&$markup_array) {
+  foreach ($markup_array as &$value) {
+    if (!is_array($value)) {
+      // Not a renderable array, just a string. Let's convert it to a
+      // renderable '#markup' element.
+      $value = array(
+        '#markup' => $value,
+      );
+    }
+    elseif (!isset($value['#type']) && !isset($value['#markup'])) {
+      // A simple array--possibly the result of a recursive merge? Let's
+      // look at each, to possibly convert them to a renderable '#markup'
+      // elements.
+      foreach ($value as &$inner) {
+        if (!is_array($inner)) {
+          // If it is an array at this level, we can assume that it is a
+          // renderable array. If it is not an array, convert to a renderable
+          // '#markup' element.
+          $inner = array(
+            '#markup' => $inner,
+          );
+        }
+      }
+      unset($inner);
+    }
+  }
+  unset($value);
+}
