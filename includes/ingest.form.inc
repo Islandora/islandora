@@ -703,7 +703,7 @@ function islandora_ingest_form_submit(array $form, array &$form_state) {
     islandora_ingest_form_execute_consecutive_callback_steps($form, $form_state, $step);
   }
   // Ingest the objects.
-  foreach ($form_state['islandora']['objects'] as $object) {
+  foreach ($form_state['islandora']['objects'] as &$object) {
     try {
       islandora_add_object($object);
       $form_state['redirect'] = "islandora/object/{$object->id}";
@@ -715,6 +715,9 @@ function islandora_ingest_form_submit(array $form, array &$form_state) {
       drupal_set_message(t('A problem occured while ingesting "@label" (ID: @pid), please notifiy the administrator.', array('@label' => $object->label, '@pid' => $object->id)), 'error');
     }
   }
+  // XXX: Foreaching with references can be weird... The reference exists in
+  // the scope outside.
+  unset($object);
 }
 
 /**
