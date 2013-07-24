@@ -1077,8 +1077,9 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
   module_load_include('inc', 'fedora_repository', 'ObjectHelper');
   module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
-  global $user;
-
+  global $user, $conf;
+  $conf['cache'] = CACHE_DISABLED;
+  
   if (!fedora_available()) {
     drupal_set_message(t('The Fedora repository server is currently unavailable. Please contact the site administrator.'), 'warning', FALSE);
     return '';
