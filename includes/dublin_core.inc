@@ -133,6 +133,7 @@ class DublinCore {
           $dc_array[$field]['label'] = $element_label;
           $dc_array[$field]['value'] = $value;
           $dc_array[$field]['class'] = drupal_strtolower(preg_replace('/[^A-Za-z0-9]/', '-', $field));
+          $dc_array[$field]['dcterms'] = preg_replace('/^dc/', 'dcterms', $field);
         }
       }
     }
