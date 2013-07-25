@@ -1,4 +1,4 @@
-#!/bin/bash     
+#!/bin/bash
 
 mysql -u root -e 'create database drupal;'
 mysql -u root -e "create database fedora;"
@@ -11,8 +11,8 @@ cd islandora_tomcat
 export CATALINA_HOME='.'
 ./bin/startup.sh
 cd $HOME
-pear upgrade –force Console_Getopt
-pear upgrade –force pear
+pear upgrade --force Console_Getopt
+pear upgrade --force pear
 pear upgrade-all
 pear channel-discover pear.drush.org
 pear channel-discover pear.drush.org
