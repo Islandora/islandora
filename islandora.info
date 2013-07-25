@@ -17,4 +17,5 @@ files[] = tests/hooks.test
 files[] = tests/ingest.test
 files[] = tests/hooked_access.test
 files[] = tests/islandora_manage_permissions.test
+files[] = tests/islandora_tuque.test
 php = 5.3

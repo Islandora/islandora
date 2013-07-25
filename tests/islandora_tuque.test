@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * @file
+ * Tests islandora tuque functionality.
+ */
+
+class IslandoraTuqueTestCase extends IslandoraWebTestCase {
+
+  /**
+   * Gets info to display to describe this test.
+   *
+   * @see IslandoraWebTestCase::getInfo()
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Islandora Tuque',
+      'description' => 'Tests basic tuque functionality.',
+      'group' => 'Islandora',
+    );
+  }
+
+  /**
+   * Prepares enviroment for testing.
+   *
+   * @see IslandoraWebTestCase::setUp()
+   */
+  public function setUp() {
+    parent::setUp(array('islandora'));
+  }
+
+  /**
+   * Tests that a new tuque instance is created when a new user is provided.
+   */
+  public function testTuqueUserChange() {
+    global $user;
+
+    $tuque = islandora_get_tuque_connection($user);
+
+    $old_user_name = $tuque->connection->username;
+
+    $new_user = user_load(0);
+
+    $tuque = islandora_get_tuque_connection($new_user);
+
+    $new_user_name = $tuque->connection->username;
+
+    $this->assertNotEqual($old_user_name, $new_user_name, "User in tuque's connection changes when a new user is provided to islandora_get_tuque_connection().");
+
+    $old_user_name = $new_user_name;
+
+    $tuque = islandora_get_tuque_connection();
+
+    $new_user_name = $tuque->connection->username;
+
+    $this->assertEqual($old_user_name, $new_user_name, "User in tuque's connection does not change when no user is provided to islandora_get_tuque_connection().");
+  }
+
+}
