@@ -821,6 +821,8 @@ function islandora_default_islandora_view_object($object) {
  *   A IslandoraTuque instance
  */
 function islandora_get_tuque_connection($new_user = NULL, $url = NULL) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
+
   $tuque = &drupal_static(__FUNCTION__);
 
   global $user;
@@ -892,19 +894,6 @@ function islandora_get_tuque_connection($new_user = NULL, $url = NULL) {
     }
   }
   return $tuque;
-}
-
-function islandora_make_tuque($user, $url) {
-  if (IslandoraTuque::exists()) {
-    try {
-      return new IslandoraTuque($user, $url);
-    }
-    catch (Exception $e) {
-      drupal_set_message(t('Unable to connect to the repository %e', array('%e' => $e)), 'error');
-    }
-  }
-
-  return NULL;
 }
 
 /**
