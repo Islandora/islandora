@@ -6,10 +6,54 @@
  */
 
 /**
+ * Get the information about required object.
+ *
+ * @param string $module
+ *   An optional string, identifying a module for which to get the required
+ *   object information.
+ *
+ * @return array
+ *   An associative array of info describing the required objects. If $module
+ *   is not provided (or is NULL), then we provide the info for all modules. If
+ *   $module is provided and we have info for the given module, only the info
+ *   for that module is provided. If $module is provided and we have no info
+ *   for the given module, we throw an exception.
+ */
+function islandora_solution_packs_get_required_objects($module = NULL) {
+  // Should make this statically cache, after figuring out how exactly it
+  // should be called... We occasionally load a module and attempt to install
+  // it's object right away (in the same request)... This would require
+  // resetting of the cache. Let's just not cache for now...
+  $required_objects = array();
+
+  if (!$required_objects) {
+    $connection = islandora_get_tuque_connection();
+    $required_objects = module_invoke_all('islandora_required_objects', $connection);
+  }
+
+  if ($module !== NULL) {
+    if (isset($required_objects[$module])) {
+      return $required_objects[$module];
+    }
+    else {
+      watchdog('islandora', 'Attempted to get required objects for %module... %module does not appear to have any required objects. Clear caches?', array(
+        '%module' => $module,
+      ));
+      throw new Exception(t('Module "@module" has no required objects!', array(
+        '@module' => $module,
+      )));
+    }
+  }
+  else {
+    return $required_objects;
+  }
+}
+
+/**
  * Solution pack admin page callback.
  *
- * @return string
- *   The html repersentation of all solution pack forms for required objects.
+ * @return array
+ *   Renderable array of all solution pack forms for required objects.
  */
 function islandora_solution_packs_admin() {
   module_load_include('inc', 'islandora', 'includes/utilities');
@@ -18,17 +62,15 @@ function islandora_solution_packs_admin() {
     return '';
   }
 
-  $connection = islandora_get_tuque_connection();
   drupal_add_css(drupal_get_path('module', 'islandora') . '/css/islandora.admin.css');
-  $output = '';
-  $enabled_solution_packs = module_invoke_all('islandora_required_objects', $connection);
+  $output = array();
+  $enabled_solution_packs = islandora_solution_packs_get_required_objects();
   foreach ($enabled_solution_packs as $solution_pack_module => $solution_pack_info) {
     // @todo We should probably get the title of the solution pack from the
     // systems table for consistency in the interface.
     $solution_pack_name = $solution_pack_info['title'];
     $objects = array_filter($solution_pack_info['objects']);
-    $form = drupal_get_form('islandora_solution_pack_form_' . $solution_pack_module, $solution_pack_module, $solution_pack_name, $objects);
-    $output .= drupal_render($form);
+    $output[$solution_pack_module] = drupal_get_form('islandora_solution_pack_form_' . $solution_pack_module, $solution_pack_module, $solution_pack_name, $objects);
   }
   return $output;
 }
@@ -161,20 +203,38 @@ function islandora_solution_pack_form(array $form, array &$form_state, $solution
  */
 function islandora_solution_pack_form_submit(array $form, array &$form_state) {
   $solution_pack_module = $form_state['values']['solution_pack_module'];
-  $objects = $form_state['values']['objects'];
-  $batch = array(
-    'title' => t('Installing / Updating solution pack objects'),
-    'file' => drupal_get_path('module', 'islandora') . '/includes/solution_packs.inc',
-    'operations' => array(),
-  );
-  foreach ($objects as $object) {
-    $batch['operations'][] = array('islandora_solution_pack_batch_operation_reingest_object', array($object));
-  }
+
+  $batch = islandora_solution_pack_get_batch($solution_pack_module);
   batch_set($batch);
   // Hook to let solution pack objects be modified.
   // Not using module_invoke so solution packs can be expanded by other modules.
   // @todo shouldn't we send the object list along as well?
   module_invoke_all('islandora_postprocess_solution_pack', $solution_pack_module);
+}
+
+/**
+ * Get the batch definition to reinstall all the objects for a given module.
+ *
+ * @param string $module
+ *   The name of the modules of which to grab the required objects for to setup
+ *   the batch.
+ *
+ * @return array
+ *   An array defining a batch which can be passed on to batch_set().
+ */
+function islandora_solution_pack_get_batch($module) {
+  $batch = array(
+    'title' => t('Installing / Updating solution pack objects'),
+    'file' => drupal_get_path('module', 'islandora') . '/includes/solution_packs.inc',
+    'operations' => array(),
+  );
+
+  $info = islandora_solution_packs_get_required_objects($module);
+  foreach ($info['objects'] as $object) {
+    $batch['operations'][] = array('islandora_solution_pack_batch_operation_reingest_object', array($object));
+  }
+
+  return $batch;
 }
 
 /**
@@ -245,14 +305,16 @@ function islandora_solution_pack_batch_operation_reingest_object(AbstractObject 
  *   install/unistall hooks.
  * @param string $op
  *   The operation to perform, either install or uninstall.
+ * @param bool $force
+ *   Force the (un)installation of object.
  *
  * @todo Implement hook_modules_installed/hook_modules_uninstalled instead of
  *   calling this function directly.
  * @todo Remove the second parameter and have two seperate functions.
  */
-function islandora_install_solution_pack($module, $op = 'install') {
+function islandora_install_solution_pack($module, $op = 'install', $force = FALSE) {
   if ($op == 'uninstall') {
-    islandora_uninstall_solution_pack($module);
+    islandora_uninstall_solution_pack($module, $force);
     return;
   }
 
@@ -267,9 +329,9 @@ function islandora_install_solution_pack($module, $op = 'install') {
     '!admin_link' => $admin_link,
   );
 
-  module_load_include('module', 'islandora', 'islandora');
+  drupal_load('module', 'islandora');
   module_load_include('inc', 'islandora', 'includes/utilities');
-  module_load_include('module', $module, $module);
+  drupal_load('module', $module);
   $info_file = drupal_get_path('module', $module) . "/{$module}.info";
   $info_array = drupal_parse_info_file($info_file);
   $module_name = $info_array['name'];
@@ -279,8 +341,8 @@ function islandora_install_solution_pack($module, $op = 'install') {
     return;
   }
   $connection = islandora_get_tuque_connection();
-  $required_objects = module_invoke($module, 'islandora_required_objects', $connection);
-  $objects = $required_objects[$module]['objects'];
+  $required_objects = islandora_solution_packs_get_required_objects($module);
+  $objects = $required_objects['objects'];
   $status_messages = array(
     'up_to_date' => $t('The object already exists and is up-to-date.', $t_params),
     'missing_datastream' => $t('The object already exists but is missing a datastream. Please reinstall the object on the !admin_link page.', $t_params),
@@ -288,32 +350,52 @@ function islandora_install_solution_pack($module, $op = 'install') {
     'modified_datastream' => $t('The object already exists but datastreams are modified. Please reinstall the object on the !admin_link page.', $t_params),
   );
   foreach ($objects as $object) {
-    $query = $connection->api->a->findObjects('query', 'pid=' . $object->id);
-    $already_exists = !empty($query['results']);
+    $already_exists = islandora_object_load($object->id);
+
     $label = $object->label;
     $object_link = l($label, "islandora/object/{$object->id}");
+    $deleted = FALSE;
     if ($already_exists) {
-      $object_status = islandora_check_object_status($object);
-      $here_params = array(
-        '!summary' => $t("@module: Did not install !object_link.", array(
-            '!object_link' => $object_link,
-          ) + $t_params),
-        '!description' => $status_messages[$object_status['status']],
-      );
-      drupal_set_message(filter_xss(format_string('!summary !description', $here_params)), 'warning');
+      if (!$force) {
+        $object_status = islandora_check_object_status($object);
+        $here_params = array(
+          '!summary' => $t("@module: Did not install !object_link.", array(
+              '!object_link' => $object_link,
+            ) + $t_params),
+          '!description' => $status_messages[$object_status['status']],
+        );
+        drupal_set_message(filter_xss(format_string('!summary !description', $here_params)), 'warning');
+        continue;
+      }
+      else {
+        $deleted = islandora_delete_object($already_exists);
+      }
     }
-    else {
+
+    if ($already_exists && $deleted || !$already_exists) {
       $object = islandora_add_object($object);
       if ($object) {
-        drupal_set_message(filter_xss($t('@module: Successfully installed. !object_link.', array(
-            '!object_link' => $object_link,
-          ) + $t_params)), 'status');
+        if ($deleted) {
+          drupal_set_message(filter_xss($t('@module: Successfully reinstalled. !object_link.', array(
+              '!object_link' => $object_link,
+            ) + $t_params)), 'status');
+        }
+        else {
+          drupal_set_message(filter_xss($t('@module: Successfully installed. !object_link.', array(
+              '!object_link' => $object_link,
+            ) + $t_params)), 'status');
+        }
       }
       else {
         drupal_set_message($t('@module: Failed to install. @label.', array(
               '@label' => $label,
             ) + $t_params), 'warning');
       }
+    }
+    else {
+      drupal_set_message($t('@module: "@label" already exists and failed to be deleted.', array(
+              '@label' => $label,
+            ) + $t_params), 'warning');
     }
   }
 }
@@ -323,15 +405,17 @@ function islandora_install_solution_pack($module, $op = 'install') {
  *
  * @param string $module
  *   The solution pack to uninstall.
+ * @param bool $force
+ *   Force the objects to be removed.
  *
  * @todo Implement hook_modules_uninstalled instead of calling this function
  *    directly for each solution pack.
  */
-function islandora_uninstall_solution_pack($module) {
+function islandora_uninstall_solution_pack($module, $force = FALSE) {
   $t = get_t();
-  module_load_include('module', 'islandora', 'islandora');
+  drupal_load('module', 'islandora');
   module_load_include('inc', 'islandora', 'includes/utilities');
-  module_load_include('module', $module, $module);
+  drupal_load('module', $module);
   $config_link = l($t('Islandora configuration'), 'admin/islandora/configure');
   $info_file = drupal_get_path('module', $module) . "/{$module}.info";
   $info_array = drupal_parse_info_file($info_file);
@@ -345,22 +429,35 @@ function islandora_uninstall_solution_pack($module) {
     return;
   }
   $connection = islandora_get_tuque_connection();
-  $required_objects = module_invoke($module, 'islandora_required_objects', $connection);
-  $objects = $required_objects[$module]['objects'];
+  $required_objects = islandora_solution_packs_get_required_objects($module);
+  $objects = $required_objects['objects'];
   $filter = function($o) use($connection) {
     $param = "pid={$o->id}";
     $query = $connection->api->a->findObjects('query', $param);
     return !empty($query['results']);
   };
   $existing_objects = array_filter($objects, $filter);
-  foreach ($existing_objects as $object) {
-    $object_link = l($object->label, "islandora/object/{$object->id}");
-    $msg = $t('@module: Did not remove !object_link. It may be used by other sites.', array(
-      '!object_link' => $object_link,
-      '@module' => $module_name,
-    ));
 
-    drupal_set_message(filter_xss($msg), 'warning');
+  if (!$force) {
+    foreach ($existing_objects as $object) {
+      $object_link = l($object->label, "islandora/object/{$object->id}");
+      $msg = $t('@module: Did not remove !object_link. It may be used by other sites.', array(
+        '!object_link' => $object_link,
+        '@module' => $module_name,
+      ));
+
+      drupal_set_message(filter_xss($msg), 'warning');
+    }
+  }
+  else {
+    foreach ($existing_objects as $object) {
+      $params = array(
+        '@id' => $object->id,
+        '@module' => $module_name,
+      );
+      islandora_delete_object($object);
+      drupal_set_message($t('@module: Deleted @id.', $params));
+    }
   }
 }
 
