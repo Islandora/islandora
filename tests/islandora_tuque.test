@@ -57,3 +57,93 @@ class IslandoraTuqueTestCase extends IslandoraWebTestCase {
   }
 
 }
+
+/**
+ * Tests that tuque does not exist and the user is not null.
+ */
+public function testTuqueDoesNotExistAndUserIsNotNull() {
+  $tuque = &drupal_static(__FUNCTION__);
+  $tuque = NULL;
+
+  $user_to_provide = user_load(0);
+
+  $new_tuque = islandora_get_tuque_connection($user_to_provide);
+  $new_tuque_user_name = $new_tuque->connection->username;
+
+  assertNotNull($new_tuque);
+  assertNotNull($tuque);
+  assertEqual($user_to_provide->name, $new_tuque_user_name);
+}
+
+/**
+ * Tests that tuque does not exist and the user is null.
+ */
+public function testTuqueDoesNotExistAndUserIsNull() {
+  $tuque = &drupal_static(__FUNCTION__);
+  $tuque = NULL;
+
+  $user_to_provide = NULL;
+
+  $new_tuque = islandora_get_tuque_connection($user_to_provide);
+  $new_tuque_user_name = $new_tuque->connection->username;
+
+  global $user;
+
+  assertNotNull($new_tuque);
+  assertNotNull($tuque);
+  assertEqual($new_tuque_user_name, $user);
+}
+
+/**
+ * Test that tuque exists and the user is not null and the user is not tuque's
+ * user.
+ */
+public function testTuqueExistsAndUserIsNotNullAndUserIsNotTuquesUser() {
+  $tuque = &drupal_static(__FUNCTION__);
+  $user_to_provide = user_load(0);
+  $new_tuque = islandora_get_tuque_connection($user_to_provide);
+
+  assertNotNull($new_tuque);
+  assertNotNull($tuque);
+  assertNotEqual($user_to_provide->name, $new_tuque->connection->username);
+}
+
+/**
+ * Tests that tuque exists and the user is not null and the user is tuque's user
+ */
+public function testTuqueExistsAndUserIsNotNullAndUserIsTuquesUser() {
+  $tuque = &drupal_static(__FUNCTION__);
+  $new_tuque = islandora_get_tuque_connection($tuque->connection->username);
+
+  assertNotNull($new_tuque);
+  assertNotNull($tuque);
+  assertEqual($tuque->connection->username, $new_tuque->connection->username);
+}
+
+/**
+ * Tests that tuque exists and the user is null and the global user is not
+ * tuque's user.
+ */
+public function testTuqueExistsAndUserIsNullAndGlobalUserIsNotTuquesUser() {
+  $tuque = &drupal_static(__FUNCTION__);
+  global $user = NULL;
+  $new_tuque = islandora_get_tuque_connection($user);
+
+  assertNotNull($new_tuque);
+  assertNotNull($tuque);
+  assertNotEqual($new_tuque->connection->username, $user);
+}
+
+/**
+ * Tests that tuque exists and the user is null and the global user is tuque's
+ * user.
+ */
+public function testTuqueExistsAndUserIsNullAndGlobalUserIsTuquesUser() {
+  $tuque = &drupal_static(__FUNCTION__);
+  global $user = $tuque->connection->username;
+  $new_tuque = islandora_get_tuque_connection($user);
+
+  assertNotNull($new_tuque);
+  assertNotNull($tuque);
+  assertEqual($new_tuque->connection->username, $user);
+}
