@@ -157,27 +157,27 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Asserts that the given datastreams exist on the object.
+   * Asserts that the given datastreams exist correctly on the object.
    *
    * @param AbstractObject $object
    *   The PID of the object
    * @param array $datastreams
-   *   An array of strings containing  datastream names
+   *   An array of strings containing datastream names
    */
   public function assertDatastreams($object, array $datastreams) {
     if (!is_object($object)) {
-      $this->fail("Failed. Object passed in is invalid.");
-      return;
+      $this->fail("Failed. Object passed in is invalid.", 'Islandora');
     }
 
     foreach ($datastreams as $datastream) {
       if (isset($object[$datastream])) {
-        $this->pass("Loaded datastream {$datastream} from PID {$object->id}");
+        $this->pass("Loaded datastream {$datastream} from PID {$object->id}.", 'Islandora');
       }
       else {
-        $this->fail("Failed to load datastream {$datastream} from PID {$object->id}");
+        $this->fail("Failed to load datastream {$datastream} from PID {$object->id}.", 'Islandora');
       }
     }
+
   }
 
   /**
@@ -199,7 +199,7 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
         }
       }
     }
-    $this->fail("Failed to parse path : $path.");
+    $this->fail("Failed to parse path: $path.");
     return FALSE;
   }
 
@@ -208,31 +208,46 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
    *
    * @param string $pid
    *   The PID of the collection to be deleted
+   * @param string $button
+   *   The label of the first 'Delete' button
    */
-  public function deleteObject($pid) {
-    $current_user = $this->loggedInUser;
-    $user = $this->drupalCreateUser(array(
-      'manage object properties',
-      'delete fedora objects and datastreams',
-      'view fedora repository objects',
-    ));
-
-    $this->drupalLogin($user);
-
+  public function deleteObject($pid, $button = 'Delete') {
     $path = 'islandora/object/' . $pid . '/manage/properties';
     $edit = array();
-    $this->drupalPost($path, $edit, t('Delete'));
+    $this->drupalPost($path, $edit, $button);
     $this->drupalPost($this->url, $edit, t('Delete'));
     $object = islandora_object_load($pid);
 
     $this->drupalGet("islandora/object/$pid");
     $this->assertResponse(404, "Object $pid successfully deleted.");
+  }
 
-    if ($current_user) {
-      $this->drupalLogin($current_user);
+  /**
+   * Reverses a hex string and converts it to a little-endian-formatted integer.
+   *
+   * This is useful for running checks on values that appear in the binary
+   * of a datastream. Returns FALSE if the hex value contains non-hex characters
+   * or if the string would not return a 16- or 32-bit formatted big-endian
+   * signed integer.
+   *
+   * @param string $hex
+   *   The hex value being converted.
+   */
+  public function convertHexToInt($hex) {
+
+    // A couple of quick string checks.
+    if (!ctype_xdigit($hex)) {
+      $this->fail('String passed to convertHexToInt() contains non-hexidecimal characters.', 'PHP');
+      return FALSE;
     }
-    else {
-      $this->drupalLogout();
+    if (!strlen($hex) === 4 || !strlen($hex) === 8) {
+      $this->fail('String passed to convertHexToInt() cannot create a 16- or 32-bit little-endian signed integer', 'PHP');
+      return FALSE;
     }
+
+    // The actual conversion.
+    $reverse_hex = implode('', array_reverse(str_split($hex, 2)));
+    $int = hexdec($reverse_hex);
+    return $int;
   }
 }
