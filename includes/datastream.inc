@@ -26,8 +26,19 @@ function islandora_download_datastream(AbstractDatastream $datastream) {
  * @param bool $download
  *   If TRUE the file is download to the user computer for viewing otherwise it
  *   will attempt to display in the browser natively.
+ * @param int $version
+ *   The version of the datastream to display
  */
-function islandora_view_datastream(AbstractDatastream $datastream, $download = FALSE) {
+function islandora_view_datastream(AbstractDatastream $datastream, $download = FALSE, $version = NULL) {
+  if ($version !== NULL) {
+    if (isset($datastream[$version])) {
+      $datastream = $datastream[$version];
+    }
+    else {
+      return drupal_not_found();
+    }
+  }
+
   header_remove('Cache-Control');
   header_remove('Expires');
   header('Content-type: ' . $datastream->mimetype);
@@ -69,12 +80,31 @@ function islandora_datastream_get_human_readable_size(AbstractDatastream $datast
  *
  * @param AbstractDatastream $datastream
  *   The datastream to generated the url to.
+ * @param string $type
+ *   One of:
+ *   - download
+ *   - view
+ * @param int $version
+ *   (Optional) The version of the datastream to get a URL for.
  *
  * @return string
  *   either the 'view' or 'download' url for the given datastream.
  */
-function islandora_datastream_get_url(AbstractDatastream $datastream, $type = 'download') {
-  return $datastream->controlGroup == 'R' ? $datastream->url : "islandora/object/{$datastream->parent->id}/datastream/{$datastream->id}/$type";
+function islandora_datastream_get_url(AbstractDatastream $datastream, $type = 'download', $version = NULL) {
+  if ($version === NULL) {
+    $link = "islandora/object/{$datastream->parent->id}/datastream/{$datastream->id}/$type";
+  }
+  else {
+    $link = "islandora/object/{$datastream->parent->id}/datastream/{$datastream->id}/version/$version/$type";
+    $datastream = $datastream[$version];
+  }
+
+  if ($datastream->controlGroup == 'R') {
+    return $datastream->url;
+  }
+  else {
+    return $link;
+  }
 }
 
 /**
