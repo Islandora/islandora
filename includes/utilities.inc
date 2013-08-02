@@ -14,6 +14,8 @@
  *
  * @param int $bytes
  *   Size in bytes to convert
+ * @param int $precision
+ *   The amount of decimal precision to show.
  *
  * @return string
  *   Human readable size.

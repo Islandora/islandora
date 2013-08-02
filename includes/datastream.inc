@@ -112,6 +112,9 @@ function islandora_datastream_get_url(AbstractDatastream $datastream, $type = 'd
  *
  * @param AbstractDatastream $datastream
  *   The datastream to generated the url to.
+ *
+ * @return string
+ *   Markup containing the link to the confirm form to delete the datastream.
  */
 function islandora_datastream_get_delete_link(AbstractDatastream $datastream) {
   $message = islandora_deprecated('7.x-1.2', 'Use the "islandora_datastream_delete_link" theme implementation.');
@@ -127,6 +130,9 @@ function islandora_datastream_get_delete_link(AbstractDatastream $datastream) {
  *
  * @param AbstractDatastream $datastream
  *   The datastream to generated the url to.
+ *
+ * @return string
+ *   Markup containing the link to edit the datastream.
  */
 function islandora_datastream_edit_get_link(AbstractDatastream $datastream) {
   $message = islandora_deprecated('7.x-1.2', 'Use the "islandora_datastream_edit_link" theme implementation.');
@@ -169,6 +175,9 @@ function islandora_edit_datastream(AbstractDatastream $datastream) {
  *
  * @param array $edit_registry
  *   A list of 'islandora_edit_datastream_registry' values.
+ *
+ * @return array
+ *   A Drupal renderable array containing the "edit" markup.
  */
 function islandora_edit_datastream_registry_render(array $edit_registry) {
   $markup = '';

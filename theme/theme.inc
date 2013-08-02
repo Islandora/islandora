@@ -251,6 +251,9 @@ function islandora_preprocess_islandora_objects(array &$variables) {
  * @param array $vars
  *   An array containing:
  *   - datastream: An AbstractDatastream for which to generate a download link.
+ *
+ * @return string
+ *   Markup containing the download url if the user has access, empty otherwise.
  */
 function theme_islandora_datastream_download_link(array $vars) {
   $datastream = $vars['datastream'];
@@ -270,6 +273,9 @@ function theme_islandora_datastream_download_link(array $vars) {
  *   - datastream: An AbstractDatastream for which to generate a view link.
  *   - label: (Optional) The label for the link.
  *   - version: (Optional) The version of the datstream to link to.
+ *
+ * @return string
+ *   Markup containing the link to the datastream or the label if inaccessible.
  */
 function theme_islandora_datastream_view_link(array $vars) {
   $datastream = $vars['datastream'];
@@ -304,6 +310,9 @@ function theme_islandora_datastream_view_link(array $vars) {
  *   An array containing:
  *   - datastream: An AbstractDatastream for which to generate a delete link.
  *   - version: (optional) the version of the datastream to delete.
+ *
+ * @return string
+ *   Markup containing the url to delete a datastream, or empty if inaccessible.
  */
 function theme_islandora_datastream_delete_link(array $vars) {
   $datastream = $vars['datastream'];
@@ -336,6 +345,9 @@ function theme_islandora_datastream_delete_link(array $vars) {
  * @param array $vars
  *   An array containing:
  *   - datastream: An AbstractDatastream for which to generate a edit link.
+ *
+ * @return string
+ *   Markup containing the url to edit a datastream, or empty if inaccessible.
  */
 function theme_islandora_datastream_edit_link(array $vars) {
   $datastream = $vars['datastream'];

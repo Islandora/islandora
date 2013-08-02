@@ -186,10 +186,10 @@ function islandora_ingest_form_get_step(array &$form_state, $step_id = NULL) {
  *
  * @param array $form_state
  *   The Drupal form state.
- * @param string $step
+ * @param array $step
  *   The step relative to the result, if not provided the current step is used.
  *
- * @return string
+ * @return array|null
  *   The next step if found, NULL otherwise.
  */
 function islandora_ingest_form_get_next_step(array &$form_state, array $step = NULL) {
@@ -205,10 +205,10 @@ function islandora_ingest_form_get_next_step(array &$form_state, array $step = N
  *
  * @param array $form_state
  *   The Drupal form state.
- * @param string $step
+ * @param array $step
  *   The step relative to the result, if not provided the current step is used.
  *
- * @return string
+ * @return array|null
  *   The next step if found, NULL otherwise.
  */
 function islandora_ingest_form_get_previous_step(array &$form_state, array $step = NULL) {
@@ -329,6 +329,9 @@ function islandora_ingest_form_decrement_step(array &$form_state) {
  *   The Drupal form.
  * @param array $form_state
  *   The Drupal form state.
+ * @param string $step_id
+ *   The ID of the step relative to the result, if not provided the current
+ *   step_id is used.
  *
  * @return array
  *   The form definition of the current step.
@@ -363,6 +366,8 @@ function islandora_ingest_form_execute_step(array $form, array &$form_state, $st
  *   The Drupal form.
  * @param array $form_state
  *   The Drupal form state.
+ * @param array $step
+ *   The step we are executing.
  *
  * @return array
  *   The form definition of the given step.
@@ -391,6 +396,8 @@ function islandora_ingest_form_execute_form_step(array $form, array &$form_state
  *   The Drupal form.
  * @param array $form_state
  *   The Drupal form state.
+ * @param array $step
+ *   The step that execution begins from.
  */
 function islandora_ingest_form_execute_consecutive_callback_steps(array $form, array &$form_state, array $step) {
   do {
@@ -409,6 +416,8 @@ function islandora_ingest_form_execute_consecutive_callback_steps(array $form, a
  *   The Drupal form.
  * @param array $form_state
  *   The Drupal form state.
+ * @param array $step
+ *   The step currently being executed.
  */
 function islandora_ingest_form_execute_callback_step(array $form, array &$form_state, array $step) {
   $args = array(&$form_state);
@@ -425,6 +434,8 @@ function islandora_ingest_form_execute_callback_step(array $form, array &$form_s
  *   The Drupal form.
  * @param array $form_state
  *   The Drupal form state.
+ * @param array $step
+ *   The step that execution begins from.
  */
 function islandora_ingest_form_undo_consecutive_callback_steps(array $form, array &$form_state, array $step) {
   do {
@@ -443,6 +454,8 @@ function islandora_ingest_form_undo_consecutive_callback_steps(array $form, arra
  *   The Drupal form.
  * @param array $form_state
  *   The Drupal form state.
+ * @param array $step
+ *   The step which the undo callback is being called on.
  */
 function islandora_ingest_form_undo_callback_step(array $form, array &$form_state, array $step) {
   $args = array(&$form_state);
@@ -457,11 +470,13 @@ function islandora_ingest_form_undo_callback_step(array $form, array &$form_stat
  *   The Drupal form.
  * @param array $form_state
  *   The Drupal form state.
+ * @param array $step
+ *   An array defining a ingest step.
  *
  * @return array
  *   The stepified Drupal form definition for the given step.
  */
-function islandora_ingest_form_stepify(array $form, array &$form_state, $step) {
+function islandora_ingest_form_stepify(array $form, array &$form_state, array $step) {
   $first_form_step = islandora_ingest_form_on_first_form_step($form_state);
   $last_form_step = islandora_ingest_form_on_last_form_step($form_state);
   $form['form_step_id'] = array(
@@ -692,6 +707,8 @@ function islandora_ingest_form_ingest_button(array &$form_state) {
  *
  * Attempts to ingest every object built by the previous steps.
  *
+ * @param array $form
+ *   The Drupal form.
  * @param array $form_state
  *   The Drupal form state.
  */

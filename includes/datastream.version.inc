@@ -65,6 +65,8 @@ function islandora_datastream_version_table($datastream) {
  *   The Drupal form state.
  * @param AbstractDatastream $datastream
  *   The datastream to be deleted.
+ * @param string $version
+ *   The version number of the datastream we are trying to delete.
  *
  * @return array
  *   The drupal form definition.
