@@ -197,7 +197,7 @@ function islandora_menu() {
   $items['islandora/object/%islandora_object/datastream/%islandora_datastream'] = array(
     'title' => 'View datastream',
     'page callback' => 'islandora_view_datastream',
-    'page arguments' => array(4, FALSE),
+    'page arguments' => array(4, FALSE, NULL),
     'type' => MENU_CALLBACK,
     'file' => 'includes/datastream.inc',
     'access callback' => 'islandora_datastream_access',
