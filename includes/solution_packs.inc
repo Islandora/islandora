@@ -173,7 +173,7 @@ function islandora_solution_pack_form(array $form, array &$form_state, $solution
         '#markup' => t('<strong>Object status:</strong> !image !status', array(
                      '!image' => $solution_pack_status_info['image'],
                      '!status' => $solution_pack_status_info['solution_pack'],
-                   )),
+          )),
         '#prefix' => '<div class="islandora-solution-pack-install-status">',
         '#suffix' => '</div>',
       ),
@@ -720,7 +720,7 @@ function theme_islandora_viewers_table($variables) {
                'header' => $header,
                'rows' => $rows,
                'attributes' => array('id' => 'islandora-viewers-table'),
-             ));
+    ));
   $output .= drupal_render_children($form);
   return $output;
 }
