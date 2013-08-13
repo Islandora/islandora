@@ -1439,7 +1439,7 @@ function islandora_islandora_object_access($op, $object, $user) {
 /**
  * Hookable access callback for datastreams.
  *
- * Requires the equivalent permissions on the object.
+ * Positive permissions on object access suggests on the datastream.
  */
 function islandora_datastream_access($op, $datastream, $user = NULL) {
   $cache = &drupal_static(__FUNCTION__);
@@ -1468,10 +1468,9 @@ function islandora_datastream_access($op, $datastream, $user = NULL) {
       $user,
     ));
 
-    // Neither the object nor the datastream check returned FALSE, and one in
-    // the object or datastream checks returned TRUE.
+    // The datastream check returned FALSE, and one in the object or datastream
+    // checks returned TRUE.
     $cache[$op][$datastream->parent->id][$datastream->id][$user->uid] = (
-      !in_array(FALSE, $object_results, TRUE) &&
       !in_array(FALSE, $datastream_results, TRUE) &&
       (in_array(TRUE, $object_results, TRUE) ||  in_array(TRUE, $datastream_results, TRUE))
     );
