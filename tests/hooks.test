@@ -75,6 +75,8 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
 
   /**
    * Test ALL THE HOOKS!.
+   *
+   * Covers the majority of cases...
    */
   public function testHooks() {
     // Test ingesting with FedoraRepository::ingestObject().
@@ -85,6 +87,7 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
     $this->assert($_SESSION['islandora_hooks']['alter'][ISLANDORA_OBJECT_INGESTED_HOOK], 'Called "hook_islandora_object_alter" when ingesting via FedoraRepository::ingestObject.');
     $this->assert($_SESSION['islandora_hooks']['hook'][ISLANDORA_OBJECT_INGESTED_HOOK], 'Called ISLANDORA_OBJECT_INGESTED_HOOK when ingesting via FedoraRepository::ingestObject.');
     $this->repository->purgeObject($object->id);
+
     // Test blocking the ingest.
     $object = $this->repository->constructObject('test:testIngestedObjectHook');
     $object->label = 'block';
@@ -100,6 +103,7 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
       $this->assert($_SESSION['islandora_hooks']['alter'][ISLANDORA_OBJECT_INGESTED_HOOK], 'Called "hook_islandora_object_alter" when blocking ingesting via FedoraRepository::ingestObject.');
       $this->assertFalse($_SESSION['islandora_hooks']['hook'][ISLANDORA_OBJECT_INGESTED_HOOK], 'Did not called ISLANDORA_OBJECT_INGESTED_HOOK when blocking ingesting via FedoraRepository::ingestObject.');
     }
+
     // Test modifying via set magic functions.
     $object = $this->repository->constructObject('test:testModifiedObjectHook');
     $this->repository->ingestObject($object);
@@ -108,6 +112,7 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
     $object->label = "New Label!";
     $this->assert($_SESSION['islandora_hooks']['alter'][ISLANDORA_OBJECT_MODIFIED_HOOK], 'Called "hook_islandora_object_alter" when modifying via set magic functions.');
     $this->assert($_SESSION['islandora_hooks']['hook'][ISLANDORA_OBJECT_MODIFIED_HOOK], 'Called ISLANDORA_OBJECT_MODIFIED_HOOK when modifying via set magic functions.');
+
     // Test blocking the modification.
     try {
       $_SESSION['islandora_hooks']['hook'][ISLANDORA_OBJECT_MODIFIED_HOOK] = FALSE;
@@ -122,6 +127,7 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
       $this->assertFALSE($_SESSION['islandora_hooks']['hook'][ISLANDORA_OBJECT_MODIFIED_HOOK], 'Called ISLANDORA_OBJECT_MODIFIED_HOOK when blocking modifying via set magic functions.');
     }
     $this->repository->purgeObject($object->id);
+
     // Test purging with FedoraRepository::purgeObject().
     $object = $this->repository->constructObject('test:testPurgedObjectHook');
     $this->repository->ingestObject($object);
@@ -130,6 +136,7 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
     $this->repository->purgeObject($object->id);
     $this->assert($_SESSION['islandora_hooks']['alter'][ISLANDORA_OBJECT_PURGED_HOOK], 'Called "hook_islandora_object_alter" when purging via FedoraRepository::purgeObject.');
     $this->assert($_SESSION['islandora_hooks']['hook'][ISLANDORA_OBJECT_PURGED_HOOK], 'Called ISLANDORA_OBJECT_PURGED_HOOK when purging via FedoraRepository::purgeObject.');
+
     // Test deleting.
     $object = $this->repository->constructObject('test:testPurgedObjectHook');
     $this->repository->ingestObject($object);
@@ -139,6 +146,7 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
     $this->assert($_SESSION['islandora_hooks']['alter'][ISLANDORA_OBJECT_PURGED_HOOK], 'Called "hook_islandora_object_alter" when deleting via FedoraObject::delete.');
     $this->assert($_SESSION['islandora_hooks']['hook'][ISLANDORA_OBJECT_PURGED_HOOK], 'Called ISLANDORA_OBJECT_PURGED_HOOK when purging via FedoraObject::delete.');
     $this->repository->purgeObject($object->id);
+
     // Test alter blocking.
     $object = $this->repository->constructObject('test:testPurgedObjectHook');
     $this->repository->ingestObject($object);
@@ -154,6 +162,7 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
       $this->assert($_SESSION['islandora_hooks']['alter'][ISLANDORA_OBJECT_PURGED_HOOK], 'Called "hook_islandora_object_alter" when blocking purge via FedoraRepository::purgeObject.');
       $this->assertFalse($_SESSION['islandora_hooks']['hook'][ISLANDORA_OBJECT_PURGED_HOOK], 'Called ISLANDORA_OBJECT_PURGED_HOOK when blocking purge via FedoraRepository::purgeObject.');
     }
+
     // Test alter delete.
     $_SESSION['islandora_hooks']['hook'][ISLANDORA_OBJECT_PURGED_HOOK] = FALSE;
     $_SESSION['islandora_hooks']['alter'][ISLANDORA_OBJECT_PURGED_HOOK] = FALSE;
@@ -164,6 +173,7 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
     $this->assert($_SESSION['islandora_hooks']['hook'][ISLANDORA_OBJECT_PURGED_HOOK], 'Called ISLANDORA_OBJECT_PURGED_HOOK when preventing purge and deleting.');
     $object->label = 'Something other than delete';
     $this->repository->purgeObject($object->id);
+
     // Test ingesting with FedoraRepository::ingestObject().
     $object = $this->repository->constructObject('test:testIngestedDatastreamHook');
     $this->repository->ingestObject($object);
@@ -174,6 +184,7 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
     $this->assert($_SESSION['islandora_hooks']['alter'][ISLANDORA_DATASTREAM_INGESTED_HOOK], 'Called "hook_islandora_datastream_alter" when ingesting via FedoraObject::ingestDatastream.');
     $this->assert($_SESSION['islandora_hooks']['hook'][ISLANDORA_DATASTREAM_INGESTED_HOOK], 'Called ISLANDORA_DATASTREAM_INGESTED_HOOK when ingesting via FedoraObject::ingestDatastream.');
     $this->repository->purgeObject($object->id);
+
     // Test modifying a datastream.
     $object = $this->repository->constructObject('test:testModifiedDatastreamHook');
     $this->repository->ingestObject($object);
@@ -184,6 +195,7 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
     $ds->label = "New Label!";
     $this->assert($_SESSION['islandora_hooks']['alter'][ISLANDORA_DATASTREAM_MODIFIED_HOOK], 'Called "hook_islandora_datastream_alter" when modifying via set magic functions.');
     $this->assert($_SESSION['islandora_hooks']['hook'][ISLANDORA_DATASTREAM_MODIFIED_HOOK], 'Called ISLANDORA_DATASTREAM_MODIFIED_HOOK when modifying via set magic functions.');
+
     // Test blocking modifying.
     try {
       $_SESSION['islandora_hooks']['hook'][ISLANDORA_DATASTREAM_MODIFIED_HOOK] = FALSE;
@@ -197,6 +209,7 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
       $this->assertFALSE($_SESSION['islandora_hooks']['hook'][ISLANDORA_DATASTREAM_MODIFIED_HOOK], 'Called ISLANDORA_DATASTREAM_MODIFIED_HOOK when blocking modifying via set magic functions.');
     }
     $this->repository->purgeObject($object->id);
+
     // Test purging with FedoraRepository::purgeObject().
     $object = $this->repository->constructObject('test:testPurgedDatastreamHook');
     $this->repository->ingestObject($object);
@@ -210,4 +223,21 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
     $this->repository->purgeObject($object->id);
   }
 
+  /**
+   * Test ALL THE HOOKS!.
+   *
+   * Ensure hooks are triggered properly in "New" objects.
+   */
+  public function testNewIngestHooks() {
+    // Test ingesting with FedoraRepository::ingestObject().
+    $object = $this->repository->constructObject('test:testIngestedDatastreamHook');
+    $ds = $object->constructDatastream('TEST');
+    $_SESSION['islandora_hooks']['hook'][ISLANDORA_DATASTREAM_INGESTED_HOOK] = FALSE;
+    $_SESSION['islandora_hooks']['alter'][ISLANDORA_DATASTREAM_INGESTED_HOOK] = FALSE;
+    $object->ingestDatastream($ds);
+    $this->repository->ingestObject($object);
+    $this->assert($_SESSION['islandora_hooks']['alter'][ISLANDORA_DATASTREAM_INGESTED_HOOK], 'Called "hook_islandora_datastream_alter" when ingesting via FedoraObject::ingestDatastream.');
+    $this->assert($_SESSION['islandora_hooks']['hook'][ISLANDORA_DATASTREAM_INGESTED_HOOK], 'Called ISLANDORA_DATASTREAM_INGESTED_HOOK when ingesting via FedoraObject::ingestDatastream.');
+    $this->repository->purgeObject($object->id);
+  }
 }

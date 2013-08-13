@@ -1,0 +1,198 @@
+<?php
+
+/**
+ * @file
+ * Tests that datastream versions code works as intended
+ */
+
+class IslandoraDatastreamVersionTestCase extends IslandoraWebTestCase {
+
+  /**
+   * Gets info to display to describe this test.
+   *
+   * @see IslandoraWebTestCase::getInfo()
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Islandora Datastream Versions',
+      'description' => 'Tests the functionality related to datastream versions in Islandora.',
+      'group' => 'Islandora',
+    );
+  }
+
+  /**
+   * Create an object with many datastram versions.
+   *
+   * @see IslandoraWebTestCase::setUp()
+   */
+  public function setUp() {
+    parent::setUp();
+
+    $this->pid = $this->randomName() . ":" . $this->randomName();
+    $tuque = islandora_get_tuque_connection();
+    $object = $tuque->repository->constructObject($this->pid);
+    $object = $tuque->repository->ingestObject($object);
+    $this->dsid = $this->randomName();
+    $ds = $object->constructDatastream($this->dsid);
+    $ds->label = 'Test';
+    $ds->content = 'test';
+    $object->ingestDatastream($ds);
+
+    // Create three versions.
+    $ds->mimetype = 'application/pdf';
+    $ds->label = 'jaaaaa maaaan';
+    $ds->content = 'Tests... are the bests.';
+  }
+
+  /**
+   * Free any objects/resources created for this test.
+   *
+   * @see IslandoraWebTestCase::tearDown()
+   */
+  public function tearDown() {
+    $tuque = islandora_get_tuque_connection();
+    $tuque->repository->purgeObject($this->pid);
+
+    parent::tearDown();
+  }
+
+  /**
+   * Check if the user can see datastream versions in the datastream table.
+   */
+  public function testSeeDatastreamVersions() {
+    $user = $this->drupalCreateUser(array(
+      'view fedora repository objects',
+      'ingest fedora objects',
+      'view old datastream versions',
+      'add fedora datastreams',
+    ));
+    $this->drupalLogin($user);
+    $this->drupalGet("islandora/object/{$this->pid}/manage/datastreams");
+    $this->assertLink($this->dsid);
+    $this->assertLink("4");
+    $encoded_pid = urlencode($this->pid);
+    $this->assertLinkByHref("islandora/object/$encoded_pid/datastream/{$this->dsid}/version");
+  }
+
+  /**
+   * Check that users without permission cannot see datastream versions.
+   */
+  public function testNotSeeDatastreamVersions() {
+    $user = $this->drupalCreateUser(array(
+      'view fedora repository objects',
+      'ingest fedora objects',
+      'add fedora datastreams',
+    ));
+    $this->drupalLogin($user);
+    $this->drupalGet("islandora/object/{$this->pid}/manage/datastreams");
+    $this->assertLink($this->dsid);
+    $this->assertNoLink("4");
+    $encoded_pid = urlencode($this->pid);
+    $this->assertNoLinkByHref("islandora/object/$encoded_pid/datastream/{$this->dsid}/version");
+  }
+
+  /**
+   * Check that users without permission cannot see datastream version pages.
+   */
+  public function testDatastreamVersionPermissions() {
+    $this->drupalGet("islandora/object/{$this->pid}/datastream/{$this->dsid}/version");
+    $this->assertResponse(403);
+    $this->drupalGet("islandora/object/{$this->pid}/datastream/{$this->dsid}/version/0/view");
+    $this->assertResponse(403);
+  }
+
+  /**
+   * Check that the proper infomration is displayed on the ds version page.
+   */
+  public function testDatastreamVersionPage() {
+    $user = $this->drupalCreateUser(array(
+      'view old datastream versions',
+    ));
+    $this->drupalLogin($user);
+    $this->drupalGet("islandora/object/{$this->pid}/datastream/{$this->dsid}/version");
+    $this->assertNoLink("Delete");
+    $this->assertText("text/xml");
+    $this->assertText("application/pdf");
+    $this->assertText("jaaaaa maaaan");
+    $this->assertText("Test");
+
+    $encoded_pid = urlencode($this->pid);
+    $this->assertLinkByHref("islandora/object/$encoded_pid/datastream/{$this->dsid}/version/0/view");
+    $this->assertLinkByHref("islandora/object/$encoded_pid/datastream/{$this->dsid}/version/1/view");
+    $this->assertLinkByHref("islandora/object/$encoded_pid/datastream/{$this->dsid}/version/2/view");
+    $this->assertLinkByHref("islandora/object/$encoded_pid/datastream/{$this->dsid}/version/3/view");
+  }
+
+  /**
+   * Make sure the correct content is displayed for each datastream version.
+   */
+  public function testDatastreamVersionContent() {
+    $user = $this->drupalCreateUser(array(
+      'view old datastream versions',
+    ));
+    $this->drupalLogin($user);
+    $this->drupalGet("islandora/object/{$this->pid}/datastream/{$this->dsid}/version/3/view");
+    $content = $this->drupalGetContent();
+    if ($content != 'test') {
+      $this->fail("Incorrect datastream content");
+    }
+    $this->drupalGet("islandora/object/{$this->pid}/datastream/{$this->dsid}/version/2/view");
+    $content = $this->drupalGetContent();
+    if ($content != 'test') {
+      $this->fail("Incorrect datastream content");
+    }
+    $this->drupalGet("islandora/object/{$this->pid}/datastream/{$this->dsid}/version/1/view");
+    $content = $this->drupalGetContent();
+    if ($content != 'test') {
+      $this->fail("Incorrect datastream content");
+    }
+    $this->drupalGet("islandora/object/{$this->pid}/datastream/{$this->dsid}/version/0/view");
+    $content = $this->drupalGetContent();
+    if ($content != 'Tests... are the bests.') {
+      $this->fail("Incorrect datastream content");
+    }
+    $this->drupalGet("islandora/object/{$this->pid}/datastream/{$this->dsid}/version/5/view");
+    $this->assertResponse(404);
+  }
+
+  /**
+   * Make sure you can delete datastream versions.
+   */
+  public function testDatastreamVersionDelete() {
+    $user = $this->drupalCreateUser(array(
+      'view old datastream versions',
+      'delete fedora objects and datastreams',
+    ));
+    $this->drupalLogin($user);
+    $this->drupalGet("islandora/object/{$this->pid}/datastream/{$this->dsid}/version");
+    $this->assertLink("delete");
+    $this->assertText('text/xml');
+
+    $encoded_pid = urlencode($this->pid);
+    $this->assertLinkByHref("islandora/object/$encoded_pid/datastream/{$this->dsid}/version/0/delete");
+    $this->assertLinkByHref("islandora/object/$encoded_pid/datastream/{$this->dsid}/version/1/delete");
+    $this->assertLinkByHref("islandora/object/$encoded_pid/datastream/{$this->dsid}/version/2/delete");
+    $this->assertLinkByHref("islandora/object/$encoded_pid/datastream/{$this->dsid}/version/3/delete");
+
+    $this->drupalGet("islandora/object/{$this->pid}/datastream/{$this->dsid}/version/3/delete");
+    $this->drupalPost(NULL, array(), t('Delete'));
+    $this->assertNoText('text/xml');
+  }
+
+  /**
+   * Make sure you can't delete versions that don't exist/have only 1 version.
+   */
+  public function testDatastreamVersionDeleteEdgeCase() {
+    $user = $this->drupalCreateUser(array(
+      'view old datastream versions',
+      'delete fedora objects and datastreams',
+    ));
+    $this->drupalLogin($user);
+
+    $this->drupalGet("islandora/object/{$this->pid}/datastream/{$this->dsid}/version/6/delete");
+    $this->assertResponse(404);
+
+    $this->drupalGet("islandora/object/{$this->pid}/datastream/DC/version/0/delete");
+    $this->assertResponse(404);
+  }
+}

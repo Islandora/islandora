@@ -23,6 +23,9 @@ function islandora_hooked_access_test_islandora_object_access($op, $object, $use
  * Implements hook_islandora_datastream_access().
  */
 function islandora_hooked_access_test_islandora_datastream_access($op, $datastream, $user) {
+  if ($op == FEDORA_PURGE) {
+    return FALSE;
+  }
   if (isset($_SESSION['islandora_hooked_access_test']) && $_SESSION['islandora_hooked_access_test'] === func_get_args()) {
     return TRUE;
   }

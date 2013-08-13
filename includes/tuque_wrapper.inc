@@ -82,13 +82,26 @@ class IslandoraFedoraRepository extends FedoraRepository {
    * @see FedoraRepository::ingestObject()
    */
   public function ingestObject(NewFedoraObject &$object) {
-    $context = array(
-      'action' => 'ingest',
-      'block' => FALSE,
-    );
-    islandora_alter_object($object, $context);
     try {
-      if ($context['block']) {
+      foreach ($object as $dsid => $datastream) {
+        $datastream_context = array(
+          'action' => 'ingest',
+          'block' => FALSE,
+        );
+        islandora_alter_datastream($object, $datastream, $datastream_context);
+        if ($datastream_context['block']) {
+          throw new Exception(t('Object ingest blocked due to ingest of @dsid being blocked.', array(
+            '@dsid' => $dsid,
+          )));
+        }
+      }
+
+      $object_context = array(
+        'action' => 'ingest',
+        'block' => FALSE,
+      );
+      islandora_alter_object($object, $object_context);
+      if ($object_context['block']) {
         throw new Exception('Ingest Object was blocked.');
       }
       $ret = parent::ingestObject($object);
@@ -194,6 +207,9 @@ class IslandoraFedoraApiM extends FedoraApiM {
       'params' => $params,
     );
     islandora_alter_datastream($object, $datastream, $context);
+    if (isset($params['lastModifiedDate'])) {
+      $params['lastModifiedDate'] = (string) $object[$dsid]->createdDate;
+    }
     try {
       if ($context['block']) {
         throw new Exception('Modify Datastream was blocked.');
@@ -269,7 +285,6 @@ class IslandoraFedoraApiM extends FedoraApiM {
       switch ($action) {
         case 'block':
           throw new Exception('Purge Datastream was blocked.');
-        break;
 
         case 'delete':
           $object[$dsid]->state = 'D';
@@ -313,7 +328,6 @@ class IslandoraFedoraApiM extends FedoraApiM {
       switch ($action) {
         case 'block':
           throw new Exception('Purge object was blocked.');
-        break;
 
         case 'delete':
           $object->state = 'D';
