@@ -1,7 +1,7 @@
 name = Islandora
 description = "View and manage Fedora objects"
 package = Islandora
-version = 7.x-dev
+version = 7.x-1.2-RC1
 core = 7.x
 configure = admin/islandora/configure
 stylesheets[all][] = css/islandora.base.css
