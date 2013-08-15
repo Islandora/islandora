@@ -802,7 +802,7 @@ function islandora_view_object(AbstractObject $object) {
 
   drupal_add_js(array(
     'islandora' => array(
-      'print_link' => '/islandora/object/' . $object->id . '/print')),
+      'print_link' => 'islandora/object/' . $object->id . '/print')),
     array('type' => 'setting'));
   drupal_add_js($path . '/js/add_print.js');
 
