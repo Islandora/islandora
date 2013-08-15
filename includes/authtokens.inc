@@ -10,7 +10,7 @@
 
 // Token lifespan(seconds): after this duration the token expires.
 // 5 minutes.
-define('TOKEN_TIMEOUT', 300);
+define('ISLANDORA_AUTHTOKEN_TOKEN_TIMEOUT', 300);
 
 /**
  * Request Islandora to construct an object/datastream authentication token.
@@ -92,7 +92,7 @@ function islandora_validate_object_token($pid, $dsid, $token) {
     ->condition('pid', $pid, '=')
     ->condition('dsid', $dsid, '=')
     ->condition('time', $time, '<=')
-    ->condition('time', $time - TOKEN_TIMEOUT, '>')
+    ->condition('time', $time - ISLANDORA_AUTHTOKEN_TOKEN_TIMEOUT, '>')
     ->execute()
     ->fetchAll();
   if ($result) {
@@ -131,6 +131,6 @@ function islandora_validate_object_token($pid, $dsid, $token) {
 function islandora_remove_expired_tokens() {
   $time = time();
   db_delete("islandora_authtokens")
-    ->condition('time', $time - TOKEN_TIMEOUT, '<')
+    ->condition('time', $time - ISLANDORA_AUTHTOKEN_TOKEN_TIMEOUT, '<')
     ->execute();
 }

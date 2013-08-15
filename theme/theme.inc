@@ -115,7 +115,7 @@ function islandora_preprocess_islandora_default(&$variables) {
       $download_path = islandora_datastream_get_url($ds, 'download');
       $datastreams[$id]['id'] = $id;
       $datastreams[$id]['label'] = $label;
-      $datastreams[$id]['label_link'] = islandora_datastream_access(FEDORA_VIEW_OBJECTS, $ds) ?
+      $datastreams[$id]['label_link'] = islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $ds) ?
         l($label, $download_path) :
         $label;
       $datastreams[$id]['download_url'] = $download_path;
@@ -130,14 +130,14 @@ function islandora_preprocess_islandora_default(&$variables) {
   }
   $variables['datastreams'] = $datastreams;
   // Objects in fcrepo4 don't always contain a DC datastream.
-  if (isset($islandora_object['DC']) && islandora_datastream_access(FEDORA_VIEW_OBJECTS, $islandora_object['DC'])) {
+  if (isset($islandora_object['DC']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $islandora_object['DC'])) {
     $dc_object = DublinCore::importFromXMLString($islandora_object['DC']->content);
     $dc_array = $dc_object->asArray();
   }
   $variables['dc_array'] = isset($dc_array) ? $dc_array : array();
   $variables['islandora_dublin_core'] = isset($dc_object) ? $dc_object : NULL;
   $variables['islandora_object_label'] = $islandora_object->label;
-  if (isset($islandora_object['TN']) && islandora_datastream_access(FEDORA_VIEW_OBJECTS, $islandora_object['TN'])) {
+  if (isset($islandora_object['TN']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $islandora_object['TN'])) {
     $variables['islandora_thumbnail_url'] = url("islandora/object/{$islandora_object->id}/datastream/TN/view");
   }
 }
@@ -219,11 +219,11 @@ function islandora_preprocess_islandora_objects(array &$variables) {
     $o = islandora_object_load($o);
     $url = "islandora/object/{$o->id}";
     $link_options = array('html' => TRUE, 'attributes' => array('title' => $o->label));
-    $img = islandora_datastream_access(FEDORA_VIEW_OBJECTS, $o['TN']) ?
+    $img = islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $o['TN']) ?
       theme('image', array('path' => url("$url/datastream/TN/view"), 'attributes' => array())) :
       '';
     $description = NULL;
-    if (isset($o['DC']) && islandora_datastream_access(FEDORA_VIEW_OBJECTS, $o['DC'])) {
+    if (isset($o['DC']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $o['DC'])) {
       $dc = DublinCore::importFromXMLString($o['DC']->content);
       if ($dc) {
         $dc = $dc->asArray();
@@ -260,7 +260,7 @@ function theme_islandora_datastream_download_link(array $vars) {
   module_load_include('inc', 'islandora', 'includes/utilities');
 
   $label = t('download');
-  return islandora_datastream_access(FEDORA_VIEW_OBJECTS, $datastream) ?
+  return islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $datastream) ?
     l($label, islandora_datastream_get_url($datastream, 'download')) :
     '';
 }
@@ -289,7 +289,7 @@ function theme_islandora_datastream_view_link(array $vars) {
   }
 
   if ($vars['version'] === NULL) {
-    $perm = FEDORA_VIEW_OBJECTS;
+    $perm = ISLANDORA_VIEW_OBJECTS;
   }
   else {
     $perm = ISLANDORA_VIEW_DATASTREAM_HISTORY;
@@ -319,7 +319,7 @@ function theme_islandora_datastream_delete_link(array $vars) {
 
   $datastreams = module_invoke_all('islandora_undeletable_datastreams', $datastream->parent->models);
 
-  $can_delete = !in_array($datastream->id, $datastreams) && islandora_datastream_access(FEDORA_PURGE, $datastream);
+  $can_delete = !in_array($datastream->id, $datastreams) && islandora_datastream_access(ISLANDORA_PURGE, $datastream);
 
   if ($vars['version'] !== NULL) {
     if (count($datastream) == 1) {
@@ -354,7 +354,7 @@ function theme_islandora_datastream_edit_link(array $vars) {
 
   $edit_registry = module_invoke_all('islandora_edit_datastream_registry', $datastream->parent, $datastream);
 
-  $can_edit = count($edit_registry) > 0 && islandora_datastream_access(FEDORA_METADATA_EDIT, $datastream);
+  $can_edit = count($edit_registry) > 0 && islandora_datastream_access(ISLANDORA_METADATA_EDIT, $datastream);
 
   return $can_edit ?
     l(t('edit'), "islandora/object/{$datastream->parent->id}/datastream/{$datastream->id}/edit") :

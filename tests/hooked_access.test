@@ -37,9 +37,9 @@ class IslandoraHookedAccessTestCase extends IslandoraWebTestCase {
     $this->objects = array(
       'test:testAccessHook',
     );
-    $this->op = FEDORA_VIEW_OBJECTS;
-    $this->other_op = FEDORA_INGEST;
-    $this->denied_op = FEDORA_PURGE;
+    $this->op = ISLANDORA_VIEW_OBJECTS;
+    $this->other_op = ISLANDORA_INGEST;
+    $this->denied_op = ISLANDORA_PURGE;
     $this->purgeTestObjects();
     $this->dsid = 'asdf';
     $this->createTestObjects();

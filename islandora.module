@@ -24,15 +24,15 @@
  */
 
 // Common datastreams.
-define('DS_COMP_STREAM', 'DS-COMPOSITE-MODEL');
+define('ISLANDORA_DS_COMP_STREAM', 'DS-COMPOSITE-MODEL');
 
 // Permissions.
-define('FEDORA_VIEW_OBJECTS', 'view fedora repository objects');
-define('FEDORA_METADATA_EDIT', 'edit fedora metadata');
-define('FEDORA_ADD_DS', 'add fedora datastreams');
-define('FEDORA_INGEST', 'ingest fedora objects');
-define('FEDORA_PURGE', 'delete fedora objects and datastreams');
-define('FEDORA_MANAGE_PROPERTIES', 'manage object properties');
+define('ISLANDORA_VIEW_OBJECTS', 'view fedora repository objects');
+define('ISLANDORA_METADATA_EDIT', 'edit fedora metadata');
+define('ISLANDORA_ADD_DS', 'add fedora datastreams');
+define('ISLANDORA_INGEST', 'ingest fedora objects');
+define('ISLANDORA_PURGE', 'delete fedora objects and datastreams');
+define('ISLANDORA_MANAGE_PROPERTIES', 'manage object properties');
 define('ISLANDORA_VIEW_DATASTREAM_HISTORY', 'view old datastream versions');
 
 // Hooks.
@@ -56,6 +56,19 @@ define('ISLANDORA_INGEST_STEP_HOOK', 'islandora_ingest_steps');
 
 // Autocomplete paths.
 define('ISLANDORA_CONTENT_MODELS_AUTOCOMPLETE', 'islandora/autocomplete/content-models');
+
+/**
+ * @deprecated Constants.
+ */
+// @codingStandardsIgnoreStart
+define('DS_COMP_STREAM', ISLANDORA_DS_COMP_STREAM);
+define('FEDORA_VIEW_OBJECTS', ISLANDORA_VIEW_OBJECTS);
+define('FEDORA_METADATA_EDIT', ISLANDORA_METADATA_EDIT);
+define('FEDORA_ADD_DS', ISLANDORA_ADD_DS);
+define('FEDORA_INGEST', ISLANDORA_INGEST);
+define('FEDORA_PURGE', ISLANDORA_PURGE);
+define('FEDORA_MANAGE_PROPERTIES', ISLANDORA_MANAGE_PROPERTIES);
+// @codingStandardsIgnoreEnd
 
 /**
  * Implements hook_menu().
@@ -85,7 +98,7 @@ function islandora_menu() {
     'title' => 'Solution packs',
     'description' => 'Install content models and collections required by installed solution packs.',
     'page callback' => 'islandora_solution_packs_admin',
-    'access arguments' => array(FEDORA_ADD_DS),
+    'access arguments' => array(ISLANDORA_ADD_DS),
     'file' => 'includes/solution_packs.inc',
     'type' => MENU_NORMAL_ITEM,
   );
@@ -93,7 +106,7 @@ function islandora_menu() {
     'title' => 'Islandora Repository',
     'page callback' => 'islandora_view_default_object',
     'type' => MENU_NORMAL_ITEM,
-    'access arguments' => array(FEDORA_VIEW_OBJECTS),
+    'access arguments' => array(ISLANDORA_VIEW_OBJECTS),
   );
   $items['islandora/object/%islandora_object'] = array(
     'title callback' => 'islandora_drupal_title',
@@ -102,14 +115,14 @@ function islandora_menu() {
     'page arguments' => array(2),
     'type' => MENU_NORMAL_ITEM,
     'access callback' => 'islandora_object_access_callback',
-    'access arguments' => array(FEDORA_VIEW_OBJECTS, 2),
+    'access arguments' => array(ISLANDORA_VIEW_OBJECTS, 2),
   );
   $items['islandora/object/%islandora_object/print'] = array(
     'page callback' => 'islandora_printer_object',
     'page arguments' => array(2),
     'type' => MENU_NORMAL_ITEM,
     'access callback' => 'islandora_object_access_callback',
-    'access arguments' => array(FEDORA_VIEW_OBJECTS, 2),
+    'access arguments' => array(ISLANDORA_VIEW_OBJECTS, 2),
   );
   $items['islandora/object/%islandora_object/view'] = array(
     'title' => 'View',
@@ -129,11 +142,11 @@ function islandora_menu() {
     'access callback' => 'islandora_object_manage_access_callback',
     'access arguments' => array(
       array(
-        FEDORA_MANAGE_PROPERTIES,
-        FEDORA_METADATA_EDIT,
-        FEDORA_ADD_DS,
-        FEDORA_PURGE,
-        FEDORA_INGEST,
+        ISLANDORA_MANAGE_PROPERTIES,
+        ISLANDORA_METADATA_EDIT,
+        ISLANDORA_ADD_DS,
+        ISLANDORA_PURGE,
+        ISLANDORA_INGEST,
       ), 2),
   );
 
@@ -151,9 +164,9 @@ function islandora_menu() {
     'access callback' => 'islandora_object_manage_access_callback',
     'access arguments' => array(
       array(
-        FEDORA_METADATA_EDIT,
-        FEDORA_ADD_DS,
-        FEDORA_PURGE,
+        ISLANDORA_METADATA_EDIT,
+        ISLANDORA_ADD_DS,
+        ISLANDORA_PURGE,
       ), 2),
     'weight' => -10,
   );
@@ -165,7 +178,7 @@ function islandora_menu() {
     'page arguments' => array('islandora_object_properties_form', 2),
     'type' => MENU_LOCAL_TASK,
     'access callback' => 'islandora_object_access_callback',
-    'access arguments' => array(FEDORA_MANAGE_PROPERTIES, 2),
+    'access arguments' => array(ISLANDORA_MANAGE_PROPERTIES, 2),
     'weight' => -5,
   );
   $items['islandora/object/%islandora_object/delete'] = array(
@@ -175,7 +188,7 @@ function islandora_menu() {
     'page arguments' => array('islandora_delete_object_form', 2),
     'type' => MENU_CALLBACK,
     'access callback' => 'islandora_object_access_callback',
-    'access arguments' => array(FEDORA_PURGE, 2),
+    'access arguments' => array(ISLANDORA_PURGE, 2),
   );
   $items['islandora/object/%islandora_object/manage/datastreams/add'] = array(
     'title' => 'Add a datastream',
@@ -184,7 +197,7 @@ function islandora_menu() {
     'page arguments' => array('islandora_add_datastream_form', 2),
     'type' => MENU_LOCAL_ACTION,
     'access callback' => 'islandora_object_access_callback',
-    'access arguments' => array(FEDORA_ADD_DS, 2),
+    'access arguments' => array(ISLANDORA_ADD_DS, 2),
   );
   $items['islandora/object/%islandora_object/manage/datastreams/add/autocomplete'] = array(
     'file' => 'includes/add_datastream.form.inc',
@@ -192,7 +205,7 @@ function islandora_menu() {
     'page arguments' => array(2),
     'type' => MENU_CALLBACK,
     'access callback' => 'islandora_object_access_callback',
-    'access arguments' => array(FEDORA_ADD_DS, 2),
+    'access arguments' => array(ISLANDORA_ADD_DS, 2),
   );
   $items['islandora/object/%islandora_object/datastream/%islandora_datastream'] = array(
     'title' => 'View datastream',
@@ -201,7 +214,7 @@ function islandora_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'includes/datastream.inc',
     'access callback' => 'islandora_datastream_access',
-    'access arguments' => array(FEDORA_VIEW_OBJECTS, 4),
+    'access arguments' => array(ISLANDORA_VIEW_OBJECTS, 4),
     'load arguments' => array(2),
   );
   // This menu item uses token authentication in islandora_tokened_object.
@@ -209,7 +222,7 @@ function islandora_menu() {
     'title' => 'View datastream',
     'load arguments' => array('%map'),
     'access callback' => 'islandora_object_datastream_tokened_access_callback',
-    'access arguments' => array(FEDORA_VIEW_OBJECTS, 2, 4),
+    'access arguments' => array(ISLANDORA_VIEW_OBJECTS, 2, 4),
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['islandora/object/%islandora_object/datastream/%islandora_datastream/download'] = array(
@@ -219,7 +232,7 @@ function islandora_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'includes/datastream.inc',
     'access callback' => 'islandora_datastream_access',
-    'access arguments' => array(FEDORA_VIEW_OBJECTS, 4),
+    'access arguments' => array(ISLANDORA_VIEW_OBJECTS, 4),
     'load arguments' => array(2),
   );
   $items['islandora/object/%islandora_object/datastream/%islandora_datastream/edit'] = array(
@@ -229,7 +242,7 @@ function islandora_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'includes/datastream.inc',
     'access callback' => 'islandora_datastream_access',
-    'access arguments' => array(FEDORA_METADATA_EDIT, 4),
+    'access arguments' => array(ISLANDORA_METADATA_EDIT, 4),
     'load arguments' => array(2),
   );
   $items['islandora/object/%islandora_object/datastream/%islandora_datastream/delete'] = array(
@@ -239,7 +252,7 @@ function islandora_menu() {
     'file' => 'includes/delete_datastream.form.inc',
     'type' => MENU_CALLBACK,
     'access callback' => 'islandora_datastream_access',
-    'access arguments' => array(FEDORA_PURGE, 4),
+    'access arguments' => array(ISLANDORA_PURGE, 4),
     'load arguments' => array(2),
   );
   $items['islandora/object/%islandora_object/datastream/%islandora_datastream/version'] = array(
@@ -259,7 +272,7 @@ function islandora_menu() {
     'file' => 'includes/datastream.version.inc',
     'type' => MENU_CALLBACK,
     'access callback' => 'islandora_datastream_access',
-    'access arguments' => array(FEDORA_PURGE, 4),
+    'access arguments' => array(ISLANDORA_PURGE, 4),
     'load arguments' => array(2),
   );
   $items['islandora/object/%islandora_object/datastream/%islandora_datastream/version/%/view'] = array(
@@ -277,7 +290,7 @@ function islandora_menu() {
     'page arguments' => array(2),
     'type' => MENU_CALLBACK,
     'access callback' => 'islandora_object_access',
-    'access arguments' => array(FEDORA_VIEW_OBJECTS, 2),
+    'access arguments' => array(ISLANDORA_VIEW_OBJECTS, 2),
     'load arguments' => array(2),
   );
   $items[ISLANDORA_CONTENT_MODELS_AUTOCOMPLETE] = array(
@@ -390,27 +403,27 @@ function islandora_theme() {
  */
 function islandora_permission() {
   return array(
-    FEDORA_VIEW_OBJECTS => array(
+    ISLANDORA_VIEW_OBJECTS => array(
       'title' => t('View repository objects'),
       'description' => t('View objects in the repository. Note: Fedora XACML security policies may override this permission.'),
     ),
-    FEDORA_ADD_DS => array(
+    ISLANDORA_ADD_DS => array(
       'title' => t('Add datastreams to repository objects'),
       'description' => t('Add datastreams to objects in the repository. Note: Fedora XACML security policies may override this position.'),
     ),
-    FEDORA_METADATA_EDIT => array(
+    ISLANDORA_METADATA_EDIT => array(
       'title' => t('Edit metadata'),
       'description' => t('Edit metadata for objects in the repository.'),
     ),
-    FEDORA_INGEST => array(
+    ISLANDORA_INGEST => array(
       'title' => t('Create new repository objects'),
       'description' => t('Create new objects in the repository.'),
     ),
-    FEDORA_PURGE => array(
+    ISLANDORA_PURGE => array(
       'title' => t('Permanently remove objects from the repository'),
       'description' => t('Permanently remove objects from the repository.'),
     ),
-    FEDORA_MANAGE_PROPERTIES => array(
+    ISLANDORA_MANAGE_PROPERTIES => array(
       'title' => t('Manage object properties'),
       'description' => t('Modify object labels, owner IDs, and states.'),
     ),
