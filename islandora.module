@@ -53,6 +53,7 @@ define('ISLANDORA_DATASTREAM_INGESTED_HOOK', 'islandora_datastream_ingested');
 define('ISLANDORA_DATASTREAM_MODIFIED_HOOK', 'islandora_datastream_modified');
 define('ISLANDORA_DATASTREAM_PURGED_HOOK', 'islandora_datastream_purged');
 define('ISLANDORA_INGEST_STEP_HOOK', 'islandora_ingest_steps');
+define('ISLANDORA_DERVIATIVE_CREATION_HOOK', 'islandora_derivative');
 
 // Autocomplete paths.
 define('ISLANDORA_CONTENT_MODELS_AUTOCOMPLETE', 'islandora/autocomplete/content-models');
@@ -1504,4 +1505,50 @@ function islandora_islandora_basic_collection_get_query_filters() {
       '!namespaces' => $namespace_sparql,
     ));
   }
+}
+
+
+/**
+ * Implements hook_islandora_object_ingested().
+ *
+ * On object ingestion we call the case of source_dsid being NULL only as
+ * the islandora_islandora_datastream_ingested hook will handle the cases
+ * where specific values of source_dsid can occur.
+ */
+function islandora_islandora_object_ingested(AbstractObject $object) {
+  module_load_include('inc', 'islandora', 'includes/derivatives');
+  $logging_results = islandora_do_derivatives($object, array(
+    'source_dsid' => NULL,
+  ));
+  islandora_derivative_logging($logging_results);
+}
+
+/**
+ * Implements hook_islandora_datastream_ingested().
+ *
+ * When a datastream is ingested we filter the derivatives on source_dsid being
+ * equal to the current ingested datastream's id.
+ */
+function islandora_islandora_datastream_ingested(AbstractObject $object, AbstractDatastream $datastream) {
+  module_load_include('inc', 'islandora', 'includes/derivatives');
+  $logging_results = islandora_do_derivatives($object, array(
+    'source_dsid' => $datastream->id,
+  ));
+  islandora_derivative_logging($logging_results);
+}
+
+/**
+ * Implements hook_islandora_datastream_modified().
+ *
+ * When a datastream is modified we filter the derivatives on source_dsid being
+ * equal to the current ingested datastream's id. Force is set to TRUE such that
+ * existing derivatives will be updated to reflect the change in the source.
+ */
+function islandora_islandora_datastream_modified(AbstractObject $object, AbstractDatastream $datastream) {
+  module_load_include('inc', 'islandora', 'includes/derivatives');
+  $logging_results = islandora_do_derivatives($object, array(
+    'source_dsid' => $datastream->id,
+    'force' => TRUE,
+  ));
+  islandora_derivative_logging($logging_results);
 }

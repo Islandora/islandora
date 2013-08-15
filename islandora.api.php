@@ -572,3 +572,77 @@ function hook_islandora_overview_object_alter(AbstractObject &$object, &$output)
 function hook_CMODEL_PID_islandora_overview_object_alter(AbstractObject &$object, &$output) {
   $output = $output . drupal_render(drupal_get_form('some_form', $object));
 }
+
+/*
+ * Defines derivative functions to be executed based on certain conditions.
+ *
+ * This hook fires when an object/datastream is ingested or a datastream is
+ * modified.
+ *
+ * @return array
+ *   An array containing an entry for each derivative to be created. Each entry
+ *   is an array of parameters containing:
+ *   - force: Bool denoting whether we are forcing the generation of
+ *     derivatives.
+ *   - source_dsid: (Optional) String of the datastream id we are generating
+ *     from or NULL if it's the object itself.
+ *   - destination_dsid: (Optional) String of the datastream id that is being
+ *     created. To be used in the UI.
+ *   - weight: A string denoting the weight of the function. This value is
+ *     sorted upon to run functions in order.
+ *   - function: An array of function(s) to be ran when constructing
+ *     derivatives. Functions that are defined to be called for derivation
+ *     creation must have the following structure:
+ *     module_name_derivative_creation_function($object, $force = FALSE)
+ *     These functions must return an array in the structure of:
+ *     - success: Bool denoting whether the operation was successful.
+ *     - messages: An array structure containing:
+ *       - message: A string passed through t() describing the
+ *         outcome of the operation.
+ *       - message_sub: (Optional) Substitutions to be passed along to t() or
+ *         watchdog.
+ *       - type: A string denoting whether the output is to be
+ *         drupal_set_messaged (dsm) or watchdogged (watchdog).
+ *       - severity: (Optional) A severity level / status to be used when
+ *         logging messages. Uses the defaults of drupal_set_message and
+ *         watchdog if not defined.
+ *   - file: A string denoting the path to the file where the function
+ *     is being called from.
+ */
+function hook_islandora_derivative() {
+  return array(
+    array(
+      'source_dsid' => 'OBJ',
+      'destination_dsid' => 'DERIV',
+      'weight' => '0',
+      'function' => array(
+        'islandora_derivatives_test_create_deriv_datastream',
+      ),
+    ),
+    array(
+      'source_dsid' => 'SOMEWEIRDDATASTREAM',
+      'destination_dsid' => 'STANLEY',
+      'weight' => '-1',
+      'function' => array(
+        'islandora_derivatives_test_create_some_weird_datastream',
+      ),
+    ),
+    array(
+      'source_dsid' => NULL,
+      'destination_dsid' => 'NOSOURCE',
+      'weight' => '-3',
+      'function' => array(
+        'islandora_derivatives_test_create_nosource_datastream',
+      ),
+    ),
+  );
+}
+
+/**
+ * Content model specific version of hook_islandora_derivative().
+ *
+ * @see hook_islandora_derivative()
+ */
+function hook_CMODEL_PID_islandora_derivative() {
+
+}

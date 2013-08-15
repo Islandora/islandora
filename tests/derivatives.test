@@ -1,0 +1,296 @@
+<?php
+
+/**
+ * @file
+ * Tests to see if the hooks get called when appropriate.
+ *
+ * In the test module 'islandora_derivatives_test' there are implementations
+ * of hooks being tested. These implementations modifies the session, and
+ * that's how we test if the hook gets called.
+ *
+ * To make sense of these tests reference islandora_derivatives_test.module.
+ */
+
+class IslandoraDerivativesTestCase extends IslandoraWebTestCase {
+
+  /**
+   * Gets info to display to describe this test.
+   *
+   * @see IslandoraWebTestCase::getInfo()
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Islandora Derivative Generation',
+      'description' => 'Ensure that the derivative generation hooks return appropriate results.',
+      'group' => 'Islandora',
+    );
+  }
+
+  /**
+   * Creates an admin user and a connection to a fedora repository.
+   *
+   * @see IslandoraWebTestCase::setUp()
+   */
+  public function setUp() {
+    parent::setUp(
+      array(
+        'islandora_derivatives_test',
+      )
+    );
+    $url = variable_get('islandora_base_url', 'http://localhost:8080/fedora');
+    $this->connection = new RepositoryConnection($url, $this->admin->name, $this->admin->pass);
+    $this->connection->reuseConnection = TRUE;
+    $this->api = new FedoraApi($this->connection);
+    $this->cache = new SimpleCache();
+    $this->repository = new FedoraRepository($this->api, $this->cache);
+    $this->pid = $this->randomName() . ":" . $this->randomName();
+  }
+
+  /**
+   * Free any objects/resources created for this test.
+   *
+   * @see IslandoraWebTestCase::tearDown()
+   */
+  public function tearDown() {
+    $tuque = islandora_get_tuque_connection();
+    parent::tearDown();
+  }
+
+  /**
+   * Tests that the islandora_islandora_object_ingested hook gets fired.
+   */
+  public function testDerivativeOnIngest() {
+    global $_islandora_derivative_test_ingest_method;
+    $_islandora_derivative_test_ingest_method = 'modifyDatastream';
+    $tuque = islandora_get_tuque_connection();
+    $object = $tuque->repository->constructObject($this->pid);
+    $object->models = array(
+      'some:cmodel',
+    );
+    $dsid = 'OBJ';
+    $ds = $object->constructDatastream($dsid);
+    $ds->label = 'Test';
+    $ds->content = 'test';
+    $object->ingestDatastream($ds);
+    $tuque->repository->ingestObject($object);
+    $this->assertDatastreams($object, array(
+      'RELS-EXT',
+      'DC',
+      'OBJ',
+      'DERIV',
+      'NOSOURCE',
+    ));
+    $this->assertEqual('ingestDatastream', $_islandora_derivative_test_ingest_method, 'The expected ingest method is "ingestDatastream", got "' . $_islandora_derivative_test_ingest_method . '".');
+    $this->assertEqual('test some string', $object['DERIV']->content, 'The expected content of the DERIV datastream is "test some string", got "' . $object['DERIV']->content . '".');
+    $this->assertEqual('NOSOURCE', $object['NOSOURCE']->content, 'The expected content of the NOSOURCE datastream is "NOSOURCE", got "' . $object['NOSOURCE']->content . '".');
+
+  }
+
+  /**
+   * Tests the ingest method when when forcing on existing datastreams.
+   */
+  public function testDerivativeOnForceExistingDatastream() {
+    global $_islandora_derivative_test_ingest_method;
+    $_islandora_derivative_test_ingest_method = 'ingestDatastream';
+    $object = $this->constructBaseObject();
+    $object = $this->constructDERIVDatastream($object);
+    $this->constructNOSOURCEDatastream($object);
+    $islandora_object = islandora_object_load($this->pid);
+    islandora_do_derivatives($islandora_object, array(
+      'force' => TRUE,
+    ));
+    $this->assertEqual('modifyDatastream', $_islandora_derivative_test_ingest_method, 'The expected ingest method is "modifyDatastream", got "' . $_islandora_derivative_test_ingest_method . '".');
+    $this->assertEqual('FORCEFULLY APPENDING CONTENT TO test', $islandora_object['DERIV']->content, 'The expected content of the DERIV datastream is "FORCEFULLY APPENDING CONTENT TO test", got "' . $islandora_object['DERIV']->content . '".');
+  }
+
+  /**
+   * Tests the ingest method when forcing on non-existing datastreams.
+   */
+  public function testDerivativeOnForceNonExistingDatastream() {
+    global $_islandora_derivative_test_ingest_method;
+    $_islandora_derivative_test_ingest_method = 'modifyDatastream';
+    $this->constructBaseObject();
+    $object = islandora_object_load($this->pid);
+    islandora_do_derivatives($object, array(
+      'force' => TRUE,
+    ));
+    $this->assertEqual('ingestDatastream', $_islandora_derivative_test_ingest_method, 'The expected ingest method is "ingestDatastream", got "' . $_islandora_derivative_test_ingest_method . '".');
+    $this->assertEqual('test some string', $object['DERIV']->content, 'The expected content of the DERIV datastream is "test some string", got "' . $object['DERIV']->content . '".');
+  }
+
+  /**
+   * Tests the islandora_datastream_modified hook when there are existing DSes.
+   */
+  public function testDerivativeOnModifyExistingDatastream() {
+    global $_islandora_derivative_test_ingest_method;
+    $_islandora_derivative_test_ingest_method = 'ingestDatastream';
+    $object = $this->constructBaseObject();
+    $this->constructDERIVDatastream($object);
+    // Need to do this as Tuque caches.
+    $connection = islandora_get_tuque_connection();
+    $connection->cache->resetCache();
+    $islandora_object = islandora_object_load($this->pid);
+    $changed_content = 'islandora beast';
+    $islandora_object['OBJ']->content = $changed_content;
+    $this->assertEqual('modifyDatastream', $_islandora_derivative_test_ingest_method, 'The expected ingest method is "modifyDatastream", got "' . $_islandora_derivative_test_ingest_method . '".');
+    $this->assertEqual('FORCEFULLY APPENDING CONTENT TO ' . $changed_content, $islandora_object['DERIV']->content, 'The expected content of the DERIV datastream is "FORCEFULLY APPENDING CONTENT TO islandora beast", got "' . $islandora_object['DERIV']->content . '".');
+  }
+
+  /**
+   * Tests islandora_datastream_modified hook when there are no existing DSes.
+   */
+  public function testDerivativeOnModifyNonExistingDatastream() {
+    global $_islandora_derivative_test_ingest_method;
+    $_islandora_derivative_test_ingest_method = 'modifyDatastream';
+    $this->constructBaseObject();
+    // Need to do this as Tuque caches.
+    $connection = islandora_get_tuque_connection();
+    $connection->cache->resetCache();
+    $islandora_object = islandora_object_load($this->pid);
+    $changed_content = 'islandora beast';
+    $islandora_object['OBJ']->content = $changed_content;
+    $this->assertEqual('ingestDatastream', $_islandora_derivative_test_ingest_method, 'The expected ingest method is "ingestDatastream", got "' . $_islandora_derivative_test_ingest_method . '".');
+    $this->assertEqual($changed_content . ' some string', $islandora_object['DERIV']->content, 'The expected content of the DERIV datastream is "islandora beast string", got "' . $islandora_object['DERIV']->content . '".');
+  }
+
+  /**
+   * Tests derivative hook filtering based upon source_dsid.
+   */
+  public function testDerivativeFilteringOnSourceDSID() {
+    global $_islandora_derivative_test_derivative_functions;
+    $_islandora_derivative_test_derivative_functions = array();
+    $this->constructBaseObject();
+    $object = islandora_object_load($this->pid);
+    islandora_do_derivatives($object, array(
+      'source_dsid' => 'OBJ',
+    ));
+    $this->assertEqual(1, count($_islandora_derivative_test_derivative_functions), 'Expected 1 derivative function for the source_dsid of "OBJ", got ' . count($_islandora_derivative_test_derivative_functions) . '.');
+    $called_function = (string) reset($_islandora_derivative_test_derivative_functions);
+    $this->assertEqual('islandora_derivatives_test_create_deriv_datastream', $called_function, 'Expected derivative function is "islandora_derivatives_test_create_deriv_datastream", got "' . $called_function . '".');
+
+    // Reset the derivative functions array as we are going to use it again.
+    $_islandora_derivative_test_derivative_functions = array();
+    islandora_do_derivatives($object, array(
+      'source_dsid' => 'SOMEWEIRDDATASTREAM',
+    ));
+    $this->assertEqual(1, count($_islandora_derivative_test_derivative_functions), 'Expected 1 derivative function for the source_dsid of "SOMEWEIRDDATASTREAM", got ' . count($_islandora_derivative_test_derivative_functions) . '.');
+    $called_function = (string) reset($_islandora_derivative_test_derivative_functions);
+    $this->assertEqual('islandora_derivatives_test_create_some_weird_datastream', $called_function, 'Expected derivative function is "islandora_derivatives_test_create_some_weird_datastream", got "' . $called_function . '".');
+  }
+
+  /**
+   * Tests that only functions were the source_dsid is NULL are fired.
+   */
+  public function testNULLSourceDSID() {
+    global $_islandora_derivative_test_derivative_functions;
+    $_islandora_derivative_test_derivative_functions = array();
+    $this->constructBaseObject();
+    $object = islandora_object_load($this->pid);
+    islandora_do_derivatives($object, array(
+      'source_dsid' => NULL,
+    ));
+    $this->assertDatastreams($object, array(
+      'DC',
+      'RELS-EXT',
+      'OBJ',
+      'NOSOURCE',
+    ));
+    $this->assertEqual(1, count($_islandora_derivative_test_derivative_functions), 'Expected 1 derivative function for the source_dsid of "NULL", got ' . count($_islandora_derivative_test_derivative_functions) . '.');
+    $called_function = (string) reset($_islandora_derivative_test_derivative_functions);
+    $this->assertEqual('islandora_derivatives_test_create_nosource_datastream', $called_function, 'Expected derivative function is "islandora_derivatives_test_create_nosource_datastream", got "' . $called_function . '".');
+    $this->assertEqual('NOSOURCE', $object['NOSOURCE']->content, 'The expected content of the NOSOURCE datastream is "NOSOURCE", got "' . $object['NOSOURCE']->content . '".');
+  }
+
+  /**
+   * Tests that when no source_dsid all derivative functions are called.
+   */
+  public function testNoSourceDSIDNoForce() {
+    global $_islandora_derivative_test_derivative_functions;
+    $_islandora_derivative_test_derivative_functions = array();
+    $this->constructBaseObject();
+    $object = islandora_object_load($this->pid);
+    islandora_do_derivatives($object, array());
+    $this->assertDatastreams($object, array(
+      'DC',
+      'RELS-EXT',
+      'OBJ',
+      'DERIV',
+      'NOSOURCE',
+    ));
+    $this->assertEqual(3, count($_islandora_derivative_test_derivative_functions), 'Expected 3 derivative functions when there is no source_dsid, got ' . count($_islandora_derivative_test_derivative_functions) . '.');
+  }
+
+  /**
+   * Tests that when no source_dsid all derivative functions are called.
+   */
+  public function testNoSourceDSIDForce() {
+    global $_islandora_derivative_test_derivative_functions;
+    $_islandora_derivative_test_derivative_functions = array();
+    $this->constructBaseObject();
+    $object = islandora_object_load($this->pid);
+    islandora_do_derivatives($object, array(
+      'force' => TRUE,
+    ));
+    $this->assertDatastreams($object, array(
+      'DC',
+      'RELS-EXT',
+      'OBJ',
+      'DERIV',
+      'NOSOURCE',
+    ));
+    $this->assertEqual(3, count($_islandora_derivative_test_derivative_functions), 'Expected 3 derivative functions when there is no source_dsid, got ' . count($_islandora_derivative_test_derivative_functions) . '.');
+  }
+
+  /**
+   * Helper function that will construct a base object.
+   */
+  public function constructBaseObject() {
+    $object = $this->repository->constructObject($this->pid);
+    $object->models = array(
+      'some:cmodel',
+    );
+    $dsid = 'OBJ';
+    $ds = $object->constructDatastream($dsid);
+    $ds->label = 'Test';
+    $ds->content = 'test';
+    $object->ingestDatastream($ds);
+    $this->repository->ingestObject($object);
+    return $object;
+  }
+
+  /**
+   * Helper function to construct the DERIV datastream without firing hooks.
+   *
+   * @param AbstractObject $object
+   *   An AbstractObject representing a FedoraObject.
+   *
+   * @return AbstractObject
+   *   The modified AbstractObject.
+   */
+  public function constructDERIVDatastream(AbstractObject $object) {
+    $dsid = 'DERIV';
+    $ds = $object->constructDatastream($dsid);
+    $ds->label = 'Test';
+    $ds->content = 'test some string';
+    $object->ingestDatastream($ds);
+    return $object;
+  }
+
+  /**
+   * Helper function to construct the NOSOURCE datastream without firing hooks.
+   *
+   * @param AbstractObject $object
+   *   An AbstractObject representing a FedoraObject.
+   *
+   * @return AbstractObject
+   *   The modified AbstractObject.
+   */
+  public function constructNOSOURCEDatastream(AbstractObject $object) {
+    $dsid = 'NOSOURCE';
+    $ds = $object->constructDatastream($dsid);
+    $ds->label = 'Test';
+    $ds->content = 'NOSOURCE';
+    $object->ingestDatastream($ds);
+    return $object;
+  }
+}
