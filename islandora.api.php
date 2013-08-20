@@ -477,10 +477,11 @@ function hook_CMODEL_PID_islandora_ingest_steps(array $form_state) {
  * @param object $user
  *   A loaded user object, as the global $user variable might contain.
  *
- * @return bool|NULL
+ * @return bool|NULL|array
  *   Either boolean TRUE or FALSE to explicitly allow or deny the operation on
  *   the given object, or NULL to indicate that we are making no assertion
- *   about the outcome.
+ *   about the outcome. Can also be an array containing multiple
+ *   TRUE/FALSE/NULLs, due to how hooks work.
  */
 function hook_islandora_object_access($op, $object, $user) {
   switch ($op) {
@@ -515,10 +516,11 @@ function hook_CMODEL_PID_islandora_object_access($op, $object, $user) {
  * @param object $user
  *   A loaded user object, as the global $user variable might contain.
  *
- * @return bool|NULL
+ * @return bool|NULL|array
  *   Either boolean TRUE or FALSE to explicitly allow or deny the operation on
  *   the given object, or NULL to indicate that we are making no assertion
- *   about the outcome.
+ *   about the outcome. Can also be an array containing multiple
+ *   TRUE/FALSE/NULLs, due to how hooks work.
  */
 function hook_islandora_datastream_access($op, $object, $user) {
   switch ($op) {
