@@ -98,7 +98,7 @@ function islandora_derivative_logging(array $logging_results) {
         // message and the substitutions needed. We are using
         // call_user_func until such time as the @ignore changes
         // are merged into the standard release for Coder.
-        call_user_func('watchdog', $message['message'], isset($message['message_sub']) ? $message['message_sub'] : array(), isset($message['severity']) ? $message['severity'] : WATCHDOG_NOTICE);
+        call_user_func('watchdog', 'islandora_derivatives', $message['message'], isset($message['message_sub']) ? $message['message_sub'] : array(), isset($message['severity']) ? $message['severity'] : WATCHDOG_NOTICE);
       }
     }
   }
