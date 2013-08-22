@@ -340,6 +340,37 @@ function theme_islandora_datastream_delete_link(array $vars) {
 }
 
 /**
+ * Renders a link to allow replacing of a datatream.
+ *
+ * @param array $vars
+ *   An array containing:
+ *   - datastream: An AbstractDatastream for which to generate a revert link.
+ *   - version: (optional) the version of the datastream to revert.
+ *
+ * @return string
+ *   Markup containing the url to delete a datastream, or empty if inaccessible.
+ */
+function theme_islandora_datastream_revert_link(array $vars) {
+  $datastream = $vars['datastream'];
+
+  $can_revert = islandora_datastream_access(ISLANDORA_REVERT_DATASTREAM, $datastream);
+
+  if ($vars['version'] !== NULL) {
+    if (count($datastream) == 1) {
+      $can_revert = FALSE;
+    }
+    $link = "islandora/object/{$datastream->parent->id}/datastream/{$datastream->id}/version/{$vars['version']}/revert";
+  }
+
+  if ($can_revert) {
+    return l(t('revert'), $link);
+  }
+  else {
+    return '';
+  }
+}
+
+/**
  * Renders a link to allow editing of a datatream.
  *
  * @param array $vars

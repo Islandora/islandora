@@ -34,6 +34,7 @@ define('ISLANDORA_INGEST', 'ingest fedora objects');
 define('ISLANDORA_PURGE', 'delete fedora objects and datastreams');
 define('ISLANDORA_MANAGE_PROPERTIES', 'manage object properties');
 define('ISLANDORA_VIEW_DATASTREAM_HISTORY', 'view old datastream versions');
+define('ISLANDORA_REVERT_DATASTREAM', 'revert to old datastream');
 
 // Hooks.
 define('ISLANDORA_VIEW_HOOK', 'islandora_view_object');
@@ -276,6 +277,16 @@ function islandora_menu() {
     'access arguments' => array(ISLANDORA_PURGE, 4),
     'load arguments' => array(2),
   );
+  $items['islandora/object/%islandora_object/datastream/%islandora_datastream/version/%/revert'] = array(
+    'title' => 'Revert to datastream version',
+    'page arguments' => array('islandora_revert_datastream_version_form', 4, 6),
+    'page callback' => 'drupal_get_form',
+    'file' => 'includes/datastream.version.inc',
+    'type' => MENU_CALLBACK,
+    'access callback' => 'islandora_datastream_access',
+    'access arguments' => array(ISLANDORA_REVERT_DATASTREAM, 4),
+    'load arguments' => array(2),
+  );
   $items['islandora/object/%islandora_object/datastream/%islandora_datastream/version/%/view'] = array(
     'title' => 'View datastream version',
     'page callback' => 'islandora_view_datastream',
@@ -380,6 +391,10 @@ function islandora_theme() {
       'file' => 'theme/theme.inc',
       'variables' => array('datastream' => NULL, 'version' => NULL),
     ),
+    'islandora_datastream_revert_link' => array(
+      'file' => 'theme/theme.inc',
+      'variables' => array('datastream' => NULL, 'version' => NULL),
+    ),
     'islandora_datastream_view_link' => array(
       'file' => 'theme/theme.inc',
       'variables' => array(
@@ -431,6 +446,10 @@ function islandora_permission() {
     ISLANDORA_VIEW_DATASTREAM_HISTORY => array(
       'title' => t('View datastream history'),
       'description' => t('View all previous versions of a datastream.'),
+    ),
+    ISLANDORA_REVERT_DATASTREAM => array(
+      'title' => t('Revert datastream history'),
+      'description' => t('Revert to a previous version of a datastream.'),
     ),
   );
 }
