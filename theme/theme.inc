@@ -361,6 +361,9 @@ function theme_islandora_datastream_revert_link(array $vars) {
     }
     $link = "islandora/object/{$datastream->parent->id}/datastream/{$datastream->id}/version/{$vars['version']}/revert";
   }
+  else {
+    $can_revert = FALSE;
+  }
 
   if ($can_revert) {
     return l(t('revert'), $link);
