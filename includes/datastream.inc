@@ -30,6 +30,13 @@ function islandora_download_datastream(AbstractDatastream $datastream) {
  *   The version of the datastream to display
  */
 function islandora_view_datastream(AbstractDatastream $datastream, $download = FALSE, $version = NULL) {
+  // XXX: Certain features of the Devel module rely on the use of "shutdown
+  // handlers", such as query logging... The problem is that they might blindly
+  // add additional output which will break things if what is actually being
+  // output is anything but a webpage... like an image or video or audio or
+  // whatever the datastream is here.
+  $GLOBALS['devel_shutdown'] = FALSE;
+
   if ($version !== NULL) {
     if (isset($datastream[$version])) {
       $datastream = $datastream[$version];
