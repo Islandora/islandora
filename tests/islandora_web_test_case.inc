@@ -168,16 +168,45 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
     if (!is_object($object)) {
       $this->fail("Failed. Object passed in is invalid.", 'Islandora');
     }
-
-    foreach ($datastreams as $datastream) {
-      if (isset($object[$datastream])) {
-        $this->pass("Loaded datastream {$datastream} from PID {$object->id}.", 'Islandora');
-      }
-      else {
-        $this->fail("Failed to load datastream {$datastream} from PID {$object->id}.", 'Islandora');
+    else {
+      foreach ($datastreams as $datastream) {
+        if (isset($object[$datastream])) {
+          $this->pass("Loaded datastream {$datastream} from PID {$object->id}.", 'Islandora');
+        }
+        else {
+          $this->fail("Failed to load datastream {$datastream} from PID {$object->id}.", 'Islandora');
+        }
       }
     }
+  }
 
+  /**
+   * Asserts that an object's given datastreams are common-type image files.
+   *
+   * Uses PHPGD to run the assertion check. This means that only certain kinds
+   * of image files can be checked. Please check the documentation for the PHPGD
+   * imagecreatefromstring() function to determine what filetypes are valid.
+   *
+   * @param AbstractObject $object
+   *   The PID of the object.
+   * @param array $datastreams
+   *   An array of datastreams to check.
+   */
+  public function assertImageDatastreams($object, array $datastreams) {
+    if (!is_object($object)) {
+      $this->fail("Failed. Object passed in is invalid.", 'Islandora');
+    }
+    else {
+      foreach ($datastreams as $datastream) {
+        $datastream_string = $object[$datastream]->content;
+        if (!imagecreatefromstring($datastream_string)) {
+          $this->fail("Image datastream {$datastream} is either invalid or corrupt.", 'Islandora');
+        }
+        else {
+          $this->pass("Image datastream {$datastream} is valid.", 'Islandora');
+        }
+      }
+    }
   }
 
   /**
