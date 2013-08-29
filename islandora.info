@@ -18,5 +18,6 @@ files[] = tests/ingest.test
 files[] = tests/hooked_access.test
 files[] = tests/islandora_manage_permissions.test
 files[] = tests/datastream_versions.test
+files[] = tests/datastream_cache.test
 files[] = tests/derivatives.test
 php = 5.3
