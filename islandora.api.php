@@ -37,6 +37,16 @@ function hook_islandora_view_object($object, $user, $page_number, $page_size) {
 
   return $output;
 }
+
+/**
+ * Hook into the manage object page.
+ *
+ * @param array $form_state
+ * @param AbstractObject $object
+ */
+function hook_islandora_basic_collection_build_manage_object($form_state, $object) {
+}
+
 /**
  * Generate a print friendly page for the given object.
  *
