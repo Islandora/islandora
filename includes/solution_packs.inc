@@ -745,7 +745,9 @@ function islandora_get_viewer($params = NULL, $variable_id = NULL, $fedora_objec
     $viewer_id = islandora_get_viewer_id($variable_id);
     if ($viewer_id AND $params !== NULL) {
       $callback = islandora_get_viewer_callback($viewer_id);
-      return $callback($params, $fedora_object);
+      if (function_exists($callback)) {
+        return $callback($params, $fedora_object);
+      }
     }
   }
   return FALSE;
