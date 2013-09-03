@@ -648,3 +648,15 @@ function hook_islandora_derivative() {
 function hook_CMODEL_PID_islandora_derivative() {
 
 }
+
+/**
+ * Alters breadcrumbs used on Solr search results and within Islandora views.
+ *
+ * @param array $breadcrumbs
+ *   Breadcrumbs array to be altered by reference. Each element is markup.
+ * @param string $context
+ *   Where the alter is originating from for distinguishing.
+ */
+function hook_islandora_breadcrumbs_alter(&$breadcrumbs, $context) {
+
+}
