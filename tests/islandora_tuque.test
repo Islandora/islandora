@@ -68,9 +68,9 @@ class IslandoraTuqueTestCase extends IslandoraWebTestCase {
     $new_tuque = islandora_get_tuque_connection($user_to_provide);
     $new_tuque_user_name = $new_tuque->connection->username;
 
-    assertNotNull($new_tuque);
-    assertNotNull($tuque);
-    assertEqual($user_to_provide->name, $new_tuque_user_name);
+    $this->assertNotNull($new_tuque);
+    $this->assertNotNull($tuque);
+    $this->assertEqual($user_to_provide->name, $new_tuque_user_name);
   }
 
   /**
@@ -87,9 +87,9 @@ class IslandoraTuqueTestCase extends IslandoraWebTestCase {
 
     global $user;
 
-    assertNotNull($new_tuque);
-    assertNotNull($tuque);
-    assertEqual($new_tuque_user_name, $user);
+    $this->assertNotNull($new_tuque);
+    $this->assertNotNull($tuque);
+    $this->assertEqual($new_tuque_user_name, $user);
   }
 
   /**
@@ -100,9 +100,9 @@ class IslandoraTuqueTestCase extends IslandoraWebTestCase {
     $user_to_provide = user_load(0);
     $new_tuque = islandora_get_tuque_connection($user_to_provide);
 
-    assertNotNull($new_tuque);
-    assertNotNull($tuque);
-    assertNotEqual($user_to_provide->name, $new_tuque->connection->username);
+    $this->assertNotNull($new_tuque);
+    $this->assertNotNull($tuque);
+    $this->assertNotEqual($user_to_provide->name, $new_tuque->connection->username);
   }
 
   /**
@@ -112,9 +112,9 @@ class IslandoraTuqueTestCase extends IslandoraWebTestCase {
     $tuque = &drupal_static(__FUNCTION__);
     $new_tuque = islandora_get_tuque_connection($tuque->connection->username);
 
-    assertNotNull($new_tuque);
-    assertNotNull($tuque);
-    assertEqual($tuque->connection->username, $new_tuque->connection->username);
+    $this->assertNotNull($new_tuque);
+    $this->assertNotNull($tuque);
+    $this->assertEqual($tuque->connection->username, $new_tuque->connection->username);
   }
 
   /**
@@ -126,9 +126,9 @@ class IslandoraTuqueTestCase extends IslandoraWebTestCase {
     $user = NULL;
     $new_tuque = islandora_get_tuque_connection($user);
 
-    assertNotNull($new_tuque);
-    assertNotNull($tuque);
-    assertNotEqual($new_tuque->connection->username, $user);
+    $this->assertNotNull($new_tuque);
+    $this->assertNotNull($tuque);
+    $this->assertNotEqual($new_tuque->connection->username, $user);
   }
 
   /**
@@ -140,8 +140,8 @@ class IslandoraTuqueTestCase extends IslandoraWebTestCase {
     $_islandora_user = $tuque->connection->username;
     $new_tuque = islandora_get_tuque_connection($user);
 
-    assertNotNull($new_tuque);
-    assertNotNull($tuque);
-    assertEqual($new_tuque->connection->username, $user);
+    $this->assertNotNull($new_tuque);
+    $this->assertNotNull($tuque);
+    $this->assertEqual($new_tuque->connection->username, $user);
   }
 }
