@@ -86,7 +86,7 @@ function hook_CMODEL_PID_islandora_view_object_alter(&$object, &$rendered) {
 }
 
 /**
- * Generate an object's management display.
+ * Generate an object's datastreams management display.
  *
  * @param AbstractObject $object
  *   A Tuque FedoraObject
@@ -98,7 +98,7 @@ function hook_islandora_edit_object($object) {
 }
 
 /**
- * Generate an object's management display for the given content model.
+ * Generate an object's datastreams management display based on content model.
  *
  * Content models PIDs have colons and hyphens changed to underscores, to
  * create the hook name.
@@ -113,7 +113,7 @@ function hook_CMODEL_PID_islandora_edit_object($object) {
 }
 
 /**
- * Allow management display output to be altered.
+ * Allow datastreams management display output to be altered.
  *
  * @param AbstractObject $object
  *   A Tuque FedoraObject
