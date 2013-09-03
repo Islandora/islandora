@@ -318,6 +318,14 @@ function islandora_install_solution_pack($module, $op = 'install', $force = FALS
     return;
   }
 
+  // Login as user 1 if the installation is coming from the command line (e.g.
+  // drush).
+  if (drupal_is_cli()) {
+    global $user;
+    $user = user_load(1);
+    user_login_finalize();
+  }
+
   $t = get_t();
 
   // Some general replacements.
@@ -412,6 +420,14 @@ function islandora_install_solution_pack($module, $op = 'install', $force = FALS
  *    directly for each solution pack.
  */
 function islandora_uninstall_solution_pack($module, $force = FALSE) {
+  // Login as user 1 if the uninstall is coming from the command line (e.g.
+  // drush).
+  if (drupal_is_cli()) {
+    global $user;
+    $user = user_load(1);
+    user_login_finalize();
+  }
+
   $t = get_t();
   drupal_load('module', 'islandora');
   module_load_include('inc', 'islandora', 'includes/utilities');
