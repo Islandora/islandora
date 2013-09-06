@@ -1025,42 +1025,26 @@ function islandora_get_tuque_connection($new_user = NULL, $url = NULL) {
 
   $tuque = &drupal_static(__FUNCTION__);
 
-  global $user;
+  if ($new_user === NULL) {
+    global $user;
+    $new_user = $user;
+  }
+
 
   // If tuque is NULL.
   if (!$tuque) {
-    // If the provided user is not null, pass it along to Tuque.
-    if ($new_user) {
-      $tuque = islandora_make_tuque($new_user, $url);
-    }
-    // Otherwise give Tuque the global user.
-    else {
-      $tuque = islandora_make_tuque($user, $url);
-    }
+    $tuque = islandora_make_tuque($new_user, $url);
   }
   // Else, tuque already exists.  So only make it if the users are different.
   else {
-    if ($new_user) {
-      // Get the name of the new user.  If it's '', then it's actually
-      // 'anonymous' as far as Tuque is concerned.
-      $new_user_name = $new_user->name;
-      if (empty($new_user_name)) {
-        $new_user_name = 'anonymous';
-      }
-      if ($new_user_name != $tuque->connection->username) {
-        $tuque = islandora_make_tuque($new_user);
-      }
+    // Get the name of the new user.  If it's '', then it's actually
+    // 'anonymous' as far as Tuque is concerned.
+    $new_user_name = $new_user->name;
+    if (empty($new_user_name)) {
+      $new_user_name = 'anonymous';
     }
-    else {
-      // Get the name of the global user.  If it's '', then it's actually
-      // 'anonymous' as far as Tuque is concerned.
-      $user_name = $user->name;
-      if (empty($user_name)) {
-        $user_name = 'anonymous';
-      }
-      if ($user->name != $tuque->connection->username) {
-        $tuque = islandora_make_tuque($user);
-      }
+    if ($new_user_name != $tuque->connection->username) {
+      $tuque = islandora_make_tuque($new_user, $url);
     }
   }
   return $tuque;
