@@ -912,3 +912,27 @@ function islandora_as_renderable_array(&$markup_array) {
   }
   unset($value);
 }
+
+/**
+ * Creates and returns a singleton of tuque if one does not already exist.
+ *
+ * @param object $user
+ *   User who created the request.
+ * @param object $url
+ *   URL to Fedora.
+ *
+ * @return IslandoraTuque
+ *   An IslandoraTuque instance.
+ */
+function islandora_make_tuque($user, $url) {
+  if (IslandoraTuque::exists()) {
+    try {
+      return new IslandoraTuque($user, $url);
+    }
+    catch (Exception $e) {
+      drupal_set_message(t('Unable to connect to the repository %e', array('%e' => $e)), 'error');
+    }
+  }
+
+  return NULL;
+}

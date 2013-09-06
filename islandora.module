@@ -1012,7 +1012,7 @@ function islandora_default_islandora_printer_object($object, $alter) {
  *
  * Includes some very basic error logging.
  *
- * @param object $user
+ * @param object $new_user
  *   The user to connect as.
  * @param string $url
  *   The URL to connect to.
@@ -1020,19 +1020,30 @@ function islandora_default_islandora_printer_object($object, $alter) {
  * @return IslandoraTuque
  *   A IslandoraTuque instance
  */
-function islandora_get_tuque_connection($user = NULL, $url = NULL) {
+function islandora_get_tuque_connection($new_user = NULL, $url = NULL) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
+
   $tuque = &drupal_static(__FUNCTION__);
+
+  if ($new_user === NULL) {
+    global $user;
+    $new_user = $user;
+  }
+
+  // If tuque is NULL.
   if (!$tuque) {
-    if (IslandoraTuque::exists()) {
-      try {
-        $tuque = new IslandoraTuque($user, $url);
-      }
-      catch (Exception $e) {
-        drupal_set_message(t('Unable to connect to the repository %e', array('%e' => $e)), 'error');
-      }
+    $tuque = islandora_make_tuque($new_user, $url);
+  }
+  // Else, tuque already exists.  So only make it if the users are different.
+  else {
+    // Get the name of the new user.  If it's '', then it's actually
+    // 'anonymous' as far as Tuque is concerned.
+    $new_user_name = $new_user->name;
+    if (empty($new_user_name)) {
+      $new_user_name = 'anonymous';
     }
-    else {
-      return NULL;
+    if ($new_user_name != $tuque->connection->username) {
+      $tuque = islandora_make_tuque($new_user, $url);
     }
   }
   return $tuque;

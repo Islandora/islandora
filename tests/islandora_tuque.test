@@ -1,0 +1,73 @@
+<?php
+
+/**
+ * @file
+ * Tests islandora tuque functionality.
+ */
+
+class IslandoraTuqueTestCase extends IslandoraWebTestCase {
+
+  /**
+   * Gets info to display to describe this test.
+   *
+   * @see IslandoraWebTestCase::getInfo()
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Islandora Tuque User Cache',
+      'description' => 'Tests the tuque cache when a user changes.',
+      'group' => 'Islandora',
+    );
+  }
+
+  /**
+   * Prepares enviroment for testing.
+   *
+   * @see IslandoraWebTestCase::setUp()
+   */
+  public function setUp() {
+    parent::setUp(array('islandora'));
+  }
+
+  /**
+   * Tests that a new tuque instance is created when a new user is provided.
+   */
+  public function testTuqueUserChange() {
+    global $user;
+    $tuque = islandora_get_tuque_connection($user);
+    $old_user_name = $tuque->connection->username;
+    $new_user = user_load(0);
+    $tuque = islandora_get_tuque_connection($new_user);
+    $new_user_name = $tuque->connection->username;
+    $this->assertNotEqual($old_user_name, $new_user_name, "User in tuque's connection changes when a new user is provided to islandora_get_tuque_connection().");
+
+    $tuque = islandora_get_tuque_connection();
+    $new_user_name = $tuque->connection->username;
+
+    $this->assertEqual($old_user_name, $new_user_name, "User in tuque's connection changes back when no user is provided.");
+  }
+
+  /**
+   * Tests that tuque does not exist and the user is not null.
+   */
+  public function testTuqueDoesNotExistAndUserIsNotNull() {
+    drupal_static_reset('islandora_get_tuque_connection');
+    $user_to_provide = user_load(1);
+
+    $new_tuque = islandora_get_tuque_connection($user_to_provide);
+    $new_tuque_user_name = $new_tuque->connection->username;
+
+    $this->assertNotNull($new_tuque, 'Tuque is not NULL');
+    $this->assertEqual($user_to_provide->name, $new_tuque_user_name);
+  }
+
+  /**
+   * Tests that tuque does not exist and the user is null.
+   */
+  public function testTuqueDoesNotExistAndUserIsNull() {
+    $new_tuque = islandora_get_tuque_connection();
+    $new_tuque_user_name = $new_tuque->connection->username;
+    global $user;
+    $this->assertEqual($new_tuque_user_name, $user->name);
+  }
+}
