@@ -1030,7 +1030,6 @@ function islandora_get_tuque_connection($new_user = NULL, $url = NULL) {
     $new_user = $user;
   }
 
-
   // If tuque is NULL.
   if (!$tuque) {
     $tuque = islandora_make_tuque($new_user, $url);
