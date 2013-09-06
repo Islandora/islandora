@@ -889,9 +889,7 @@ function islandora_as_renderable_array(&$markup_array) {
     if (!is_array($value)) {
       // Not a renderable array, just a string. Let's convert it to a
       // renderable '#markup' element.
-      $value = array(
-        '#markup' => $value,
-      );
+      $value = array('#markup' => $value);
     }
     elseif (!isset($value['#type']) && !isset($value['#markup'])) {
       // A simple array--possibly the result of a recursive merge? Let's
@@ -902,9 +900,7 @@ function islandora_as_renderable_array(&$markup_array) {
           // If it is an array at this level, we can assume that it is a
           // renderable array. If it is not an array, convert to a renderable
           // '#markup' element.
-          $inner = array(
-            '#markup' => $inner,
-          );
+          $inner = array('#markup' => $inner);
         }
       }
       unset($inner);

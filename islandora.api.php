@@ -650,6 +650,21 @@ function hook_CMODEL_PID_islandora_derivative() {
 }
 
 /**
+
+ * Retrieves PIDS of related objects for property updating.
+ *
+ * @param AbstractObject $object
+ *   AbstractObject representing deleted object
+ */
+function hook_islandora_update_related_objects_properties(AbstractObject $object) {
+  $related_objects = get_all_children_siblings_and_friends($object);
+  $pids_to_return = array();
+  foreach($related_objects as $related_object) {
+    $pids_to_return[] = $related_object->id;
+  }
+  return $pids_to_return;
+}
+/**
  * Alters breadcrumbs used on Solr search results and within Islandora views.
  *
  * @param array $breadcrumbs
