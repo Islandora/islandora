@@ -162,6 +162,7 @@ class MimeDetect {
     "xpm" => "image/x-xpixmap",
     "xwd" => "image/x-windowdump",
     // videos:
+    "mkv" => "video/x-matroska",
     "mpeg" => "video/mpeg",
     "mpe" => "video/mpeg",
     "mpg" => "video/mpeg",
