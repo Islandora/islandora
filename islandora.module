@@ -485,6 +485,10 @@ function islandora_permission() {
       'title' => t('Revert datastream history'),
       'description' => t('Revert to a previous version of a datastream.'),
     ),
+    ISLANDORA_MANAGE_DELETED_OBJECTS => array(
+      'title' => t('Manage deleted objects'),
+      'description' => t('Purge or revert deleted objects.'),
+    ),
   );
 }
 
@@ -504,6 +508,7 @@ function islandora_print_object(AbstractObject $object) {
   drupal_set_title($object->label);
   return theme('islandora_object_print', array('object' => $object));
 }
+
 /**
  * Implements hook_forms().
  */
