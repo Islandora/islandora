@@ -578,6 +578,8 @@ function hook_CMODEL_PID_islandora_overview_object_alter(AbstractObject &$object
 /*
  * Defines derivative functions to be executed based on certain conditions.
  *
+ * @param AbstractObject $object
+ *   Object to which derivatives will be added
  * This hook fires when an object/datastream is ingested or a datastream is
  * modified.
  *
@@ -611,33 +613,38 @@ function hook_CMODEL_PID_islandora_overview_object_alter(AbstractObject &$object
  *   - file: A string denoting the path to the file where the function
  *     is being called from.
  */
-function hook_islandora_derivative() {
-  return array(
-    array(
-      'source_dsid' => 'OBJ',
-      'destination_dsid' => 'DERIV',
-      'weight' => '0',
-      'function' => array(
-        'islandora_derivatives_test_create_deriv_datastream',
-      ),
+function hook_islandora_derivative(AbstractObject $object) {
+
+  $derivatives[] = array(
+    'source_dsid' => 'OBJ',
+    'destination_dsid' => 'DERIV',
+    'weight' => '0',
+    'function' => array(
+      'islandora_derivatives_test_create_deriv_datastream',
     ),
-    array(
+  );
+  // Test object before adding this derivative.
+  if ($object['SOMEWEIRDDATASTREAM']->mimetype == "SOMETHING/ODD") {
+    $derivatives[] = array(
       'source_dsid' => 'SOMEWEIRDDATASTREAM',
       'destination_dsid' => 'STANLEY',
       'weight' => '-1',
       'function' => array(
         'islandora_derivatives_test_create_some_weird_datastream',
       ),
-    ),
-    array(
-      'source_dsid' => NULL,
-      'destination_dsid' => 'NOSOURCE',
-      'weight' => '-3',
-      'function' => array(
-        'islandora_derivatives_test_create_nosource_datastream',
-      ),
+    );
+  }
+
+  $derivatives[] = array(
+    'source_dsid' => NULL,
+    'destination_dsid' => 'NOSOURCE',
+    'weight' => '-3',
+    'function' => array(
+      'islandora_derivatives_test_create_nosource_datastream',
     ),
   );
+
+  return $derivatives;
 }
 
 /**
