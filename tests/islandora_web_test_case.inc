@@ -210,6 +210,66 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Asserts the validity of any .tif/.tiff datastream, which we have a lot of.
+   *
+   * @param AbstractObject $object
+   *   The PID of the object.
+   * @param array $datastreams
+   *   An array of .tif or .tiff datastreams to check.
+   */
+  public function assertTiffDatastreams($object, array $datastreams) {
+    if (!is_object($object)) {
+      $this->fail("Failed. Object passed in is invalid.", 'Islandora');
+      return FALSE;
+    }
+    foreach ($datastreams as $datastream) {
+      $datastream_string = $object[$datastream]->content;
+      $datastream_header_hex = substr(bin2hex($datastream_string), 0, 8);
+      if ($datastream_header_hex == "49492a00") {
+        // In this case, the ingested TIFF is designated as using the "Intel
+        // byte-order" (e.g. little-endian) by starting with the characters "II"
+        // (repeated so that byte order does not yet need to be significant).
+        // The number that follows is '42' in little-endian hex, a number of
+        // 'deep philosophical significance' to the TIFF format creators.
+        $this->pass(t("{$datastream} datastream asserts that it is a valid Intel-byte-orderded TIF/TIFF file."), 'Islandora');
+      }
+      else if ($datastream_header_hex == "4d4d002a") {
+        // In this case, the ingested TIFF is designated as using the "Motorola
+        // byte-order" (e.g. big-endian) by starting with the characters "MM"
+        // instead. 42 follows once again, this time in big-endian hex.
+        $this->pass(t("{$datastream} datastream asserts that it is a valid Motorola-byte-ordered TIF/TIFF file."), 'Islandora');
+      }
+      else {
+        $this->fail(t("{$datastream} datastream does not assert that it is a valid TIF/TIFF file."), 'Islandora');
+      }
+    }
+  }
+
+  /**
+   * Asserts the validity of any .jp2 datastreams, which we also have a lot of.
+   *
+   * @param AbstractObject $object
+   *   The PID of the object.
+   * @param array $datastreams
+   *   An array of .jp2 datastreams to check.
+   */
+  public function assertJp2Datastreams($object, array $datastreams) {
+    if (!is_object($object)) {
+      $this->fail("Failed. Object passed in is invalid.", 'Islandora');
+      return FALSE;
+    }
+    foreach ($datastreams as $datastream) {
+      $datastream_hex = bin2hex($object[$datastream]->content);
+      // .jp2 files begin with an offset header at the second 32-bit integer,
+      // 0x6A502020. This header is in all .jp2s, and we check for it here.
+      $this->assertTrue(substr($datastream_hex, 8, 8) == '6a502020', t("{$datastream} datastream begins correctly with the appropriate .jp2 header."), 'Islandora');
+      // .jp2 files have their codestream capped with a marker, 0xFFD9. We're
+      // just checking for it here to see if the .jp2 encoder finished okay.
+      $this->assertTrue(substr($datastream_hex, strlen($datastream_hex) - 4, 4) == 'ffd9', t("{$datastream} datastream ends correctly with the appropriate .jp2 marker."), 'Islandora');
+    }
+  }
+
+  /**
    * Gets a tuque object from a path.
    *
    * @param string $path
@@ -282,4 +342,100 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
     $int = hexdec($reverse_hex);
     return $int;
   }
+
+  /**
+   * Constructs and ingests a Fedora object and datastream(s) via tuque.
+   *
+   * All keys inside the parameter arrays for this function are optional. it
+   * can be run simply by calling $this->ingestConstructedObject();.
+   *
+   * @param array $properties
+   *   An array containing object information using these keys:
+   *   'label' - The object label; randomized if not set.
+   *   'pid' - 'namespace:pid', or just 'namespace' to generate the suffix.
+   *   'models' - An array that can contain multiple content model PIDs.
+   *   'owner' - The object's owner.
+   *   'parent' - The PID of the parent collection.
+   * @param array $datastreams
+   *   An array containing zero or more datastream arrays that use the keys:
+   *   'dsid' - the datastream ID; randomized if not set.
+   *   'path' - The path to the file to use; defaults to fixtures/test.jpg.
+   *   'control_group' - The single-letter control group identifier.
+   *   'mimetype' - The datastream's mimetype.
+   *
+   * @return bool|array
+   *   FALSE if the object ingest failed, or the object array if successful.
+   */
+  public function ingestConstructedObject(array $properties = array(), array $datastreams = array()) {
+    module_load_include('inc', 'islandora', 'includes/tuque');
+    $tuque = new IslandoraTuque();
+    $repository = $tuque->repository;
+    if (!isset($properties['pid'])) {
+      $properties['pid'] = "islandora";
+    }
+    $object = $repository->constructObject($properties['pid']);
+
+    // Set the object properties before ingesting it.
+    if (isset($properties['label'])) {
+      $object->label = $properties['label'];
+    }
+    else {
+      $properties['label'] = $this->randomName(16);
+      $object->label = $properties['label'];
+    }
+
+    if (isset($properties['owner'])) {
+      $object->owner = $properties['owner'];
+    }
+
+    if (isset($properties['models']) && is_array($properties['models'])) {
+      foreach ($properties['models'] as $model) {
+        $object->relationships->add(FEDORA_MODEL_URI, 'hasModel', $model);
+      }
+    }
+    elseif (isset($properties['models']) && !is_array($properties['models'])) {
+      $this->fail(t("'models' key of properties variable is not an array. Content model(s) will not be set."), 'Islandora');
+    }
+
+    $repository->ingestObject($object);
+    if (!$object) {
+      $this->fail(t("Failed to ingest object."), 'Islandora');
+      return FALSE;
+    }
+    else {
+      $this->pass(t("Ingested object %object", array('%object' => $object->id)), 'Islandora');
+    }
+
+    // Chuck in some datastreams.
+    if (!empty($datastreams)) {
+      foreach ($datastreams as $datastream) {
+        if (!isset($datastream['dsid'])) {
+          $datastream['dsid'] = $this->randomName(8);
+        }
+        if (!isset($datastream['path'])) {
+          $datastream['path'] = drupal_get_path('module', 'islandora') . '/tests/fixtures/test.jpg';
+        }
+        if (!isset($datastream['control_group'])) {
+          $new_datastream = $object->constructDatastream($datastream['dsid']);
+        }
+        else {
+          $new_datastream = $object->constructDatastream($datastream['dsid'], $datastream['control_group']);
+        }
+        $new_datastream->label = $datastream['dsid'];
+        if (isset($datastream['mimetype'])) {
+          $new_datastream->mimetype = $datastream['mimetype'];
+        }
+        $new_datastream->setContentFromFile($datastream['path']);
+        $object->ingestDatastream($new_datastream);
+      }
+    }
+
+    // Add a parent relationship, if necessary.
+    if (isset($properties['parent'])) {
+      $object->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', $properties['parent']);
+    }
+
+    return $object;
+  }
+
 }
