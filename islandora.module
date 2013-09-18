@@ -1237,10 +1237,10 @@ function islandora_islandora_required_objects(IslandoraTuque $connection) {
 }
 
 /**
- * Implements islandora_undeleteable_datastreams().
+ * Implements hook_islandora_undeleteable_datastreams().
  */
 function islandora_islandora_undeletable_datastreams(array $models) {
-  return array('DC');
+  return array('DC', 'RELS-EXT');
 }
 
 /**

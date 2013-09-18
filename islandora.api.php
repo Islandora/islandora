@@ -394,8 +394,17 @@ function hook_islandora_viewer_info() {
 
 /**
  * Returns a list of datastreams that are determined to be undeletable.
+ *
+ * The list is used to prevent delete links from being shown.
+ *
+ * @param array $models
+ *   An array of content models for the current object.
+ *
+ * @return array
+ *   An array of DSIDs that shouldn't be deleted.
  */
 function hook_islandora_undeletable_datastreams(array $models) {
+  return array('DC', 'MODS');
 }
 
 /**
