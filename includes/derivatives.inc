@@ -60,9 +60,14 @@ function islandora_do_derivatives(AbstractObject $object, array $options) {
       require_once $hook['file'];
     }
     foreach ($hook['function'] as $function) {
-      $logging = call_user_func($function, $object, $options['force']);
-      if (!empty($logging)) {
-        $results[] = $logging;
+      if (function_exists($function)) {
+        $logging = call_user_func($function, $object, $options['force']);
+        if (!empty($logging)) {
+          $results[] = $logging;
+        }
+      }
+      else {
+        watchdog('islandora', 'Unable to call derivative function @function as it was not found!', array('@function' => $function), WATCHDOG_ERROR);
       }
     }
   }
