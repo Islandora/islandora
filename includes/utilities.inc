@@ -908,3 +908,19 @@ function islandora_as_renderable_array(&$markup_array) {
   }
   unset($value);
 }
+
+/**
+ * Sanitizes an input string to be valid XML.
+ *
+ * @param string $input
+ *   An input string.
+ * @param string $replacement
+ *   What we are replacing invalid characters with, defaults to ''.
+ *
+ * @return string
+ *   The sanitized string.
+ */
+function islandora_sanitize_input_for_valid_xml($input, $replacement = '') {
+  $input = preg_replace('/[^\x9\xA\xD\x20-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u', $replacement, $input);
+  return $input;
+}
