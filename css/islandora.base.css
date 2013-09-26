@@ -1,4 +1,4 @@
-/* 
+/*
     Document   : islandora_basic_collection.base.css
     Created on : May 23, 2012, 11:22:04 AM
     Description:
@@ -19,7 +19,7 @@
 /*
  * These rules will display DTs/DDs as columns.
  * Constructs must follow a key/value pair pattern.
- * The three last declarations are meant to kill white space between DTs/DDs 
+ * The three last declarations are meant to kill white space between DTs/DDs
  * (result of inline-block styling)
  */
 
@@ -43,7 +43,20 @@ dl.islandora-inline-metadata {
   padding-left: 40px;
 }
 
-/* 
+dl.islandora-metadata-fields {
+    width:100%;
+}
+
+.islandora-metadata dt,
+.islandora-metadata dd {
+    border-top:1px solid #e5e5e5;
+}
+
+.islandora-metadata dt.first,
+.islandora-metadata dd.first {
+    border-top:0;
+}
+/*
  * In this rule, we reset the white-space (see hack above)
  */
 .islandora-inline-metadata dt,

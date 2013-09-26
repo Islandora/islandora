@@ -99,6 +99,14 @@ function islandora_menu() {
     'type' => MENU_NORMAL_ITEM,
     'weight' => -1,
   );
+  $items['admin/islandora/metadata'] = array(
+    'title' => 'Metadata Display',
+    'description' => 'Configure settings for metadata display on Islandora objects',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('islandora_metadata_display_form'),
+    'file' => 'includes/metadata.inc',
+    'access arguments' => array('adminisiter site configuration'),
+  );
   $items['admin/islandora/solution_packs'] = array(
     'title' => 'Solution packs',
     'description' => 'Install content models and collections required by installed solution packs.',
@@ -444,6 +452,31 @@ function islandora_theme() {
     'islandora_datastream_version_link' => array(
       'file' => 'theme/theme.inc',
       'variables' => array('datastream' => NULL),
+    ),
+    'islandora_dublin_core_display' => array(
+      'file' => 'theme/theme.inc',
+      'template' => 'theme/islandora-dublin-core-display',
+      // We can add PIDs to the end of this pattern in our preprocess function
+      // and templates will be able to have have a pid appended to the
+      // template name to overide a template on a per object basis.
+      // An example template might be named:
+      // "islandora-dublin-core-display--islandora-27.tpl.php".
+      'pattern' => 'islandora_dublin_core_display__',
+      'variables' => array(
+        'islandora_object' => NULL,
+        'print' => NULL,
+      ),
+    ),
+    'islandora_dublin_core_description' => array(
+      'file' => 'theme/theme.inc',
+      'template' => 'theme/islandora-dublin-core-description',
+      // We can add PIDs to the end of this pattern in our preprocess function
+      // and templates will be able to have have a pid appended to the
+      // template name to overide a template on a per object basis.
+      // An example template might be named:
+      // "islandora-dublin-core-description--islandora-27.tpl.php".
+      'pattern' => 'islandora_dublin_core_description__',
+      'variables' => array('islandora_object' => NULL),
     ),
   );
 }
@@ -991,6 +1024,7 @@ function islandora_default_islandora_view_object($object) {
 function islandora_default_islandora_printer_object($object, $alter) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   module_load_include('inc', 'islandora', 'includes/datastream');
+  module_load_include('inc', 'islandora', 'includes/metadata');
 
   $path = drupal_get_path('module', 'islandora');
   drupal_add_css($path . '/css/islandora.print.css');
@@ -1005,11 +1039,12 @@ function islandora_default_islandora_printer_object($object, $alter) {
   catch (Exception $e) {
     drupal_set_message(t('Error retrieving object %s %t', array('%s' => $islandora_object->id, '%t' => $e->getMessage())), 'error', FALSE);
   }
-
+  $metadata = islandora_retrieve_metadata_markup($object, TRUE);
   $variables = isset($dc_object) ? $dc_object->asArray() : array();
   $output = theme('islandora_object_print_object', array(
     'object' => $object,
     'dc_array' => $variables,
+    'metadata' => $metadata,
     'islandora_content' => $alter));
 
   return array('Default output' => array('#markup' => $output));
@@ -1601,4 +1636,18 @@ function islandora_islandora_datastream_modified(AbstractObject $object, Abstrac
     'force' => TRUE,
   ));
   islandora_derivative_logging($logging_results);
+}
+
+/**
+ * Implements hook_islandora_metadata_display_info().
+ */
+function islandora_islandora_metadata_display_info() {
+  return array(
+    'dublin_core' => array(
+      'label' => t('Dublin Core'),
+      'description' => t('Dublin Core metadata'),
+      'metadata callback' => 'islandora_metadata_display_callback',
+      'description callback' => 'islandora_metadata_description_callback',
+    ),
+  );
 }

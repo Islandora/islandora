@@ -4,15 +4,6 @@
  *
  * We provide some sane print styling for Drupal, hiding most visuals.
  */
-a:link,
-a:visited { /* underline all links */
-  text-decoration: underline !important;
-}
-
-#site-name a:link,
-#site-name a:visited { /* Don't underline header */
-  text-decoration: none !important;
-}
 
 #content a[href^="javascript:"]:after,
 #content a[href^="#"]:after { /* Only display useful links. */
@@ -66,6 +57,7 @@ body.sidebar-first {
 .book-navigation,
 .forum-topic-navigation,
 .pager,
+.contextual-links-region,
 .feed-icons { /* Hide sidebars and nav elements */
   visibility: hidden !important;
   display: none !important;
