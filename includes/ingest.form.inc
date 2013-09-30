@@ -697,9 +697,46 @@ function islandora_ingest_form_ingest_button(array &$form_state) {
     '#type' => 'submit',
     '#name' => 'ingest',
     '#value' => t('Ingest'),
+    '#process' => array('islandora_ingest_form_ingest_button_process'),
     '#validate' => $validate,
     '#submit' => $submit,
   );
+}
+
+/**
+ * Process hook for the ingest button, adds the please wait spinning icon.
+ */
+function islandora_ingest_form_ingest_button_process(array $element) {
+  $settings['spinner'][$element['#id']] = array(
+    'message' => t('Please be patient while the the page loads.'),
+    'options' => array(
+      'lines' => 10,
+      'length' => 20,
+      'width' => 10,
+      'radius' => 30,
+      'corners' => 1,
+      'rotate' => 0,
+      'direction' => 1,
+      'color' => '#000',
+      'speed' => 1,
+      'trail' => 60,
+      'shadow' => FALSE,
+      'hwaccel' => FALSE,
+      'className' => 'spinner',
+      'zIndex' => 2000000000,
+      'top' => 'auto',
+      'left' => 'auto',
+    ),
+  );
+  drupal_add_js($settings, 'setting');
+  $islandora_path = drupal_get_path('module', 'islandora');
+  $element['#attached'] = array(
+    'js' => array(
+      "$islandora_path/js/spin/spin.min.js",
+      "$islandora_path/js/spinner.js",
+    ),
+  );
+  return $element;
 }
 
 /**
