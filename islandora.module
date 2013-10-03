@@ -105,7 +105,7 @@ function islandora_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('islandora_metadata_display_form'),
     'file' => 'includes/metadata.inc',
-    'access arguments' => array('adminisiter site configuration'),
+    'access arguments' => array('administer site configuration'),
   );
   $items['admin/islandora/solution_packs'] = array(
     'title' => 'Solution packs',
