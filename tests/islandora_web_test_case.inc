@@ -74,15 +74,22 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
     $connection_info = Database::getConnectionInfo('default');
     $drupal_filter_dom = new DomDocument();
     $drupal_filter_dom->loadXML($this->originalDrupalFilterContent);
-    $drupal_filter_xpath = new DOMXPath($drupal_filter_dom);
     $server = $connection_info['default']['host'];
     $dbname = $connection_info['default']['database'];
     $user = $connection_info['default']['username'];
     $password = $connection_info['default']['password'];
     $port = $connection_info['default']['port'] ? $connection_info['default']['port'] : '3306';
     $prefix = $connection_info['default']['prefix']['default'];
-    $results = $drupal_filter_xpath->query("/FilterDrupal_Connection/connection[@server='$server' and @dbname='$dbname' and @user='$user' and @password='$password' and @port='$port']/sql");
-    $results->item(0)->nodeValue = "SELECT DISTINCT u.uid AS userid, u.name AS Name, u.pass AS Pass, r.name AS Role FROM ({$prefix}users u LEFT JOIN {$prefix}users_roles ON u.uid={$prefix}users_roles.uid) LEFT JOIN {$prefix}role r ON r.rid={$prefix}users_roles.rid WHERE u.name=? AND u.pass=?;";
+    $filter_drupal_connection_node = $drupal_filter_dom->getElementsByTagName('FilterDrupal_Connection')->item(0);
+    $first_connection_node = $drupal_filter_dom->getElementsByTagName('connection')->item(0);
+    $connection_node = $filter_drupal_connection_node->insertBefore($drupal_filter_dom->createElement('connection'), $first_connection_node);
+    $connection_node->setAttributeNode(new DOMAttr('server', $server));
+    $connection_node->setAttributeNode(new DOMAttr('dbname', $dbname));
+    $connection_node->setAttributeNode(new DOMAttr('user', $user));
+    $connection_node->setAttributeNode(new DOMAttr('password', $password));
+    $connection_node->setAttributeNode(new DOMAttr('port', $port));
+    $sql_node = $connection_node->appendChild(new DOMElement('sql'));
+    $sql_node->appendChild($drupal_filter_dom->createTextNode("SELECT DISTINCT u.uid AS userid, u.name AS Name, u.pass AS Pass, r.name AS Role FROM ({$prefix}users u LEFT JOIN {$prefix}users_roles ON u.uid={$prefix}users_roles.uid) LEFT JOIN {$prefix}role r ON r.rid={$prefix}users_roles.rid WHERE u.name=? AND u.pass=?;"));
     file_put_contents($this->configuration['drupal_filter_file'], $drupal_filter_dom->saveXML());
   }
 
@@ -181,29 +188,37 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Asserts that an object's given datastreams are common-type image files.
+   * Attempts to validate an array of datastreams, generally via binary checks.
    *
-   * Uses PHPGD to run the assertion check. This means that only certain kinds
-   * of image files can be checked. Please check the documentation for the PHPGD
-   * imagecreatefromstring() function to determine what filetypes are valid.
+   * These functions exist in, and can be added to, datastream_validators.inc,
+   * which is found in this folder.
    *
-   * @param AbstractObject $object
-   *   The PID of the object.
-   * @param array $datastreams
-   *   An array of datastreams to check.
+   * $param AbstractObject $object
+   *   The object to load datastreams from.
+   * $param array $datastreams
+   *   An array of paired DSIDs, validate function names, and optional params.
    */
-  public function assertImageDatastreams($object, array $datastreams) {
+  public function validateDatastreams($object, array $datastreams) {
     if (!is_object($object)) {
       $this->fail("Failed. Object passed in is invalid.", 'Islandora');
     }
-    else {
-      foreach ($datastreams as $datastream) {
-        $datastream_string = $object[$datastream]->content;
-        if (!imagecreatefromstring($datastream_string)) {
-          $this->fail("Image datastream {$datastream} is either invalid or corrupt.", 'Islandora');
+    module_load_include('inc', 'islandora', 'tests/datastream_validators');
+    foreach ($datastreams as $datastream) {
+      if (isset($object[$datastream[0]])) {
+        $function = 'islandora_validate_' . $datastream[1] . '_datastream';
+        if (function_exists($function)) {
+          if (isset($datastream[2])) {
+            $results = $function($object, $datastream[0], $datastream[2]);
+          }
+          else {
+            $results = $function($object, $datastream[0]);
+          }
+          foreach ($results as $result) {
+            $this->assertTrue($result[0], $result[1], 'Islandora');
+          }
         }
         else {
-          $this->pass("Image datastream {$datastream} is valid.", 'Islandora');
+          $this->fail("No {$datastream[0]} validation function exists for the {$datastream[1]} datastream.", 'Islandora');
         }
       }
     }
@@ -240,10 +255,16 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
    * @param string $button
    *   The label of the first 'Delete' button
    */
-  public function deleteObject($pid, $button = 'Delete') {
+  public function deleteObject($pid, $button = NULL) {
     $path = 'islandora/object/' . $pid . '/manage/properties';
     $edit = array();
-    $this->drupalPost($path, $edit, $button);
+    if (isset($button)) {
+      $this->drupalPost($path, $edit, $button);
+    }
+    else {
+      $object = islandora_object_load($pid);
+      $this->drupalPost($path, $edit, "Permanently remove '{$object->label}' from repository");
+    }
     $this->drupalPost($this->url, $edit, t('Delete'));
     $object = islandora_object_load($pid);
 
@@ -252,34 +273,98 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Reverses a hex string and converts it to a little-endian-formatted integer.
+   * Constructs and ingests a Fedora object and datastream(s) via tuque.
    *
-   * This is useful for running checks on values that appear in the binary
-   * of a datastream. Returns FALSE if the hex value contains non-hex characters
-   * or if the string would not return a 16- or 32-bit formatted big-endian
-   * signed integer.
+   * All keys inside the parameter arrays for this function are optional. it
+   * can be run simply by calling $this->ingestConstructedObject();.
    *
-   * @param string $hex
-   *   The hex value being converted.
+   * @param array $properties
+   *   An array containing object information using these keys:
+   *   'label' - The object label; randomized if not set.
+   *   'pid' - 'namespace:pid', or just 'namespace' to generate the suffix.
+   *   'models' - An array that can contain multiple content model PIDs.
+   *   'owner' - The object's owner.
+   *   'parent' - The PID of the parent collection.
+   * @param array $datastreams
+   *   An array containing zero or more datastream arrays that use the keys:
+   *   'dsid' - the datastream ID; randomized if not set.
+   *   'path' - The path to the file to use; defaults to fixtures/test.jpg.
+   *   'control_group' - The single-letter control group identifier.
+   *   'mimetype' - The datastream's mimetype.
    *
-   * @return bool|int
-   *   FALSE or the integer value that is converted.
+   * @return bool|array
+   *   FALSE if the object ingest failed, or the object array if successful.
    */
-  public function convertHexToInt($hex) {
+  public function ingestConstructedObject(array $properties = array(), array $datastreams = array()) {
+    module_load_include('inc', 'islandora', 'includes/tuque');
+    $tuque = new IslandoraTuque();
+    $repository = $tuque->repository;
+    if (!isset($properties['pid'])) {
+      $properties['pid'] = "islandora";
+    }
+    $object = $repository->constructObject($properties['pid']);
 
-    // A couple of quick string checks.
-    if (!ctype_xdigit($hex)) {
-      $this->fail('String passed to convertHexToInt() contains non-hexidecimal characters.', 'PHP');
+    // Set the object properties before ingesting it.
+    if (isset($properties['label'])) {
+      $object->label = $properties['label'];
+    }
+    else {
+      $properties['label'] = $this->randomName(16);
+      $object->label = $properties['label'];
+    }
+
+    if (isset($properties['owner'])) {
+      $object->owner = $properties['owner'];
+    }
+
+    if (isset($properties['models']) && is_array($properties['models'])) {
+      foreach ($properties['models'] as $model) {
+        $object->relationships->add(FEDORA_MODEL_URI, 'hasModel', $model);
+      }
+    }
+    elseif (isset($properties['models']) && !is_array($properties['models'])) {
+      $this->fail(t("'models' key of properties variable is not an array. Content model(s) will not be set."), 'Islandora');
+    }
+
+    $repository->ingestObject($object);
+    if (!$object) {
+      $this->fail(t("Failed to ingest object."), 'Islandora');
       return FALSE;
     }
-    if (!strlen($hex) === 4 || !strlen($hex) === 8) {
-      $this->fail('String passed to convertHexToInt() cannot create a 16- or 32-bit little-endian signed integer', 'PHP');
-      return FALSE;
+    else {
+      $this->pass(t("Ingested object %object", array('%object' => $object->id)), 'Islandora');
     }
 
-    // The actual conversion.
-    $reverse_hex = implode('', array_reverse(str_split($hex, 2)));
-    $int = hexdec($reverse_hex);
-    return $int;
+    // Chuck in some datastreams.
+    if (!empty($datastreams)) {
+      foreach ($datastreams as $datastream) {
+        if (!isset($datastream['dsid'])) {
+          $datastream['dsid'] = $this->randomName(8);
+        }
+        if (!isset($datastream['path'])) {
+          $datastream['path'] = drupal_get_path('module', 'islandora') . '/tests/fixtures/test.jpg';
+        }
+        if (!isset($datastream['control_group'])) {
+          $new_datastream = $object->constructDatastream($datastream['dsid']);
+        }
+        else {
+          $new_datastream = $object->constructDatastream($datastream['dsid'], $datastream['control_group']);
+        }
+        $new_datastream->label = $datastream['dsid'];
+        if (isset($datastream['mimetype'])) {
+          $new_datastream->mimetype = $datastream['mimetype'];
+        }
+        $new_datastream->setContentFromFile($datastream['path']);
+        $object->ingestDatastream($new_datastream);
+      }
+    }
+
+    // Add a parent relationship, if necessary.
+    if (isset($properties['parent'])) {
+      $object->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', $properties['parent']);
+    }
+
+    return $object;
   }
+
 }

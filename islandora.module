@@ -1639,8 +1639,102 @@ function islandora_islandora_datastream_modified(AbstractObject $object, Abstrac
 }
 
 /**
- * Implements hook_islandora_metadata_display_info().
+ * Implements hook_form_simpletest_test_form_alter().
  */
+function islandora_form_simpletest_test_form_alter(array &$form) {
+  module_load_include('inc', 'simpletest', 'simpletest.pages');
+  $form['tests'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Tests'),
+    '#description' => t('Select the test(s) or test group(s) you would like to run, and click <em>Run tests</em>.<br/><br/>NOTE: Tests in groups prefixed with <em>Islandora</em> generally require a configuration file, found in the Islandora module "tests" folder, as well as the use of the Islandora Drupal filter. Before any tests are run, please ensure that your web server has the appropriate permissions to alter the drupal_filter.xml file in your Fedora config folder. Your original Islandora Drupal filter configuration will NOT be overwritten by tests; HOWEVER, if PHP exits abnormally before the filter is reset, please use the "Repair Drupal Filter" button below.'),
+  );
+
+  $form['tests']['table'] = array(
+    '#theme' => 'simpletest_test_table',
+  );
+
+  // Generate the list of tests arranged by group.
+  $groups = simpletest_test_get_all();
+  foreach ($groups as $group => $tests) {
+    $form['tests']['table'][$group] = array(
+      '#collapsed' => TRUE,
+    );
+
+    foreach ($tests as $class => $info) {
+      $form['tests']['table'][$group][$class] = array(
+        '#type' => 'checkbox',
+        '#title' => filter_xss($info['name']),
+        '#description' => filter_xss($info['description']),
+      );
+    }
+  }
+
+  // Operation buttons.
+  $form['tests']['op'] = array(
+    '#type' => 'submit',
+    '#value' => t('Run tests'),
+  );
+
+  $form['reset'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => FALSE,
+    '#collapsed' => FALSE,
+    '#title' => t('Repair Islandora Drupal Filter'),
+    '#description' => t('Attempts to repair the Islandora Drupal filter if a test that alters the Drupal filter has crashed. This is also intended for developers when creating tests built using the IslandoraWebTestCase class.'),
+  );
+  $form['reset']['op'] = array(
+    '#type' => 'submit',
+    '#value' => t('Repair Drupal Filter'),
+    '#submit' => array('islandora_repair_drupal_filter'),
+  );
+}
+
+/**
+ * Submit handler for islandora_form_simpletest_test_form_alter().
+ */
+function islandora_repair_drupal_filter() {
+
+  // Grab the config.
+  $path = drupal_get_path('module', 'islandora');
+  if (file_exists("$path/tests/test_config.ini")) {
+    $configuration = parse_ini_file("$path/tests/test_config.ini");
+  }
+  elseif (file_exists("$path/tests/default.test_config.ini")) {
+    $configuration = parse_ini_file("$path/tests/default.test_config.ini");
+  }
+  else {
+    drupal_set_message(t('Required default.test_config.ini/test_config.ini file not found'), 'error');
+    return FALSE;
+  }
+
+  // Xpath to the filter 'sql' elements.
+  $drupal_filter_dom = new DOMDocument();
+  $drupal_filter_dom->loadXML(file_get_contents($configuration['drupal_filter_file']));
+  $drupal_filter_xpath = new DOMXPath($drupal_filter_dom);
+
+  // Blow out the simpletest stuff.
+  $entries = 0;
+  foreach ($drupal_filter_xpath->query('//sql') as $sql) {
+    if (strpos($sql->nodeValue, 'simpletest') !== FALSE) {
+      $parent = $sql->parentNode;
+      $root = $parent->parentNode;
+      $parent->removeChild($sql);
+      $root->removeChild($parent);
+      $entries++;
+    }
+  }
+  file_put_contents($configuration['drupal_filter_file'], $drupal_filter_dom->saveXML());
+  if ($entries == 0) {
+    drupal_set_message(t("No simpletest entries were found in the Drupal filter."));
+  }
+  else {
+    drupal_set_message(format_plural($entries, "Removed 1 simpletest entry from the Drupal filter.", "Removed @count simpletest entries from the Drupal filter."));
+  }
+}
+
+ /**
+  * Implements hook_islandora_metadata_display_info().
+  */
 function islandora_islandora_metadata_display_info() {
   return array(
     'dublin_core' => array(
