@@ -118,7 +118,8 @@ function islandora_validate_image_datastream($object, $datastream) {
 /**
  * Asserts the validity of any .tif/.tiff datastream.
  *
- * Does not use the islandora_assert_valid() function, as this is not a simple true/false.
+ * Does not use the islandora_assert_valid() function, as this is not a simple
+ * true/false.
  *
  * @param AbstractObject $object
  *   The PID of the object.
