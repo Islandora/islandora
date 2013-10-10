@@ -20,7 +20,7 @@ pear channel-discover pear.phpqatools.org
 pear channel-discover pear.netpirates.net
 pear install pear/PHP_CodeSniffer
 pear install pear.phpunit.de/phpcpd
-pear install drush/drush
+pear install drush/drush-5.9.0
 phpenv rehash
 drush dl --yes drupal
 cd drupal-*
