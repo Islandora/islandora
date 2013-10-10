@@ -427,17 +427,21 @@ function hook_islandora_undeletable_datastreams(array $models) {
  *   - do_function: An associate array including:
  *       - 'function': The callback function to be called.
  *       - 'args': An array of arguments to pass to the callback function.
+ *       - 'file': A file to include (relative to the module's path, including
+ *          the file's extension).
  *   - undo_function: An associate array including:
  *       - 'function': The callback function to be called to reverse the
  *          executed action in the ingest steps.
  *       - 'args': An array of arguments to pass to the callback function.
+ *       - 'file': A file to include (relative to the module's path, including
+ *          the file's extension).
  *   Shared parameters between both types:
  *   - weight: The "weight" of this step--heavier(/"larger") values sink to the
  *     end of the process while smaller(/"lighter") values are executed first.
  *   Both types may optionally include:
  *   - module: A module from which we want to load an include.
  *   "Form" type may optionally include:
- *   - file: A file to include (relative to the module's path, including the
+ *   - 'file': A file to include (relative to the module's path, including the
  *     file's extension).
  */
 function hook_islandora_ingest_steps(array $form_state) {
