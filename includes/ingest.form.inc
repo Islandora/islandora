@@ -57,6 +57,12 @@ function islandora_ingest_form(array $form, array &$form_state, array $configura
     return islandora_ingest_form_execute_step($form, $form_state);
   }
   catch (Exception $e) {
+    watchdog(
+      'islandora',
+      'Exception during ingest form processing with Message: "@exception",  and Trace: @trace',
+      array('@exception' => $e->getMessage(), '@trace' => $e->getTraceAsString()),
+      WATCHDOG_ERROR
+    );
     drupal_set_message($e->getMessage(), 'error');
     return array(array(
         '#markup' => l(t('Back'), 'javascript:window.history.back();', array('external' => TRUE))));
@@ -771,8 +777,17 @@ function islandora_ingest_form_submit(array $form, array &$form_state) {
     catch (Exception $e) {
       // If post hooks throws it may already exist at this point but may be
       // invalid, so don't say failed.
-      watchdog('islandora', 'Exception Message: @exception.', array('@exception' => $e->getMessage()), WATCHDOG_ERROR);
-      drupal_set_message(t('A problem occured while ingesting "@label" (ID: @pid), please notifiy the administrator.', array('@label' => $object->label, '@pid' => $object->id)), 'error');
+      watchdog(
+        'islandora',
+        'Exception during ingest with Message: "@exception",  and Trace: @trace',
+        array('@exception' => $e->getMessage(), '@trace' => $e->getTraceAsString()),
+        WATCHDOG_ERROR
+      );
+      drupal_set_message(
+        t('A problem occured while ingesting "@label" (ID: @pid), please notifiy the administrator.',
+        array('@label' => $object->label, '@pid' => $object->id)),
+        'error'
+      );
     }
   }
   // XXX: Foreaching with references can be weird... The reference exists in
