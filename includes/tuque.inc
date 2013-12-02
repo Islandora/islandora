@@ -7,27 +7,9 @@
 
 $islandora_module_path = drupal_get_path('module', 'islandora');
 
+include_once 'sites/all/libraries/tuque/Bootstrap.php';
+
 // Do this until we expose these in a module or library.
-@include_once 'sites/all/libraries/tuque/Datastream.php';
-@include_once 'sites/all/libraries/tuque/FedoraApi.php';
-@include_once 'sites/all/libraries/tuque/FedoraApiSerializer.php';
-@include_once 'sites/all/libraries/tuque/Object.php';
-@include_once 'sites/all/libraries/tuque/RepositoryConnection.php';
-@include_once 'sites/all/libraries/tuque/Cache.php';
-@include_once 'sites/all/libraries/tuque/RepositoryException.php';
-@include_once 'sites/all/libraries/tuque/Repository.php';
-@include_once 'sites/all/libraries/tuque/FedoraRelationships.php';
-
-@include_once "$islandora_module_path/libraries/tuque/Datastream.php";
-@include_once "$islandora_module_path/libraries/tuque/FedoraApi.php";
-@include_once "$islandora_module_path/libraries/tuque/FedoraApiSerializer.php";
-@include_once "$islandora_module_path/libraries/tuque/Object.php";
-@include_once "$islandora_module_path/libraries/tuque/RepositoryConnection.php";
-@include_once "$islandora_module_path/libraries/tuque/Cache.php";
-@include_once "$islandora_module_path/libraries/tuque/RepositoryException.php";
-@include_once "$islandora_module_path/libraries/tuque/Repository.php";
-@include_once "$islandora_module_path/libraries/tuque/FedoraRelationships.php";
-
 class IslandoraTuque {
 
   /**
@@ -86,11 +68,12 @@ class IslandoraTuque {
 
     if (self::exists()) {
       module_load_include('inc', 'islandora', 'includes/tuque_wrapper');
-      $this->connection = new IslandoraRepositoryConnection($url, $user_string, $pass_string);
-      $this->connection->reuseConnection = TRUE;
-      $this->api = new IslandoraFedoraApi($this->connection);
-      $this->cache = new IslandoraSimpleCache();
-      $this->repository = new IslandoraFedoraRepository($this->api, $this->cache);
+      $config = new Tuque\RepositoryConfig($url, $user_string, $pass_string);
+      $this->repository = IslandoraFedoraRepository::fromConfig($config);
+      // @todo Eventualy remove these public properties.
+      $this->api = $this->repository->api;
+      $this->connection = $this->api->connection;
+      $this->cache = $config->getCache();
     }
   }
 
@@ -101,7 +84,7 @@ class IslandoraTuque {
    *   TRUE if the Connection class exists FALSE otherwise.
    */
   public static function exists() {
-    return class_exists('RepositoryConnection');
+    return class_exists('Tuque\Repository');
   }
 
   /**

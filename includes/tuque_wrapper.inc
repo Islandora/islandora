@@ -10,26 +10,7 @@
 
 $islandora_module_path = drupal_get_path('module', 'islandora');
 
-// @todo this until we expost these in a module or library
-@include_once 'sites/all/libraries/tuque/Datastream.php';
-@include_once 'sites/all/libraries/tuque/FedoraApi.php';
-@include_once 'sites/all/libraries/tuque/FedoraApiSerializer.php';
-@include_once 'sites/all/libraries/tuque/Object.php';
-@include_once 'sites/all/libraries/tuque/RepositoryConnection.php';
-@include_once 'sites/all/libraries/tuque/Cache.php';
-@include_once 'sites/all/libraries/tuque/RepositoryException.php';
-@include_once 'sites/all/libraries/tuque/Repository.php';
-@include_once 'sites/all/libraries/tuque/FedoraRelationships.php';
-
-@include_once "$islandora_module_path/libraries/tuque/Datastream.php";
-@include_once "$islandora_module_path/libraries/tuque/FedoraApi.php";
-@include_once "$islandora_module_path/libraries/tuque/FedoraApiSerializer.php";
-@include_once "$islandora_module_path/libraries/tuque/Object.php";
-@include_once "$islandora_module_path/libraries/tuque/RepositoryConnection.php";
-@include_once "$islandora_module_path/libraries/tuque/Cache.php";
-@include_once "$islandora_module_path/libraries/tuque/RepositoryException.php";
-@include_once "$islandora_module_path/libraries/tuque/Repository.php";
-@include_once "$islandora_module_path/libraries/tuque/FedoraRelationships.php";
+@include_once 'sites/all/libraries/tuque/Bootstrap.php';
 
 /**
  * Allow modules to alter an object before a mutable event occurs.
@@ -71,17 +52,41 @@ function islandora_invoke_datastream_hooks($hook, array $models, $dsid) {
   return islandora_invoke_hook_list($hook, $refinements, array_slice(func_get_args(), 3));
 }
 
-class IslandoraFedoraRepository extends FedoraRepository {
-  protected $queryClass = 'IslandoraRepositoryQuery';
-  protected $newObjectClass = 'IslandoraNewFedoraObject';
-  protected $objectClass = 'IslandoraFedoraObject';
+class IslandoraFedoraRepository extends Tuque\Repository {
+
+  /**
+   * The decorator class to wrap existing objects.
+   * @var string
+   */
+  protected $objectDecorator = 'IslandoraFedoraObject';
+  protected $newObjectDecorator = 'IslandoraNewFedoraObject';
+
+  /**
+   * Creates a repository from the given configuration.
+   */
+  public static function fromConfig(Tuque\RepositoryConfig $config) {
+    return new IslandoraFedoraRepository(Tuque\RepositoryFactory::getRepository($config));
+  }
+
+  /**
+   * Constructor for the Repository object.
+   *
+   * @param AbstractRepository $repository
+   *   The configuration setting that defines what kind of repository to
+   *   instantiate.
+   */
+  public function __construct(AbstractRepository $repository) {
+    parent::__construct($repository);
+    // @todo Get rid of this class at some point.
+    $this->api->m = new IslandoraFedoraApiM($this->api->m);
+  }
 
   /**
    * Ingest the given object.
    *
    * @see FedoraRepository::ingestObject()
    */
-  public function ingestObject(NewFedoraObject &$object) {
+  public function ingestObject(AbstractObject &$object) {
     try {
       foreach ($object as $dsid => $datastream) {
         $datastream_context = array(
@@ -91,11 +96,10 @@ class IslandoraFedoraRepository extends FedoraRepository {
         islandora_alter_datastream($object, $datastream, $datastream_context);
         if ($datastream_context['block']) {
           throw new Exception(t('Object ingest blocked due to ingest of @dsid being blocked.', array(
-            '@dsid' => $dsid,
-          )));
+                '@dsid' => $dsid,
+              )));
         }
       }
-
       $object_context = array(
         'action' => 'ingest',
         'block' => FALSE,
@@ -105,6 +109,7 @@ class IslandoraFedoraRepository extends FedoraRepository {
         throw new Exception('Ingest Object was blocked.');
       }
       $ret = parent::ingestObject($object);
+
       islandora_invoke_object_hooks(ISLANDORA_OBJECT_INGESTED_HOOK, $object->models, $object);
       // Call the ingested datastream hooks for NewFedoraObject's after the
       // object had been ingested.
@@ -123,18 +128,13 @@ class IslandoraFedoraRepository extends FedoraRepository {
   }
 }
 
-class IslandoraRepositoryQuery extends RepositoryQuery {}
+class IslandoraFedoraObject extends Tuque\Object {
 
-class IslandoraNewFedoraObject extends NewFedoraObject {
-  protected $newFedoraDatastreamClass = 'IslandoraNewFedoraDatastream';
-  protected $fedoraDatastreamClass = 'IslandoraFedoraDatastream';
-  protected $fedoraRelsExtClass = 'IslandoraFedoraRelsExt';
-}
-
-class IslandoraFedoraObject extends FedoraObject {
-  protected $newFedoraDatastreamClass = 'IslandoraNewFedoraDatastream';
-  protected $fedoraDatastreamClass = 'IslandoraFedoraDatastream';
-  protected $fedoraRelsExtClass = 'IslandoraFedoraRelsExt';
+  /**
+   * The decorator class to wrap the repository reference.
+   * @var string
+   */
+  protected $repositoryDecorator = 'IslandoraFedoraRepository';
 
   /**
    * Ingest the given datastream.
@@ -165,28 +165,37 @@ class IslandoraFedoraObject extends FedoraObject {
       throw $e;
     }
   }
-}
-
-class IslandoraRepositoryConnection extends RepositoryConnection {}
-
-class IslandoraFedoraApi extends FedoraApi {
 
   /**
-   * Instantiate a IslandoraFedoraApi object.
-   *
-   * @see FedoraApi::__construct()
+   * Get the string repersentation of this object.
    */
-  public function __construct(IslandoraRepositoryConnection $connection, FedoraApiSerializer $serializer = NULL) {
-    if (!$serializer) {
-      $serializer = new FedoraApiSerializer();
-    }
-    $this->a = new FedoraApiA($connection, $serializer);
-    $this->m = new IslandoraFedoraApiM($connection, $serializer);
-    $this->connection = $connection;
+  public function __tostring() {
+    return $this->id;
   }
+
 }
 
-class IslandoraFedoraApiM extends FedoraApiM {
+class IslandoraNewFedoraObject extends Tuque\NewObject {
+
+  /**
+   * The decorator class to wrap the repository reference.
+   * @var string
+   */
+  protected $repositoryDecorator = 'IslandoraFedoraRepository';
+
+  /**
+   * Get the string repersentation of this object.
+   */
+  public function __tostring() {
+    return $this->id;
+  }
+
+}
+
+/**
+ * @todo Find a way to use this without referencing the implementation class.
+ */
+class IslandoraFedoraApiM extends Tuque\Delegate {
 
   /**
    * Update a datastream.
@@ -351,24 +360,3 @@ class IslandoraFedoraApiM extends FedoraApiM {
   }
 
 }
-
-class IslandoraSimpleCache extends SimpleCache {}
-
-class IslandoraNewFedoraDatastream extends NewFedoraDatastream {
-  protected $fedoraRelsIntClass = 'IslandoraFedoraRelsInt';
-  protected $fedoraDatastreamVersionClass = 'IslandoraFedoraDatastreamVersion';
-}
-
-class IslandoraFedoraDatastream extends FedoraDatastream {
-  protected $fedoraRelsIntClass = 'IslandoraFedoraRelsInt';
-  protected $fedoraDatastreamVersionClass = 'IslandoraFedoraDatastreamVersion';
-}
-
-class IslandoraFedoraDatastreamVersion extends FedoraDatastreamVersion {
-  protected $fedoraRelsIntClass = 'IslandoraFedoraRelsInt';
-  protected $fedoraDatastreamVersionClass = 'IslandoraFedoraDatastreamVersion';
-}
-
-class IslandoraFedoraRelsExt extends FedoraRelsExt {}
-
-class IslandoraFedoraRelsInt extends FedoraRelsInt {}

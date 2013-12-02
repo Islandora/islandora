@@ -1,0 +1,82 @@
+<?php
+
+/**
+ * @file
+ * Test Authentication Tokens.
+ */
+
+class IslandoraTuqueWrapperTestCase extends IslandoraWebTestCase {
+
+  /**
+   * Get test information for display.
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Islandora Tuque Wrapper',
+      'description' => 'Ensure that the Tuque Wrapper functions correctly.',
+      'group' => 'Islandora',
+    );
+  }
+
+  /**
+   * Set up data for the tests.
+   */
+  public function setUp() {
+    parent::setUp();
+    $this->repository = $this->admin->repository;
+    $this->purgeTestObjects();
+  }
+
+
+  /**
+   * Free any objects/resources created for this test.
+   *
+   * @see IslandoraWebTestCase::tearDown()
+   */
+  public function tearDown() {
+    $this->purgeTestObjects();
+    parent::tearDown();
+  }
+
+  /**
+   * Purge any objects created by the test's in this class.
+   */
+  public function purgeTestObjects() {
+    $objects = array(
+      'test:test',
+    );
+    foreach ($objects as $object) {
+      try {
+        $object = $this->repository->getObject($object);
+        $this->repository->purgeObject($object->id);
+      }
+      catch (Exception $e) {
+        // Meh... Either it didn't exist or the purge failed.
+      }
+    }
+  }
+
+  /**
+   * Test the wrapper wraps the classes correctly.
+   */
+  public function testWrapper() {
+    global $user;
+    $url = variable_get('islandora_base_url', $this->configuration['fedora_url']);
+    $connection = islandora_get_tuque_connection($user, $url);
+    $this->assertTrue($connection instanceOf IslandoraTuque);
+    $this->assertTrue($connection->repository instanceOf IslandoraFedoraRepository);
+    $this->assertTrue($connection->repository->api->m instanceOf IslandoraFedoraApiM);
+    $repository = $connection->repository;
+    $object = $repository->constructObject('test:test');
+    $this->assertTrue($object instanceOf Tuque\NewObject);
+    $repository->ingestObject($object);
+    $this->assertTrue($object instanceOf IslandoraFedoraObject);
+    $object = $repository->getObject('test:test');
+    $this->assertTrue($object instanceOf IslandoraFedoraObject);
+    $datastream = $object->constructDatastream('test');
+    $this->assertTrue($datastream instanceOf Tuque\NewDatastream);
+    $object->ingestDatastream($datastream);
+    $this->assertTrue($datastream instanceOf Tuque\Datastream);
+  }
+
+}

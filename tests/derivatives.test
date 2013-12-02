@@ -37,12 +37,7 @@ class IslandoraDerivativesTestCase extends IslandoraWebTestCase {
         'islandora_derivatives_test',
       )
     );
-    $url = variable_get('islandora_base_url', 'http://localhost:8080/fedora');
-    $this->connection = new RepositoryConnection($url, $this->admin->name, $this->admin->pass);
-    $this->connection->reuseConnection = TRUE;
-    $this->api = new FedoraApi($this->connection);
-    $this->cache = new SimpleCache();
-    $this->repository = new FedoraRepository($this->api, $this->cache);
+    $this->repository = $this->admin->repository->getDelegate();
     $this->pid = $this->randomName() . ":" . $this->randomName();
   }
 
@@ -52,7 +47,6 @@ class IslandoraDerivativesTestCase extends IslandoraWebTestCase {
    * @see IslandoraWebTestCase::tearDown()
    */
   public function tearDown() {
-    $tuque = islandora_get_tuque_connection();
     parent::tearDown();
   }
 

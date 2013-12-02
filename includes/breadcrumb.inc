@@ -50,7 +50,7 @@ function islandora_get_breadcrumbs($object) {
  * @return array
  *   An array of links representing the breadcrumb trail, "root" first.
  */
-function islandora_get_breadcrumbs_recursive($pid, FedoraRepository $repository, array &$context = NULL) {
+function islandora_get_breadcrumbs_recursive($pid, AbstractRepository $repository, array &$context = NULL) {
   // Before executing the query, we have a base case of accessing the top-level
   // collection.
   if ($context === NULL) {

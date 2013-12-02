@@ -18,6 +18,7 @@ files[] = tests/authtokens.test
 files[] = tests/hooks.test
 files[] = tests/ingest.test
 files[] = tests/hooked_access.test
+files[] = tests/tuque_wrapper.test
 files[] = tests/islandora_manage_permissions.test
 files[] = tests/datastream_versions.test
 files[] = tests/datastream_cache.test
