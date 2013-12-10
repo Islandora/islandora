@@ -87,7 +87,11 @@ function islandora_ingest_test_test_testcmodel2_islandora_ingest_steps(array &$f
  *   The Drupal form definition.
  */
 function islandora_ingest_test_set_label_form(array $form, array &$form_state) {
-  $models = array('test:nomorestepscmodel', 'test:testcmodel', 'test:testcmodel2');
+  $models = array(
+    'test:nomorestepscmodel',
+    'test:testcmodel',
+    'test:testcmodel2',
+  );
   $model = isset($form_state['values']['model']) ? $form_state['values']['model'] : reset($models);
   $shared_storage = &islandora_ingest_form_get_shared_storage($form_state);
   $shared_storage['models'] = array($model);
@@ -139,8 +143,7 @@ function islandora_ingest_test_set_label_form_submit(array $form, array &$form_s
  * Test the First content model.
  */
 function islandora_ingest_test_testcmodel_form(array $form, array &$form_state) {
-  return array(
-  );
+  return array();
 }
 
 /**
@@ -154,8 +157,7 @@ function islandora_ingest_test_testcmodel_form_submit(array $form, array &$form_
  * Test the second content model.
  */
 function islandora_ingest_test_testcmodel2_form(array $form, array &$form_state) {
-  return array(
-  );
+  return array();
 }
 
 /**

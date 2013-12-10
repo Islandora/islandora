@@ -28,7 +28,16 @@ function islandora_solution_packs_get_required_objects($module = NULL) {
 
   if (!$required_objects) {
     $connection = islandora_get_tuque_connection();
-    $required_objects = module_invoke_all('islandora_required_objects', $connection);
+    if (isset($module)) {
+      // The module may be disabled when this function runs, as modules must be
+      // disabled before they can be uninstalled. We must manually load the
+      // module file to use it's islandora_required_objects hook.
+      module_load_include('module', $module, $module);
+      $required_objects = module_invoke($module, 'islandora_required_objects', $connection);
+    }
+    else {
+      $required_objects = module_invoke_all('islandora_required_objects', $connection);
+    }
   }
 
   if ($module !== NULL) {
@@ -173,7 +182,7 @@ function islandora_solution_pack_form(array $form, array &$form_state, $solution
         '#markup' => t('<strong>Object status:</strong> !image !status', array(
                      '!image' => $solution_pack_status_info['image'],
                      '!status' => $solution_pack_status_info['solution_pack'],
-                   )),
+          )),
         '#prefix' => '<div class="islandora-solution-pack-install-status">',
         '#suffix' => '</div>',
       ),
@@ -720,7 +729,7 @@ function theme_islandora_viewers_table($variables) {
                'header' => $header,
                'rows' => $rows,
                'attributes' => array('id' => 'islandora-viewers-table'),
-             ));
+    ));
   $output .= drupal_render_children($form);
   return $output;
 }
@@ -745,7 +754,9 @@ function islandora_get_viewer($params = NULL, $variable_id = NULL, $fedora_objec
     $viewer_id = islandora_get_viewer_id($variable_id);
     if ($viewer_id AND $params !== NULL) {
       $callback = islandora_get_viewer_callback($viewer_id);
-      return $callback($params, $fedora_object);
+      if (function_exists($callback)) {
+        return $callback($params, $fedora_object);
+      }
     }
   }
   return FALSE;

@@ -33,16 +33,16 @@ class IslandoraPermissionsTestCase extends IslandoraWebTestCase {
    * Test manage permissions.
    */
   public function testManagePermissions() {
-    // Test permission FEDORA_VIEW_OBJECTS.
+    // Test permission ISLANDORA_VIEW_OBJECTS.
     // Create a user with permission.
-    $user = $this->drupalCreateUser(array(FEDORA_VIEW_OBJECTS));
+    $user = $this->drupalCreateUser(array(ISLANDORA_VIEW_OBJECTS));
     // Log the user in.
     $this->drupalLogin($user);
     $this->clickLink(t('Islandora Repository'));
     $this->assertNoLink('Manage', 'Manage tab is not on current page.');
 
-    // Test permission FEDORA_VIEW_OBJECTS, FEDORA_MANAGE_PROPERTIES.
-    $user = $this->drupalCreateUser(array(FEDORA_VIEW_OBJECTS, FEDORA_MANAGE_PROPERTIES));
+    // Test permission ISLANDORA_VIEW_OBJECTS, ISLANDORA_MANAGE_PROPERTIES.
+    $user = $this->drupalCreateUser(array(ISLANDORA_VIEW_OBJECTS, ISLANDORA_MANAGE_PROPERTIES));
     $this->drupalLogin($user);
     $this->clickLink(t('Islandora Repository'));
     $this->assertLink('Manage', 0, 'Manage tab is on current page.');
@@ -51,8 +51,8 @@ class IslandoraPermissionsTestCase extends IslandoraWebTestCase {
     $this->assertNoLink('Datastreams', 'Datastreams tab is not on current page.');
     $this->assertNoLink('Collection', 'Collection tab is not on current page.');
 
-    // Test permission FEDORA_VIEW_OBJECTS, FEDORA_ADD_DS.
-    $user = $this->drupalCreateUser(array(FEDORA_VIEW_OBJECTS, FEDORA_ADD_DS));
+    // Test permission ISLANDORA_VIEW_OBJECTS, ISLANDORA_ADD_DS.
+    $user = $this->drupalCreateUser(array(ISLANDORA_VIEW_OBJECTS, ISLANDORA_ADD_DS));
     $this->drupalLogin($user);
     $this->clickLink(t('Islandora Repository'));
     $this->assertLink('Manage', 0, 'Manage tab is on current page.');
@@ -61,8 +61,8 @@ class IslandoraPermissionsTestCase extends IslandoraWebTestCase {
     $this->assertNoLink('Properties', 'Properties tab is not on current page.');
     $this->assertNoLink('Collection', 'Collection tab is not on current page.');
 
-    // Test permission FEDORA_VIEW_OBJECTS, FEDORA_METADATA_EDIT.
-    $user = $this->drupalCreateUser(array(FEDORA_VIEW_OBJECTS, FEDORA_METADATA_EDIT));
+    // Test permission ISLANDORA_VIEW_OBJECTS, ISLANDORA_METADATA_EDIT.
+    $user = $this->drupalCreateUser(array(ISLANDORA_VIEW_OBJECTS, ISLANDORA_METADATA_EDIT));
     $this->drupalLogin($user);
     $this->clickLink(t('Islandora Repository'));
     $this->assertLink('Manage', 0, 'Manage tab is on current page.');
@@ -71,8 +71,8 @@ class IslandoraPermissionsTestCase extends IslandoraWebTestCase {
     $this->assertNoLink('Properties', 'Properties tab is not on current page.');
     $this->assertNoLink('Collection', 'Collection tab is not on current page.');
 
-    // Test permission FEDORA_VIEW_OBJECTS, FEDORA_PURGE.
-    $user = $this->drupalCreateUser(array(FEDORA_VIEW_OBJECTS, FEDORA_PURGE));
+    // Test permission ISLANDORA_VIEW_OBJECTS, ISLANDORA_PURGE.
+    $user = $this->drupalCreateUser(array(ISLANDORA_VIEW_OBJECTS, ISLANDORA_PURGE));
     $this->drupalLogin($user);
     $this->clickLink(t('Islandora Repository'));
     $this->assertLink('Manage', 0, 'Manage tab is on current page.');
@@ -98,39 +98,39 @@ class IslandoraPermissionsTestCase extends IslandoraWebTestCase {
     $ret = islandora_user_access($object, array());
     $this->assertFalse($ret, 'User access denied when no permissions are provided.');
     // Test access with matching permission.
-    $user = $this->drupalCreateUser(array(FEDORA_VIEW_OBJECTS));
-    $ret = islandora_user_access($object, array(FEDORA_VIEW_OBJECTS), array(), TRUE, $user);
+    $user = $this->drupalCreateUser(array(ISLANDORA_VIEW_OBJECTS));
+    $ret = islandora_user_access($object, array(ISLANDORA_VIEW_OBJECTS), array(), TRUE, $user);
     $this->assertTrue($ret, 'User access granted when permissions match.');
     // Test access with matching permission but access any is FALSE.
-    $user = $this->drupalCreateUser(array(FEDORA_VIEW_OBJECTS));
-    $ret = islandora_user_access($object, array(FEDORA_VIEW_OBJECTS, FEDORA_PURGE), array(), FALSE, $user);
+    $user = $this->drupalCreateUser(array(ISLANDORA_VIEW_OBJECTS));
+    $ret = islandora_user_access($object, array(ISLANDORA_VIEW_OBJECTS, ISLANDORA_PURGE), array(), FALSE, $user);
     $this->assertFalse($ret, 'User access denied for matching permission but with access any set to FALSE.');
     // Test access with non-matching permission.
-    $user = $this->drupalCreateUser(array(FEDORA_PURGE));
-    $ret = islandora_user_access($object, array(FEDORA_VIEW_OBJECTS), array(), TRUE, $user);
+    $user = $this->drupalCreateUser(array(ISLANDORA_PURGE));
+    $ret = islandora_user_access($object, array(ISLANDORA_VIEW_OBJECTS), array(), TRUE, $user);
     $this->assertFalse($ret, 'User access denied when permissions did not match.');
     // Test access with both permissions and content model.
-    $user = $this->drupalCreateUser(array(FEDORA_VIEW_OBJECTS));
+    $user = $this->drupalCreateUser(array(ISLANDORA_VIEW_OBJECTS));
     $model = $object->models;
     $model = reset($model);
-    $ret = islandora_user_access($object, array(FEDORA_VIEW_OBJECTS), array($model), TRUE, $user);
+    $ret = islandora_user_access($object, array(ISLANDORA_VIEW_OBJECTS), array($model), TRUE, $user);
     $this->assertTrue($ret, 'User access granted for matching permission and model.');
     // Test access with matching permissions and non-matching content model.
-    $user = $this->drupalCreateUser(array(FEDORA_VIEW_OBJECTS));
-    $ret = islandora_user_access($object, array(FEDORA_VIEW_OBJECTS), array('islandora:obviouslyNotACModel'), TRUE, $user);
+    $user = $this->drupalCreateUser(array(ISLANDORA_VIEW_OBJECTS));
+    $ret = islandora_user_access($object, array(ISLANDORA_VIEW_OBJECTS), array('islandora:obviouslyNotACModel'), TRUE, $user);
     $this->assertFalse($ret, 'User access denied for matching permission and non-matching model.');
     // Test access with all matching permissions and one matching model but
     // access any is FALSE.
-    $user = $this->drupalCreateUser(array(FEDORA_VIEW_OBJECTS, FEDORA_PURGE));
+    $user = $this->drupalCreateUser(array(ISLANDORA_VIEW_OBJECTS, ISLANDORA_PURGE));
     $model = $object->models;
     $model = reset($model);
-    $ret = islandora_user_access($object, array(FEDORA_VIEW_OBJECTS, FEDORA_PURGE), array($model, 'islandora:obviouslyNotACModel'), FALSE, $user);
+    $ret = islandora_user_access($object, array(ISLANDORA_VIEW_OBJECTS, ISLANDORA_PURGE), array($model, 'islandora:obviouslyNotACModel'), FALSE, $user);
     $this->assertFalse($ret, 'User access denied for all matching permissions and one matching model but with access any set to FALSE.');
-    $ret = islandora_user_access($object, array(FEDORA_VIEW_OBJECTS, FEDORA_PURGE), array($model), FALSE, $user);
+    $ret = islandora_user_access($object, array(ISLANDORA_VIEW_OBJECTS, ISLANDORA_PURGE), array($model), FALSE, $user);
     $this->assertTrue($ret, 'User access granted for all matching permissions and matching models with access any set to FALSE.');
     // Test passing in a Datastream.
-    $user = $this->drupalCreateUser(array(FEDORA_VIEW_OBJECTS, FEDORA_PURGE));
-    $ret = islandora_user_access($object['DC'], array(FEDORA_VIEW_OBJECTS), array(), TRUE, $user);
+    $user = $this->drupalCreateUser(array(ISLANDORA_VIEW_OBJECTS, ISLANDORA_PURGE));
+    $ret = islandora_user_access($object['DC'], array(ISLANDORA_VIEW_OBJECTS), array(), TRUE, $user);
     $this->assertTrue($ret, 'User access granted for matching permissions, with a datastream given instead of an object.');
   }
 }

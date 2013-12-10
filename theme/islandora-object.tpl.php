@@ -60,6 +60,7 @@
 ?>
 <div class="islandora-object islandora">
   <h2><?php print t('Details'); ?></h2>
+  
   <dl class="islandora-object-tn">
     <dt>
       <?php if (isset($variables['islandora_thumbnail_url'])): ?>

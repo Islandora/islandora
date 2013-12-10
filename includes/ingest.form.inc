@@ -57,6 +57,12 @@ function islandora_ingest_form(array $form, array &$form_state, array $configura
     return islandora_ingest_form_execute_step($form, $form_state);
   }
   catch (Exception $e) {
+    watchdog(
+      'islandora',
+      'Exception during ingest form processing with Message: "@exception",  and Trace: @trace',
+      array('@exception' => $e->getMessage(), '@trace' => $e->getTraceAsString()),
+      WATCHDOG_ERROR
+    );
     drupal_set_message($e->getMessage(), 'error');
     return array(array(
         '#markup' => l(t('Back'), 'javascript:window.history.back();', array('external' => TRUE))));
@@ -186,10 +192,10 @@ function islandora_ingest_form_get_step(array &$form_state, $step_id = NULL) {
  *
  * @param array $form_state
  *   The Drupal form state.
- * @param string $step
+ * @param array $step
  *   The step relative to the result, if not provided the current step is used.
  *
- * @return string
+ * @return array|null
  *   The next step if found, NULL otherwise.
  */
 function islandora_ingest_form_get_next_step(array &$form_state, array $step = NULL) {
@@ -205,10 +211,10 @@ function islandora_ingest_form_get_next_step(array &$form_state, array $step = N
  *
  * @param array $form_state
  *   The Drupal form state.
- * @param string $step
+ * @param array $step
  *   The step relative to the result, if not provided the current step is used.
  *
- * @return string
+ * @return array|null
  *   The next step if found, NULL otherwise.
  */
 function islandora_ingest_form_get_previous_step(array &$form_state, array $step = NULL) {
@@ -329,6 +335,9 @@ function islandora_ingest_form_decrement_step(array &$form_state) {
  *   The Drupal form.
  * @param array $form_state
  *   The Drupal form state.
+ * @param string $step_id
+ *   The ID of the step relative to the result, if not provided the current
+ *   step_id is used.
  *
  * @return array
  *   The form definition of the current step.
@@ -363,6 +372,8 @@ function islandora_ingest_form_execute_step(array $form, array &$form_state, $st
  *   The Drupal form.
  * @param array $form_state
  *   The Drupal form state.
+ * @param array $step
+ *   The step we are executing.
  *
  * @return array
  *   The form definition of the given step.
@@ -391,6 +402,8 @@ function islandora_ingest_form_execute_form_step(array $form, array &$form_state
  *   The Drupal form.
  * @param array $form_state
  *   The Drupal form state.
+ * @param array $step
+ *   The step that execution begins from.
  */
 function islandora_ingest_form_execute_consecutive_callback_steps(array $form, array &$form_state, array $step) {
   do {
@@ -409,10 +422,15 @@ function islandora_ingest_form_execute_consecutive_callback_steps(array $form, a
  *   The Drupal form.
  * @param array $form_state
  *   The Drupal form state.
+ * @param array $step
+ *   The step currently being executed.
  */
 function islandora_ingest_form_execute_callback_step(array $form, array &$form_state, array $step) {
   $args = array(&$form_state);
   $args = isset($step['do_function']['args']) ? array_merge($args, $step['do_function']['args']) : $args;
+  if (isset($step['do_function']['file'])) {
+    require_once drupal_get_path('module', $step['module']) . "/" . $step['do_function']['file'];
+  }
   call_user_func_array($step['do_function']['function'], $args);
 }
 
@@ -425,6 +443,8 @@ function islandora_ingest_form_execute_callback_step(array $form, array &$form_s
  *   The Drupal form.
  * @param array $form_state
  *   The Drupal form state.
+ * @param array $step
+ *   The step that execution begins from.
  */
 function islandora_ingest_form_undo_consecutive_callback_steps(array $form, array &$form_state, array $step) {
   do {
@@ -443,10 +463,15 @@ function islandora_ingest_form_undo_consecutive_callback_steps(array $form, arra
  *   The Drupal form.
  * @param array $form_state
  *   The Drupal form state.
+ * @param array $step
+ *   The step which the undo callback is being called on.
  */
 function islandora_ingest_form_undo_callback_step(array $form, array &$form_state, array $step) {
   $args = array(&$form_state);
   $args = isset($step['undo_function']['args']) ? array_merge($args, $step['undo_function']['args']) : $args;
+  if (isset($step['undo_function']['file'])) {
+    require_once drupal_get_path('module', $step['module']) . "/" . $step['undo_function']['file'];
+  }
   call_user_func_array($step['undo_function']['function'], $args);
 }
 
@@ -457,11 +482,13 @@ function islandora_ingest_form_undo_callback_step(array $form, array &$form_stat
  *   The Drupal form.
  * @param array $form_state
  *   The Drupal form state.
+ * @param array $step
+ *   An array defining a ingest step.
  *
  * @return array
  *   The stepified Drupal form definition for the given step.
  */
-function islandora_ingest_form_stepify(array $form, array &$form_state, $step) {
+function islandora_ingest_form_stepify(array $form, array &$form_state, array $step) {
   $first_form_step = islandora_ingest_form_on_first_form_step($form_state);
   $last_form_step = islandora_ingest_form_on_last_form_step($form_state);
   $form['form_step_id'] = array(
@@ -682,9 +709,46 @@ function islandora_ingest_form_ingest_button(array &$form_state) {
     '#type' => 'submit',
     '#name' => 'ingest',
     '#value' => t('Ingest'),
+    '#process' => array('islandora_ingest_form_ingest_button_process'),
     '#validate' => $validate,
     '#submit' => $submit,
   );
+}
+
+/**
+ * Process hook for the ingest button, adds the please wait spinning icon.
+ */
+function islandora_ingest_form_ingest_button_process(array $element) {
+  $settings['spinner'][$element['#id']] = array(
+    'message' => t('Please be patient while the the page loads.'),
+    'options' => array(
+      'lines' => 10,
+      'length' => 20,
+      'width' => 10,
+      'radius' => 30,
+      'corners' => 1,
+      'rotate' => 0,
+      'direction' => 1,
+      'color' => '#000',
+      'speed' => 1,
+      'trail' => 60,
+      'shadow' => FALSE,
+      'hwaccel' => FALSE,
+      'className' => 'spinner',
+      'zIndex' => 2000000000,
+      'top' => 'auto',
+      'left' => 'auto',
+    ),
+  );
+  drupal_add_js($settings, 'setting');
+  $islandora_path = drupal_get_path('module', 'islandora');
+  $element['#attached'] = array(
+    'js' => array(
+      "$islandora_path/js/spin/spin.min.js",
+      "$islandora_path/js/spinner.js",
+    ),
+  );
+  return $element;
 }
 
 /**
@@ -692,6 +756,8 @@ function islandora_ingest_form_ingest_button(array &$form_state) {
  *
  * Attempts to ingest every object built by the previous steps.
  *
+ * @param array $form
+ *   The Drupal form.
  * @param array $form_state
  *   The Drupal form state.
  */
@@ -703,16 +769,34 @@ function islandora_ingest_form_submit(array $form, array &$form_state) {
     islandora_ingest_form_execute_consecutive_callback_steps($form, $form_state, $step);
   }
   // Ingest the objects.
+  $set_redirect = TRUE;
   foreach ($form_state['islandora']['objects'] as &$object) {
     try {
       islandora_add_object($object);
-      $form_state['redirect'] = "islandora/object/{$object->id}";
+      // We want to redirect to the first object as it's considered to be the
+      // primary object.
+      if ($set_redirect) {
+        $form_state['redirect'] = "islandora/object/{$object->id}";
+        $set_redirect = FALSE;
+      }
+      drupal_set_message(
+      t('"@label" (ID: @pid) has been ingested.', array('@label' => $object->label, '@pid' => $object->id)),
+      'status');
     }
     catch (Exception $e) {
       // If post hooks throws it may already exist at this point but may be
       // invalid, so don't say failed.
-      watchdog('islandora', 'Exception Message: @exception.', array('@exception' => $e->getMessage()), WATCHDOG_ERROR);
-      drupal_set_message(t('A problem occured while ingesting "@label" (ID: @pid), please notifiy the administrator.', array('@label' => $object->label, '@pid' => $object->id)), 'error');
+      watchdog(
+        'islandora',
+        'Exception during ingest with Message: "@exception",  and Trace: @trace',
+        array('@exception' => $e->getMessage(), '@trace' => $e->getTraceAsString()),
+        WATCHDOG_ERROR
+      );
+      drupal_set_message(
+        t('A problem occured while ingesting "@label" (ID: @pid), please notifiy the administrator.',
+        array('@label' => $object->label, '@pid' => $object->id)),
+        'error'
+      );
     }
   }
   // XXX: Foreaching with references can be weird... The reference exists in

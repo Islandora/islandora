@@ -26,6 +26,10 @@ function islandora_drush_command() {
     'drupal dependencies' => array(
       'islandora',
     ),
+    'examples' => array(
+      'drush -u 1 ispiro --module=islandora' => dt('Install missing solution pack objects for the "islandora" module.'),
+      'drush -u 1 ispiro --module=islandora --force' => dt('Install all solution pack objects for the "islandora" module, purging any which currently exist.'),
+    ),
     'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_LOGIN,
   );
   $commands['islandora-solution-pack-uninstall-required-objects'] = array(
@@ -36,12 +40,16 @@ function islandora_drush_command() {
         'required' => TRUE,
       ),
       'force' => array(
-        'description' => dt('Force reinstallation of the objects.'),
+        'description' => dt('Force uninstallation of the objects.'),
       ),
     ),
     'aliases' => array('ispuro'),
     'drupal dependencies' => array(
       'islandora',
+    ),
+    'examples' => array(
+      'drush -u 1 ispuro --module=islandora' => dt('Uninstall solution pack objects for the "islandora" module.'),
+      'drush -u 1 ispuro --module=islandora --force' => dt('Force uninstallation of all solution pack objects for the "islandora" module.'),
     ),
     'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_LOGIN,
   );
@@ -55,6 +63,10 @@ function islandora_drush_command() {
     'aliases' => array('ispros'),
     'drupal dependencies' => array(
       'islandora',
+    ),
+    'examples' => array(
+      'drush -u 1 ispros' => dt('Get the status of all solution pack objects.'),
+      'drush -u 1 ispros --module=islandora' => dt('Get the status of solution pack objects for the "islandora" module.'),
     ),
     'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_LOGIN,
   );

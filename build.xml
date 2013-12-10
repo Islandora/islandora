@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="islandora" default="build">
- <target name="build" depends="clean,prepare,lint,phploc,code_sniff,phpcpd,pdepend,doxygen,phpcb,test" />
+ <target name="build" depends="clean,prepare,php-eval,lint,phploc,code_sniff,phpcpd,pdepend,doxygen,phpcb,test,cc-process,cc-export" />
 
   <target name="clean" description="Cleanup build artifacts">
       <delete dir="${basedir}/build/test" />
@@ -9,6 +9,7 @@
       <delete dir="${basedir}/build/pdepend" />
       <delete dir="${basedir}/build/api" />
       <delete dir="${basedir}/build/code-browser" />
+      <delete dir="${basedir}/build/code_coverage" />
   </target>
 
   <target name="prepare" description="Prepares workspace for artifacts" >
@@ -17,6 +18,13 @@
     <mkdir dir="${basedir}/build/pdepend" />
     <mkdir dir="${basedir}/build/api" />
     <mkdir dir="${basedir}/build/code-browser" />
+    <mkdir dir="${basedir}/build/code_coverage" />
+  </target>
+  
+  <target name="php-eval" description="Use php-eval to set the code_coverage_filter_files variable">
+    <exec executable="drush">
+      <arg line="php-eval &quot;variable_set('code_coverage_files', array('sites/all/modules/islandora/islandora.module', 'sites/all/modules/islandora/islandora.install', 'sites/all/modules/islandora/islandora.api.php', 'sites/all/modules/islandora/islandora.drush.inc', 'sites/all/modules/islandora/islandora.rules.inc', 'sites/all/modules/islandora/includes/add_datastream.form.inc', 'sites/all/modules/islandora/includes/admin.form.inc', 'sites/all/modules/islandora/includes/authtokens.inc', 'sites/all/modules/islandora/includes/breadcrumb.inc', 'sites/all/modules/islandora/includes/content_model.autocomplete.inc', 'sites/all/modules/islandora/includes/datastream.inc', 'sites/all/modules/islandora/includes/delete_datastream.form.inc', 'sites/all/modules/islandora/includes/delete_object.form.inc', 'sites/all/modules/islandora/includes/derivatives.inc', 'sites/all/modules/islandora/includes/dublin_core.inc', 'sites/all/modules/islandora/includes/ingest.form.inc', 'sites/all/modules/islandora/includes/manage_deleted_objects.inc', 'sites/all/modules/islandora/includes/metadata.inc', 'sites/all/modules/islandora/includes/mime_detect.inc', 'sites/all/modules/islandora/includes/object.entity_controller.inc', 'sites/all/modules/islandora/includes/object_properties.form.inc', 'sites/all/modules/islandora/includes/solution_packs.inc', 'sites/all/modules/islandora/includes/tuque.inc', 'sites/all/modules/islandora/includes/tuque_wrapper.inc', 'sites/all/modules/islandora/includes/utilities.inc', 'sites/all/modules/islandora/tests/datastream_validators.inc', 'sites/all/modules/islandora/tests/islandora_web_test_case.inc', 'sites/all/modules/islandora/theme/islandora-dublin-core-description.tpl.php', 'sites/all/modules/islandora/theme/islandora-dublin-core-display.tpl.php', 'sites/all/modules/islandora/theme/islandora-object-edit.tpl.php', 'sites/all/modules/islandora/theme/islandora-object-img-print.tpl.php', 'sites/all/modules/islandora/theme/islandora-object.tpl.php', 'sites/all/modules/islandora/theme/islandora-objects-grid.tpl.php', 'sites/all/modules/islandora/theme/islandora-objects-list.tpl.php', 'sites/all/modules/islandora/theme/islandora-objects.tpl.php', 'sites/all/modules/islandora/theme/theme.inc')); variable_set('code_coverage_modules', array());&quot;"/>
+    </exec>
   </target>
 
   <target name="lint" description="Perform syntax check of sourcecode files">
@@ -81,4 +89,17 @@
         <arg line='-c "php ../../../../scripts/run-tests.sh --xml ${basedir}/build/test Islandora"' />
     </exec>
   </target>
+  
+  <target name="cc-process" description="Processes the code coverage output so it can be exported">
+    <exec executable="drush">
+      <arg line="cc-process all"/>
+    </exec>
+  </target>
+  
+  <target name="cc-export" description="Generate a code coverage report for the simpletest run">
+    <exec executable="drush">
+      <arg line="cc-export latest --html --csv --tag-html --generate-index --path=${basedir}/build/code_coverage"/>
+    </exec>
+  </target>
+  
 </project>

@@ -8,6 +8,7 @@ branches:
 env:
   - FEDORA_VERSION="3.5"
   - FEDORA_VERSION="3.6.2"
+  - FEDORA_VERSION="3.7.0"
 before_install:
   - export ISLANDORA_DIR=$TRAVIS_BUILD_DIR
   - $TRAVIS_BUILD_DIR/tests/scripts/travis_setup.sh

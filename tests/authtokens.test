@@ -74,7 +74,7 @@ class IslandoraAuthtokensTestCase extends IslandoraWebTestCase {
     $this->drupalGet("islandora/object/{$newpid}/datastream/JP2/view");
     $this->assertResponse(403, 'Page not found as anonymous');
 
-    $account = $this->drupalCreateUser(array(FEDORA_VIEW_OBJECTS));
+    $account = $this->drupalCreateUser(array(ISLANDORA_VIEW_OBJECTS));
     $this->drupalLogin($account);
 
     $this->drupalGet("islandora/object/{$newpid}/datastream/JP2/view");

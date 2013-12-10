@@ -32,7 +32,7 @@ function islandora_add_datastream_form(array $form, array &$form_state, Abstract
     '#attributes' => array(
       'enctype' => 'multipart/form-data',
     ),
-    'dsid' => array(
+    'dsid_fieldset' => array(
       '#type' => 'fieldset',
       '#title' => 'Add a datastream',
       '#collapsible' => FALSE,
@@ -40,44 +40,44 @@ function islandora_add_datastream_form(array $form, array &$form_state, Abstract
       'dsid' => array(
         '#title' => 'Datastream ID',
         '#description' => t("An ID for this stream that is unique to this object. Must start with a letter and contain only alphanumeric characters, dashes and underscores. The following datastreams are defined by this content model but don't currently exist: <b>@unused_dsids</b>.", array('@unused_dsids' => $unused_datastreams)),
+        '#type' => 'textfield',
+        '#size' => 64,
+        '#maxlength' => 64,
+        '#required' => TRUE,
+        '#element_validate' => array(
+          'islandora_add_datastream_form_field_is_not_an_existing_datastream_id',
+          'islandora_add_datastream_form_field_starts_with_a_letter',
+          'islandora_add_datastream_form_field_is_valid_dsid',
+        ),
+        '#autocomplete_path' => "islandora/object/{$object->id}/manage/datastreams/add/autocomplete",
       ),
-      '#type' => 'textfield',
-      '#size' => 64,
-      '#maxlength' => 64,
-      '#required' => TRUE,
-      '#element_validate' => array(
-        'islandora_add_datastream_form_field_is_not_an_existing_datastream_id',
-        'islandora_add_datastream_form_field_starts_with_a_letter',
-        'islandora_add_datastream_form_field_is_valid_dsid',
+      'label' => array(
+        '#title' => 'Datastream Label',
+        '#required' => TRUE,
+        '#size' => 64,
+        '#maxlength' => 64,
+        '#description' => t('A human-readable label'),
+        '#type' => 'textfield',
+        '#element_validate' => array('islandora_add_datastream_form_field_does_not_contain_a_forward_slash'),
       ),
-      '#autocomplete_path' => "islandora/object/{$object->id}/manage/datastreams/add/autocomplete",
-    ),
-    'label' => array(
-      '#title' => 'Datastream Label',
-      '#required' => TRUE,
-      '#size' => 64,
-      '#maxlength' => 64,
-      '#description' => t('A human-readable label'),
-      '#type' => 'textfield',
-      '#element_validate' => array('islandora_add_datastream_form_field_does_not_contain_a_forward_slash'),
-    ),
-    'file' => array(
-      '#type' => 'managed_file',
-      '#required' => TRUE,
-      '#title' => t('Upload Document'),
-      '#size' => 48,
-      '#description' => t('Select a file to upload.<br/>Files must be less than <b>@size MB.</b>', array('@size' => $upload_size)),
-      '#default_value' => isset($form_state['values']['files']) ? $form_state['values']['files'] : NULL,
-      '#upload_location' => 'temporary://',
-      '#upload_validators' => array(
-        'file_validate_extensions' => array(NULL),
-        // Assume its specified in MB.
-        'file_validate_size' => array($upload_size * 1024 * 1024),
+      'file' => array(
+        '#type' => 'managed_file',
+        '#required' => TRUE,
+        '#title' => t('Upload Document'),
+        '#size' => 48,
+        '#description' => t('Select a file to upload.<br/>Files must be less than <b>@size MB.</b>', array('@size' => $upload_size)),
+        '#default_value' => isset($form_state['values']['files']) ? $form_state['values']['files'] : NULL,
+        '#upload_location' => 'temporary://',
+        '#upload_validators' => array(
+          'file_validate_extensions' => array(NULL),
+          // Assume its specified in MB.
+          'file_validate_size' => array($upload_size * 1024 * 1024),
+        ),
       ),
-    ),
-    'submit' => array(
-      '#type' => 'submit',
-      '#value' => t('Add Datastream'),
+      'submit' => array(
+        '#type' => 'submit',
+        '#value' => t('Add Datastream'),
+      ),
     ),
   );
 }
@@ -148,7 +148,7 @@ function islandora_add_datastream_form_field_does_not_contain_a_forward_slash(ar
 }
 
 /**
- * Checks if the given datastream requires the upload to be a certian MIME type.
+ * Checks if the given datastream requires the upload to be a certain MIME type.
  *
  * @param array $form
  *   The Drupal form.
@@ -161,7 +161,10 @@ function islandora_add_datastream_form_validate(array $form, array &$form_state)
   if (isset($form_state['datastream_requirements'][$dsid]) && $file) {
     $allowed_types = $form_state['datastream_requirements'][$dsid]['mime'];
     $mime_detect = new MimeDetect();
-    $allowed_extensions = array_map(array($mime_detect, 'getExtension'), $allowed_types);
+    $allowed_extensions = array();
+    foreach ($allowed_types as $mime) {
+      $allowed_extensions = array_merge($allowed_extensions, $mime_detect->getValidExtensions($mime));
+    }
     $errors = file_validate_extensions($file, implode(' ', $allowed_extensions));
     if (count($errors) > 0) {
       form_set_error('file', $errors[0]);

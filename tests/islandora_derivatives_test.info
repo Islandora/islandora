@@ -1,0 +1,7 @@
+name = Islandora Derivatives Generation testing
+description = Tests derivative generation hooks. Do not enable.
+core = 7.x
+package = Testing
+hidden = TRUE
+files[] = islandora_derivatives_test.module
+dependencies[] = islandora

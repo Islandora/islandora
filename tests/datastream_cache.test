@@ -1,0 +1,160 @@
+<?php
+
+/**
+ * @file
+ * Tests to verify the cache headers we provide.
+ */
+
+class IslandoraDatastreamCacheTestCase extends IslandoraWebTestCase {
+
+  /**
+   * Gets info to display to describe this test.
+   *
+   * @see IslandoraWebTestCase::getInfo()
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Datastream Cache Headers',
+      'description' => 'Check our headers work as we expect them to.',
+      'group' => 'Islandora',
+    );
+  }
+
+  /**
+   * Creates an admin user and a connection to a fedora repository.
+   *
+   * @see IslandoraWebTestCase::setUp()
+   */
+  public function setUp() {
+    parent::setUp();
+    $this->repository = $this->admin->repository;
+    $this->purgeTestObjects();
+  }
+
+  /**
+   * Free any objects/resources created for this test.
+   *
+   * @see IslandoraWebTestCase::tearDown()
+   */
+  public function tearDown() {
+    $this->purgeTestObjects();
+    parent::tearDown();
+  }
+
+  /**
+   * Purge any objects created by the test's in this class.
+   */
+  public function purgeTestObjects() {
+    $objects = array(
+      'test:test',
+    );
+    foreach ($objects as $object) {
+      try {
+        $object = $this->repository->getObject($object);
+        $this->repository->purgeObject($object->id);
+      }
+      catch (Exception $e) {
+        // Meh... Either it didn't exist or the purge failed.
+      }
+    }
+  }
+
+  /**
+   * Create our test object.
+   */
+  protected function createTestObject() {
+    $object = $this->repository->constructObject('test:test');
+    $object->label = 'Test object';
+    $object->models = 'test:model';
+    $datastream = $object->constructDatastream('asdf', 'M');
+    $datastream->label = 'datastream of doom';
+    $datastream->mimetype = 'text/plain';
+    $datastream->content = 'And then things happened.';
+    $datastream->checksumType = 'SHA-1';
+    $object->ingestDatastream($datastream);
+    $this->repository->ingestObject($object);
+    return $object;
+  }
+
+  /**
+   * Test HTTP cache headers.
+   */
+  public function testCacheHeaders() {
+    $object = $this->createTestObject();
+    $datastream = $object['asdf'];
+
+    $user = $this->drupalCreateUser(array(ISLANDORA_VIEW_OBJECTS));
+    $this->drupalLogin($user);
+
+    // Test If-Modified-Since.
+    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+      'If-Modified-Since: ' . $datastream->createdDate->format('D, d M Y H:i:s \G\M\T'),
+    ));
+    $this->assertResponse(304);
+    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+      'If-Modified-Since: ' . $datastream->createdDate->sub(new DateInterval('P1M'))->format('D, d M Y H:i:s \G\M\T'),
+    ));
+    $this->assertResponse(200);
+
+    // Test If-Unmodified-Since.
+    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+      'If-Unmodified-Since: ' . $datastream->createdDate->format('D, d M Y H:i:s \G\M\T'),
+    ));
+    $this->assertResponse(200);
+    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+      'If-Unmodified-Since: ' . $datastream->createdDate->sub(new DateInterval('P1M'))->format('D, d M Y H:i:s \G\M\T'),
+    ));
+    $this->assertResponse(412);
+
+    // Test If-Match.
+    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+      format_string('If-Match: "!checksum"', array(
+        '!checksum' => $datastream->checksum,
+      )),
+    ));
+    $this->assertResponse(200);
+    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+      format_string('If-Match: "!checksum"', array(
+        '!checksum' => 'dont-match' . $datastream->checksum,
+      )),
+    ));
+    $this->assertResponse(412);
+
+    // Test If-None-Match.
+    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+      format_string('If-None-Match: "!checksum"', array(
+        '!checksum' => $datastream->checksum,
+      )),
+    ));
+    $this->assertResponse(304);
+    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+      format_string('If-None-Match: "!checksum"', array(
+        '!checksum' => 'dont-match' . $datastream->checksum,
+      )),
+    ));
+    $this->assertResponse(200);
+
+    // Test combination of If-None-Match and If-Modified-Since
+    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+      'If-Modified-Since: ' . $datastream->createdDate->format('D, d M Y H:i:s \G\M\T'),
+      format_string('If-None-Match: "!checksum"', array(
+        '!checksum' => $datastream->checksum,
+      )),
+    ));
+    $this->assertResponse(304);
+    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+      'If-Modified-Since: ' . $datastream->createdDate->format('D, d M Y H:i:s \G\M\T'),
+      format_string('If-None-Match: "!checksum"', array(
+        '!checksum' => 'dont-match' . $datastream->checksum,
+      )),
+    ));
+    $this->assertResponse(200);
+    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+      'If-Modified-Since: ' . $datastream->createdDate->sub(new DateInterval('P1M'))->format('D, d M Y H:i:s \G\M\T'),
+      format_string('If-None-Match: "!checksum"', array(
+        '!checksum' => $datastream->checksum,
+      )),
+    ));
+    $this->assertResponse(200);
+  }
+}

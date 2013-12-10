@@ -55,6 +55,12 @@ function islandora_repository_admin(array $form, array &$form_state) {
           '#description' => t('The PID of the Root Collection Object'),
           '#required' => TRUE,
         ),
+        'islandora_use_datastream_cache_headers' => array(
+          '#type' => 'checkbox',
+          '#title' => t('Generate/parse datastream HTTP cache headers'),
+          '#description' => t('HTTP caching can reduce network traffic, by allowing clients to used cached copies.'),
+          '#default_value' => variable_get('islandora_use_datastream_cache_headers', TRUE),
+        ),
       ),
       'islandora_namespace' => array(
         '#type' => 'fieldset',
