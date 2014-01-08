@@ -1801,3 +1801,19 @@ function islandora_islandora_metadata_display_info() {
     ),
   );
 }
+
+/**
+ * Determines the server's operating system.
+ *
+ * @return string
+ *
+ */
+function islandora_os_check() {
+  // Determine if PHP is currently running on Windows. (The constant
+  // "PHP_OS" may return "Windows," "WIN32," "WINNT," "CYGWIN_NT-5.1," etc.)
+  if ((strtolower(substr(PHP_OS, 0, 3)) == 'win') ||
+      (strtolower(substr(PHP_OS, 0, 6)) == 'cygwin')) {
+    return 'Windows';
+  }
+  return 'Linux';
+}
