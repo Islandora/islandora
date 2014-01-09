@@ -1806,7 +1806,7 @@ function islandora_islandora_metadata_display_info() {
  * Determines the server's operating system.
  *
  * @return string
- *
+ *   The name of the operating system being used.
  */
 function islandora_os_check() {
   // Determine if PHP is currently running on Windows. (The constant
@@ -1815,5 +1815,5 @@ function islandora_os_check() {
       (strtolower(substr(PHP_OS, 0, 6)) == 'cygwin')) {
     return 'Windows';
   }
-  return 'Linux';
+  return 'Unix';
 }
