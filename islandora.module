@@ -36,7 +36,6 @@ define('ISLANDORA_MANAGE_PROPERTIES', 'manage object properties');
 define('ISLANDORA_VIEW_DATASTREAM_HISTORY', 'view old datastream versions');
 define('ISLANDORA_MANAGE_DELETED_OBJECTS', 'manage deleted objects');
 define('ISLANDORA_REVERT_DATASTREAM', 'revert to old datastream');
-define('ISLANDORA_REGENERATE_DERIVATIVES', 'regenerate derivatives for an object');
 
 
 // Hooks.
@@ -210,15 +209,6 @@ function islandora_menu() {
     'access callback' => 'islandora_object_access_callback',
     'access arguments' => array(ISLANDORA_PURGE, 2),
   );
-  $items['islandora/object/%islandora_object/regenerate'] = array(
-    'title' => 'Regenerate all derivatives on an object',
-    'file' => 'includes/regenerate_derivatives.form.inc',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('islandora_regenerate_object_derivatives_form', 2),
-    'type' => MENU_CALLBACK,
-    'access callback' => 'islandora_object_access_callback',
-    'access arguments' => array(ISLANDORA_REGENERATE_DERIVATIVES, 2),
-  );
   $items['islandora/object/%islandora_object/manage/datastreams/add'] = array(
     'title' => 'Add a datastream',
     'file' => 'includes/add_datastream.form.inc',
@@ -322,16 +312,6 @@ function islandora_menu() {
     'file' => 'includes/datastream.inc',
     'access callback' => 'islandora_datastream_access',
     'access arguments' => array(ISLANDORA_VIEW_DATASTREAM_HISTORY, 4),
-    'load arguments' => array(2),
-  );
-  $items['islandora/object/%islandora_object/datastream/%islandora_datastream/regenerate'] = array(
-    'title' => 'Regenrate datastream derivative',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('islandora_regenerate_datastream_derivative_form', 4),
-    'file' => 'includes/regenerate_derivatives.form.inc',
-    'type' => MENU_CALLBACK,
-    'access callback' => 'islandora_datastream_access',
-    'access arguments' => array(ISLANDORA_REGENERATE_DERIVATIVES, 4),
     'load arguments' => array(2),
   );
   $items['islandora/object/%islandora_object/download_clip'] = array(
@@ -480,10 +460,6 @@ function islandora_theme() {
       'file' => 'theme/theme.inc',
       'variables' => array('datastream' => NULL),
     ),
-    'islandora_datastream_regenerate_link' => array(
-      'file' => 'theme/theme.inc',
-      'variables' => array('datastream' => NULL),
-    ),
     'islandora_dublin_core_display' => array(
       'file' => 'theme/theme.inc',
       'template' => 'theme/islandora-dublin-core-display',
@@ -557,10 +533,6 @@ function islandora_permission() {
     ISLANDORA_MANAGE_DELETED_OBJECTS => array(
       'title' => t('Manage deleted objects'),
       'description' => t('Purge or revert deleted objects.'),
-    ),
-    ISLANDORA_REGENERATE_DERIVATIVES => array(
-      'title' => t('Regenerate derivatives'),
-      'description' => t('Regenerate derivatives for an object or per datastream.'),
     ),
   );
 }
@@ -1097,7 +1069,7 @@ function islandora_default_islandora_view_object($object) {
  *
  * @param AbstractObject $object
  *   The fedora object to print.
- * @param string $alter
+ * @param unknown $alter
  *   The string representation of the themed viewable object.
  *
  * @return array
@@ -1831,6 +1803,7 @@ function islandora_islandora_metadata_display_info() {
 }
 
 /**
+<<<<<<< HEAD
  * Implements hook_islandora_datastream_access().
  */
 function islandora_islandora_datastream_access($op, AbstractDatastream $datastream, $user) {
@@ -1854,4 +1827,19 @@ function islandora_islandora_datastream_access($op, AbstractDatastream $datastre
     }
   }
   return $result;
+=======
+ * Determines the server's operating system.
+ *
+ * @return string
+ *   The name of the operating system being used.
+ */
+function islandora_os_check() {
+  // Determine if PHP is currently running on Windows. (The constant
+  // "PHP_OS" may return "Windows," "WIN32," "WINNT," "CYGWIN_NT-5.1," etc.)
+  if ((strtolower(substr(PHP_OS, 0, 3)) == 'win') ||
+      (strtolower(substr(PHP_OS, 0, 6)) == 'cygwin')) {
+    return 'Windows';
+  }
+  return 'Unix';
+>>>>>>> parent of db28487... ISLANDORA-441 Merging outside commits made since 1/9/2014.
 }
