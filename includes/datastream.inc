@@ -53,8 +53,19 @@ function islandora_view_datastream(AbstractDatastream $datastream, $download = F
   if ($download) {
     // Browsers will not append all extensions.
     $mime_detect = new MimeDetect();
-    $extension = $mime_detect->getExtension($datastream->mimetype);
-    $filename = $datastream->label . '.' . $extension;
+    $extension = '.' . $mime_detect->getExtension($datastream->mimetype);
+
+    // Prevent adding on a duplicate extension.
+    $label = $datastream->label;
+    $extension_length = strlen($extension);
+    $duplicate_extension_position = strlen($label) > $extension_length ?
+      strripos($label, $extension, -$extension_length) :
+      FALSE;
+    $filename = $label;
+    if ($duplicate_extension_position === FALSE) {
+      $filename .= $extension;
+    }
+
     header("Content-Disposition: attachment; filename=\"$filename\"");
   }
 
@@ -70,14 +81,30 @@ function islandora_view_datastream(AbstractDatastream $datastream, $download = F
   islandora_view_datastream_set_cache_headers($datastream);
 
   drupal_page_is_cacheable(FALSE);
-  // Try not to load the file into PHP memory!
-  // Close and flush ALL the output buffers!
-  while (@ob_end_flush()) {
-  };
 
   // New content needed.
   if ($cache_check === 200) {
-    $datastream->getContent('php://output');
+    // We need to see if the chunking is being requested. This will mainly
+    // happen with iOS video requests as they do not support any other way
+    // to receive content for playback.
+    $chunk_headers = FALSE;
+    if (isset($_SERVER['HTTP_RANGE'])) {
+      // Set headers specific to chunking.
+      $chunk_headers = islandora_view_datastream_set_chunk_headers($datastream);
+    }
+    // Try not to load the file into PHP memory!
+    // Close and flush ALL the output buffers!
+    while (@ob_end_flush()) {
+    };
+
+    if (isset($_SERVER['HTTP_RANGE'])) {
+      if ($chunk_headers) {
+        islandora_view_datastream_deliver_chunks($datastream, $chunk_headers);
+      }
+    }
+    else {
+      $datastream->getContent('php://output');
+    }
   }
   exit();
 }
@@ -312,7 +339,7 @@ function islandora_edit_datastream(AbstractDatastream $datastream) {
     case 0:
       // No edit implementations.
       drupal_set_message(t('There are no edit methods specified for this datastream.'));
-      drupal_goto("islandora/object/{$object->id}/manage/datastreams");
+      drupal_goto("islandora/object/{$datastream->parent->id}/manage/datastreams");
       break;
 
     case 1:
@@ -382,4 +409,126 @@ function islandora_datastream_get_view_link(AbstractDatastream $datastream) {
   return theme('islandora_datastream_view_link', array(
     'datastream' => $datastream,
   ));
+}
+
+/**
+ * Set the headers for the chunking of our content.
+ *
+ * @param AbstractDatastream $datastream
+ *   An AbstractDatastream representing a datastream on a Fedora object.
+ *
+ * @return bool
+ *   TRUE if there are chunks to be returned, FALSE otherwise.
+ */
+function islandora_view_datastream_set_chunk_headers(AbstractDatastream $datastream) {
+  $file_uri = islandora_view_datastream_retrieve_file_uri($datastream);
+  // The meat of this has been taken from:
+  // http://mobiforge.com/design-development/content-delivery-mobile-devices.
+  $size   = filesize($file_uri);
+  $length = $size;
+  $start  = 0;
+  $end    = $size - 1;
+
+  header("Accept-Ranges: 0-$length");
+  if (isset($_SERVER['HTTP_RANGE'])) {
+    $c_start = $start;
+    $c_end   = $end;
+    // Extract the range string.
+    list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
+    // Make sure the client hasn't sent us a multibyte range.
+    if (strpos($range, ',') !== FALSE) {
+      // Not a valid range, notify the client.
+      header('HTTP/1.1 416 Requested Range Not Satisfiable');
+      header("Content-Range: bytes $start-$end/$size");
+      exit;
+    }
+    // If the range starts with an '-' we start from the beginning. If not, we
+    // forward the file pointer and make sure to get the end byte if specified.
+    if (strpos($range, '-') === 0) {
+      // The n-number of the last bytes is requested.
+      $c_start = $size - substr($range, 1);
+    }
+    else {
+      $range  = explode('-', $range);
+      $c_start = $range[0];
+      $c_end   = (isset($range[1]) && is_numeric($range[1])) ? $range[1] : $size;
+    }
+    /* Check the range and make sure it's treated according to the specs.
+     * http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
+     */
+    // End bytes can not be larger than $end.
+    $c_end = ($c_end > $end) ? $end : $c_end;
+    // Validate the requested range and return an error if it's not correct.
+    if ($c_start > $c_end || $c_start > $size - 1 || $c_end >= $size) {
+      header('HTTP/1.1 416 Requested Range Not Satisfiable');
+      header("Content-Range: bytes $start-$end/$size");
+      exit;
+    }
+    $start  = $c_start;
+    $end    = $c_end;
+    // Calculate new content length.
+    $length = $end - $start + 1;
+    header('HTTP/1.1 206 Partial Content');
+  }
+  // Notify the client the byte range we'll be outputting.
+  header("Content-Range: bytes $start-$end/$size");
+  header("Content-Length: $length");
+  return array(
+    'start' => $start,
+    'end' => $end,
+  );
+}
+
+/**
+ * Deliver back the specified chunks of a file.
+ *
+ * @param AbstractDatastream $datastream
+ *   An AbstractDatastream representing a datastream on a Fedora object.
+ * @param array $params
+ *   An associate array containing the start and ending chunk bytes.
+ */
+function islandora_view_datastream_deliver_chunks(AbstractDatastream $datastream, $params) {
+  $file_uri = islandora_view_datastream_retrieve_file_uri($datastream);
+  // The meat of this has been taken from:
+  // http://mobiforge.com/design-development/content-delivery-mobile-devices.
+  $fp = @fopen($file_uri, 'rb');
+  fseek($fp, $params['start']);
+  // Start buffered download.
+  $buffer = 1024 * 8;
+  while (!feof($fp) && ($p = ftell($fp)) <= $params['end']) {
+    if ($p + $buffer > $params['end']) {
+      // In case we're only outputting a chunk, make sure we don't read past the
+      // length.
+      $buffer = $params['end'] - $p + 1;
+    }
+    // Reset time limit for big files.
+    set_time_limit(0);
+    echo fread($fp, $buffer);
+  }
+  fclose($fp);
+}
+
+/**
+ * Creates/returns the file URI for the content of a datastream for chunking.
+ *
+ * @param AbstractDatastream $datastream
+ *   An AbstractDatastream representing a datastream on a Fedora object.
+ *
+ * @return string
+ *   The URI of the file.
+ */
+function islandora_view_datastream_retrieve_file_uri(AbstractDatastream $datastream) {
+  $mime_detect = new MimeDetect();
+  $extension = $mime_detect->getExtension($datastream->mimetype);
+  $file_uri = 'temporary://chunk_' . $datastream->parent->id . '_' . $datastream->id . '_' . $datastream->createdDate->getTimestamp() . '.' . $extension;
+  if (!file_exists($file_uri)) {
+    $file = new stdClass();
+    $file->uri = $file_uri;
+    $file->filename = drupal_basename($file_uri);
+    $file->filemime = $datastream->mimeType;
+    $file->status = 0;
+    $datastream->getContent($file_uri);
+    file_save($file);
+  }
+  return $file_uri;
 }

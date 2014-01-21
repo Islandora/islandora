@@ -691,8 +691,10 @@ function hook_islandora_update_related_objects_properties(AbstractObject $object
  *   Breadcrumbs array to be altered by reference. Each element is markup.
  * @param string $context
  *   Where the alter is originating from for distinguishing.
+ * @param AbstractObject $object
+ *   (Optional) AbstractObject representing object providing breadcrumb path
  */
-function hook_islandora_breadcrumbs_alter(&$breadcrumbs, $context) {
+function hook_islandora_breadcrumbs_alter(&$breadcrumbs, $context, $object = NULL) {
 
 }
 

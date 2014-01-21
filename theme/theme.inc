@@ -25,7 +25,7 @@ function islandora_preprocess_islandora_default_edit(array &$variables) {
     $header[] = array('data' => t('Versions'));
   }
 
-  $header[] = array('data' => t('Operations'), 'colspan' => '3');
+  $header[] = array('data' => t('Operations'), 'colspan' => '4');
 
   $table_attributes = array('class' => array('manage-datastreams'));
   $rows = array();
@@ -53,7 +53,7 @@ function islandora_preprocess_islandora_default_edit(array &$variables) {
       'class' => 'datastream-size',
       'data' => islandora_datastream_get_human_readable_size($ds),
     );
-    if (user_access(ISLANDORA_VIEW_DATASTREAM_HISTORY)) {
+    if (islandora_datastream_access(ISLANDORA_VIEW_DATASTREAM_HISTORY, $ds)) {
       $row[] = array(
         'class' => 'datastream-versions',
         'data' => theme('islandora_datastream_version_link', array(
@@ -76,6 +76,12 @@ function islandora_preprocess_islandora_default_edit(array &$variables) {
     $row[] = array(
       'class' => 'datastream-delete',
       'data' => theme('islandora_datastream_delete_link', array(
+        'datastream' => $ds,
+      )),
+    );
+    $row[] = array(
+      'class' => 'datastream-regenerate',
+      'data' => theme('islandora_datastream_regenerate_link', array(
         'datastream' => $ds,
       )),
     );
@@ -421,6 +427,23 @@ function theme_islandora_datastream_version_link(array $vars) {
   }
   else {
     return '';
+  }
+}
+
+/**
+ * Renders a link that will re-create derivatives for a datastream.
+ *
+ * @param array $vars
+ *   An array containing:
+ *   - datastream: An AbstractDatastream to generate the version link from.
+ *
+ * @return string
+ *   Markup.
+ */
+function theme_islandora_datastream_regenerate_link(array $vars) {
+  $datastream = $vars['datastream'];
+  if (islandora_datastream_access(ISLANDORA_REGENERATE_DERIVATIVES, $datastream)) {
+    return l(t('regenerate'), "islandora/object/{$datastream->parent->id}/datastream/{$datastream->id}/regenerate");
   }
 }
 

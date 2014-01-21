@@ -159,7 +159,8 @@ class IslandoraDerivativesTestCase extends IslandoraWebTestCase {
   public function testDerivativeFilteringOnSourceDSID() {
     global $_islandora_derivative_test_derivative_functions;
     $_islandora_derivative_test_derivative_functions = array();
-    $this->constructBaseObject();
+    $object = $this->constructBaseObject();
+    $this->constructSOMEWEIRDDATASTREAMDatastream($object);
     $object = islandora_object_load($this->pid);
     islandora_do_derivatives($object, array(
       'source_dsid' => 'OBJ',
@@ -207,7 +208,8 @@ class IslandoraDerivativesTestCase extends IslandoraWebTestCase {
   public function testNoSourceDSIDNoForce() {
     global $_islandora_derivative_test_derivative_functions;
     $_islandora_derivative_test_derivative_functions = array();
-    $this->constructBaseObject();
+    $object = $this->constructBaseObject();
+    $object = $this->constructSOMEWEIRDDATASTREAMDatastream($object);
     $object = islandora_object_load($this->pid);
     islandora_do_derivatives($object, array());
     $this->assertDatastreams($object, array(
@@ -216,6 +218,8 @@ class IslandoraDerivativesTestCase extends IslandoraWebTestCase {
       'OBJ',
       'DERIV',
       'NOSOURCE',
+      'SOMEWEIRDDATASTREAM',
+      'STANLEY',
     ));
     $this->assertEqual(3, count($_islandora_derivative_test_derivative_functions), 'Expected 3 derivative functions when there is no source_dsid, got ' . count($_islandora_derivative_test_derivative_functions) . '.');
   }
@@ -226,7 +230,8 @@ class IslandoraDerivativesTestCase extends IslandoraWebTestCase {
   public function testNoSourceDSIDForce() {
     global $_islandora_derivative_test_derivative_functions;
     $_islandora_derivative_test_derivative_functions = array();
-    $this->constructBaseObject();
+    $object = $this->constructBaseObject();
+    $this->constructSOMEWEIRDDATASTREAMDatastream($object);
     $object = islandora_object_load($this->pid);
     islandora_do_derivatives($object, array(
       'force' => TRUE,
@@ -236,6 +241,8 @@ class IslandoraDerivativesTestCase extends IslandoraWebTestCase {
       'RELS-EXT',
       'OBJ',
       'DERIV',
+      'SOMEWEIRDDATASTREAM',
+      'STANLEY',
       'NOSOURCE',
     ));
     $this->assertEqual(3, count($_islandora_derivative_test_derivative_functions), 'Expected 3 derivative functions when there is no source_dsid, got ' . count($_islandora_derivative_test_derivative_functions) . '.');
@@ -290,6 +297,24 @@ class IslandoraDerivativesTestCase extends IslandoraWebTestCase {
     $ds = $object->constructDatastream($dsid);
     $ds->label = 'Test';
     $ds->content = 'NOSOURCE';
+    $object->ingestDatastream($ds);
+    return $object;
+  }
+
+  /**
+   * Helper function to construct the SWD datastream without firing hooks.
+   *
+   * @param AbstractObject $object
+   *   An AbstractObject representing a FedoraObject.
+   *
+   * @return AbstractObject
+   *   The modified AbstractObject.
+   */
+  public function constructSOMEWEIRDDATASTREAMDatastream(AbstractObject $object) {
+    $dsid = 'SOMEWEIRDDATASTREAM';
+    $ds = $object->constructDatastream($dsid);
+    $ds->label = 'Test';
+    $ds->content = 'Omnomnom';
     $object->ingestDatastream($ds);
     return $object;
   }

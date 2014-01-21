@@ -23,7 +23,7 @@ function islandora_derivatives_test_some_cmodel_islandora_derivative() {
       'destination_dsid' => 'STANLEY',
       'weight' => '-1',
       'function' => array(
-        'islandora_derivatives_test_create_some_weird_datastream',
+        'islandora_derivatives_test_create_stanley_datastream',
       ),
     ),
     array(
@@ -81,17 +81,20 @@ function islandora_derivatives_test_create_deriv_datastream(AbstractObject $obje
 }
 
 /**
- * Stub function that used only for datastream filtering counts.
+ * Creates the STANLEY datastream for use in testing.
  *
  * @param AbstractObject $object
  *   An AbstractObject representing a Fedora object.
  * @param bool $force
  *   Whether the derivatives are being forcefully generated or not.
  */
-function islandora_derivatives_test_create_some_weird_datastream(AbstractObject $object, $force = FALSE) {
+function islandora_derivatives_test_create_stanley_datastream(AbstractObject $object, $force = FALSE) {
   global $_islandora_derivative_test_derivative_functions;
   // Add to the global that we got to this function.
   $_islandora_derivative_test_derivative_functions[] = 'islandora_derivatives_test_create_some_weird_datastream';
+  if (!isset($object['STANLEY']) || (isset($object['STANLEY']) && $force === TRUE)) {
+    islandora_derivatives_test_add_datastream($object, 'STANLEY', 'yum');
+  }
 }
 
 /**
