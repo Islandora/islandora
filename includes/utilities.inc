@@ -528,7 +528,7 @@ function islandora_display_repository_inaccessible_message() {
   $link = l($text, 'admin/islandora/configure', array('attributes' => array('title' => $text)));
   $message = t('Could not connect to the repository. Please check the settings on the !link page.',
   array('!link' => $link));
-  drupal_set_message(check_plain($message), 'error', FALSE);
+  drupal_set_message(filter_xss($message), 'error', FALSE);
 
 }
 
