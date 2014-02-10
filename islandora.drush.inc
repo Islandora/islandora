@@ -177,23 +177,25 @@ function drush_islandora_solution_pack_install_content_models() {
     $objects_to_add = array();
     foreach ($info['objects'] as $key => $candidate) {
       $object = islandora_object_load($candidate);
-      if (in_array('fedora-system:ContentModel-3.0', $object->models)) {
+      if ($object && in_array('fedora-system:ContentModel-3.0', $object->models)) {
         $objects_to_add[] = $candidate;
       }
     }
-    foreach ($objects_to_add as $object_to_add) {
-      $old_object = islandora_object_load($object_to_add->id);
-      if ($old_object) {
-        $deleted = islandora_delete_object($old_object);
-        if (!$deleted) {
-          drush_log(dt('@object did not delete.', array('@object' => $old_object->id), 'error'));
-          continue;
+    if (count($objects_to_add) > 0) {
+      foreach ($objects_to_add as $object_to_add) {
+        $old_object = islandora_object_load($object_to_add->id);
+        if ($old_object) {
+          $deleted = islandora_delete_object($old_object);
+          if (!$deleted) {
+            drush_log(dt('@object did not delete.', array('@object' => $old_object->id), 'error'));
+            continue;
+          }
         }
-      }
-      $new_object = islandora_add_object($object_to_add);
-      $verb = $deleted ? dt("Replaced") : dt("Added");
-      if ($new_object) {
-        drush_log("$verb " . $object_to_add->id . " - " . $object_to_add->label);
+        $new_object = islandora_add_object($object_to_add);
+        $verb = $deleted ? dt("Replaced") : dt("Added");
+        if ($new_object) {
+          drush_log("$verb " . $object_to_add->id . " - " . $object_to_add->label);
+        }
       }
     }
   }
