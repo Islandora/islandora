@@ -15,13 +15,12 @@ cd $HOME
 pear upgrade --force Console_Getopt
 pear upgrade --force pear
 pear upgrade-all
-pear channel-discover pear.drush.org
-pear channel-discover pear.drush.org
 pear channel-discover pear.phpqatools.org
 pear channel-discover pear.netpirates.net
 pear install pear/PHP_CodeSniffer-1.4.8
 pear install pear.phpunit.de/phpcpd
-pear install drush/drush-5.9.0
+composer global require --prefer-source drush/drush:6.x
+sudo ln -s $HOME/.composer/vendor/bin/drush /usr/local/sbin
 phpenv rehash
 drush dl --yes drupal
 cd drupal-*
