@@ -315,7 +315,8 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
    *   An array containing object information using these keys:
    *   'label' - The object label; randomized if not set.
    *   'pid' - 'namespace:pid', or just 'namespace' to generate the suffix.
-   *   'models' - An array that can contain multiple content model PIDs.
+   *   'models' - An array that can contain multiple content model PIDs, or a
+   *   string containing a single content model PID.
    *   'owner' - The object's owner. Defaults to the currently logged-in user,
    *   if available. It is recommended to set this to a value that can be found
    *   in $this->users; otherwise, this object will have to be manually deleted.
@@ -331,8 +332,7 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
    *   FALSE if the object ingest failed, or the object array if successful.
    */
   public function ingestConstructedObject(array $properties = array(), array $datastreams = array()) {
-    module_load_include('inc', 'islandora', 'includes/tuque');
-    $tuque = new IslandoraTuque();
+    $tuque = islandora_get_tuque_connection($this->admin);
     $repository = $tuque->repository;
     if (!isset($properties['pid'])) {
       $properties['pid'] = "islandora";
@@ -355,13 +355,14 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
       $object->owner = $this->loggedInUser->name;
     }
 
-    if (isset($properties['models']) && is_array($properties['models'])) {
-      foreach ($properties['models'] as $model) {
-        $object->relationships->add(FEDORA_MODEL_URI, 'hasModel', $model);
+    if (isset($properties['models'])) {
+      try {
+        $object->models = (array) $properties['models'];
       }
-    }
-    elseif (isset($properties['models']) && !is_array($properties['models'])) {
-      $this->fail(t("'models' key of properties variable is not an array. Content model(s) will not be set."), 'Islandora');
+      catch (Exception $e) {
+        $this->fail("Encountered an exception when trying to add content models to {$object->id}: $e");
+        return FALSE;
+      }
     }
 
     $repository->ingestObject($object);
@@ -440,6 +441,134 @@ QUERY;
       }
       return TRUE;
     }
+  }
+
+  /**
+   * These are a few quick helper functions to fill in a gap in the standard
+   * DrupalWebTestCase where no function exists to test for the simple existence
+   * or non-existence of an error.
+   */
+
+  /**
+   * Asserts that an error is found in $this->content.
+   *
+   * @param string $message
+   *   The message to pass on to the results.
+   * @param string $group
+   *   The group to place the result in.
+   *
+   * @return bool
+   *   TRUE on success, FALSE on failure.
+   */
+  public function assertError($message = '', $group = 'Other') {
+    if (!$message) {
+      $message = "Error found on current page when error was expected.";
+    }
+    return $this->assertRaw("<div class=\"messages error\">", $message, $group);
+  }
+
+  /**
+   * Asserts that no error is found in $this->content.
+   *
+   * @param string $message
+   *   The message to pass on to the results.
+   * @param string $group
+   *   The group to place the result in.
+   *
+   * @return bool
+   *   TRUE on success, FALSE on failure.
+   */
+  public function assertNoError($message = '', $group = 'Other') {
+    if (!$message) {
+      $message = "No error found on current page when no error was expected.";
+    }
+    return $this->assertNoRaw("<div class=\"messages error\">", $message, $group);
+  }
+
+  /**
+   * Asserts that a warning is found in $this->content.
+   *
+   * @param string $message
+   *   The message to pass on to the results.
+   * @param string $group
+   *   The group to place the result in.
+   *
+   * @return bool
+   *   TRUE on success, FALSE on failure.
+   */
+  public function assertWarning($message = '', $group = 'Other') {
+    if (!$message) {
+      $message = "Warning found on current page when warning was expected.";
+    }
+    return $this->assertRaw("<div class=\"messages warning\">", $message, $group);
+  }
+
+  /**
+   * Asserts that no warning is found in $this->content.
+   *
+   * @param string $message
+   *   The message to pass on to the results.
+   * @param string $group
+   *   The group to place the result in.
+   *
+   * @return bool
+   *   TRUE on success, FALSE on failure.
+   */
+  public function assertNoWarning($message = '', $group = 'Other') {
+    if (!$message) {
+      $message = "No warning found on current page when no warning was expected.";
+    }
+    return $this->assertNoRaw("<div class=\"messages error\">", $message, $group);
+  }
+
+  /**
+   * Makes a drupalPost() request, using the form submit button's ID.
+   *
+   * Because drupalPost() is silly and doesn't let us choose which button we'd
+   * like to select if multiple buttons have the same value, this function
+   * allows us to select whatever button we'd like based on the ID instead.
+   *
+   * This is done via the absolutely hilarious method of fudging the actual
+   * button labels that don't have the ID we want, so that the only one left
+   * with the correct label is the one with the right ID.
+   *
+   * @see DrupalWebTestCase::drupalPost()
+   *
+   * @param string $path
+   *   Location of the post form.
+   * @param array $edit
+   *   Field data in an associative array.
+   * @param string $submit
+   *   Value of the submit button whose click is to be emulated.
+   * @param string $id
+   *   ID of the submit button whose click is to be emulated.
+   * @param array $options
+   *   Options to be forwarded to url().
+   * @param array $headers
+   *   An array containing additional HTTP request headers, each formatted as
+   *   "name: value".
+   * @param null $form_html_id
+   *   (optional) HTML ID of the form to be submitted.
+   * @param null $extra_post
+   *   (optional) A string of additional data to append to the POST submission.
+   *
+   * @return bool|string
+   *   The content from the POST request's curlExec, or FALSE on fail.
+   */
+  public function drupalPostByID($path, $edit, $submit, $id, array $options = array(), array $headers = array(), $form_html_id = NULL, $extra_post = NULL) {
+    $buttons = $this->xpath("//input[@type=\"submit\" and @value=\"{$submit}\"]");
+    if (empty($buttons)) {
+      $this->fail("No buttons found on the page with value '$submit'");
+      return FALSE;
+    }
+    $i = 0;
+    foreach ($buttons as $button) {
+      if ($button['id'] !== $id) {
+        $button['value'] .= "_$i";
+        $i++;
+      }
+    }
+    return $this->drupalPost($path, $edit, $submit, $options, $headers, $form_html_id, $extra_post);
   }
 
 }
