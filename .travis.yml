@@ -17,6 +17,8 @@ env:
 before_install:
   - export ISLANDORA_DIR=$TRAVIS_BUILD_DIR
   - $TRAVIS_BUILD_DIR/tests/scripts/travis_setup.sh
+  - sudo sh $TRAVIS_BUILD_DIR/tests/scripts/adore.sh
+  - sudo sh $TRAVIS_BUILD_DIR/tests/scripts/tesseract.sh
   - cd $HOME/drupal-*
 script:
   - ant -buildfile sites/all/modules/islandora/build.xml lint
