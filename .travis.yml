@@ -13,7 +13,7 @@ env:
   global:
     # This key is unique to the Islandora/islandora repository; logging will
     # fail on forked repositories unless a new unique key is generated for them.
-    - secure: "nTv2Zb/qKlECK+xE5ahbfXI9ZZbf2ZMd796q7oPlTxUwvu6nomHnUOjJATl6tq2cj23PyJ89Jlgl5cMZ5h0QMUzYpN5hPyY6oCJxWgFamFaE3bv5E/rBd1f6WVTJW7S4UKn8Mr9R2PrX+ZxQZGVIigAfR8VfhQuP8PcuO5eMLBk="
+    - secure: "jvq6Q0Pybo+secZ2mAaxuzwUSSUeEyoRQSxvCynkIkx0eQTEGrBek0RMTZKzojSGzARoloczZ2G/ApWku27l9m8DcNaULG7KXqpjHlFy3ryn/zuJJW0P4WvlpICbUkwSXjei47/VTuJBGTm1hoYYmjX81btX3bWsqlJ5cbEivmg="
 before_install:
   - export ISLANDORA_DIR=$TRAVIS_BUILD_DIR
   - $TRAVIS_BUILD_DIR/tests/scripts/travis_setup.sh
