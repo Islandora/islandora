@@ -19,18 +19,10 @@ pear upgrade --force pear
 pear channel-discover pear.drush.org
 
 # "prefer-source" required due to SSL shenanigans on the Travis boxes...
-composer global require --prefer-source 'squizlabs/php_codesniffer=*' 'sebastian/phpcpd=*'
+composer global require --prefer-source 'squizlabs/php_codesniffer=*' 'sebastian/phpcpd=*' 'drush/drush:6.3.0'
 # Because we can't add to the PATH here and this file is used in many repos,
 # let's just throw symlinks in.
 find $HOME/.composer/vendor/bin -executable \! -type d -exec sudo ln -s {}  /usr/local/sbin/ \;
-
-# Install Drush
-git clone https://github.com/drush-ops/drush.git
-pushd drush
-git checkout 5.9.0
-chmod +x drush
-popd
-sudo ln -s $HOME/drush/drush /usr/local/sbin
 
 phpenv rehash
 drush dl --yes drupal
