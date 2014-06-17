@@ -14,13 +14,7 @@ git clone -b $CURRENT_REPO https://islandora-logger:$LOGGER_PW@github.com/Island
 cd islandora_travis_logs
 git checkout -B $CURRENT_REPO
 
-# Out with the old (anything older than a week)
-#for i in `find ./ -maxdepth 1 -type d -mtime +7 -print`
-#do
-#  rm -rf $i
-#done
-# In with the new
-#mkdir $TRAVIS_JOB_NUMBER
+# Out with the old, in with the new
 rm -rf ./*
 cp $VERBOSE_DIR/* ./
 cp $HOME/islandora_tomcat/logs/* ./
