@@ -10,7 +10,7 @@ git config --global user.email noreply@islandora.ca
 # Git business
 cd $HOME/drupal-*
 export VERBOSE_DIR=`pwd`/sites/default/files/simpletest/verbose
-git clone -b $CURRENT_REPO https://islandora-logger:$LOGGER_PW@github.com/Islandora/islandora_travis_logs.git
+git clone -b $CURRENT_REPO https://github.com/Islandora/islandora_travis_logs.git
 cd islandora_travis_logs
 git checkout -B $CURRENT_REPO
 
