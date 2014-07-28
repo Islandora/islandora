@@ -27,3 +27,5 @@ script:
   - drush test-run --uri=http://localhost:8081 Islandora
 after_failure:
   - $ISLANDORA_DIR/tests/scripts/travis_after_failure.sh
+notifications:
+  irc: "irc.freenode.org#islandora"
