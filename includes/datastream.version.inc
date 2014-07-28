@@ -289,7 +289,7 @@ function islandora_datastream_version_replace_form($form, &$form_state, Abstract
       $ext = array_merge($ext, $extensions);
     }
   }
-
+  $valid_extensions = implode(' ', $ext);
   $upload_size = min((int) ini_get('post_max_size'), (int) ini_get('upload_max_filesize'));
   return array(
     'dsid_fieldset' => array(
@@ -313,7 +313,7 @@ function islandora_datastream_version_replace_form($form, &$form_state, Abstract
         '#description' => t('Select a file to upload.<br/>Files must be less than <strong>@size MB.</strong>', array('@size' => $upload_size)),
         '#upload_location' => 'temporary://',
         '#upload_validators' => array(
-          'file_validate_extensions' => $ext,
+          'file_validate_extensions' => array($valid_extensions),
           // Assume its specified in MB.
           'file_validate_size' => array($upload_size * 1024 * 1024),
         ),
