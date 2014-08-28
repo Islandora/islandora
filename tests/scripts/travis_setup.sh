@@ -32,7 +32,7 @@ drush si minimal --db-url=mysql://drupal:drupal@localhost/drupal --yes
 sudo chmod a+w sites/default/settings.php
 echo "include_once '$HOME/.composer/vendor/autoload.php';" >> sites/default/settings.php
 sudo chmod a-w sites/default/settings.php
-drush runserver --php-cgi=$HOME/.phpenv/shims/php-cgi localhost:8081 &>/dev/null &
+drush runserver --php-cgi=$HOME/.phpenv/shims/php-cgi localhost:8081 &>/tmp/drush_webserver.log &
 ln -s $ISLANDORA_DIR sites/all/modules/islandora
 mv sites/all/modules/islandora/tests/travis.test_config.ini sites/all/modules/islandora/tests/test_config.ini
 mkdir sites/all/libraries

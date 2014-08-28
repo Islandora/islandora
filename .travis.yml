@@ -11,10 +11,6 @@ env:
     - FEDORA_VERSION="3.5"
     - FEDORA_VERSION="3.6.2"
     - FEDORA_VERSION="3.7.0"
-  global:
-    # This key is unique to the Islandora/islandora repository; logging will
-    # fail on forked repositories unless a new unique key is generated for them.
-    - secure: "nTv2Zb/qKlECK+xE5ahbfXI9ZZbf2ZMd796q7oPlTxUwvu6nomHnUOjJATl6tq2cj23PyJ89Jlgl5cMZ5h0QMUzYpN5hPyY6oCJxWgFamFaE3bv5E/rBd1f6WVTJW7S4UKn8Mr9R2PrX+ZxQZGVIigAfR8VfhQuP8PcuO5eMLBk="
 before_install:
   - export ISLANDORA_DIR=$TRAVIS_BUILD_DIR
   - $TRAVIS_BUILD_DIR/tests/scripts/travis_setup.sh
