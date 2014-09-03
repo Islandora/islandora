@@ -962,7 +962,7 @@ function makeObject($pid, $dsID) {
     return ' ';
   }
   global $user, $conf;
-  if (!fedora_repository_check_perm(OBJECTHELPER :: $OBJECT_HELPER_VIEW_FEDORA, $pid, $user)) {
+  if (!fedora_repository_check_perm(OBJECTHELPER :: $OBJECT_HELPER_VIEW_FEDORA, $pid, $user, FALSE, $dsID)) {
     drupal_access_denied();
     return;
     drupal_set_message(t("You do not have access to Fedora objects within the attempted namespace."), 'error');
@@ -1079,7 +1079,7 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
   module_load_include('inc', 'fedora_repository', 'api/fedora_item');
   global $user, $conf;
   $conf['cache'] = CACHE_DISABLED;
-  
+
   if (!fedora_available()) {
     drupal_set_message(t('The Fedora repository server is currently unavailable. Please contact the site administrator.'), 'warning', FALSE);
     return '';
@@ -1109,7 +1109,7 @@ function fedora_repository_get_items($pid = NULL, $dsId = NULL, $collection = NU
     drupal_set_message(t("Invalid dsID!"), 'error');
     return ' ';
   }
-  if (!fedora_repository_check_perm(OBJECTHELPER::$OBJECT_HELPER_VIEW_FEDORA, $pid, $user)) {
+  if (!fedora_repository_check_perm(OBJECTHELPER::$OBJECT_HELPER_VIEW_FEDORA, $pid, $user, FALSE, $dsId)) {
     if (user_access('access administration pages')) {
       drupal_set_message(t("PIDs may be added to allowed namespaces, or all namespace restrictions removed !here", array('!here' => l('here', 'admin/settings/fedora_repository'))), 'warning');
     }
@@ -1698,12 +1698,14 @@ function fedora_repository_access() {
  *   An account to check the permission on, or NULL to use the current user.
  * @param boolean $reset_cache
  *   A boolean to reset the static cache, if required in long-running processes.
+ * @param string|null $dsid
+ *   A dsid to check, or NULL to use object level check.
  *
  * @return boolean
  *   A boolean indicating if the operation should be permitted (TRUE) or denied
  *   (FALSE).
  */
-function fedora_repository_check_perm($op, $pid = NULL, $as_user = NULL, $reset_cache = FALSE) {
+function fedora_repository_check_perm($op, $pid = NULL, $as_user = NULL, $reset_cache = FALSE, $dsid = NULL) {
   static $cache = array();
 
   if ($reset_cache) {
@@ -1717,13 +1719,19 @@ function fedora_repository_check_perm($op, $pid = NULL, $as_user = NULL, $reset_
     global $user;
     $as_user = $user;
   }
-
-  // Populate the cache on a miss.
-  if (!isset($cache[$op][$pid][$as_user->uid])) {
-    $results = module_invoke_all('fedora_repository_check_perm', $op, $pid, $as_user);
-    // Nothing returned FALSE, and something returned TRUE.
-    $cache[$op][$pid][$as_user->uid] = (!in_array(FALSE, $results, TRUE) && in_array(TRUE, $results, TRUE));
+  if ($dsid) {
+    $results = module_invoke_all('fedora_repository_check_perm', $op, $pid, $as_user, $dsid);
+    return (!in_array(FALSE, $results, TRUE) && in_array(TRUE, $results, TRUE));
   }
+  else {
+    // Populate the cache on a miss.
+    if (!isset($cache[$op][$pid][$as_user->uid])) {
+      $results = module_invoke_all('fedora_repository_check_perm', $op, $pid, $as_user);
+      // Nothing returned FALSE, and something returned TRUE.
+      $cache[$op][$pid][$as_user->uid] = (!in_array(FALSE, $results, TRUE) && in_array(TRUE, $results, TRUE));
+    }
+  }
+
 
   return $cache[$op][$pid][$as_user->uid];
 }

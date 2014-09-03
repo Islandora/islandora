@@ -144,12 +144,15 @@ function hook_fedora_repository_can_ingest($collection_pid) {
  *   given by user_load or the $user global).  The (default) value of NULL will
  *   cause permissions to be evaluated for the current user (from the $user
  *   global).
+ * @param string $dsid
+ *  A string containing the Fedora object datastream ID on which the operation is to be
+ *   performed.
  *
  * @return boolean|null
  *   Either a boolean permitting (TRUE) or forbidding (FALSE) an operation, or
  *   NULL to make no assertion.
  */
-function hook_fedora_repository_check_perm($op, $pid = NULL, $as_user = NULL) {
+function hook_fedora_repository_check_perm($op, $pid = NULL, $as_user = NULL, $dsid = NULL) {
   return NULL;
 }
 
