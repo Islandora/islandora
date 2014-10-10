@@ -1372,7 +1372,33 @@ function islandora_islandora_required_objects(IslandoraTuque $connection) {
   $datastream = $root_collection->constructDatastream('TN', 'M');
   $datastream->label = 'Thumbnail';
   $datastream->mimetype = 'image/png';
-  $datastream->setContentFromFile("$module_path/images/folder.png", FALSE);
+
+  // randomly pick a colour for the folder
+  $randomColour = mt_rand(1,7);
+  switch ($randomColour) {
+    case 1:
+      $datastream->setContentFromFile("$module_path/images/folder.png", FALSE);
+      break;
+    case 2:
+      $datastream->setContentFromFile("$module_path/images/redfolder.png", FALSE);
+      break;
+    case 3:
+      $datastream->setContentFromFile("$module_path/images/bluefolder.png", FALSE);
+      break;
+    case 4:
+      $datastream->setContentFromFile("$module_path/images/yellowfolder.png", FALSE);
+      break;
+    case 5:
+      $datastream->setContentFromFile("$module_path/images/greenfolder.png", FALSE);
+      break;
+    case 6:
+      $datastream->setContentFromFile("$module_path/images/purplefolder.png", FALSE);
+      break;
+    case 7:
+      $datastream->setContentFromFile("$module_path/images/tealfolder.png", FALSE);
+      break;
+  }
+
   $root_collection->ingestDatastream($datastream);
   return array(
     'islandora' => array(
