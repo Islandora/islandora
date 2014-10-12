@@ -650,53 +650,6 @@ function islandora_system_settings_form_default_value($name, $default_value, arr
 }
 
 /**
- * Checks that the given/current account has all the given permissions.
- *
- * @param array $perms
- *   The permissions to check.
- * @param mixed $account
- *   (optional) The account to check, if not given use currently logged in user.
- *
- * @return bool
- *   TRUE if the account has all the given permissions, FALSE otherwise.
- */
-function islandora_user_access_all(array $perms, $account = NULL) {
-  $message = islandora_deprecated('7.x-1.2', 'Roll your own code or use islandora_user_access().');
-  trigger_error(filter_xss($message), E_USER_DEPRECATED);
-
-  foreach ($perms as $perm) {
-    if (!user_access($perm, $account)) {
-      return FALSE;
-    }
-  }
-  return TRUE;
-}
-
-/**
- * Checks that the given/current account has at one of the given permissions.
- *
- * @param array $perms
- *   The permissions to check.
- * @param mixed $account
- *   (optional) The account to check, if not given use currently logged in user.
- *
- * @return bool
- *   TRUE if the account has at least one of the given permissions, FALSE
- *   otherwise.
- */
-function islandora_user_access_any(array $perms, $account = NULL) {
-  $message = islandora_deprecated('7.x-1.2', 'Roll your own code or use islandora_user_access().');
-  trigger_error(filter_xss($message), E_USER_DEPRECATED);
-
-  foreach ($perms as $perm) {
-    if (user_access($perm, $account)) {
-      return TRUE;
-    }
-  }
-  return FALSE;
-}
-
-/**
  * Gets the list of allowed namespaces as defined by 'islandora_pids_allowed'.
  *
  * @return array

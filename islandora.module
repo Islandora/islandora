@@ -818,34 +818,6 @@ function islandora_object_access_callback($perm, $object = NULL) {
 /**
  * Checks whether the user can access the given object and datastream.
  *
- * Checks for object existance, accessiblitly, namespace permissions,
- * and user permissions
- *
- * @param string $perm
- *   The user permission to test for.
- * @param AbstractObject $object
- *   The object to test, if NULL given the object doesn't exist or is
- *   inaccessible.
- * @param AbstractDatastream $datastream
- *   The datastream to test, if NULL given the datastream doesn't exist
- *   or is inaccessible.
- * @param StdObject $account
- *   The account to test permissions as or NULL for current user.
- *
- * @return bool
- *   TRUE if the user is allowed to access this object, FALSE otherwise.
- */
-function islandora_object_datastream_access_callback($perm, $object = NULL, $datastream = NULL, $account = NULL) {
-  module_load_include('inc', 'islandora', 'includes/utilities');
-  $message = islandora_deprecated('7.x-1.2', 'Use islandora_datastream_access().');
-  trigger_error(filter_xss($message), E_USER_DEPRECATED);
-
-  return islandora_datastream_access($perm, $datastream, $account);
-}
-
-/**
- * Checks whether the user can access the given object and datastream.
- *
  * This function will validate and use a token if present in the GET parameters.
  *
  * Checks for object existance, accessibility, namespace permissions,
