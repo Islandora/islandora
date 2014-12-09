@@ -11,6 +11,7 @@ env:
     - FEDORA_VERSION="3.5"
     - FEDORA_VERSION="3.6.2"
     - FEDORA_VERSION="3.7.0"
+    - FEDORA_VERSION="3.8.0"
   global:
     # This key is unique to the Islandora/islandora repository; logging will
     # fail on forked repositories unless a new unique key is generated for them.
