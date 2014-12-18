@@ -680,8 +680,8 @@ function islandora_print_object(AbstractObject $object) {
  *   FALSE if 'islandora_show_print_option' is not selected in islandora
  *   configuraton.
  */
-function islandora_print_object_access($one, $two) {
-  $access = islandora_object_access($one, $two);
+function islandora_print_object_access($op, $object) {
+  $access = islandora_object_access($op, $object);
   if ($access && variable_get('islandora_show_print_option', FALSE)) {
     return $access;
   }
