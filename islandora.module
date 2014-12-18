@@ -147,7 +147,7 @@ function islandora_menu() {
     'page callback' => 'islandora_printer_object',
     'page arguments' => array(2),
     'type' => MENU_LOCAL_TASK,
-    'access callback' => 'islandora_object_access',
+    'access callback' => 'islandora_print_object_access',
     'access arguments' => array(ISLANDORA_VIEW_OBJECTS, 2),
   );
   $items['islandora/object/%islandora_object/print'] = array(
@@ -663,6 +663,31 @@ function islandora_print_object(AbstractObject $object) {
   return theme('islandora_object_print', array('object' => $object));
 }
 
+/** 
+ * View print tab access.
+ *
+ * Configurable option in islandora configuration.
+ *
+ * @param string $op
+ *   String identifying an operation to check. Should correspond to a
+ *   permission declared via hook_permission().
+ * @param AbstractObject $object
+ *   An object to check for permissions.
+ *
+ * @return bool
+ *   TRUE if at least one implementation of hook_islandora_object_access()
+ *   returned TRUE, and no implementation return FALSE; FALSE otherwise, or
+ *   FALSE if 'islandora_show_print_option' is not selected in islandora
+ *   configuraton.
+ */
+function islandora_print_object_access($one, $two) {
+  $access = islandora_object_access($one, $two);
+  if ($access && variable_get('islandora_show_print_option', FALSE)) {
+    return $access;
+  }
+  return FALSE;
+}
+
 /**
  * Implements hook_forms().
  */
@@ -1070,6 +1095,7 @@ function islandora_view_object(AbstractObject $object) {
 function islandora_printer_object(AbstractObject $object) {
   $output = array();
   $temp_arr = array();
+
   // Dispatch print hook.
   foreach (islandora_build_hook_list(ISLANDORA_PRINT_HOOK, $object->models) as $hook) {
     $temp = module_invoke_all($hook, $object);

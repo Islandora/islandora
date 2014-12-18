@@ -68,6 +68,12 @@ function islandora_repository_admin(array $form, array &$form_state) {
             useful if derivatives are to be created by an external service.'),
           '#default_value' => variable_get('islandora_defer_derivatives_on_ingest', FALSE),
         ),
+        'islandora_show_print_option' => array(
+          '#type' => 'checkbox',
+          '#title' => t('Show print option on objects'),
+          '#description' => t('Displays an extra print tab, allowing an object to be printed'),
+          '#default_value' => variable_get('islandora_show_print_option', FALSE),
+        ),
       ),
       'islandora_namespace' => array(
         '#type' => 'fieldset',
