@@ -1819,13 +1819,13 @@ function islandora_form_simpletest_test_form_alter(array &$form) {
   $filter_status = is_writable($filter_path);
   if ($filter_status) {
     $filter_status_message = theme_image(array('path' => 'misc/watchdog-ok.png', 'attributes' => array())) . " ";
-    $filter_status_message .= t("Drupal filter at <b>!filter_path</b> is writable by the server.", array(
+    $filter_status_message .= t("Drupal filter at <strong>!filter_path</strong> is writable by the server.", array(
       '!filter_path' => $filter_path,
     ));
   }
   else {
     $filter_status_message = theme_image(array('path' => 'misc/watchdog-error.png', 'attributes' => array())) . " ";
-    $filter_status_message .= t("Drupal filter at <b>!filter_path</b> is not writable by the server. Please make sure your webserver has permission to write to the Drupal filter. If the path given is incorrect, you will need to change it in your server's test config file, located in the Islandora module's 'tests' folder as test_config.ini or default.test_config.ini.", array(
+    $filter_status_message .= t("Drupal filter at <strong>!filter_path</strong> is not writable by the server. Please make sure your webserver has permission to write to the Drupal filter. If the path given is incorrect, you will need to change it in your server's test config file, located in the Islandora module's 'tests' folder as test_config.ini or default.test_config.ini.", array(
       '!filter_path' => $filter_path,
     ));
   }

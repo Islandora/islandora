@@ -74,12 +74,6 @@ function islandora_repository_admin(array $form, array &$form_state) {
           '#description' => t('Displays an extra print tab, allowing an object to be printed'),
           '#default_value' => variable_get('islandora_show_print_option', FALSE),
         ),
-        'islandora_render_drupal_breadcrumbs' => array(
-          '#type' => 'checkbox',
-          '#title' => t('Render Drupal breadcrumbs'),
-          '#description' => t('Larger sites may experience a notable performance improvement when disabled due to how breadcrumbs are constructed.'),
-          '#default_value' => variable_get('islandora_render_drupal_breadcrumbs', TRUE),
-        ),
       ),
       'islandora_namespace' => array(
         '#type' => 'fieldset',
@@ -93,7 +87,7 @@ function islandora_repository_admin(array $form, array &$form_state) {
         'islandora_pids_allowed' => array(
           '#type' => 'textarea',
           '#title' => t('PID namespaces allowed in this Drupal install'),
-          '#description' => t('A list of PID namespaces, separated by spaces, that users are permitted to access from this Drupal installation. <br /> This could be more than a simple namespace, e.g. <b>demo:mydemos</b>. <br /> The namespace <b>islandora:</b> is reserved, and is always allowed.'),
+          '#description' => t('A list of PID namespaces, separated by spaces, that users are permitted to access from this Drupal installation. <br /> This could be more than a simple namespace, e.g. <strong>demo:mydemos</strong>. <br /> The namespace <strong>islandora:</strong> is reserved, and is always allowed.'),
           '#default_value' => variable_get('islandora_pids_allowed', 'default: demo: changeme: ilives: islandora-book: books: newspapers: '),
           '#states' => array(
             'invisible' => array(
