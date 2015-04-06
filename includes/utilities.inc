@@ -86,16 +86,16 @@ function islandora_temp_file_entry($file_uri, $mime = NULL) {
 function islandora_control_group_to_human_readable($control_group) {
   switch ($control_group) {
     case 'M':
-      return '<b>M</b>anaged';
+      return '<strong>M</strong>anaged';
 
     case 'X':
-      return 'Inline <b>X</b>ML';
+      return 'Inline <strong>X</strong>ML';
 
     case 'R':
-      return '<b>R</b>edirect';
+      return '<strong>R</strong>edirect';
 
     case 'E':
-      return '<b>E</b>xternally Referenced';
+      return '<strong>E</strong>xternally Referenced';
 
     default:
       return $control_group;

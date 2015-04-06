@@ -245,7 +245,7 @@ function hook_cmodel_pid_islandora_object_ingested(AbstractObject $object) {
  * modifications, where as manipulating an object's datstreams are not.
  *
  * @param AbstractObject $object
- *   The object that was modified.
+ *   The object that was ingested.
  *
  * @todo We should also include what changes were made in a additional
  *   parameter.
@@ -254,7 +254,7 @@ function hook_islandora_object_modified(AbstractObject $object) {
 }
 
 /**
- * Notify modules that the given object was modified.
+ * Notify modules that the given object was ingested.
  *
  * @see hook_islandora_object_modified()
  */
@@ -361,22 +361,9 @@ function hook_cmodel_pid_islandora_datastream_purged(AbstractObject $object, $ds
  * @param AbstractObject $object
  *   The object to check.
  * @param string $dsid
- *   A string indicating the datastream for which to get the registry.
- *
- * @return array
- *   An array of associative arrays, each mapping:
- *   - name: A string containg a human-readable name for the entry.
- *   - url: A string containing the URL to which to the user will be routed.
+ *   todo
  */
 function hook_islandora_edit_datastream_registry($object, $dsid) {
-  $routes = array();
-
-  $routes[] = array(
-    'name' => t('My Awesome Edit Route'),
-    'url' => "go/edit/here/{$object->id}/{$dsid}",
-  );
-
-  return $routes;
 }
 
 /**
@@ -623,7 +610,12 @@ function hook_islandora_overview_object_alter(AbstractObject &$object, &$output)
  * Content model specific.
  */
 function hook_cmodel_pid_islandora_overview_object_alter(AbstractObject &$object, &$output) {
-  $output = $output . drupal_render(drupal_get_form('some_form', $object));
+  $view = views_embed_view('usage_collection');
+  $form['islandora_manage_overview_object'] = array(
+    '#type' => 'item',
+    '#markup' => $view,
+  );
+  $output = $output . $form . drupal_render(drupal_get_form('some_form', $object));
 }
 
 /**

@@ -43,7 +43,7 @@ function islandora_add_datastream_form(array $form, array &$form_state, Abstract
       '#collapsed' => FALSE,
       'dsid' => array(
         '#title' => 'Datastream ID',
-        '#description' => t("An ID for this stream that is unique to this object. Must start with a letter and contain only alphanumeric characters, dashes and underscores. The following datastreams are defined by this content model but don't currently exist: <b>@unused_dsids</b>.", array('@unused_dsids' => $unused_datastreams)),
+        '#description' => t("An ID for this stream that is unique to this object. Must start with a letter and contain only alphanumeric characters, dashes and underscores. The following datastreams are defined by this content model but don't currently exist: <strong>@unused_dsids</strong>.", array('@unused_dsids' => $unused_datastreams)),
         '#type' => 'textfield',
         '#size' => 64,
         '#maxlength' => 64,
