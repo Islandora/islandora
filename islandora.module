@@ -59,10 +59,13 @@ define('ISLANDORA_DATASTREAM_MODIFIED_HOOK', 'islandora_datastream_modified');
 define('ISLANDORA_DATASTREAM_PURGED_HOOK', 'islandora_datastream_purged');
 define('ISLANDORA_INGEST_STEP_HOOK', 'islandora_ingest_steps');
 define('ISLANDORA_DERIVATIVE_CREATION_HOOK', 'islandora_derivative');
+<<<<<<< HEAD
 // ISLANDORA_DERVIATIVE_CREATION_HOOK is deprecated. Should be removed
 // as of 7.x-1.5.
 define('ISLANDORA_DERVIATIVE_CREATION_HOOK', ISLANDORA_DERIVATIVE_CREATION_HOOK);
 
+=======
+>>>>>>> 4b477a3... Fixing derivatives hook spelling error
 
 // Autocomplete paths.
 define('ISLANDORA_CONTENT_MODELS_AUTOCOMPLETE', 'islandora/autocomplete/content-models');

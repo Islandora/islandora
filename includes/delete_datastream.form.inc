@@ -19,44 +19,15 @@
  *   The drupal form definition.
  */
 function islandora_delete_datastream_form(array $form, array &$form_state, AbstractDatastream $datastream) {
-  // XXX: Stashed version of datastream is deprecated... Use object and
-  // datastream IDs from 'datastream_info' to acquire.
   $form_state['datastream'] = $datastream;
-
-  $form_state['datastream_info'] = array(
-    'object_id' => $datastream->parent->id,
-    'datastream_id' => $datastream->id,
-  );
   $object = $datastream->parent;
   $dsid = $datastream->id;
-  $dsids = array_merge(array($dsid), islandora_datastream_to_purge($object, $dsid));
-  $dsids = array_unique($dsids);
+  $derivs = implode(', ', islandora_datastream_to_purge($object, $dsid));
   $form['delete_derivatives'] = array(
     '#title' => t('Delete Derivatives'),
     '#type' => 'checkbox',
     '#default_value' => 0,
-    '#description' => t('Derivatives can be regenerated at a later time.'),
-  );
-  $form['base_info'] = array(
-    '#type' => 'item',
-    '#title' => t('Datastream to be purged'),
-    '#markup' => $dsid,
-    '#states' => array(
-      'invisible' => array(
-        ':input[name="delete_derivatives"]' => array('checked' => TRUE),
-      ),
-    ),
-  );
-  $form['derivative_info'] = array(
-    '#type' => 'item',
-    '#title' => t('Datastream(s) to be purged'),
-    '#description' => t('Including detectable derivatives.'),
-    '#markup' => implode(', ', $dsids),
-    '#states' => array(
-      'visible' => array(
-        ':input[name="delete_derivatives"]' => array('checked' => TRUE),
-      ),
-    ),
+    '#description' => t('Derivatives can be regenerated at a later time. <p><strong>Datastream(s) to be purged: </strong></p>@dsid, @derivs', array('@dsid' => $datastream->id, '@derivs' => $derivs)),
   );
   return confirm_form($form,
     t('Are you sure you want to delete the %dsid datastream?', array('%dsid' => $datastream->id)),
@@ -116,10 +87,9 @@ function islandora_datastream_derivatives_purged(AbstractObject $object, $dsid) 
  *   The Drupal form state.
  */
 function islandora_delete_datastream_form_submit(array $form, array &$form_state) {
-  $object = islandora_object_load($form_state['datastream_info']['object_id']);
-  $datastream_id = $form_state['datastream_info']['datastream_id'];
-  $datastream = $object[$datastream_id];
-
+  $datastream = $form_state['datastream'];
+  $datastream_id = $datastream->id;
+  $object = $datastream->parent;
   $deleted = FALSE;
   if ($form_state['values']['delete_derivatives']) {
     islandora_datastream_derivatives_purged($object, $datastream_id);
