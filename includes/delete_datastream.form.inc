@@ -19,22 +19,21 @@
  *   The drupal form definition.
  */
 function islandora_delete_datastream_form(array $form, array &$form_state, AbstractDatastream $datastream) {
+  // XXX: Stashed version of datastream is deprecated... Use object and
+  // datastream IDs from 'datastream_info' to acquire.
   $form_state['datastream'] = $datastream;
-<<<<<<< HEAD
   $form_state['datastream_info'] = array(
     'object_id' => $datastream->parent->id,
     'datastream_id' => $datastream->id,
   );
-=======
->>>>>>> 4b477a3... Fixing derivatives hook spelling error
   $object = $datastream->parent;
   $dsid = $datastream->id;
-  $derivs = implode(', ', islandora_datastream_to_purge($object, $dsid));
+  $dsids = array_merge(array($dsid), islandora_datastream_to_purge($object, $dsid));
+  $dsids = array_unique($dsids);
   $form['delete_derivatives'] = array(
     '#title' => t('Delete Derivatives'),
     '#type' => 'checkbox',
     '#default_value' => 0,
-<<<<<<< HEAD
         '#description' => t('Derivatives can be regenerated at a later time.'),
   );
   $form['base_info'] = array(
@@ -57,9 +56,6 @@ function islandora_delete_datastream_form(array $form, array &$form_state, Abstr
         ':input[name="delete_derivatives"]' => array('checked' => TRUE),
       ),
     ),
-=======
-    '#description' => t('Derivatives can be regenerated at a later time. <p><strong>Datastream(s) to be purged: </strong></p>@dsid, @derivs', array('@dsid' => $datastream->id, '@derivs' => $derivs)),
->>>>>>> 4b477a3... Fixing derivatives hook spelling error
   );
   return confirm_form($form,
     t('Are you sure you want to delete the %dsid datastream?', array('%dsid' => $datastream->id)),
@@ -119,15 +115,9 @@ function islandora_datastream_derivatives_purged(AbstractObject $object, $dsid) 
  *   The Drupal form state.
  */
 function islandora_delete_datastream_form_submit(array $form, array &$form_state) {
-<<<<<<< HEAD
   $object = islandora_object_load($form_state['datastream_info']['object_id']);
   $datastream_id = $form_state['datastream_info']['datastream_id'];
   $datastream = $object[$datastream_id];
-=======
-  $datastream = $form_state['datastream'];
-  $datastream_id = $datastream->id;
-  $object = $datastream->parent;
->>>>>>> 4b477a3... Fixing derivatives hook spelling error
   $deleted = FALSE;
   if ($form_state['values']['delete_derivatives']) {
     islandora_datastream_derivatives_purged($object, $datastream_id);
