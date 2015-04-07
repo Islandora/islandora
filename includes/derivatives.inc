@@ -83,7 +83,7 @@ function islandora_do_derivatives(AbstractObject $object, array $options) {
   $options += array(
     'force' => FALSE,
   );
-  $hooks = islandora_invoke_hook_list(ISLANDORA_DERVIATIVE_CREATION_HOOK, $object->models, array($object));
+  $hooks = islandora_invoke_hook_list(ISLANDORA_DERIVATIVE_CREATION_HOOK, $object->models, array($object));
   uasort($hooks, 'drupal_sort_weight');
   $results = array();
   $hooks = islandora_filter_derivatives($hooks, $options, $object);
@@ -176,7 +176,7 @@ function islandora_do_batch_derivatives(AbstractObject $object, array $options) 
   $options += array(
     'force' => FALSE,
   );
-  $hooks = islandora_invoke_hook_list(ISLANDORA_DERVIATIVE_CREATION_HOOK, $object->models, array($object));
+  $hooks = islandora_invoke_hook_list(ISLANDORA_DERIVATIVE_CREATION_HOOK, $object->models, array($object));
   uasort($hooks, 'drupal_sort_weight');
   $operations = array();
 
