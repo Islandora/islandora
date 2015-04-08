@@ -61,7 +61,7 @@ define('ISLANDORA_INGEST_STEP_HOOK', 'islandora_ingest_steps');
 define('ISLANDORA_DERIVATIVE_CREATION_HOOK', 'islandora_derivative');
 // ISLANDORA_DERVIATIVE_CREATION_HOOK is deprecated. Should be removed
 // as of 7.x-1.5.
-define('ISLANDORA_DERVIATIVE_CREATION_HOOK', 'ISLANDORA_DERIVATIVE_CREATION_HOOK');
+define('ISLANDORA_DERVIATIVE_CREATION_HOOK', ISLANDORA_DERIVATIVE_CREATION_HOOK);
 
 
 // Autocomplete paths.
