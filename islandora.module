@@ -58,6 +58,8 @@ define('ISLANDORA_DATASTREAM_INGESTED_HOOK', 'islandora_datastream_ingested');
 define('ISLANDORA_DATASTREAM_MODIFIED_HOOK', 'islandora_datastream_modified');
 define('ISLANDORA_DATASTREAM_PURGED_HOOK', 'islandora_datastream_purged');
 define('ISLANDORA_INGEST_STEP_HOOK', 'islandora_ingest_steps');
+// ISLANDORA_DERVIATIVE_CREATION_HOOK is depricated. Should be removed after next release.
+define('ISLANDORA_DERVIATIVE_CREATION_HOOK', 'islandora_derivative');
 define('ISLANDORA_DERIVATIVE_CREATION_HOOK', 'islandora_derivative');
 
 // Autocomplete paths.
