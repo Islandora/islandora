@@ -60,14 +60,21 @@ define('ISLANDORA_DATASTREAM_PURGED_HOOK', 'islandora_datastream_purged');
 define('ISLANDORA_INGEST_STEP_HOOK', 'islandora_ingest_steps');
 define('ISLANDORA_DERIVATIVE_CREATION_HOOK', 'islandora_derivative');
 <<<<<<< HEAD
+<<<<<<< HEAD
 // The "ISLANDORA_DERVIATIVE_CREATION_HOOK" constant has deprecated as of
 // 7.x-1.5, and should be removed after the next release.
 =======
 // ISLANDORA_DERVIATIVE_CREATION_HOOK is deprecated. Should be removed
 // as of 7.x-1.5.
 >>>>>>> parent of a7a98a1... Adding changes.
+=======
+// ISLANDORA_DERVIATIVE_CREATION_HOOK is deprecated. Should be removed
+// as of 7.x-1.5.
+>>>>>>> parent of 62860db... Adding changes.
 define('ISLANDORA_DERVIATIVE_CREATION_HOOK', ISLANDORA_DERIVATIVE_CREATION_HOOK);
 
+=======
+>>>>>>> 4b477a3... Fixing derivatives hook spelling error
 
 // Autocomplete paths.
 define('ISLANDORA_CONTENT_MODELS_AUTOCOMPLETE', 'islandora/autocomplete/content-models');
