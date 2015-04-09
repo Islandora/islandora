@@ -22,7 +22,6 @@ function islandora_delete_datastream_form(array $form, array &$form_state, Abstr
   // XXX: Stashed version of datastream is deprecated... Use object and
   // datastream IDs from 'datastream_info' to acquire.
   $form_state['datastream'] = $datastream;
-
   $form_state['datastream_info'] = array(
     'object_id' => $datastream->parent->id,
     'datastream_id' => $datastream->id,
@@ -32,10 +31,10 @@ function islandora_delete_datastream_form(array $form, array &$form_state, Abstr
   $dsids = array_merge(array($dsid), islandora_datastream_to_purge($object, $dsid));
   $dsids = array_unique($dsids);
   $form['delete_derivatives'] = array(
-    '#title' => t('Delete Derviatives'),
+    '#title' => t('Delete Derivatives'),
     '#type' => 'checkbox',
     '#default_value' => 0,
-    '#description' => t('Derivatives can be regenerated at a later time.'),
+        '#description' => t('Derivatives can be regenerated at a later time.'),
   );
   $form['base_info'] = array(
     '#type' => 'item',
@@ -72,7 +71,7 @@ function islandora_delete_datastream_form(array $form, array &$form_state, Abstr
  */
 function islandora_datastream_to_purge(AbstractObject $object, $dsid) {
   module_load_include('inc', 'islandora', 'includes/utilities');
-  $hooks = islandora_invoke_hook_list(ISLANDORA_DERVIATIVE_CREATION_HOOK, $object->models, array($object));
+  $hooks = islandora_invoke_hook_list(ISLANDORA_DERIVATIVE_CREATION_HOOK, $object->models, array($object));
   $hook_filter = function ($hook_def) use ($dsid) {
     return isset($hook_def['source_dsid']) && isset($hook_def['destination_dsid']) ?
       $hook_def['source_dsid'] == $dsid :
@@ -119,7 +118,6 @@ function islandora_delete_datastream_form_submit(array $form, array &$form_state
   $object = islandora_object_load($form_state['datastream_info']['object_id']);
   $datastream_id = $form_state['datastream_info']['datastream_id'];
   $datastream = $object[$datastream_id];
-
   $deleted = FALSE;
   if ($form_state['values']['delete_derivatives']) {
     islandora_datastream_derivatives_purged($object, $datastream_id);

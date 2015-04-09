@@ -58,7 +58,11 @@ define('ISLANDORA_DATASTREAM_INGESTED_HOOK', 'islandora_datastream_ingested');
 define('ISLANDORA_DATASTREAM_MODIFIED_HOOK', 'islandora_datastream_modified');
 define('ISLANDORA_DATASTREAM_PURGED_HOOK', 'islandora_datastream_purged');
 define('ISLANDORA_INGEST_STEP_HOOK', 'islandora_ingest_steps');
-define('ISLANDORA_DERVIATIVE_CREATION_HOOK', 'islandora_derivative');
+define('ISLANDORA_DERIVATIVE_CREATION_HOOK', 'islandora_derivative');
+// The "ISLANDORA_DERVIATIVE_CREATION_HOOK" constant has deprecated as of
+// 7.x-1.5, and should be removed after the next release.
+define('ISLANDORA_DERVIATIVE_CREATION_HOOK', ISLANDORA_DERIVATIVE_CREATION_HOOK);
+
 
 // Autocomplete paths.
 define('ISLANDORA_CONTENT_MODELS_AUTOCOMPLETE', 'islandora/autocomplete/content-models');
@@ -1971,7 +1975,7 @@ function islandora_islandora_datastream_access($op, AbstractDatastream $datastre
     module_load_include('inc', 'islandora', 'includes/derivatives');
     $applicable_hook = FALSE;
     $object = $datastream->parent;
-    $hooks = islandora_invoke_hook_list(ISLANDORA_DERVIATIVE_CREATION_HOOK, $object->models, array($object));
+    $hooks = islandora_invoke_hook_list(ISLANDORA_DERIVATIVE_CREATION_HOOK, $object->models, array($object));
     $hooks = islandora_filter_derivatives($hooks, array('force' => TRUE), $object);
     foreach ($hooks as $hook) {
       if (isset($hook['destination_dsid']) && $hook['destination_dsid'] == $datastream->id &&
