@@ -359,4 +359,36 @@ QUERY;
     return ($object instanceof FedoraObject);
   }
 
+  /**
+   * Asserts that the given PID represents a Fedora object.
+   *
+   * @param $pid
+   *   The PID of the object.
+   *
+   * @return bool
+   *   TRUE if the object exists in the repository; FALSE otherwise.
+   */
+  public function assertObjectExists($pid) {
+    $object = islandora_object_load($pid);
+    $exists = $this->assertFedoraObject($pid);
+    $this->addResult($exists, "Object $pid exists in the repository.");
+    return $exists;
+  }
+
+  /**
+   * Asserts that the given PID does not represent a Fedora object.
+   *
+   * @param $pid
+   *   The PID of the object.
+   *
+   * @return bool
+   *   TRUE if the object does not exist in the repository, or FALSE otherwise.
+   */
+  public function assertNoObjectExists($pid) {
+    $object = islandora_object_load($pid);
+    $exists = $this->assertFedoraObject($pid);
+    $this->addResult(!$exists, "Object $pid does not exist in the repository.");
+    return !$exists;
+  }
+
 }
