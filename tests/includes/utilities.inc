@@ -362,7 +362,7 @@ QUERY;
   /**
    * Asserts that the given PID represents a Fedora object.
    *
-   * @param $pid
+   * @param string $pid
    *   The PID of the object.
    *
    * @return bool
@@ -378,7 +378,7 @@ QUERY;
   /**
    * Asserts that the given PID does not represent a Fedora object.
    *
-   * @param $pid
+   * @param string $pid
    *   The PID of the object.
    *
    * @return bool
