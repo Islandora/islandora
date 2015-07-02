@@ -370,7 +370,7 @@ QUERY;
    */
   public function assertObjectExists($pid) {
     $object = islandora_object_load($pid);
-    $exists = $this->assertFedoraObject($pid);
+    $exists = $this->assertFedoraObject($object);
     $this->addResult($exists, "Object $pid exists in the repository.");
     return $exists;
   }
@@ -386,7 +386,7 @@ QUERY;
    */
   public function assertNoObjectExists($pid) {
     $object = islandora_object_load($pid);
-    $exists = $this->assertFedoraObject($pid);
+    $exists = $this->assertFedoraObject($object);
     $this->addResult(!$exists, "Object $pid does not exist in the repository.");
     return !$exists;
   }
