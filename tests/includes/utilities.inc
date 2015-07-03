@@ -112,7 +112,7 @@ class IslandoraTestUtilities extends IslandoraTestUtilityClass {
    *   TRUE on success, FALSE on fail.
    */
   public function assertDatastreams($object, array $datastreams) {
-    if (self::assertFedoraObject($object)) {
+    if ($object = islandora_object_load($object)) {
       $missing_datastreams = array_diff_key(array_flip($datastreams), $object->repository->api->a->listDatastreams($object->id));
 
       if (!empty($missing_datastreams)) {
@@ -134,7 +134,7 @@ class IslandoraTestUtilities extends IslandoraTestUtilityClass {
    *   An array of datastreams to confirm not present.
    */
   public function assertNoDatastreams($object, array $datastreams) {
-    if (self::assertFedoraObject($object, FALSE)) {
+    if ($object = islandora_object_load($object)) {
       $this->addResult("Failed to check the datastreams on the object; the object could not be loaded.");
       return;
     }
@@ -166,7 +166,7 @@ class IslandoraTestUtilities extends IslandoraTestUtilityClass {
    *   for examples.
    */
   public function validateDatastreams($object, array $datastreams) {
-    if (self::assertFedoraObject($object, FALSE)) {
+    if ($object = islandora_object_load($object)) {
       $this->addResult(FALSE, "Datastream validation failed; Object passed in is invalid.", 'Islandora');
       return;
     }
@@ -340,36 +340,5 @@ QUERY;
       }
     }
     return $return_value;
-  }
-
-  /**
-   * Asserts a Fedora object from an object or PID, and loads it if possible.
-   *
-   * @param FedoraObject|string $object
-   *   The object to assess, or a string to use as a PID.
-   * @param bool $exists
-   *   Whether or not the object should exist in the repository, according to
-   *   our assertion. Defaults to TRUE.
-   *
-   * @return FedoraObject|bool
-   *   The object in question if it was a FedoraObject or loaded into one, or
-   *   FALSE otherwise.
-   */
-  public static function assertFedoraObject($object, $exists = TRUE) {
-    if ($object instanceof FedoraObject) {
-      $this->addResult($exists, "Object loaded from $object->id is a Fedora repository object.");
-      return $object;
-    }
-    elseif (is_string($object)) {
-      $loaded_object = islandora_object_load($object);
-      if ($loaded_object instanceof FedoraObject) {
-        $this->addResult($exists, "Successfully loaded object $object from the Fedora repository.");
-        return $loaded_object;
-      }
-      $this->addResult($exists, "Object identified by $object was not found in the repository.");
-      return FALSE;
-    }
-    $this->addResult($exists, "Object passed in was not found in the repository.");
-    return FALSE;
   }
 }
