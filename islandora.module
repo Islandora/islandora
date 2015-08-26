@@ -52,6 +52,7 @@ define('ISLANDORA_UPDATE_RELATED_OBJECTS_PROPERTIES_HOOK', 'islandora_update_rel
 define('ISLANDORA_METADATA_OBJECT_ALTER', 'islandora_metadata_object');
 define('ISLANDORA_METADATA_OBJECT_DESCRIPTION_ALTER', 'islandora_metadata_object_description');
 define('ISLANDORA_BREADCRUMB_FILTER_PREDICATE_HOOK', 'islandora_get_breadcrumb_query_predicates');
+define('ISLANDORA_OBJECTS_DISPLAY_HOOK', 'islandora_objects_object_results');
 
 // @todo Add Documentation.
 define('ISLANDORA_OBJECT_INGESTED_HOOK', 'islandora_object_ingested');

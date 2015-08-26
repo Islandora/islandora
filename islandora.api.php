@@ -830,3 +830,31 @@ function hook_islandora_get_breadcrumb_query_predicates() {
     'someotherpredicate',
   );
 }
+
+/**
+ * Allows for the alteration of object arrays for the islandora_objects theme.
+ *
+ * The islandora_objects theme is used to render a view for multiple objects on
+ * a page, such as when viewing the objects in a collection. This hook is called
+ * on each object that is added to the islandora_objects array.
+ *
+ * Each object array contains the following:
+ *
+ * 'label' - the object label.
+ * 'class' - the class to add to the object's div on the page.
+ * 'link' - a link to the object, passed through l().
+ * 'thumb' - a link to the object as a thumbnail, passed through l().
+ * 'description' - the object description.
+ *
+ * @param array $object_array
+ *   The object array to be added.
+ * @param array $object_info
+ *   An associative array containing two keys: 'pid' for the object's PID, and
+ *   'object', which either contains the loaded object that the $object_array
+ *   was generated from, or FALSE if it was unable to be loaded.
+ */
+function hook_islandora_objects_object_results_alter(&$object_array, $object_info) {
+  if (!$object_info['object']) {
+    $object_array['description'] = t('The object could not be loaded.');
+  }
+}
