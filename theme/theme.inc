@@ -283,7 +283,7 @@ function islandora_objects_object_mapper($object_id) {
         $description = $dc['dc:description']['value'];
       }
     }
-    return array(
+    $return = array(
       'label' => $o->label,
       'class' => drupal_strtolower(preg_replace('/[^A-Za-z0-9]/', '-', $o->id)),
       'link' => l($o->label, $url, $link_options),
@@ -293,7 +293,7 @@ function islandora_objects_object_mapper($object_id) {
   }
   else {
     $link_options = array('html' => TRUE, 'attributes' => array('title' => t('(Unknown)')));
-    return array(
+    $return = array(
       'label' => t('(Unknown)'),
       'class' => drupal_strtolower(preg_replace('/[^A-Za-z0-9]/', '-', $object_id)),
       'link' => l(t('(Unknown)'), $url, $link_options),
@@ -301,6 +301,12 @@ function islandora_objects_object_mapper($object_id) {
       'description' => '',
     );
   }
+  $object_info = array(
+    'pid' => $object_id,
+    'object' => $o,
+  );
+  drupal_alter(ISLANDORA_OBJECTS_DISPLAY_HOOK, $return, $object_info);
+  return $return;
 }
 
 /**
