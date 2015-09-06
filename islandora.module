@@ -1159,13 +1159,6 @@ function islandora_default_islandora_printer_object($object, $alter) {
   $islandora_object = islandora_object_load($object->id);
   $repository = $islandora_object->repository;
 
-  try {
-    $dc = $islandora_object['DC']->content;
-    $dc_object = DublinCore::importFromXMLString($dc);
-  }
-  catch (Exception $e) {
-    drupal_set_message(t('Error retrieving object %s %t', array('%s' => $islandora_object->id, '%t' => $e->getMessage())), 'error', FALSE);
-  }
   $metadata = islandora_retrieve_metadata_markup($object, TRUE);
   $variables = isset($dc_object) ? $dc_object->asArray() : array();
   $output = theme('islandora_object_print_object', array(

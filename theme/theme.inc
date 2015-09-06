@@ -143,11 +143,6 @@ function islandora_preprocess_islandora_default(&$variables) {
     }
   }
   $variables['datastreams'] = $datastreams;
-  // Objects in fcrepo4 don't always contain a DC datastream.
-  if (isset($islandora_object['DC']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $islandora_object['DC'])) {
-    $dc_object = DublinCore::importFromXMLString($islandora_object['DC']->content);
-    $dc_array = $dc_object->asArray();
-  }
   // We should eventually remove the DC object and dc_array code as it only
   // exists to not break legacy implementations.
   $variables['dc_array'] = isset($dc_array) ? $dc_array : array();
@@ -329,7 +324,7 @@ function islandora_objects_object_mapper($object_id) {
  *   - pager: A renderable array for the pager.
  *   - content: A renderable array for the main content of the page.
  */
-function template_preprocess_islandora_objects_subset(&$variables) {
+function template_preprocess_islandora_objects_subset(array &$variables) {
   $display = (empty($_GET['display'])) ? $variables['display'] : $_GET['display'];
   $grid_display = $display == 'grid';
   $list_display = !$grid_display;
@@ -615,15 +610,6 @@ function theme_islandora_datastream_regenerate_link(array $vars) {
  */
 function islandora_preprocess_islandora_dublin_core_display(array &$variables) {
   $islandora_object = $variables['islandora_object'];
-  if (islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $islandora_object['DC'])) {
-    try {
-      $dc = $islandora_object['DC']->content;
-      $dc_object = DublinCore::importFromXMLString($dc);
-    }
-    catch (Exception $e) {
-      drupal_set_message(t('Error retrieving object %s %t', array('%s' => $islandora_object->id, '%t' => $e->getMessage())), 'error', FALSE);
-    }
-  }
   $variables['dc_array'] = isset($dc_object) ? $dc_object->asArray() : array();
 }
 
@@ -632,14 +618,5 @@ function islandora_preprocess_islandora_dublin_core_display(array &$variables) {
  */
 function islandora_preprocess_islandora_dublin_core_description(array &$variables) {
   $islandora_object = $variables['islandora_object'];
-  if (islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $islandora_object['DC'])) {
-    try {
-      $dc = $islandora_object['DC']->content;
-      $dc_object = DublinCore::importFromXMLString($dc);
-    }
-    catch (Exception $e) {
-      drupal_set_message(t('Error retrieving object %s %t', array('%s' => $islandora_object->id, '%t' => $e->getMessage())), 'error', FALSE);
-    }
-  }
   $variables['dc_array'] = isset($dc_object) ? $dc_object->asArray() : array();
 }
