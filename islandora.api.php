@@ -937,6 +937,8 @@ function hook_islandora_breadcrumbs_backends() {
 /**
  * Generate an array of links for breadcrumbs leading to $object, root level first.
  *
+ * Stolen shamelessly from @adam-vessey
+ *
  * @param AbstractObject $object
  *   The object to generate breadcrumbs for
  *

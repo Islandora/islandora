@@ -2178,7 +2178,6 @@ function islandora_create_manage_overview(AbstractObject $object) {
  * Implements hook_islandora_breadcrumbs_backends().
  */
 function islandora_islandora_breadcrumbs_backends() {
-  $module_path = drupal_get_path('module', 'islandora');
   return array(
     ISLANDORA_BREADCRUMB_LEGACY_BACKEND => array(
       'title' => t('Resource Index - Default'),
