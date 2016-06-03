@@ -68,6 +68,8 @@ define('ISLANDORA_DERIVATIVE_CREATION_HOOK', 'islandora_derivative');
 define('ISLANDORA_CONTENT_MODELS_AUTOCOMPLETE', 'islandora/autocomplete/content-models');
 define('ISLANDORA_MIME_TYPES_AUTOCOMPLETE', 'islandora/autocomplete/mime-types');
 
+const ISLANDORA_BREADCRUMB_LEGACY_BACKEND = 'islandora_breadcrumbs_legacy_sparql';
+
 /**
  * Implements hook_menu().
  *
@@ -2170,4 +2172,18 @@ function islandora_islandora_get_breadcrumb_query_predicates(AbstractObject $obj
 function islandora_create_manage_overview(AbstractObject $object) {
   $output = theme('islandora_object_overview', array('islandora_object' => $object));
   return array('cmodels' => $output);
+}
+
+/**
+ * Implements hook_islandora_breadcrumbs_backends().
+ */
+function islandora_islandora_breadcrumbs_backends() {
+  $module_path = drupal_get_path('module', 'islandora');
+  return array(
+    ISLANDORA_BREADCRUMB_LEGACY_BACKEND => array(
+      'title' => t('Resource Index - Default'),
+      // Callback not needed as this is our legacy process and the
+      // default incase anything goes wrong.
+    ),
+  );
 }

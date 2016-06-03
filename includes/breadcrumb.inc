@@ -25,9 +25,20 @@
  *   drupal_set_breadcrumb().
  */
 function islandora_get_breadcrumbs($object) {
-  $breadcrumbs = array();
+
   if (variable_get('islandora_render_drupal_breadcrumbs', TRUE)) {
-    $breadcrumbs = islandora_get_breadcrumbs_recursive($object->id, $object->repository);
+    $backend = variable_get('islandora_breadcrumbs_backends', ISLANDORA_BREADCRUMB_LEGACY_BACKEND);
+    $backends = module_invoke_all('islandora_breadcrumbs_backends');
+    if ($backend === ISLANDORA_BREADCRUMB_LEGACY_BACKEND || !isset($backends[$backend])) {
+      $breadcrumbs = islandora_get_breadcrumbs_recursive($object->id, $object->repository);
+    }
+    else {
+      if (isset($backends[$backend]['file'])) {
+        require_once $backends[$backend]['file'];
+      }
+      $breadcrumbs = call_user_func($backends[$backend]['callable'], $object);
+    }
+    
     array_pop($breadcrumbs);
     $context = 'islandora';
     drupal_alter('islandora_breadcrumbs', $breadcrumbs, $context, $object);

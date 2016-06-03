@@ -907,3 +907,43 @@ function hook_islandora_edit_datastream_registry_alter(&$edit_registry, $context
 function hook_islandora_repository_connection_construction_alter(RepositoryConnection $instance) {
   $instance->userAgent = "Tuque/cURL";
 }
+
+/**
+ * Allow a overridable backend for generating breadcrumbs.
+ *
+ * Stolen shamelessly from @adam-vessey
+ *
+ * @return array
+ *   Should return an associative array mapping unique (module-prefixed,
+ *   preferably) keys to associative arrays containing:
+ *   - title: A human-readable title for the backend.
+ *   - callable: A PHP callable to call for this backend, implementing
+ *     callback_islandora_basic_collection_query_backends().
+ *   - file: An optional file to load before attempting to call the callable.
+ */
+function hook_islandora_breadcrumbs_backends() {
+  $a_callable = function ($object) {
+    // Do something to get an array of breadcrumb links for $object, root first.
+    return array($root_link, $collection_link, $object_link);
+  };
+  return array(
+    'awesome_backend' => array(
+      'title' => t('Awesome Backend'),
+      'callable' => $a_callable,
+    ),
+  );
+}
+
+/**
+ * Generate an array of links for breadcrumbs leading to $object, root level first.
+ *
+ * @param AbstractObject $object
+ *   The object to generate breadcrumbs for
+ *
+ * @return array
+ *   Array of links from root to $object.
+ */
+function callback_islandora_breadcrumbs_backends(AbstractObject $object) {
+  // Do something to get an array of breadcrumb links for $object, root first.
+  return array($root_link, $collection_link, $object_link);
+}
