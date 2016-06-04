@@ -103,7 +103,7 @@ function islandora_repository_admin(array $form, array &$form_state) {
           '#description' => t('Larger sites may experience a notable performance improvement when disabled due to how breadcrumbs are constructed.'),
           '#default_value' => variable_get('islandora_render_drupal_breadcrumbs', TRUE),
         ),
-        'islandora_breadcrumbs_backend' => array(
+        'islandora_breadcrumbs_backends' => array(
           '#type' => 'radios',
           '#title' => t('Breadcrumb generation'),
           '#description' => t('How breadcrumbs for Islandora objects are generated for display.'),
@@ -111,7 +111,7 @@ function islandora_repository_admin(array $form, array &$form_state) {
           '#options' => array_map($map_to_title, $breadcrumb_backend_options),
           '#states' => array(
             'visible' => array(
-              'islandora_render_drupal_breadcrumbs' => array('checked' => TRUE),
+              ':input[name="islandora_render_drupal_breadcrumbs"]' => array('checked' => TRUE),
             ),
           ),
         ),

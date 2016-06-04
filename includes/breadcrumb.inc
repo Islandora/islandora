@@ -24,8 +24,7 @@
  *   not including the given object. For use in the function
  *   drupal_set_breadcrumb().
  */
-function islandora_get_breadcrumbs($object) {
-
+function islandora_get_breadcrumbs(AbstractObject $object) {
   if (variable_get('islandora_render_drupal_breadcrumbs', TRUE)) {
     $backend = variable_get('islandora_breadcrumbs_backends', ISLANDORA_BREADCRUMB_LEGACY_BACKEND);
     $backends = module_invoke_all('islandora_breadcrumbs_backends');
@@ -38,7 +37,6 @@ function islandora_get_breadcrumbs($object) {
       }
       $breadcrumbs = call_user_func($backends[$backend]['callable'], $object);
     }
-    
     array_pop($breadcrumbs);
     $context = 'islandora';
     drupal_alter('islandora_breadcrumbs', $breadcrumbs, $context, $object);
