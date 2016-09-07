@@ -911,7 +911,7 @@ function hook_islandora_repository_connection_construction_alter(RepositoryConne
 /**
  * Allow a overridable backend for generating breadcrumbs.
  *
- * Stolen shamelessly from @adam-vessey
+ * Stolen shamelessly from @adam-vessey.
  *
  * @return array
  *   Should return an associative array mapping unique (module-prefixed,
@@ -922,25 +922,21 @@ function hook_islandora_repository_connection_construction_alter(RepositoryConne
  *   - file: An optional file to load before attempting to call the callable.
  */
 function hook_islandora_breadcrumbs_backends() {
-  $a_callable = function ($object) {
-    // Do something to get an array of breadcrumb links for $object, root first.
-    return array($root_link, $collection_link, $object_link);
-  };
   return array(
     'awesome_backend' => array(
       'title' => t('Awesome Backend'),
-      'callable' => $a_callable,
+      'callable' => callback_islandora_breadcrumbs_backends($object),
     ),
   );
 }
 
 /**
- * Generate an array of links for breadcrumbs leading to $object, root level first.
+ * Generate an array of links for breadcrumbs leading to $object, root first.
  *
- * Stolen shamelessly from @adam-vessey
+ * Stolen shamelessly from @adam-vessey.
  *
  * @param AbstractObject $object
- *   The object to generate breadcrumbs for
+ *   The object to generate breadcrumbs for.
  *
  * @return array
  *   Array of links from root to $object.

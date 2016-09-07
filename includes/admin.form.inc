@@ -27,6 +27,11 @@ function islandora_repository_admin(array $form, array &$form_state) {
   $map_to_title = function ($backend) {
     return $backend['title'];
   };
+  // In case the selected breadcrumb backend is no longer available.
+  $breadcrumb_backend = variable_get('islandora_breadcrumbs_backends', ISLANDORA_BREADCRUMB_LEGACY_BACKEND);
+  if (!isset($breadcrumb_backend_options[$breadcrumb_backend])) {
+    $breadcrumb_backend = ISLANDORA_BREADCRUMB_LEGACY_BACKEND;
+  }
 
   $form = array(
     'islandora_tabs' => array(
@@ -107,7 +112,7 @@ function islandora_repository_admin(array $form, array &$form_state) {
           '#type' => 'radios',
           '#title' => t('Breadcrumb generation'),
           '#description' => t('How breadcrumbs for Islandora objects are generated for display.'),
-          '#default_value' => variable_get('islandora_breadcrumbs_backends', ISLANDORA_BREADCRUMB_LEGACY_BACKEND),
+          '#default_value' => $breadcrumb_backend,
           '#options' => array_map($map_to_title, $breadcrumb_backend_options),
           '#states' => array(
             'visible' => array(
