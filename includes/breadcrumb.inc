@@ -47,10 +47,11 @@ function islandora_get_breadcrumbs(AbstractObject $object) {
 /**
  * Call the legacy SPARQL recursive function and return the correct breadcrumbs.
  *
- * @param $pid
+ * @param string $pid
  *   The object id whose parent will be fetched for the next link.
  * @param \IslandoraFedoraRepository $repository
  *   The fedora repository.
+ *
  * @return array
  *   An array of links representing the breadcrumb trail, "root" first.
  */

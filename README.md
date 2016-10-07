@@ -42,6 +42,9 @@ The `islandora_drupal_filter` passes the username of 'anonymous' through to Fedo
 
 Drupal's cron can be run to remove expired authentication tokens.
 
+**Breadcrumb Generation** on the configuration page, allows you to choose the default breadcrumb generation
+ or a custom method (if implemented). 
+
 ### Customization
 
 [Customize ingest forms](http://github.com/Islandora/islandora/wiki/Multi-paged-Ingest-Forms)
