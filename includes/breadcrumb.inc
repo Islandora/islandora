@@ -30,8 +30,7 @@ function islandora_get_breadcrumbs(AbstractObject $object) {
     $backend = variable_get('islandora_breadcrumbs_backends', ISLANDORA_BREADCRUMB_LEGACY_BACKEND);
     $backends = module_invoke_all('islandora_breadcrumbs_backends');
     if ($backend === ISLANDORA_BREADCRUMB_LEGACY_BACKEND || !isset($backends[$backend])) {
-      $breadcrumbs = islandora_get_breadcrumbs_recursive($object->id, $object->repository);
-      array_pop($breadcrumbs);
+      $breadcrumbs = islandora_get_breadcrumbs_legacy($object->id, $object->repository);
     }
     else {
       if (isset($backends[$backend]['file'])) {
@@ -42,6 +41,22 @@ function islandora_get_breadcrumbs(AbstractObject $object) {
     $context = 'islandora';
     drupal_alter('islandora_breadcrumbs', $breadcrumbs, $context, $object);
   }
+  return $breadcrumbs;
+}
+
+/**
+ * Call the legacy SPARQL recursive function and return the correct breadcrumbs.
+ *
+ * @param $pid
+ *   The object id whose parent will be fetched for the next link.
+ * @param \IslandoraFedoraRepository $repository
+ *   The fedora repository.
+ * @return array
+ *   An array of links representing the breadcrumb trail, "root" first.
+ */
+function islandora_get_breadcrumbs_legacy($pid, IslandoraFedoraRepository $repository) {
+  $breadcrumbs = islandora_get_breadcrumbs_recursive($pid, $repository);
+  array_pop($breadcrumbs);
   return $breadcrumbs;
 }
 

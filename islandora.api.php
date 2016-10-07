@@ -925,7 +925,7 @@ function hook_islandora_breadcrumbs_backends() {
   return array(
     'awesome_backend' => array(
       'title' => t('Awesome Backend'),
-      'callable' => callback_islandora_breadcrumbs_backends($object),
+      'callable' => 'callback_islandora_breadcrumbs_backends',
     ),
   );
 }
@@ -939,7 +939,7 @@ function hook_islandora_breadcrumbs_backends() {
  *   The object to generate breadcrumbs for.
  *
  * @return array
- *   Array of links from root to $object.
+ *   Array of links from root to the parent of $object.
  */
 function callback_islandora_breadcrumbs_backends(AbstractObject $object) {
   // Do something to get an array of breadcrumb links for $object, root first.
