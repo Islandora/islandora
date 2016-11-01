@@ -15,6 +15,6 @@
 <div class="islandora-metadata-sidebar">
   <?php if (!empty($dc_array['dc:description']['value'])): ?>
     <h2><?php print $dc_array['dc:description']['label']; ?></h2>
-    <p property="description"><?php print nl2br(filter_xss($dc_array['dc:description']['value'])); ?></p>
+    <p property="description"><?php print $dc_array['dc:description']['value']; ?></p>
   <?php endif; ?>
 </div>

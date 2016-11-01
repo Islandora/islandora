@@ -646,6 +646,7 @@ function islandora_preprocess_islandora_dublin_core_description(array &$variable
     }
   }
   $variables['dc_array'] = isset($dc_object) ? $dc_object->asArray() : array();
+  $variables['dc_array']['dc:description']['value'] = nl2br(filter_xss($variables['dc_array']['dc:description']['value']));
 }
 
 /**
