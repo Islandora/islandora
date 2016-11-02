@@ -2154,9 +2154,9 @@ function islandora_schedule_cache_clear_for_batch() {
  */
 function islandora_islandora_get_breadcrumb_query_predicates(AbstractObject $object) {
   return array(
-    'fedora-rels-ext:isPartOf',
-    'fedora-rels-ext:isMemberOfCollection',
-    'fedora-rels-ext:isMemberOf',
+    'info:fedora/fedora-system:def/relations-external#isPartOf',
+    'info:fedora/fedora-system:def/relations-external#isMemberOfCollection',
+    'info:fedora/fedora-system:def/relations-external#isMemberOf',
   );
 }
 
