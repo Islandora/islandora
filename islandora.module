@@ -624,6 +624,7 @@ function islandora_manage_overview_object(AbstractObject $object) {
   $output = array();
   foreach (islandora_build_hook_list(ISLANDORA_OVERVIEW_HOOK, $object->models) as $hook) {
     $temp = module_invoke_all($hook, $object);
+    islandora_as_renderable_array($temp);
     if (!empty($temp)) {
       $output = array_merge_recursive($output, $temp);
     }
@@ -634,7 +635,8 @@ function islandora_manage_overview_object(AbstractObject $object) {
   }
   arsort($output);
   drupal_alter(ISLANDORA_OVERVIEW_HOOK, $object, $output);
-  return implode('', $output);
+  islandora_as_renderable_array($output);
+  return $output;
 }
 
 /**
@@ -649,7 +651,11 @@ function islandora_manage_overview_object(AbstractObject $object) {
  */
 function islandora_default_islandora_manage_overview_object(AbstractObject $object) {
   $output = theme('islandora_default_overview', array('islandora_object' => $object));
-  return array('Default overview output' => $output);
+  return array(
+    'Default overview output' => array(
+      '#markup' => $output,
+    ),
+  );
 }
 
 /**
@@ -675,6 +681,7 @@ function islandora_edit_object(AbstractObject $object) {
   $output = array();
   foreach (islandora_build_hook_list(ISLANDORA_EDIT_HOOK, $object->models) as $hook) {
     $temp = module_invoke_all($hook, $object);
+    islandora_as_renderable_array($temp);
     if (!empty($temp)) {
       $output = array_merge_recursive($output, $temp);
     }
@@ -685,7 +692,8 @@ function islandora_edit_object(AbstractObject $object) {
   }
   arsort($output);
   drupal_alter(ISLANDORA_EDIT_HOOK, $object, $output);
-  return implode('', $output);
+  islandora_as_renderable_array($output);
+  return $output;
 }
 
 /**
@@ -700,7 +708,11 @@ function islandora_edit_object(AbstractObject $object) {
  */
 function islandora_default_islandora_edit_object(AbstractObject $object) {
   $output = theme('islandora_default_edit', array('islandora_object' => $object));
-  return array('Default Edit output' => $output);
+  return array(
+    'Default Edit output' => array(
+      '#markup' => $output,
+    ),
+  );
 }
 
 /**
@@ -743,6 +755,7 @@ function islandora_view_object(AbstractObject $object) {
     // @todo Remove page number and size from this hook, implementers of the
     // hook should use drupal page handling directly.
     $temp = module_invoke_all($hook, $object, $page_number, $page_size);
+    islandora_as_renderable_array($temp);
     if (!empty($temp)) {
       $output = array_merge_recursive($output, $temp);
     }
@@ -753,7 +766,8 @@ function islandora_view_object(AbstractObject $object) {
   }
   arsort($output);
   drupal_alter($hooks, $object, $output);
-  return implode('', $output);
+  islandora_as_renderable_array($output);
+  return $output;
 }
 
 
@@ -786,7 +800,11 @@ function islandora_drupal_title(AbstractObject $object) {
  */
 function islandora_default_islandora_view_object($object) {
   $output = theme('islandora_default', array('islandora_object' => $object));
-  return array('Default output' => $output);
+  return array(
+    'Default output' => array(
+      '#markup' => $output,
+    ),
+  );
 }
 
 /**
