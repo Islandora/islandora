@@ -882,8 +882,6 @@ function islandora_ingest_form_load_include(array &$form_state) {
  *
  * Sorted by weight expected range between -50 to 50.
  *
- * The sort order is undefined for steps which have the same weight.
- *
  * @param array $form_state
  *   The Drupal form state.
  *
@@ -917,7 +915,7 @@ function islandora_ingest_form_get_steps(array &$form_state) {
   foreach ($steps as $key => &$step) {
     $step['id'] = $key;
   }
-  uasort($steps, 'drupal_sort_weight');
+  islandora_sort_ordered($steps, array('weight'));
   return $steps;
 }
 

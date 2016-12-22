@@ -966,3 +966,41 @@ function islandora_build_datastream_edit_registry(AbstractDatastream $datastream
   drupal_alter(ISLANDORA_EDIT_DATASTREAM_REGISTRY_HOOK, $edit_registry, $context);
   return $edit_registry;
 }
+
+/**
+ * Sorts a structured array by a user selectable element.
+ *
+ * This function will preserve the order of elements in the array with the
+ * same weight.
+ *
+ * @param array $array
+ *   The array to be sorted.
+ * @param array $sort_keys
+ *   An array containing the keys to sort the array by.
+ */
+function islandora_sort_ordered(&$array, $sort_keys) {
+  $array_temp = array();
+  foreach ($array as $key => $value) {
+    $weight = $value;
+
+    foreach ($sort_keys as $sort_key) {
+      if (is_array($weight) && isset($weight[$sort_key])) {
+        $weight = $weight[$sort_key];
+      }
+      else {
+        $weight = 0;
+        break;
+      }
+    }
+
+    $array_temp[$weight][$key] = $value;
+    unset($array[$key]);
+  }
+
+  ksort($array_temp);
+
+  foreach ($array_temp as $key => $value) {
+    $array += $value;
+    unset($array_temp[$key]);
+  }
+}

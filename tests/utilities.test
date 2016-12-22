@@ -1,0 +1,131 @@
+<?php
+
+/**
+ * @file
+ * Unit tests for the functions in the includes/utilities.inc file.
+ */
+
+/**
+ * Tests for drupal_sort_weight_ordered().
+ */
+class IslandoraSortOrderedTestCase extends DrupalUnitTestCase {
+
+  /**
+   * Return info about the tests.
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'islandora_sort_ordered()',
+      'description' => 'Performs unit tests on islandora_sort_oredered().',
+      'group' => 'Islandora',
+    );
+  }
+
+  /**
+   * Test sort order when sorting by weight.
+   */
+  public function testIslandoraSortOrderedSorting() {
+    module_load_include('inc', 'islandora', 'includes/utilities');
+
+    // The order of children with same weight should be preserved.
+    $element_mixed_weight = array(
+      'child5' => array('weight' => 10),
+      'child3' => array('weight' => -10),
+      'child1' => array(),
+      'child4' => array('weight' => 10),
+      'child2' => array(),
+      'child6' => array('weight' => 10),
+      'child9' => array(),
+      'child8' => array('weight' => 10),
+      'child7' => array(),
+    );
+
+    $expected = array(
+      'child3' => array('weight' => -10),
+      'child1' => array(),
+      'child2' => array(),
+      'child9' => array(),
+      'child7' => array(),
+      'child5' => array('weight' => 10),
+      'child4' => array('weight' => 10),
+      'child6' => array('weight' => 10),
+      'child8' => array('weight' => 10),
+    );
+
+    islandora_sort_ordered($element_mixed_weight, array('weight'));
+
+    $this->assertEqual($expected, $element_mixed_weight, 'Order of elements with the same weight is preserved.');
+  }
+
+  /**
+   * Make sure numeric keys are preserved.
+   */
+  public function testIslandoraSortPreserveNumeric() {
+    module_load_include('inc', 'islandora', 'includes/utilities');
+
+    // The order of children with same weight should be preserved.
+    $element_mixed_weight = array(
+      5 => array('weight' => 10),
+      3 => array('weight' => -10),
+      1 => array(),
+      4 => array('weight' => 10),
+      2 => array(),
+      6 => array('weight' => 10),
+      9 => array(),
+      8 => array('weight' => 10),
+      7 => array(),
+    );
+
+    $expected = array(
+      3 => array('weight' => -10),
+      1 => array(),
+      2 => array(),
+      9 => array(),
+      7 => array(),
+      5 => array('weight' => 10),
+      4 => array('weight' => 10),
+      6 => array('weight' => 10),
+      8 => array('weight' => 10),
+    );
+
+    islandora_sort_ordered($element_mixed_weight, array('weight'));
+
+    $this->assertEqual($expected, $element_mixed_weight, 'Numeric keys are preserved while sorting.');
+  }
+
+  /**
+   * Test sort order when sorting by a key in a multidimensional array.
+   */
+  public function testIslandoraSortOrderedMulti() {
+    module_load_include('inc', 'islandora', 'includes/utilities');
+
+    // The order of children with same weight should be preserved.
+    $element_mixed_weight = array(
+      'child5' => array('foo' => array('bar' => 10)),
+      'child3' => array('foo' => array('bar' => -10)),
+      'child1' => array('foo' => 6),
+      'child4' => array('foo' => array('bar' => 10)),
+      'child2' => array(),
+      'child6' => array('foo' => array('bar' => 10)),
+      'child9' => array(array('woot')),
+      'child8' => array('foo' => array('bar' => 10)),
+      'child7' => array(),
+    );
+
+    $expected = array(
+      'child3' => array('foo' => array('bar' => -10)),
+      'child1' => array('foo' => 6),
+      'child2' => array(),
+      'child9' => array(array('woot')),
+      'child7' => array(),
+      'child5' => array('foo' => array('bar' => 10)),
+      'child4' => array('foo' => array('bar' => 10)),
+      'child6' => array('foo' => array('bar' => 10)),
+      'child8' => array('foo' => array('bar' => 10)),
+    );
+
+    islandora_sort_ordered($element_mixed_weight, array('foo', 'bar'));
+
+    $this->assertEqual($expected, $element_mixed_weight, 'Sorting by multidimensional array works.');
+  }
+}
