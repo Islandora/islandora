@@ -16,7 +16,7 @@ class IslandoraSortOrderedTestCase extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
       'name' => 'islandora_sort_ordered()',
-      'description' => 'Performs unit tests on islandora_sort_oredered().',
+      'description' => 'Performs unit tests on islandora_sort_ordered().',
       'group' => 'Islandora',
     );
   }
