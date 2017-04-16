@@ -23,6 +23,8 @@ env:
 before_install:
   - export ISLANDORA_DIR=$TRAVIS_BUILD_DIR
   - $TRAVIS_BUILD_DIR/tests/scripts/travis_setup.sh
+  - sudo sh $TRAVIS_BUILD_DIR/tests/scripts/adore.sh
+  - sudo sh $TRAVIS_BUILD_DIR/tests/scripts/tesseract.sh
   - cd $HOME/drupal-*
 before_script:
   # Mysql might time out for long tests, increase the wait timeout.
