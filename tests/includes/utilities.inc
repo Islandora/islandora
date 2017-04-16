@@ -112,10 +112,7 @@ class IslandoraTestUtilities extends IslandoraTestUtilityClass {
    *   TRUE on success, FALSE on fail.
    */
   public function assertDatastreams($object, array $datastreams) {
-    if (!self::assertFedoraObject($object)) {
-      $this->addResult(FALSE, "Failed. Object passed in is invalid.", 'Islandora');
-    }
-    else {
+    if ($object = islandora_object_load($object)) {
       $missing_datastreams = array_diff_key(array_flip($datastreams), $object->repository->api->a->listDatastreams($object->id));
 
       if (!empty($missing_datastreams)) {
@@ -137,8 +134,8 @@ class IslandoraTestUtilities extends IslandoraTestUtilityClass {
    *   An array of datastreams to confirm not present.
    */
   public function assertNoDatastreams($object, array $datastreams) {
-    if (!self::assertFedoraObject($object)) {
-      $this->addResult(FALSE, "Failed. Object passed in is invalid.", 'Islandora');
+    if ($object = islandora_object_load($object)) {
+      $this->addResult("Failed to check the datastreams on the object; the object could not be loaded.");
       return;
     }
     $found_datastreams = array_intersect_key(array_flip($datastreams), $object->repository->api->a->listDatastreams($object->id));
@@ -169,8 +166,7 @@ class IslandoraTestUtilities extends IslandoraTestUtilityClass {
    *   for examples.
    */
   public function validateDatastreams($object, array $datastreams) {
-
-    if (!self::assertFedoraObject($object)) {
+    if ($object = islandora_object_load($object)) {
       $this->addResult(FALSE, "Datastream validation failed; Object passed in is invalid.", 'Islandora');
       return;
     }
@@ -345,18 +341,4 @@ QUERY;
     }
     return $return_value;
   }
-
-  /**
-   * Asserts that an object is a FedoraObject or an IslandoraFedoraObject.
-   *
-   * @param object $object
-   *   The object to assess.
-   *
-   * @return bool
-   *   TRUE if it is either of those object types, or FALSE otherwise.
-   */
-  public static function assertFedoraObject($object) {
-    return ($object instanceof FedoraObject);
-  }
-
 }
