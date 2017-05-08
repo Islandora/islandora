@@ -34,6 +34,7 @@ define('ISLANDORA_INGEST', 'ingest fedora objects');
 define('ISLANDORA_PURGE', 'delete fedora objects and datastreams');
 define('ISLANDORA_MANAGE_PROPERTIES', 'manage object properties');
 define('ISLANDORA_VIEW_DATASTREAM_HISTORY', 'view old datastream versions');
+define('ISLANDORA_ACCESS_INACTIVE_AND_DELETED_OBJECTS', 'access inactive and deleted objects');
 define('ISLANDORA_MANAGE_DELETED_OBJECTS', 'manage deleted objects');
 define('ISLANDORA_REVERT_DATASTREAM', 'revert to old datastream');
 define('ISLANDORA_REGENERATE_DERIVATIVES', 'regenerate derivatives for an object');
@@ -610,6 +611,10 @@ function islandora_permission() {
     ISLANDORA_REVERT_DATASTREAM => array(
       'title' => t('Revert datastream history'),
       'description' => t('Revert to a previous version of a datastream.'),
+    ),
+    ISLANDORA_ACCESS_INACTIVE_AND_DELETED_OBJECTS => array(
+      'title' => t('Access inactive and deleted objects'),
+      'description' => t('Access objects with a Fedora state of Inactive or Deleted'),
     ),
     ISLANDORA_MANAGE_DELETED_OBJECTS => array(
       'title' => t('Manage deleted objects'),
@@ -1681,8 +1686,12 @@ function islandora_object_access($op, $object, $user = NULL) {
  */
 function islandora_islandora_object_access($op, $object, $user) {
   module_load_include('inc', 'islandora', 'includes/utilities');
-
-  return islandora_namespace_accessible($object->id) && user_access($op, $user);
+  if ($object->state != 'A') {
+    return islandora_namespace_accessible($object->id) && user_access($op, $user) && user_access(ISLANDORA_ACCESS_INACTIVE_AND_DELETED_OBJECTS, $user);
+  }
+  else {
+    return islandora_namespace_accessible($object->id) && user_access($op, $user);
+  }
 }
 
 /**
