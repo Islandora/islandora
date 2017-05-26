@@ -132,3 +132,18 @@ function islandora_update_7001(&$sandbox) {
   $t = get_t();
   return $t("Islandora database updates complete");
 }
+
+/**
+ * Implements hook_update_N().
+ *
+ * Add default permissions for viewing inactive or deleted objects.
+ * Match permissions for viewing all objects.
+ */
+function islandora_update_7002(&$sandbox) {
+  $roles  = user_roles(FALSE, ISLANDORA_VIEW_OBJECTS);
+  foreach ($roles as $rid => $role) {
+    user_role_grant_permissions($rid, array(ISLANDORA_ACCESS_INACTIVE_AND_DELETED_OBJECTS));
+  }
+  $t = get_t();
+  return $t("Islandora permission updates complete. Please manage permissions to assign the new permission, 'view inactive or deleted objects', to appropriate roles.");
+}
