@@ -240,12 +240,11 @@ class IslandoraFedoraObject extends FedoraObject {
       return $ret;
     }
     catch (Exception $e) {
-      watchdog('islandora', 'Failed to ingest datastream @datastream on object: @pid</br>code: @code<br/>message: @msg', array(
-        '@pid' => $object->id,
-        '@dsid' => $datastream->id,
-        '@code' => $e->getCode(),
-        '@msg' => $e->getMessage(),
-      ), WATCHDOG_ERROR);
+      watchdog('islandora', 'Failed to ingest object: @pid</br>code: @code<br/>message: @msg', array(
+          '@pid' => $object->id,
+          '@dsid' => $datastream->id,
+          '@code' => $e->getCode(),
+          '@msg' => $e->getMessage()), WATCHDOG_ERROR);
       throw $e;
     }
   }
