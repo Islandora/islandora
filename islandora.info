@@ -27,4 +27,5 @@ files[] = tests/datastream_versions.test
 files[] = tests/datastream_cache.test
 files[] = tests/derivatives.test
 files[] = tests/datastream_validator_tests.test
+files[] = tests/utilities.test
 php = 5.3

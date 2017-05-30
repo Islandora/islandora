@@ -306,6 +306,6 @@ function islandora_get_derivative_list(AbstractObject $object, &$options) {
     drupal_alter($hook, $derivatives, $object, $ds_modified_params);
   }
 
-  uasort($derivatives, 'drupal_sort_weight');
+  islandora_sort_ordered($derivatives, array('weight'));
   return islandora_filter_derivatives($derivatives, $options, $object);
 }
