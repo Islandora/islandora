@@ -210,7 +210,7 @@ function islandora_do_batch_derivatives(AbstractObject $object, array $options) 
  *   Returns the filtered array of hooks to be ran.
  */
 function islandora_filter_derivatives($hooks, $options, AbstractObject $object) {
-  if (array_key_exists('source_dsid', $options)) {
+  if (array_key_exists('source_dsid', $options) && $options['source_dsid'] !== NULL) {
     $hooks = array_filter($hooks, function ($filter_hook) use ($options) {
       return array_key_exists('source_dsid', $filter_hook) &&
       $filter_hook['source_dsid'] == $options['source_dsid'];
