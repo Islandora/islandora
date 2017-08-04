@@ -240,11 +240,20 @@ class IslandoraFedoraObject extends FedoraObject {
       return $ret;
     }
     catch (Exception $e) {
-      watchdog('islandora', 'Failed to ingest object: @pid</br>code: @code<br/>message: @msg', array(
-          '@pid' => $object->id,
+      if ($e instanceof DatastreamExistsException && variable_get('islandora_deprecation_return_false_when_datastream_exists', TRUE)) {
+        $message = format_string('The datastream @dsid already exists on the object: @pid. As of 7.x-1.10 the function signature for ingestDatastream will be changed from returning FALSE on failure to throwing an exception.', array(
           '@dsid' => $datastream->id,
-          '@code' => $e->getCode(),
-          '@msg' => $e->getMessage()), WATCHDOG_ERROR);
+          '@pid' => $object->id,
+        ));
+        trigger_error(filter_xss($message), E_USER_DEPRECATED);
+        return FALSE;
+      }
+      watchdog('islandora', 'Failed to ingest datastream @dsid on object: @pid</br>code: @code<br/>message: @msg', array(
+        '@pid' => $object->id,
+        '@dsid' => $datastream->id,
+        '@code' => $e->getCode(),
+        '@msg' => $e->getMessage(),
+      ), WATCHDOG_ERROR);
       throw $e;
     }
   }

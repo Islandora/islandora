@@ -268,5 +268,7 @@ function islandora_mime_mapping() {
     // Web Archives:
     "warc" => "application/warc",
     "json" => "application/json",
+    // JSON-LD
+    "jsonld" => "application/ld+json",
   );
 }

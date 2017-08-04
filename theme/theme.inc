@@ -64,18 +64,12 @@ function template_preprocess_islandora_default_edit(array &$variables) {
     elseif (user_access(ISLANDORA_VIEW_DATASTREAM_HISTORY)) {
       $row[] = array();
     }
-    if (islandora_datastream_access(ISLANDORA_VIEW_DATASTREAM_HISTORY, $ds)) {
-      // Add new datastream content as the lastest version.
-      $row[] = array(
-        'class' => 'datastream-replace',
-        'data' => theme('islandora_datastream_replace_link', array(
-          'datastream' => $ds,
-        )),
-      );
-    }
-    else {
-      $row[] = array();
-    }
+    $row[] = array(
+      'class' => 'datastream-replace',
+      'data' => theme('islandora_datastream_replace_link', array(
+        'datastream' => $ds,
+      )),
+    );
     $row[] = array(
       'class' => 'datastream-download',
       'data' => theme('islandora_datastream_download_link', array(

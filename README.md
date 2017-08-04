@@ -55,6 +55,8 @@ Further documentation for this module is available at [our wiki](https://wiki.du
 
 ## Troubleshooting/Issues
 
+NOTE: There has been a function signature change for the `ingestDatastream` function within Tuque which will be deprecated after the 7.x-1.10 release. To read about it in detail please see the [JIRA ticket](https://jira.duraspace.org/browse/ISLANDORA-1995). For the time being there is a warning stating that this will become deprecated and that code that utilizes this specific behavior should be updated. Once this code is updated the `islandora_deprecation_return_false_when_datastream_exists` variable may be set to FALSE so the warning no longer displays. An example for doing this with drush: `drush vset islandora_deprecation_return_false_when_datastream_exists FALSE`. 
+
 Having problems or solved a problem? Check out the Islandora google groups for a solution.
 
 * [Islandora Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/islandora)

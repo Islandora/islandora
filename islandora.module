@@ -1029,6 +1029,10 @@ function islandora_view_object(AbstractObject $object) {
   module_load_include('inc', 'islandora', 'includes/breadcrumb');
   module_load_include('inc', 'islandora', 'includes/utilities');
 
+  // Warn if object is inactive or deleted.
+  if ($object->state != 'A') {
+    drupal_set_message(t('This object is not active. Metadata may not display correctly.'), 'warning');
+  }
   // Optional pager parameters.
   $page_number = (empty($_GET['page'])) ? '1' : $_GET['page'];
   $page_size = (empty($_GET['pagesize'])) ? '10' : $_GET['pagesize'];
