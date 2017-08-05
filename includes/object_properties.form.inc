@@ -113,12 +113,12 @@ function islandora_object_properties_form(array $form, array &$form_state, Abstr
  *   The Drupal form state.
  */
 function islandora_object_properties_form_submit(array $form, array &$form_state) {
-  if (isset($form_state['islandora']['needs_confirmation'])){
+  if (isset($form_state['islandora']['needs_confirmation'])) {
     $form_state['values'] = $form_state['islandora']['values'];
   }
   else {
     // Confirm if user is about to lock themselves out of this object.
-    if (in_array($form_state['values']['object_state'], array('I','D'))) {
+    if (in_array($form_state['values']['object_state'], array('I', 'D'))) {
       if ($form_state['object']->state == 'A') {
         if (!user_access(ISLANDORA_ACCESS_INACTIVE_AND_DELETED_OBJECTS)) {
           $form_state['islandora']['needs_confirmation'] = TRUE;
