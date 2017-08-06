@@ -244,9 +244,9 @@ function islandora_object_properties_confirm_form(&$form_state) {
   $desc = t('You do not have permission to view Inactive or Deleted objects, so you will no longer be able to view or manage this object. Are you sure?');
   $path = "islandora/object/{$form_state['object']->id}/manage/properties";
   return confirm_form(array(),
-    'Are you sure you want to set the object state?',
+    t('Are you sure you want to set the object state?'),
     $path,
     $desc,
-    'Continue',
-    'Cancel');
+    t('Continue'),
+    t('Cancel'));
 }
