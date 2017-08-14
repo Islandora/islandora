@@ -141,9 +141,9 @@ function islandora_update_7001(&$sandbox) {
  */
 function islandora_update_7002(&$sandbox) {
   $t = get_t();
-  return $t("A new permission 'view inactive or deleted objects' has been added " .
-    "to the system, and these objects can no longer be viewed by someone without " .
-    "this permission. If you have users who need to view inactive or deleted " .
-    "objects please add the new permission to appropriate roles. This is " .
-    "especially important for sites using the 'Islandora Simple Workflow' module");
+  return $t("A new permission 'view inactive or deleted objects' has been added 
+   to the system, and these objects can no longer be viewed by someone without 
+   this permission. If you have users who need to view inactive or deleted 
+   objects please add the new permission to appropriate roles. This is 
+   especially important for sites using the 'Islandora Simple Workflow' module");
 }
