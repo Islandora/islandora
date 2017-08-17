@@ -60,6 +60,7 @@ function islandora_uninstall() {
     'islandora_require_obj_upload',
     'islandora_breadcrumbs_backends',
     'islandora_render_context_ingeststep',
+    'islandora_deny_inactive_and_deleted',
   );
   array_walk($variables, 'variable_del');
 }
@@ -131,19 +132,4 @@ function islandora_update_7001(&$sandbox) {
   drupal_install_schema('islandora');
   $t = get_t();
   return $t("Islandora database updates complete");
-}
-
-/**
- * Implements hook_update_N().
- *
- * Add default permissions for viewing inactive or deleted objects.
- * Match permissions for viewing all objects.
- */
-function islandora_update_7002(&$sandbox) {
-  $t = get_t();
-  return $t("A new permission 'view inactive or deleted objects' has been added 
-   to the system, and these objects can no longer be viewed by someone without 
-   this permission. If you have users who need to view inactive or deleted 
-   objects please add the new permission to appropriate roles. This is 
-   especially important for sites using the 'Islandora Simple Workflow' module");
 }

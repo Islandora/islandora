@@ -118,7 +118,7 @@ function islandora_object_properties_form_submit(array $form, array &$form_state
   }
   else {
     // Confirm if user is about to lock themselves out of this object.
-    if (in_array($form_state['values']['object_state'], array('I', 'D'))) {
+    if (variable_get('islandora_deny_inactive_and_deleted', FALSE) && in_array($form_state['values']['object_state'], array('I', 'D'))) {
       if ($form_state['object']->state == 'A') {
         if (!user_access(ISLANDORA_ACCESS_INACTIVE_AND_DELETED_OBJECTS)) {
           $form_state['islandora']['needs_confirmation'] = TRUE;
@@ -240,7 +240,7 @@ function islandora_object_properties_regenerate_derivatives(array $form, array &
  * @param array $form_state
  *   The Drupal form state.
  */
-function islandora_object_properties_confirm_form(&$form_state) {
+function islandora_object_properties_confirm_form(array &$form_state) {
   $desc = t('You do not have permission to view Inactive or Deleted objects, so you will no longer be able to view or manage this object. Are you sure?');
   $path = "islandora/object/{$form_state['object']->id}/manage/properties";
   return confirm_form(array(),

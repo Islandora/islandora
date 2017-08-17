@@ -138,6 +138,12 @@ function islandora_repository_admin(array $form, array &$form_state) {
           '#description' => t('During the ingest workflow, make the OBJ file upload step mandatory.'),
           '#default_value' => variable_get('islandora_require_obj_upload', TRUE),
         ),
+        'islandora_deny_inactive_and_deleted' => array(
+          '#type' => 'checkbox',
+          '#title' => t('Lock down inactive and deleted objects.'),
+          '#description' => t('Deny access to inactive or deleted objects using a separate permission than for active objects.'),
+          '#default_value' => variable_get('islandora_deny_inactive_and_deleted', FALSE),
+        ),
       ),
       'islandora_namespace' => array(
         '#type' => 'fieldset',
