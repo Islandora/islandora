@@ -1693,12 +1693,11 @@ function islandora_object_access($op, $object, $user = NULL) {
  */
 function islandora_islandora_object_access($op, $object, $user) {
   module_load_include('inc', 'islandora', 'includes/utilities');
+  $access = (islandora_namespace_accessible($object->id) && user_access($op, $user));
   if (($object->state != 'A') && variable_get('islandora_deny_inactive_and_deleted', FALSE)) {
-    return islandora_namespace_accessible($object->id) && user_access($op, $user) && user_access(ISLANDORA_ACCESS_INACTIVE_AND_DELETED_OBJECTS, $user);
+    $access = ($access && user_access(ISLANDORA_ACCESS_INACTIVE_AND_DELETED_OBJECTS, $user));
   }
-  else {
-    return islandora_namespace_accessible($object->id) && user_access($op, $user);
-  }
+  return $access;
 }
 
 /**
