@@ -73,4 +73,12 @@ drush en --user=1 --yes islandora
 drush cc all
 # The shebang in this file is a bogeyman that is haunting the web test cases.
 rm /home/travis/.phpenv/rbenv.d/exec/hhvm-switcher.bash
-sleep 20
+
+# wait for Fedora to come up
+fedoraIsUp=1
+until [ $fedoraIsUp -eq "0" ]; do
+  echo "Waiting for Fedora to boot..."
+  sleep 10
+  (curl http://localhost:8080/fedora)
+  fedoraIsUp=$?
+done

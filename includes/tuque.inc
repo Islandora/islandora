@@ -65,8 +65,10 @@ class IslandoraTuque {
    *   A Drupal user.
    * @param string $url
    *   The url to the fedora instance.
+   * @param string $sparql_endpoint
+   *   The URL of a SPARQL Query endpoint for this connection.
    */
-  public function __construct($user = NULL, $url = NULL) {
+  public function __construct($user = NULL, $url = NULL, $sparql_endpoint = NULL) {
     if (!isset($user)) {
       global $user;
     }
@@ -84,9 +86,18 @@ class IslandoraTuque {
       $url = variable_get('islandora_base_url', 'http://localhost:8080/fedora');
     }
 
+    if (!isset($sparql_endpoint)) {
+      if (variable_get('islandora_sparql_endpoint_externalized', FALSE)) {
+        $sparql_endpoint = variable_get('islandora_sparql_endpoint', $url);
+      }
+      else {
+        $sparql_endpoint = $url;
+      }
+    }
+
     if (self::exists()) {
       module_load_include('inc', 'islandora', 'includes/tuque_wrapper');
-      $this->connection = new IslandoraRepositoryConnection($url, $user_string, $pass_string);
+      $this->connection = new IslandoraRepositoryConnection($url, $user_string, $pass_string, $sparql_endpoint);
       $this->connection->reuseConnection = TRUE;
       $this->api = new IslandoraFedoraApi($this->connection);
       $this->cache = new IslandoraSimpleCache();

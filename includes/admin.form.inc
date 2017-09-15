@@ -59,6 +59,21 @@ function islandora_repository_admin(array $form, array &$form_state) {
             ),
           ),
         ),
+        'islandora_sparql_endpoint_externalized' => array(
+          '#type' => 'checkbox',
+          '#title' => t('Use an external SPARQL Query endpoint'),
+          '#description' => t('If an external query endpoint is used, the repository must be configured to update it.'),
+          '#default_value' => variable_get('islandora_sparql_endpoint_externalized', FALSE),
+        ),
+        'islandora_sparql_endpoint' => array(
+          '#type' => 'textfield',
+          '#title' => t('SPARQL Query Endpoint'),
+          '#default_value' => variable_get('islandora_sparql_endpoint', ""),
+          '#description' => t("An external SPARQL Query endpoint to use."),
+          '#required' => FALSE,
+          '#states' => array(
+            'invisible' => array(':input[name="islandora_sparql_endpoint_externalized"]' => array('checked' => FALSE))),
+        ),
         'islandora_repository_pid' => array(
           '#type' => 'textfield',
           '#title' => t('Root Collection PID'),
