@@ -597,8 +597,8 @@ function hook_cmodel_pid_islandora_object_access($op, $object, $user) {
  * @param string $op
  *   A string define an operation to check. Should be defined via
  *   hook_permission().
- * @param AbstractDatastream $object
- *   An object to check the operation on.
+ * @param AbstractDatastream $datastream
+ *   A datastream to check the operation on.
  * @param object $user
  *   A loaded user object, as the global $user variable might contain.
  *
@@ -608,7 +608,7 @@ function hook_cmodel_pid_islandora_object_access($op, $object, $user) {
  *   about the outcome. Can also be an array containing multiple
  *   TRUE/FALSE/NULLs, due to how hooks work.
  */
-function hook_islandora_datastream_access($op, AbstractObject $object, $user) {
+function hook_islandora_datastream_access($op, AbstractDatastream $datastream, $user) {
   switch ($op) {
     case 'create stuff':
       return TRUE;
@@ -626,7 +626,7 @@ function hook_islandora_datastream_access($op, AbstractObject $object, $user) {
  *
  * @see hook_islandora_datastream_access()
  */
-function hook_cmodel_pid_islandora_datastream_access($op, $object, $user) {
+function hook_cmodel_pid_islandora_datastream_access($op, $datastream, $user) {
 
 }
 
