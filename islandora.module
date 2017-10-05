@@ -1226,18 +1226,17 @@ function islandora_object_load($object_id) {
       return $tuque->repository->getObject(urldecode($object_id));
     }
     catch (Exception $e) {
-      if ($e->getCode() == '404') {
+      // Check to see if invalid PID was passed
+      module_load_include('inc', 'islandora', 'includes/utilities');
+      if (!islandora_is_valid_pid($object_id)) {
+        watchdog('islandora', 'Failed to load invalid PID: @pid', array('@pid' => $object_id), WATCHDOG_ERROR);
+        return FALSE;
+      }
+      elseif ($e->getCode() == '404') {
         return FALSE;
       }
       else {
-        module_load_include('inc', 'islandora', 'includes/utilities');
-        if (!islandora_is_valid_pid($object_id)) {
-          watchdog('islandora', 'Failed to load invalid PID: @pid', array('@pid' => $object_id), WATCHDOG_ERROR);
-          return FALSE;
-        }
-        else {
-          return NULL;
-        }
+        return NULL;
       }
     }
   }
