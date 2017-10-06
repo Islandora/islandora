@@ -1226,7 +1226,12 @@ function islandora_object_load($object_id) {
       return $tuque->repository->getObject(urldecode($object_id));
     }
     catch (Exception $e) {
-      if ($e->getCode() == '404') {
+      // Check to see if tuque failure is due to invalid PID.
+      module_load_include('inc', 'islandora', 'includes/utilities');
+      if (!islandora_is_valid_pid($object_id)) {
+        return FALSE;
+      }
+      elseif ($e->getCode() == '404') {
         return FALSE;
       }
       else {
