@@ -1226,7 +1226,7 @@ function islandora_object_load($object_id) {
       return $tuque->repository->getObject(urldecode($object_id));
     }
     catch (Exception $e) {
-      // Check to see if invalid PID was passed
+      // Check to see if tuque failure is due to invalid PID.
       module_load_include('inc', 'islandora', 'includes/utilities');
       if (!islandora_is_valid_pid($object_id)) {
         watchdog('islandora', 'Failed to load invalid PID: @pid', array('@pid' => $object_id), WATCHDOG_ERROR);
