@@ -1966,6 +1966,7 @@ function islandora_islandora_datastream_access($op, AbstractDatastream $datastre
 
   if ($result && $op == ISLANDORA_REGENERATE_DERIVATIVES) {
     module_load_include('inc', 'islandora', 'includes/derivatives');
+    module_load_include('inc', 'islandora', 'includes/utilities');
     $applicable_hook = FALSE;
     $object = $datastream->parent;
     $hooks = islandora_invoke_hook_list(ISLANDORA_DERIVATIVE_CREATION_HOOK, $object->models, array($object));
