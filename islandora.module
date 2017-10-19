@@ -1967,11 +1967,11 @@ function islandora_islandora_metadata_display_info() {
  * Implements hook_islandora_datastream_access().
  */
 function islandora_islandora_datastream_access($op, AbstractDatastream $datastream, $user) {
-  module_load_include('inc', 'islandora', 'includes/utilities');
-  $result = islandora_namespace_accessible($datastream->parent->id) && user_access($op, $user);
+  $result = islandora_islandora_object_access($op, $datastream->parent, $user);
 
   if ($result && $op == ISLANDORA_REGENERATE_DERIVATIVES) {
     module_load_include('inc', 'islandora', 'includes/derivatives');
+    module_load_include('inc', 'islandora', 'includes/utilities');
     $applicable_hook = FALSE;
     $object = $datastream->parent;
     $hooks = islandora_invoke_hook_list(ISLANDORA_DERIVATIVE_CREATION_HOOK, $object->models, array($object));
