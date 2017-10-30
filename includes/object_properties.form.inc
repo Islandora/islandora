@@ -19,9 +19,6 @@
  *   The drupal form definition.
  */
 function islandora_object_properties_form(array $form, array &$form_state, AbstractObject $object) {
-  if (isset($form_state['islandora']['needs_confirmation'])) {
-    return islandora_object_properties_confirm_form($form_state);
-  }
   $form_state['object'] = $object;
   $temp = islandora_invoke_hook_list(ISLANDORA_UPDATE_RELATED_OBJECTS_PROPERTIES_HOOK, $object->models, array($object));
   $related_objects_pids = array();
@@ -113,22 +110,6 @@ function islandora_object_properties_form(array $form, array &$form_state, Abstr
  *   The Drupal form state.
  */
 function islandora_object_properties_form_submit(array $form, array &$form_state) {
-  if (isset($form_state['islandora']['needs_confirmation'])) {
-    $form_state['values'] = $form_state['islandora']['values'];
-  }
-  else {
-    // Confirm if user is about to lock themselves out of this object.
-    if (variable_get('islandora_deny_inactive_and_deleted', FALSE) && in_array($form_state['values']['object_state'], array('I', 'D'))) {
-      if ($form_state['object']->state == 'A') {
-        if (!user_access(ISLANDORA_ACCESS_INACTIVE_AND_DELETED_OBJECTS)) {
-          $form_state['islandora']['needs_confirmation'] = TRUE;
-          $form_state['islandora']['values'] = $form_state['values'];
-          $form_state['rebuild'] = TRUE;
-          return;
-        }
-      }
-    }
-  }
   $object = $form_state['object'];
   $owner = $form_state['values']['object_owner'];
   $state = $form_state['values']['object_state'];
@@ -232,21 +213,4 @@ function islandora_update_object_properties($pid, $update_states, $state, $updat
  */
 function islandora_object_properties_regenerate_derivatives(array $form, array &$form_state) {
   drupal_goto("islandora/object/{$form_state['object']}/regenerate");
-}
-
-/**
- * Confirmation form for object properties admin form.
- *
- * @param array $form_state
- *   The Drupal form state.
- */
-function islandora_object_properties_confirm_form(array &$form_state) {
-  $desc = t('You do not have permission to view Inactive or Deleted objects, so you will no longer be able to view or manage this object. Are you sure?');
-  $path = "islandora/object/{$form_state['object']->id}/manage/properties";
-  return confirm_form(array(),
-    t('Are you sure you want to set the object state?'),
-    $path,
-    $desc,
-    t('Continue'),
-    t('Cancel'));
 }
