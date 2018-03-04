@@ -1725,11 +1725,6 @@ function islandora_datastream_access($op, $datastream, $user = NULL) {
   // Populate the cache on a miss.
   if (!isset($cache[$op][$datastream->parent->id][$datastream->id][$user->uid])) {
     module_load_include('inc', 'islandora', 'includes/utilities');
-    $object_results = islandora_invoke_hook_list('islandora_object_access', $datastream->parent->models, array(
-      $op,
-      $datastream->parent,
-      $user,
-    ));
 
     $datastream_results = islandora_invoke_hook_list('islandora_datastream_access', $datastream->parent->models, array(
       $op,
@@ -1737,11 +1732,9 @@ function islandora_datastream_access($op, $datastream, $user = NULL) {
       $user,
     ));
 
-    // Nothing returned FALSE at at least one thing returned TRUE
-    // for both the datastream and the object checks.
+    // The datastream check returned no FALSE, and at least one TRUE.
     $cache[$op][$datastream->parent->id][$datastream->id][$user->uid] = (
-      (!in_array(FALSE, $datastream_results, TRUE) && in_array(TRUE, $datastream_results, TRUE)) &&
-      (!in_array(FALSE, $object_results, TRUE) && in_array(TRUE, $object_results, TRUE))
+      !in_array(FALSE, $datastream_results, TRUE) && in_array(TRUE, $datastream_results, TRUE)
     );
   }
 
@@ -1968,7 +1961,7 @@ function islandora_islandora_metadata_display_info() {
  */
 function islandora_islandora_datastream_access($op, AbstractDatastream $datastream, $user) {
   module_load_include('inc', 'islandora', 'includes/utilities');
-  $result = islandora_namespace_accessible($datastream->parent->id) && user_access($op, $user);
+  $result = islandora_object_access($op, $datastream->parent, $user);
 
   if ($result && $op == ISLANDORA_REGENERATE_DERIVATIVES) {
     module_load_include('inc', 'islandora', 'includes/derivatives');
