@@ -71,6 +71,7 @@ function islandora_derivatives_test_some_cmodel_islandora_derivative_alter(&$der
  *   An AbstractObject representing a Fedora object.
  * @param bool $force
  *   Whether or not derivative generation is to be forced.
+ *
  * @return array
  *   An array detailing the success of the operation.
  *
@@ -131,6 +132,7 @@ function islandora_derivatives_test_create_stanley_datastream(AbstractObject $ob
  *   An AbstractObject representing a Fedora object.
  * @param bool $force
  *   Whether or not derivative generation is to be forced.
+ *
  * @return array
  *   An array detailing the success of the operation.
  *
@@ -226,13 +228,13 @@ function islandora_derivatives_test_add_datastream(AbstractObject $object, $dsid
 /**
  * Returns a message if we failed to add a derivative.
  *
- * @see hook_islandora_derivative()
- *
  * @param string $message
  *   The error message to be returned back.
  *
  * @return array
  *   An array describing the outcome of our failure.
+ *
+ * @see hook_islandora_derivative()
  */
 function islandora_derivatives_test_failed_adding($message) {
   return array(

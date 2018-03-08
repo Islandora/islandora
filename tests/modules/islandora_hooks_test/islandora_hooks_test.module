@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Implements hooks that get tested by islandora_hooks.test
+ * Implements hooks that get tested by islandora_hooks.test.
  */
 
 /**

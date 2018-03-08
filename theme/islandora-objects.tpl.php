@@ -7,11 +7,11 @@
 ?>
 <div class="islandora-objects clearfix">
   <span class="islandora-objects-display-switch">
-    <?php 
+    <?php
     print theme('links', array(
-                           'links' => $display_links,
-                           'attributes' => array('class' => array('links', 'inline')),
-                         )
+      'links' => $display_links,
+      'attributes' => array('class' => array('links', 'inline')),
+    )
     );
     ?>
   </span>

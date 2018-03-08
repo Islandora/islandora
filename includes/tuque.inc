@@ -28,17 +28,20 @@ $islandora_module_path = drupal_get_path('module', 'islandora');
 @include_once "$islandora_module_path/libraries/tuque/Repository.php";
 @include_once "$islandora_module_path/libraries/tuque/FedoraRelationships.php";
 
+/**
+ * Class for setting up tuque in Islandora.
+ */
 class IslandoraTuque {
 
   /**
-   * Connection to the repository
+   * Connection to the repository.
    *
    * @var RepositoryConnection
    */
   public $connection = NULL;
 
   /**
-   * The Fedora API we are using
+   * The Fedora API we are using.
    *
    * @var FedoraAPI
    */
@@ -61,14 +64,14 @@ class IslandoraTuque {
   /**
    * Constructor.
    *
-   * @param array $user
+   * @param object $user
    *   A Drupal user.
    * @param string $url
    *   The url to the fedora instance.
    */
   public function __construct($user = NULL, $url = NULL) {
     if (!isset($user)) {
-      global $user;
+      $user = $GLOBALS['user'];;
     }
 
     if ($user->uid == 0) {
@@ -113,4 +116,5 @@ class IslandoraTuque {
     $message = t('Islandora requires the !tuque_url. Please install in /sites/all/libraries/tuque before continuing. See the !islandora_url.', array('!tuque_url' => $tuque_link, '!islandora_url' => $islandora_doc_link));
     drupal_set_message(filter_xss($message), 'error', FALSE);
   }
+
 }

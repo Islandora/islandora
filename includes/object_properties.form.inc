@@ -68,7 +68,11 @@ function islandora_object_properties_form(array $form, array &$form_state, Abstr
       '#required' => TRUE,
       '#description' => t("The object's state (active, inactive or deleted)"),
       '#type' => 'select',
-      '#options' => array('A' => 'Active', 'I' => 'Inactive', 'D' => 'Deleted'),
+      '#options' => array(
+        'A' => t('Active'),
+        'I' => t('Inactive'),
+        'D' => t('Deleted'),
+      ),
     ),
     'propogate' => array(
       '#title' => t('Apply changes to related objects?'),
@@ -90,7 +94,8 @@ function islandora_object_properties_form(array $form, array &$form_state, Abstr
       '#type' => 'submit',
       '#access' => islandora_object_access(ISLANDORA_PURGE, $object),
       '#value' => t("Permanently remove '@label' from repository", array(
-        '@label' => truncate_utf8($object->label, 32, TRUE, TRUE))
+        '@label' => truncate_utf8($object->label, 32, TRUE, TRUE),
+      )
       ),
       '#submit' => array('islandora_object_properties_form_delete'),
       '#limit_validation_errors' => array(array('pid')),
@@ -150,7 +155,7 @@ function islandora_object_properties_form_submit(array $form, array &$form_state
   if (isset($label) && $label != $object->label) {
     try {
       $object->label = $label;
-      drupal_set_message(t('Successfully updated label %s', array('%s' => check_plain($label))));
+      drupal_set_message(t('Successfully updated label %s', array('%s' => $label)));
     }
     catch (Exception $e) {
       form_set_error(t('Error updating label %s', array('%s' => $e->getMessage())));
@@ -200,15 +205,15 @@ function islandora_object_properties_form_delete(array $form, array &$form_state
  * Updates object state.
  *
  * @param string $pid
- *   PID of object to be updated
+ *   PID of object to be updated.
  * @param bool $update_states
- *   If TRUE, update object state
+ *   If TRUE, update object state.
  * @param string $state
- *   Desired object state
+ *   Desired object state.
  * @param bool $update_owners
- *   If TRUE, update Owner
+ *   If TRUE, update Owner.
  * @param string $owner
- *   New Owner
+ *   New Owner.
  */
 function islandora_update_object_properties($pid, $update_states, $state, $update_owners, $owner) {
   $fedora_object = islandora_object_load($pid);

@@ -1,7 +1,6 @@
 <?php
 
 /**
- * @file
  * Tests to see if the hooks get called when appropriate.
  *
  * In the test module 'islandora_hooked_access_test' there are implementations
@@ -10,7 +9,6 @@
  *
  * To make sense of these tests reference islandora_hooked_access_test.module.
  */
-
 class IslandoraHookedAccessTestCase extends IslandoraWebTestCase {
 
   /**
@@ -146,4 +144,5 @@ class IslandoraHookedAccessTestCase extends IslandoraWebTestCase {
   public function testDenyDatastreamExplicit() {
     $this->assertFalse(islandora_datastream_access($this->denied_op, $this->object['asdf']), 'Explicit denial of datastream access.');
   }
+
 }

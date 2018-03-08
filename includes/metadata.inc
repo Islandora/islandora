@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Defines functions used when viewing metadata displays on Islandora objects.
@@ -70,7 +71,7 @@ function islandora_retrieve_description_markup(AbstractObject $object) {
  * @return array
  *   An array representing the metadata display viewer form.
  */
-function islandora_metadata_display_form($form, $form_state) {
+function islandora_metadata_display_form(array $form, array $form_state) {
   module_load_include('inc', 'islandora', 'includes/solution_packs.inc');
   $form = array();
   $defined_displays = module_invoke_all('islandora_metadata_display_info');
@@ -106,7 +107,7 @@ function islandora_metadata_display_form($form, $form_state) {
       );
       $form['viewers']['configuration'][$name] = array(
         '#type' => 'item',
-        '#markup' => (isset($profile['configuration']) AND $profile['configuration'] != '') ? l(t('configure'), $profile['configuration']) : '',
+        '#markup' => (isset($profile['configuration']) and $profile['configuration'] != '') ? l(t('configure'), $profile['configuration']) : '',
       );
     }
     $form['viewers']['default'] = array(
@@ -135,7 +136,7 @@ function islandora_metadata_display_form($form, $form_state) {
  * @param array $form_state
  *   An array containing the Drupal form state.
  */
-function islandora_metadata_display_form_submit($form, $form_state) {
+function islandora_metadata_display_form_submit(array $form, array $form_state) {
   variable_set('islandora_metadata_display', $form_state['values']['viewers']['default']);
   drupal_set_message(t('The configuration options have been saved.'));
 }

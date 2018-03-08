@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Defines functions used when constructing derivatives.
@@ -209,7 +210,7 @@ function islandora_do_batch_derivatives(AbstractObject $object, array $options) 
  * @return array
  *   Returns the filtered array of hooks to be ran.
  */
-function islandora_filter_derivatives($hooks, $options, AbstractObject $object) {
+function islandora_filter_derivatives(array $hooks, array $options, AbstractObject $object) {
   if (array_key_exists('source_dsid', $options)) {
     $hooks = array_filter($hooks, function ($filter_hook) use ($options) {
       return array_key_exists('source_dsid', $filter_hook) &&
@@ -284,10 +285,10 @@ function islandora_remove_defer_derivatives_flag(AbstractObject $object) {
  *
  * @param AbstractObject $object
  *   The object to find derivatives for.
- * @param &array $options
+ * @param array $options
  *   Options for derivatives, will be updated to default force to FALSE.
  */
-function islandora_get_derivative_list(AbstractObject $object, &$options) {
+function islandora_get_derivative_list(AbstractObject $object, array &$options) {
   module_load_include('inc', 'islandora', 'includes/utilities');
 
   $ds_modified_params = isset($options['ds_modified_params']) ? $options['ds_modified_params'] : array();

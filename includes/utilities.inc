@@ -13,7 +13,7 @@
  * XXX: Shouldn't Drupal's format_size() be preferred?
  *
  * @param int $bytes
- *   Size in bytes to convert
+ *   Size in bytes to convert.
  * @param int $precision
  *   The amount of decimal precision to show.
  *
@@ -175,8 +175,6 @@ function islandora_describe_repository($url = NULL) {
  * as MODULE_REFINEMENT_HOOK. Any additional arguments passed to this function
  * will be passed as arguments to module_invoke_all().
  *
- * @see islandora_build_hook_list()
- *
  * @param string $hook
  *   A hook to call.
  * @param array $refinements
@@ -188,6 +186,8 @@ function islandora_describe_repository($url = NULL) {
  *
  * @return array
  *   The merged results from all the hooks.
+ *
+ * @see islandora_build_hook_list())
  */
 function islandora_invoke_hook_list($hook, array $refinements, array $args) {
   $return = array();
@@ -229,7 +229,7 @@ function islandora_invoke_hook_list($hook, array $refinements, array $args) {
  *   An array with each refinement escaped and concatenated with the base hook
  *   name, in addition to the base hook name.
  */
-function islandora_build_hook_list($hook, $refinements = array()) {
+function islandora_build_hook_list($hook, array $refinements = array()) {
   $refinements = array_unique($refinements);
   $hooks = array($hook);
   foreach ($refinements as $refinement) {
@@ -333,7 +333,7 @@ function islandora_get_parents_from_rels_ext(AbstractObject $object) {
     // @todo some logging would be nice, not sure what this throws.
     return array();
   }
-  $map = function($o) {
+  $map = function ($o) {
     return islandora_object_load($o['object']['value']);
   };
   $collections = array_map($map, $collections);
@@ -484,7 +484,7 @@ function islandora_get_datastreams_requirements_from_content_model(AbstractObjec
  * @return NewFedoraObject
  *   An ingestable NewFedoraObject.
  */
-function islandora_prepare_new_object($name_source = NULL, $label = NULL, $datastreams = array(), $content_models = array(), $relationships = array()) {
+function islandora_prepare_new_object($name_source = NULL, $label = NULL, array $datastreams = array(), array $content_models = array(), array $relationships = array()) {
   global $user;
   $tuque = islandora_get_tuque_connection();
   $object = isset($name_source) ? $tuque->repository->constructObject($name_source) : new IslandoraNewFedoraObject(NULL, $tuque->repository);
@@ -500,7 +500,7 @@ function islandora_prepare_new_object($name_source = NULL, $label = NULL, $datas
     $dsid = $ds['dsid'];
     $label = isset($ds['label']) ? $ds['label'] : '';
     $mimetype = isset($ds['mimetype']) ? $ds['mimetype'] : 'text/xml';
-    // Default 'Managed'
+    // Default 'Managed'.
     $control_group = 'M';
     $groups = array('X', 'M', 'R', 'E');
     if (isset($ds['control_group']) && in_array($ds['control_group'], $groups)) {
@@ -598,7 +598,7 @@ function islandora_display_repository_inaccessible_message() {
 function islandora_executable_available_message($path, $version = NULL, $required_version = NULL) {
   $available = is_executable($path);
   if ($available) {
-    $image = theme_image(array('path' => 'misc/watchdog-ok.png', 'attributes' => array()));
+    $image = theme('image', array('path' => 'misc/watchdog-ok.png', 'attributes' => array()));
     $message = t('Executable found at @path', array('@path' => $path));
     if ($version) {
       $message .= t('<br/>Version: @version', array('@version' => $version));
@@ -606,12 +606,12 @@ function islandora_executable_available_message($path, $version = NULL, $require
     if ($required_version) {
       $message .= t('<br/>Required Version: @version', array('@version' => $required_version));
       if (version_compare($version, $required_version) < 0) {
-        $image = theme_image(array('path' => 'misc/watchdog-error.png', 'attributes' => array()));
+        $image = theme('image', array('path' => 'misc/watchdog-error.png', 'attributes' => array()));
       }
     }
   }
   else {
-    $image = theme_image(array('path' => 'misc/watchdog-error.png', 'attributes' => array()));
+    $image = theme('image', array('path' => 'misc/watchdog-error.png', 'attributes' => array()));
     $message = t('Unable to locate executable at @path', array('@path' => $path));
   }
   return $image . $message;
@@ -629,11 +629,11 @@ function islandora_executable_available_message($path, $version = NULL, $require
 function islandora_directory_exists_message($path) {
   $available = is_dir($path);
   if ($available) {
-    $image = theme_image(array('path' => 'misc/watchdog-ok.png', 'attributes' => array()));
+    $image = theme('image', array('path' => 'misc/watchdog-ok.png', 'attributes' => array()));
     $message = t('Directory found at @path', array('@path' => $path));
   }
   else {
-    $image = theme_image(array('path' => 'misc/watchdog-error.png', 'attributes' => array()));
+    $image = theme('image', array('path' => 'misc/watchdog-error.png', 'attributes' => array()));
     $message = t('Unable to locate directory at @path', array('@path' => $path));
   }
   return $image . $message;
@@ -735,14 +735,14 @@ function islandora_get_content_models($ignore_system_namespace = TRUE) {
  * @param string $drupal_variable
  *   the name of the Drupal variable holding selected content models
  *   Content models held in this variable will appear at the top of
- *   the displayed list
+ *   the displayed list.
  * @param array $default_values_array
- *   default values to display if $drupal_variable is unset
+ *   Default values to display if $drupal_variable is unset.
  *
  * @return array
  *   Drupal form element allowing content model selection
  */
-function islandora_content_model_select_table_form_element($drupal_variable, $default_values_array = array('')) {
+function islandora_content_model_select_table_form_element($drupal_variable, array $default_values_array = array('')) {
   $defaults = array();
   $rows = array();
   $content_models = array();
@@ -835,7 +835,7 @@ function islandora_deprecated($release, $solution = NULL) {
  *   of strings, which we transform to renderable markup elements (by
  *   reference).
  */
-function islandora_as_renderable_array(&$markup_array) {
+function islandora_as_renderable_array(array &$markup_array) {
   foreach ($markup_array as &$value) {
     if (!is_array($value)) {
       // Not a renderable array, just a string. Let's convert it to a

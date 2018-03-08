@@ -37,7 +37,7 @@ function islandora_get_object_token($pid, $dsid, $uses = 1) {
   global $user;
   $time = time();
   $token = bin2hex(drupal_random_bytes(32));
-  $id = db_insert("islandora_authtokens")->fields(
+  db_insert("islandora_authtokens")->fields(
     array(
       'token' => $token,
       'uid' => $user->uid,
@@ -104,11 +104,11 @@ function islandora_validate_object_token($pid, $dsid, $token) {
     // Decrement authentication token uses.
     else {
       db_update("islandora_authtokens")
-      ->fields(array('remaining_uses' => $remaining_uses))
-      ->condition('token', $token, '=')
-      ->condition('pid', $pid, '=')
-      ->condition('dsid', $dsid, '=')
-      ->execute();
+        ->fields(array('remaining_uses' => $remaining_uses))
+        ->condition('token', $token, '=')
+        ->condition('pid', $pid, '=')
+        ->condition('dsid', $dsid, '=')
+        ->execute();
     }
     unset($result[0]->remaining_uses);
     $accounts[$pid][$dsid][$token] = $result[0];

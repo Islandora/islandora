@@ -201,7 +201,7 @@ function islandora_add_datastream_form_submit(array $form, array &$form_state) {
     file_delete($file);
   }
   catch (exception $e) {
-    drupal_set_message(t('@message', array('@message' => check_plain($e->getMessage()))), 'error');
+    drupal_set_message(t('@message', array('@message' => $e->getMessage())), 'error');
     // Make sure to delete anyways.
     file_delete($file);
     return;
@@ -227,7 +227,7 @@ function islandora_add_datastream_form_autocomplete_callback(AbstractObject $obj
   $dsids = array_combine($dsids, $dsids);
   $query = trim($query);
   if (!empty($query)) {
-    $filter = function($id) use($query) {
+    $filter = function ($id) use ($query) {
       return stripos($id, $query) !== FALSE;
     };
     $dsids = array_filter($dsids, $filter);

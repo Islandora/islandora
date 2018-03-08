@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * This file documents all available hook functions to manipulate data.
@@ -8,7 +9,7 @@
  * Generate a repository objects view.
  *
  * @param AbstractObject $object
- *   The object to display
+ *   The object to display.
  * @param object $user
  *   The user accessing the object.
  * @param string $page_number
@@ -19,7 +20,7 @@
  * @return array
  *   An array whose values are markup.
  */
-function hook_islandora_view_object($object, $user, $page_number, $page_size) {
+function hook_islandora_view_object(AbstractObject $object, $user, $page_number, $page_size) {
   $output = array();
   if (in_array('islandora:sp_basic_image', $object->models)) {
     $resource_url = url("islandora/object/{$object->id}/datastream/OBJ/view");
@@ -30,7 +31,8 @@ function hook_islandora_view_object($object, $user, $page_number, $page_size) {
     // Theme the image seperatly.
     $variables['islandora_img'] = theme('image', $params);
     $output = theme('islandora_default_print', array(
-    'islandora_content' => $variables['islandora_img']));
+      'islandora_content' => $variables['islandora_img'],
+    ));
   }
   return $output;
 }
@@ -38,10 +40,10 @@ function hook_islandora_view_object($object, $user, $page_number, $page_size) {
 /**
  * Generate a print friendly page for the given object.
  *
- * @param object $object
+ * @param AbstractObject $object
  *   The object form to print.
  */
-function hook_islandora_view_print_object($object) {
+function hook_islandora_view_print_object(AbstractObject $object) {
 
 }
 
@@ -52,13 +54,13 @@ function hook_islandora_view_print_object($object) {
  * create the hook name.
  *
  * @param AbstractObject $object
- *   A Tuque FedoraObject
+ *   A Tuque FedoraObject.
  *
  * @return array
  *   An array whose values are markup.
  */
-function hook_cmodel_pid_islandora_view_object($object) {
-
+function hook_cmodel_pid_islandora_view_object(AbstractObject $object) {
+  return array();
 }
 
 /**
@@ -69,21 +71,21 @@ function hook_cmodel_pid_islandora_view_object($object) {
  * @param array $rendered
  *   The array of rendered views.
  */
-function hook_islandora_view_object_alter(&$object, &$rendered) {
+function hook_islandora_view_object_alter(AbstractObject &$object, array &$rendered) {
 
 }
 
 /**
  * Alter display output if the object has the given model.
  *
- * @see hook_islandora_view_object_alter()
- *
  * @param AbstractObject $object
  *   A Tuque AbstractObject being operated on.
  * @param array $rendered
  *   The array of rendered views.
+ *
+ * @see hook_islandora_view_object_alter()
  */
-function hook_cmodel_pid_islandora_view_object_alter(&$object, &$rendered) {
+function hook_cmodel_pid_islandora_view_object_alter(AbstractObject &$object, array &$rendered) {
 
 }
 
@@ -91,13 +93,13 @@ function hook_cmodel_pid_islandora_view_object_alter(&$object, &$rendered) {
  * Generate an object's datastreams management display.
  *
  * @param AbstractObject $object
- *   A Tuque FedoraObject
+ *   A Tuque FedoraObject.
  *
  * @return array
  *   An array whose values are markup.
  */
-function hook_islandora_edit_object($object) {
-
+function hook_islandora_edit_object(AbstractObject $object) {
+  return array();
 }
 
 /**
@@ -107,24 +109,24 @@ function hook_islandora_edit_object($object) {
  * create the hook name.
  *
  * @param AbstractObject $object
- *   A Tuque FedoraObject
+ *   A Tuque FedoraObject.
  *
  * @return array
  *   An array whose values are markup.
  */
-function hook_cmodel_pid_islandora_edit_object($object) {
-
+function hook_cmodel_pid_islandora_edit_object(AbstractObject $object) {
+  return array();
 }
 
 /**
  * Allow datastreams management display output to be altered.
  *
  * @param AbstractObject $object
- *   A Tuque FedoraObject
+ *   A Tuque FedoraObject.
  * @param array $rendered
- *   an arr of rendered views
+ *   An arr of rendered views.
  */
-function hook_islandora_edit_object_alter(&$object, &$rendered) {
+function hook_islandora_edit_object_alter(AbstractObject &$object, array &$rendered) {
 
 }
 
@@ -227,12 +229,12 @@ function hook_cmodel_pid_dsid_islandora_datastream_alter(AbstractObject $object,
  * This hook is called after an object has been successfully ingested via a
  * FedoraRepository object.
  *
+ * @param AbstractObject $object
+ *   The object that was ingested.
+ *
  * @note
  * If ingested directly via the FedoraApiM object this will not be called as we
  * don't have access to the ingested object at that time.
- *
- * @param AbstractObject $object
- *   The object that was ingested.
  */
 function hook_islandora_object_ingested(AbstractObject $object) {
 
@@ -301,14 +303,14 @@ function hook_cmodel_pid_islandora_object_purged($pid) {
  *
  * This hook is called after the datastream has been successfully ingested.
  *
- * @note
- * If ingested directly via the FedoraApiM object this will not be called as we
- * don't have access to the ingested datastream at that time.
- *
  * @param AbstractObject $object
  *   The object the datastream belongs to.
  * @param AbstractDatastream $datastream
  *   The ingested datastream.
+ *
+ * @note
+ * If ingested directly via the FedoraApiM object this will not be called as we
+ * don't have access to the ingested datastream at that time.
  */
 function hook_islandora_datastream_ingested(AbstractObject $object, AbstractDatastream $datastream) {
 
@@ -394,7 +396,7 @@ function hook_cmodel_pid_dsid_islandora_datastream_purged(AbstractObject $object
  *   - name: A string containg a human-readable name for the entry.
  *   - url: A string containing the URL to which to the user will be routed.
  */
-function hook_islandora_edit_datastream_registry($object, $dsid) {
+function hook_islandora_edit_datastream_registry(AbstractObject $object, $dsid) {
   $routes = array();
   $routes[] = array(
     'name' => t('My Awesome Edit Route'),
@@ -451,7 +453,7 @@ function hook_islandora_undeletable_datastreams(array $models) {
  *
  * @param array $form_state
  *   An array containing the form_state, on which infomation from step storage
- *   might be extracted.  Note that the
+ *   might be extracted.  Note that the.
  *
  * @return array
  *   An associative array of associative arrays which define each step in the
@@ -511,7 +513,6 @@ function hook_islandora_ingest_steps(array $form_state) {
  *
  * @param array $steps
  *   An array of steps as generated by hook_islandora_ingest_steps().
- *
  * @param array $form_state
  *   An array containing the Drupal form_state.
  */
@@ -538,7 +539,6 @@ function hook_cmodel_pid_islandora_ingest_steps(array $form_state) {
  *
  * @param array $steps
  *   An array of steps as generated by hook_islandora_ingest_steps().
- *
  * @param array $form_state
  *   An array containing the Drupal form_state.
  */
@@ -557,13 +557,13 @@ function hook_cmodel_pid_islandora_ingest_steps_alter(array &$steps, array &$for
  * @param object $user
  *   A loaded user object, as the global $user variable might contain.
  *
- * @return bool|NULL|array
+ * @return bool|null|array
  *   Either boolean TRUE or FALSE to explicitly allow or deny the operation on
  *   the given object, or NULL to indicate that we are making no assertion
  *   about the outcome. Can also be an array containing multiple
  *   TRUE/FALSE/NULLs, due to how hooks work.
  */
-function hook_islandora_object_access($op, $object, $user) {
+function hook_islandora_object_access($op, AbstractObject $object, $user) {
   switch ($op) {
     case 'create stuff':
       return TRUE;
@@ -591,18 +591,18 @@ function hook_cmodel_pid_islandora_object_access($op, $object, $user) {
  * @param string $op
  *   A string define an operation to check. Should be defined via
  *   hook_permission().
- * @param AbstractDatastream $object
+ * @param AbstractDatastream $ds
  *   An object to check the operation on.
  * @param object $user
  *   A loaded user object, as the global $user variable might contain.
  *
- * @return bool|NULL|array
+ * @return bool|null|array
  *   Either boolean TRUE or FALSE to explicitly allow or deny the operation on
  *   the given object, or NULL to indicate that we are making no assertion
  *   about the outcome. Can also be an array containing multiple
  *   TRUE/FALSE/NULLs, due to how hooks work.
  */
-function hook_islandora_datastream_access($op, $object, $user) {
+function hook_islandora_datastream_access($op, AbstractDatastream $ds, $user) {
   switch ($op) {
     case 'create stuff':
       return TRUE;
@@ -664,7 +664,7 @@ function hook_cmodel_pid_islandora_overview_object_alter(AbstractObject &$object
  * hierarchy.
  *
  * @param AbstractObject $object
- *   Optional object to which derivatives will be added
+ *   Optional object to which derivatives will be added.
  * @param array $ds_modified_params
  *   An array that will contain the properties changed on the datastream if
  *   derivatives were triggered from a datastream_modified hook, as well as a
@@ -703,7 +703,7 @@ function hook_cmodel_pid_islandora_overview_object_alter(AbstractObject &$object
  *   - file: A string denoting the path to the file where the function
  *     is being called from.
  */
-function hook_islandora_derivative(AbstractObject $object = NULL, $ds_modified_params = array()) {
+function hook_islandora_derivative(AbstractObject $object = NULL, array $ds_modified_params = array()) {
   $derivatives[] = array(
     'source_dsid' => 'OBJ',
     'destination_dsid' => 'DERIV',
@@ -777,7 +777,7 @@ function hook_cmodel_pid_islandora_derivative_alter() {
  * Retrieves PIDS of related objects for property updating.
  *
  * @param AbstractObject $object
- *   AbstractObject representing deleted object
+ *   AbstractObject representing deleted object.
  */
 function hook_islandora_update_related_objects_properties(AbstractObject $object) {
   $related_objects = get_all_children_siblings_and_friends($object);
@@ -796,9 +796,9 @@ function hook_islandora_update_related_objects_properties(AbstractObject $object
  * @param string $context
  *   Where the alter is originating from for distinguishing.
  * @param AbstractObject $object
- *   (Optional) AbstractObject representing object providing breadcrumb path
+ *   (Optional) AbstractObject representing object providing breadcrumb path.
  */
-function hook_islandora_breadcrumbs_alter(&$breadcrumbs, $context, $object = NULL) {
+function hook_islandora_breadcrumbs_alter(array &$breadcrumbs, $context, AbstractObject $object = NULL) {
 
 }
 
@@ -883,7 +883,7 @@ function hook_islandora_get_breadcrumb_query_predicates() {
  *   - original_edit_registry: The original edit_registry prior to any
  *     modifications.
  */
-function hook_islandora_edit_datastream_registry_alter(&$edit_registry, $context) {
+function hook_islandora_edit_datastream_registry_alter(array &$edit_registry, array $context) {
   // Example: Remove xml form builder edit registry.
   if (isset($edit_registry['xml_form_builder_edit_form_registry'])) {
     unset($edit_registry['xml_form_builder_edit_form_registry']);
@@ -943,5 +943,5 @@ function hook_islandora_breadcrumbs_backends() {
  */
 function callback_islandora_breadcrumbs_backends(AbstractObject $object) {
   // Do something to get an array of breadcrumb links for $object, root first.
-  return array($root_link, $collection_link, $object_link);
+  return array('root_link', 'collection_link', 'object_link');
 }

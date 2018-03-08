@@ -5,21 +5,11 @@
  * We provide some sane print styling for Drupal, hiding most visuals.
  */
 
-#content a[href^="javascript:"]:after,
-#content a[href^="#"]:after { /* Only display useful links. */
-/*   content: ""; */
-}
-
-#content abbr[title]:after { /* Add visible title after abbreviations. */
-/*   content: " (" attr(title) ")"; */
-}
-
 #content {
-    left: 0 !important;
-    width: 100% !important;
+  left: 0 !important;
+  width: 100% !important;
 }
-uncomment when ready to test printing
-#header {
+uncomment when ready to test printing #header {
   display: none !important;
 }
 
@@ -40,8 +30,8 @@ body,
 }
 
 body.sidebar-first {
-    left: 0 !important;
-    width: 100% !important;
+  left: 0 !important;
+  width: 100% !important;
 }
 #skip-link,
 #toolbar,

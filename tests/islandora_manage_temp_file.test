@@ -1,10 +1,8 @@
 <?php
 
 /**
- * @file
  * Tests for our islandora_temp_file_entry() function.
  */
-
 class IslandoraManageTempfileTestCase extends IslandoraWebTestCase {
 
   /**
@@ -80,4 +78,5 @@ class IslandoraManageTempfileTestCase extends IslandoraWebTestCase {
     $this->baseFileHelper($this->tempUri);
     $this->baseFileHelper($this->publicUri);
   }
+
 }

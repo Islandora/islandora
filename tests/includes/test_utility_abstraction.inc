@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Abstraction n' stuff for the test utilities and results.
@@ -75,6 +76,7 @@ class IslandoraTestUtilityResult {
   public function getType() {
     return $this->type;
   }
+
 }
 
 /**

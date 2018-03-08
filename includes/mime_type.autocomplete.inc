@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Autocomplete functionality for MIME types in Islandora.

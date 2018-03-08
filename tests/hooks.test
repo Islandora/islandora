@@ -1,7 +1,6 @@
 <?php
 
 /**
- * @file
  * Tests to see if the hooks get called when appropriate.
  *
  * In the test module 'islandora_hooks_test' there are implementations
@@ -10,7 +9,6 @@
  *
  * To make sense of these tests reference islandora_hooks_test.module.
  */
-
 class IslandoraHooksTestCase extends IslandoraWebTestCase {
 
   /**
@@ -256,4 +254,5 @@ class IslandoraHooksTestCase extends IslandoraWebTestCase {
     $this->assert($_SESSION['islandora_hooks']['hook'][ISLANDORA_DATASTREAM_INGESTED_HOOK], 'Called ISLANDORA_DATASTREAM_INGESTED_HOOK when ingesting via FedoraObject::ingestDatastream.');
     $this->repository->purgeObject($object->id);
   }
+
 }

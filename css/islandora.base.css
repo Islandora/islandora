@@ -26,7 +26,7 @@
 dl.islandora-inline-metadata {
   margin: 0 auto;
   letter-spacing: -0.31em;
-  *letter-spacing:normal;
+  *letter-spacing: normal;
   word-spacing: -0.43em;
 }
 
@@ -44,17 +44,17 @@ dl.islandora-inline-metadata {
 }
 
 dl.islandora-metadata-fields {
-    width:100%;
+  width: 100%;
 }
 
 .islandora-metadata dt,
 .islandora-metadata dd {
-    border-top:1px solid #e5e5e5;
+  border-top: 1px solid #e5e5e5;
 }
 
 .islandora-metadata dt.first,
 .islandora-metadata dd.first {
-    border-top:0;
+  border-top: 0;
 }
 /*
  * In this rule, we reset the white-space (see hack above)

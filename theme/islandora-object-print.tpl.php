@@ -3,7 +3,6 @@
 /**
  * @file
  * The default view to print objects.
- *
  */
 ?>
 <div>

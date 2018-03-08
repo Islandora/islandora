@@ -1,10 +1,8 @@
 <?php
 
 /**
- * @file
  * Defines the class IslandoraWebTestCase, which allows tests to access Fedora.
  */
-
 class IslandoraWebTestCase extends DrupalWebTestCase {
 
   /**
@@ -43,7 +41,7 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
    * @return bool
    *   TRUE if the result was a pass, or FALSE otherwise.
    */
-  public function __call($method, $args) {
+  public function __call($method, array $args) {
     module_load_include('inc', 'islandora', 'tests/includes/utilities');
     $params = array(
       'logged_in_user' => $this->loggedInUser,
@@ -65,7 +63,7 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
    * @param IslandoraTestUtilities $utility
    *   An instance of IslandoraTestUtilities with populated results.
    */
-  public function parseUtilityResults($utility) {
+  public function parseUtilityResults(IslandoraTestUtilities $utility) {
     foreach ($utility->getResults() as $result) {
       $this->assert($result->getType(), $result->getMessage(), 'Islandora', $result->getCaller());
     }
@@ -253,9 +251,9 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
    * Deletes an object using the PID. This does the deletion using the UI.
    *
    * @param string $pid
-   *   The PID of the collection to be deleted
+   *   The PID of the collection to be deleted.
    * @param string $button
-   *   The label of the first 'Delete' button
+   *   The label of the first 'Delete' button.
    * @param bool $safety
    *   If TRUE, this will only delete objects owned by users in $this->users.
    *
@@ -284,11 +282,10 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
     }
   }
 
-  /**
-   * These are a few quick helper functions to fill in a gap in the standard
-   * DrupalWebTestCase where no function exists to test for the simple existence
-   * or non-existence of an error.
-   */
+  // These are a few quick helper functions to fill in a gap in the standard
+  // DrupalWebTestCase where no function exists to test for the simple existence
+  // or non-existence of an error.
+  // @codingStandardsIgnoreLine
 
   /**
    * Asserts that an error is found in $this->content.
@@ -373,8 +370,6 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
    * button labels that don't have the ID we want, so that the only one left
    * with the correct label is the one with the right ID.
    *
-   * @see DrupalWebTestCase::drupalPost()
-   *
    * @param string $path
    *   Location of the post form.
    * @param array $edit
@@ -388,15 +383,17 @@ class IslandoraWebTestCase extends DrupalWebTestCase {
    * @param array $headers
    *   An array containing additional HTTP request headers, each formatted as
    *   "name: value".
-   * @param null $form_html_id
+   * @param mixed $form_html_id
    *   (optional) HTML ID of the form to be submitted.
-   * @param null $extra_post
+   * @param mixed $extra_post
    *   (optional) A string of additional data to append to the POST submission.
    *
    * @return bool|string
    *   The content from the POST request's curlExec, or FALSE on fail.
+   *
+   * @see DrupalWebTestCase::drupalPost()
    */
-  public function drupalPostByID($path, $edit, $submit, $id, array $options = array(), array $headers = array(), $form_html_id = NULL, $extra_post = NULL) {
+  public function drupalPostById($path, array $edit, $submit, $id, array $options = array(), array $headers = array(), $form_html_id = NULL, $extra_post = NULL) {
     $buttons = $this->xpath("//input[@type=\"submit\" and @value=\"{$submit}\"]");
     if (empty($buttons)) {
       $this->fail("No buttons found on the page with value '$submit'");

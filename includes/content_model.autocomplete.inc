@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Autocomplete functionality for content models in Islandora.
@@ -46,7 +47,7 @@ function islandora_get_content_model_names() {
  * @return array
  *   An array of results in a more usable format.
  */
-function islandora_parse_query($content) {
+function islandora_parse_query(array $content) {
   $content_models = array();
   foreach ($content as $model) {
     $content_models[] = $model['object']['value'];

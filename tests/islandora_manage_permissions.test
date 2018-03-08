@@ -1,10 +1,8 @@
 <?php
 
 /**
- * @file
  * Tests islandora permissions, and permission related funcitons.
  */
-
 class IslandoraPermissionsTestCase extends IslandoraWebTestCase {
 
   /**
@@ -133,4 +131,5 @@ class IslandoraPermissionsTestCase extends IslandoraWebTestCase {
     $ret = islandora_user_access($object['DC'], array(ISLANDORA_VIEW_OBJECTS), array(), TRUE, $user);
     $this->assertTrue($ret, 'User access granted for matching permissions, with a datastream given instead of an object.');
   }
+
 }

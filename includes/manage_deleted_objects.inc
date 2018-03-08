@@ -16,7 +16,7 @@
  * @return array
  *   The Drupal form definition.
  */
-function islandora_deleted_objects_prep_form($form, $form_state, $serialized_chosen = NULL) {
+function islandora_deleted_objects_prep_form(array $form, array $form_state, $serialized_chosen = NULL) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   $chosen_contentmodels = array();
   if ($serialized_chosen) {
@@ -67,9 +67,9 @@ function islandora_deleted_objects_prep_form($form, $form_state, $serialized_cho
  * @param array $form_state
  *   The form state.
  */
-function islandora_deleted_objects_prep_form_submit($form, $form_state) {
+function islandora_deleted_objects_prep_form_submit(array $form, array $form_state) {
   $content_models = $form_state['values']['contentmodels'];
-  $chosen = function($element) {
+  $chosen = function ($element) {
     return $element;
   };
   $serialized_contentmodels = serialize(array_filter($content_models, $chosen));
@@ -87,7 +87,7 @@ function islandora_deleted_objects_prep_form_submit($form, $form_state) {
  * @return array
  *   The Drupal form definition.
  */
-function islandora_deleted_objects_manage_form($form, $form_state, $serialized_chosen = NULL) {
+function islandora_deleted_objects_manage_form(array $form, array $form_state, $serialized_chosen = NULL) {
   $form['previous'] = array(
     '#type' => 'submit',
     '#value' => t('Previous'),
@@ -186,7 +186,7 @@ function islandora_deleted_objects_manage_form($form, $form_state, $serialized_c
  * @param array $form_state
  *   The form state.
  */
-function islandora_deleted_objects_manage_form_submit($form, $form_state) {
+function islandora_deleted_objects_manage_form_submit(array $form, array $form_state) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   $serialized_chosen = isset($form_state['values']['serialized_chosen']) ? $form_state['values']['serialized_chosen'] : NULL;
 
@@ -246,7 +246,8 @@ function islandora_get_deleted_objects($content_models, $limit, $offset) {
       $cm_pid = $object['object']['value'];
       $title = $object['label']['value'];
       $deleted_objects[$pid] = array(
-        'title' => $title, 'pid' => $pid,
+        'title' => $title,
+        'pid' => $pid,
         'content_model' => $content_models[$cm_pid],
       );
     }
@@ -288,7 +289,7 @@ function islandora_get_contentmodels_with_deleted_members() {
  * Restores deleted object.
  *
  * @param string $pid
- *   PID of object to be restored
+ *   PID of object to be restored.
  */
 function islandora_restore_object_by_pid($pid) {
   $fedora_object = islandora_object_load($pid);
@@ -299,7 +300,7 @@ function islandora_restore_object_by_pid($pid) {
  * Purges deleted object.
  *
  * @param string $pid
- *   PID of object to be restored
+ *   PID of object to be restored.
  */
 function islandora_purge_object_by_pid($pid) {
   $fedora_object = islandora_object_load($pid);
@@ -310,14 +311,14 @@ function islandora_purge_object_by_pid($pid) {
  * Get query to find all deleted objects by content type.
  *
  * @param array $content_models
- *   Content models to restrict search
+ *   Content models to restrict search.
  * @param int $offset
- *   offset to be added to search
+ *   Offset to be added to search.
  *
  * @return string
  *   Sparql query
  */
-function islandora_get_deleted_query($content_models, $offset = 0) {
+function islandora_get_deleted_query(array $content_models, $offset = 0) {
   $candidates = array_keys($content_models);
   $first_contentmodel = array_shift($candidates);
   $prefix = "PREFIX fm: <" . FEDORA_MODEL_URI . "> ";

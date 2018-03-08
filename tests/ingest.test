@@ -1,7 +1,6 @@
 <?php
 
 /**
- * @file
  * Tests to see if the hooks get called when appropriate.
  *
  * In the test module 'islandora_hooks_test' there are implementations
@@ -10,7 +9,6 @@
  *
  * To make sense of these tests reference islandora_hooks_test.module.
  */
-
 class IslandoraIngestsTestCase extends IslandoraWebTestCase {
 
   /**

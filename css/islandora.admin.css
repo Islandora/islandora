@@ -5,19 +5,16 @@
 
 /* Solution pack admin page */
 
-.islandora-solution-pack-fieldset
-{
+.islandora-solution-pack-fieldset {
   padding-top: 0.5em;
 }
 
 .islandora-solution-pack-fieldset table th,
-.islandora-solution-pack-fieldset table td
-{
+.islandora-solution-pack-fieldset table td {
   width: 30%;
 }
 
 .islandora-solution-pack-fieldset table th:first-child,
-.islandora-solution-pack-fieldset table td:first-child
-{
+.islandora-solution-pack-fieldset table td:first-child {
   width: 10%;
 }

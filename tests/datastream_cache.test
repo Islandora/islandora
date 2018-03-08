@@ -1,10 +1,8 @@
 <?php
 
 /**
- * @file
  * Tests to verify the cache headers we provide.
  */
-
 class IslandoraDatastreamCacheTestCase extends IslandoraWebTestCase {
 
   /**
@@ -87,33 +85,33 @@ class IslandoraDatastreamCacheTestCase extends IslandoraWebTestCase {
     $this->drupalLogin($user);
 
     // Test If-Modified-Since.
-    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+    $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
       'If-Modified-Since: ' . $datastream->createdDate->format('D, d M Y H:i:s \G\M\T'),
     ));
     $this->assertResponse(304);
-    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+    $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
       'If-Modified-Since: ' . $datastream->createdDate->sub(new DateInterval('P1M'))->format('D, d M Y H:i:s \G\M\T'),
     ));
     $this->assertResponse(200);
 
     // Test If-Unmodified-Since.
-    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+    $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
       'If-Unmodified-Since: ' . $datastream->createdDate->format('D, d M Y H:i:s \G\M\T'),
     ));
     $this->assertResponse(200);
-    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+    $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
       'If-Unmodified-Since: ' . $datastream->createdDate->sub(new DateInterval('P1M'))->format('D, d M Y H:i:s \G\M\T'),
     ));
     $this->assertResponse(412);
 
     // Test If-Match.
-    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+    $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
       format_string('If-Match: "!checksum"', array(
         '!checksum' => $datastream->checksum,
       )),
     ));
     $this->assertResponse(200);
-    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+    $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
       format_string('If-Match: "!checksum"', array(
         '!checksum' => 'dont-match' . $datastream->checksum,
       )),
@@ -121,35 +119,35 @@ class IslandoraDatastreamCacheTestCase extends IslandoraWebTestCase {
     $this->assertResponse(412);
 
     // Test If-None-Match.
-    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+    $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
       format_string('If-None-Match: "!checksum"', array(
         '!checksum' => $datastream->checksum,
       )),
     ));
     $this->assertResponse(304);
-    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+    $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
       format_string('If-None-Match: "!checksum"', array(
         '!checksum' => 'dont-match' . $datastream->checksum,
       )),
     ));
     $this->assertResponse(200);
 
-    // Test combination of If-None-Match and If-Modified-Since
-    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+    // Test combination of If-None-Match and If-Modified-Since.
+    $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
       'If-Modified-Since: ' . $datastream->createdDate->format('D, d M Y H:i:s \G\M\T'),
       format_string('If-None-Match: "!checksum"', array(
         '!checksum' => $datastream->checksum,
       )),
     ));
     $this->assertResponse(304);
-    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+    $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
       'If-Modified-Since: ' . $datastream->createdDate->format('D, d M Y H:i:s \G\M\T'),
       format_string('If-None-Match: "!checksum"', array(
         '!checksum' => 'dont-match' . $datastream->checksum,
       )),
     ));
     $this->assertResponse(200);
-    $result = $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
+    $this->drupalGet("islandora/object/{$object->id}/datastream/{$datastream->id}/view", array(), array(
       'If-Modified-Since: ' . $datastream->createdDate->sub(new DateInterval('P1M'))->format('D, d M Y H:i:s \G\M\T'),
       format_string('If-None-Match: "!checksum"', array(
         '!checksum' => $datastream->checksum,
@@ -157,4 +155,5 @@ class IslandoraDatastreamCacheTestCase extends IslandoraWebTestCase {
     ));
     $this->assertResponse(200);
   }
+
 }

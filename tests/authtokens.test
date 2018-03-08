@@ -1,10 +1,8 @@
 <?php
 
 /**
- * @file
  * Test Authentication Tokens.
  */
-
 class IslandoraAuthtokensTestCase extends IslandoraWebTestCase {
 
   /**
@@ -16,13 +14,6 @@ class IslandoraAuthtokensTestCase extends IslandoraWebTestCase {
       'description' => 'Ensure the correct functionality of the tokens to pass authorization to Djatoka in Islandora.',
       'group' => 'Islandora',
     );
-  }
-
-  /**
-   * Set up data for the tests.
-   */
-  public function setUp() {
-    parent::setUp();
   }
 
   /**
@@ -107,4 +98,5 @@ class IslandoraAuthtokensTestCase extends IslandoraWebTestCase {
   public function testTokenedViewDatastreamWithXacml() {
     // We need to add this test.
   }
+
 }

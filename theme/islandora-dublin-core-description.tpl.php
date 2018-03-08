@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * This is the template file for the Dublin Core metadata description.

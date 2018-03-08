@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Classes and functions for datastream validation.
@@ -16,7 +17,7 @@
  *   The hexidecimal string.
  *
  * @throws Exception
- *   if something horrible happens during the actual conversion.
+ *   If something horrible happens during the actual conversion.
  *
  * @return bool|int
  *   FALSE on failure, or the integer on success.
@@ -64,6 +65,7 @@ function islandora_hex2int($hex) {
  * all the test results using getPasses() and getFails() and transforms those
  * into something that DrupalWebTestCase can use.
  */
+// @codingStandardsIgnoreLine
 abstract class DatastreamValidator extends IslandoraTestUtilityClass {
 
   /**
@@ -198,6 +200,7 @@ abstract class DatastreamValidator extends IslandoraTestUtilityClass {
  * of image files can be checked. Please check the documentation for the PHPGD
  * imagecreatefromstring() function to determine what filetypes are valid.
  */
+// @codingStandardsIgnoreLine
 class ImageDatastreamValidator extends DatastreamValidator {
 
   /**
@@ -216,19 +219,20 @@ class ImageDatastreamValidator extends DatastreamValidator {
 /**
  * Asserts the validity of any .tif/.tiff datastream.
  */
+// @codingStandardsIgnoreLine
 class TIFFDatastreamValidator extends DatastreamValidator {
 
   /**
    * Asserts that the TIFF contains an appropriate header.
    */
-  public function assertTIFFHeaderHex() {
+  public function assertTiffHeaderHex() {
     $datastream_header_hex = self::getTIFFHeaderHex();
     if ($datastream_header_hex == "49492a00") {
       // In this case, the ingested TIFF is designated as using the "Intel
       // byte-order" (i.e. little-endian) by starting with the characters "II"
       // (repeated so that byte order does not yet need to be significant).
       // The number that follows is '42' in little-endian hex, a number of
-      // 'deep philosophical significance' to the TIFF format creators.'
+      // 'deep philosophical significance' to the TIFF format creators.'.
       $this->addResult(TRUE, "{$this->datastream} datastream asserts that it is a valid Intel-byte-orderded TIF/TIFF file.");
     }
     elseif ($datastream_header_hex == "4d4d002a") {
@@ -248,7 +252,7 @@ class TIFFDatastreamValidator extends DatastreamValidator {
    * @return string
    *   The ... thing I just wrote up there.
    */
-  protected function getTIFFHeaderHex() {
+  protected function getTiffHeaderHex() {
     return substr(bin2hex($this->datastreamContent), 0, 8);
   }
 
@@ -257,6 +261,7 @@ class TIFFDatastreamValidator extends DatastreamValidator {
 /**
  * Asserts the validity of a JP2 datastream.
  */
+// @codingStandardsIgnoreLine
 class JP2DatastreamValidator extends DatastreamValidator {
 
   /**
@@ -265,7 +270,7 @@ class JP2DatastreamValidator extends DatastreamValidator {
    * JP2 files begin with an offset header at the second 32-bit integer,
    * 0x6A502020. This header is in all .jp2s, and we check for it here.
    */
-  protected function assertJP2Header() {
+  protected function assertJp2Header() {
     $assertion = substr(bin2hex($this->datastreamContent), 8, 8) == '6a502020';
     $pass = "Datastream {$this->datastream} contains the appropriate JP2 header.";
     $fail = "Datastream {$this->datastream} does not contain the appropriate JP2 header.";
@@ -279,24 +284,26 @@ class JP2DatastreamValidator extends DatastreamValidator {
    * JP2 files have their codestream capped with a marker, 0xFFD9. We're just
    * checking for it here to see if the .jp2 encoder finished okay.
    */
-  protected function assertJP2Marker() {
+  protected function assertJp2Marker() {
     $assertion = substr(bin2hex($this->datastreamContent), strlen(bin2hex($this->datastreamContent)) - 4, 4) == 'ffd9';
     $pass = "Datastream {$this->datastream} contains the appropriate JP2 ending marker.";
     $fail = "Datastream {$this->datastream} does not contain the appropriate JP2 ending marker. If this is the only JP2 validator that failed, it is likely that derivative generation was interrupted.";
     $message = $assertion ? $pass : $fail;
     $this->addResult($assertion, $message);
   }
+
 }
 
 /**
  * Asserts the validity of a PDF datastream.
  */
+// @codingStandardsIgnoreLine
 class PDFDatastreamValidator extends DatastreamValidator {
 
   /**
    * Validates the PDF signature.
    */
-  protected function assertPDFSignature() {
+  protected function assertPdfSignature() {
     $assertion = substr($this->datastreamContent, 0, 5) == '%PDF-';
     $pdf_version = substr($this->datastreamContent, 5, 3);
     $pass = "{$this->datastream} datastream asserts that it is a valid PDF file using PDF version {$pdf_version}";
@@ -308,7 +315,7 @@ class PDFDatastreamValidator extends DatastreamValidator {
   /**
    * Counts the number of signatures in this PDF file and asserts there are any.
    */
-  protected function assertPDFStreamCount() {
+  protected function assertPdfStreamCount() {
     $pdf_stream_count = substr_count(bin2hex($this->datastreamContent), '0a73747265616d0a');
     $assertion = $pdf_stream_count !== 0;
     $pass = "{$this->datastream} datastream reports the existence of {$pdf_stream_count} PDF streams. Note that an extremely low number could still indicate corruption.";
@@ -319,17 +326,15 @@ class PDFDatastreamValidator extends DatastreamValidator {
 
   /**
    * Validates the PDF closing tag.
-   *
-   * @return bool
-   *   TRUE if it was present; FALSE otherwise.
    */
-  protected function assertPDFClosingTag() {
+  protected function assertPdfClosingTag() {
     $assertion = strpos(bin2hex($this->datastreamContent), '0a2525454f460a') == TRUE;
     $pass = "{$this->datastream} datastream reports the existence of the closing 'EOF' tag required at the end of PDFs";
     $fail = "{$this->datastream} datastream does not contain the closing 'EOF' tag. If this is the only PDF validation that failed, it is likely that derivative generation was interrupted.";
     $message = $assertion ? $pass : $fail;
     $this->addResult($assertion, $message);
   }
+
 }
 
 /**
@@ -339,7 +344,9 @@ class PDFDatastreamValidator extends DatastreamValidator {
  * is the string we're looking to find in the datastream, and the second is an
  * integer representing the number of times it should appear in the datastream.
  */
+// @codingStandardsIgnoreLine
 class TextDatastreamValidator extends DatastreamValidator {
+
   /**
    * Constructor override; blow up if we don't have our two values.
    */
@@ -369,6 +376,7 @@ class TextDatastreamValidator extends DatastreamValidator {
   protected function getTextStringCount() {
     return substr_count($this->datastreamContent, $this->params[0]);
   }
+
 }
 
 /**
@@ -381,6 +389,7 @@ class TextDatastreamValidator extends DatastreamValidator {
  * declared chunk sizes against actual sizes. If any of these are off, WAV
  * players will fail to function.
  */
+// @codingStandardsIgnoreLine
 class WAVDatastreamValidator extends DatastreamValidator {
 
   /**
@@ -401,7 +410,7 @@ class WAVDatastreamValidator extends DatastreamValidator {
   /**
    * Asserts that the datastream contains a valid WAV signature.
    */
-  protected function assertWAVSignature() {
+  protected function assertWavSignature() {
     $signatures = str_split(substr($this->datastreamContent, 0, 24), 8);
     $assertion = $signatures[0] == '52494646' && $signatures[2] == '57415645';
     $pass = "Header of the {$this->datastream} datastream contains a valid file signature.";
@@ -413,7 +422,7 @@ class WAVDatastreamValidator extends DatastreamValidator {
   /**
    * Asserts that the chunksize in the header is correct.
    */
-  protected function assertWAVChunkSize() {
+  protected function assertWavChunkSize() {
     $assertion = islandora_hex2int(substr($this->datastreamContent, 8, 8)) === 36 + self::getDataSubChunkSize();
     $pass = "{$this->datastream} datastream chunksize in WAV header is correct";
     $fail = "{$this->datastream} datastream chunksize in WAV header does not match actual chunksize.";
@@ -424,7 +433,7 @@ class WAVDatastreamValidator extends DatastreamValidator {
   /**
    * Asserts that the datastream contains a 'fmt' subchunk.
    */
-  protected function assertWAVFmtSubChunk() {
+  protected function assertWavFmtSubChunk() {
     $assertion = substr($this->datastreamContent, 24, 8) === '666d7420';
     $pass = "{$this->datastream} datastream contains a 'fmt' subchunk.";
     $fail = "{$this->datastream} datastream is missing the required 'fmt' subchunk.";
@@ -435,7 +444,7 @@ class WAVDatastreamValidator extends DatastreamValidator {
   /**
    * Asserts that the byterate reported by the WAV header is valid.
    */
-  protected function assertWAVByteRate() {
+  protected function assertWavByteRate() {
     $wav_samplerate = islandora_hex2int(substr($this->datastreamContent, 48, 8));
     $assertion = islandora_hex2int(substr($this->datastreamContent, 56, 8)) === $wav_samplerate * self::getNumChannels() * self::getBytesPerSample();
     $pass = "{$this->datastream} datastream byterate in the WAV header is correct.";
@@ -447,7 +456,7 @@ class WAVDatastreamValidator extends DatastreamValidator {
   /**
    * Asserts that the block alignment is correct.
    */
-  protected function assertWAVBlockAlignment() {
+  protected function assertWavBlockAlignment() {
     $assertion = islandora_hex2int(substr($this->datastreamContent, 64, 4)) === self::getNumChannels() * self::getBytesPerSample();
     $pass = "{$this->datastream} datastream block alignment is set correctly.";
     $fail = "{$this->datastream} datastream block alignment is off.";
@@ -460,7 +469,7 @@ class WAVDatastreamValidator extends DatastreamValidator {
    *
    * Also asserts that the subchunk size is correct.
    */
-  protected function assertWAVDataSubChunk() {
+  protected function assertWavDataSubChunk() {
     if (substr($this->datastreamContent, 72, 8) !== '64617461') {
       $this->addResult(FALSE, "{$this->datastream} datastream is missing the 'data' subchunk.");
       return;
@@ -505,6 +514,7 @@ class WAVDatastreamValidator extends DatastreamValidator {
   protected function getDataSubChunkSize() {
     return islandora_hex2int(substr($this->datastreamContent, 80, 8));
   }
+
 }
 
 /**
@@ -516,6 +526,7 @@ class WAVDatastreamValidator extends DatastreamValidator {
  * VBR settings. Otherwise, we look for the basic MP3 signature 'fffa' or 'fffb'
  * at the start of the binary.
  */
+// @codingStandardsIgnoreLine
 class MP3DatastreamValidator extends DatastreamValidator {
 
   /**
@@ -526,7 +537,7 @@ class MP3DatastreamValidator extends DatastreamValidator {
    * breaking my own rules here and using a single assert function so that I
    * can handle the weird logic.
    */
-  protected function assertValidMP3() {
+  protected function assertValidMp3() {
     $this->datastreamContent = bin2hex($this->datastreamContent);
 
     // If it's not a VBR MP3, we don't have to check much, so let's get that
@@ -607,12 +618,13 @@ class MP3DatastreamValidator extends DatastreamValidator {
  * a four-character filetype code. Here, we look for 'ftyp', and then pass the
  * filetype code to the test message.
  */
+// @codingStandardsIgnoreLine
 class MP4DatastreamValidator extends DatastreamValidator {
 
   /**
    * Asserts that the datastream is ISO-formatted video.
    */
-  protected function assertISOVideo() {
+  protected function assertIsoVideo() {
     $mp4_ftyp = substr(strpos($this->datastreamContent, 'ftyp'), 4, 4);
     $assertion = strpos($this->datastreamContent, 'ftyp') !== 0;
     $pass = "{$this->datastream} datastream asserts that it is a valid ISO-formatted video file using ftyp {$mp4_ftyp}";
@@ -620,6 +632,7 @@ class MP4DatastreamValidator extends DatastreamValidator {
     $message = $assertion ? $pass : $fail;
     $this->addResult($assertion, $message);
   }
+
 }
 
 /**
@@ -631,12 +644,13 @@ class MP4DatastreamValidator extends DatastreamValidator {
  * one OGG page, and confirming that the file asserts the Theora and Vorbis
  * codecs were used to create the file.
  */
+// @codingStandardsIgnoreLine
 class OGGDatastreamValidator extends DatastreamValidator {
 
   /**
    * Asserts that the datastream contains ogg pages.
    */
-  protected function assertOGGPages() {
+  protected function assertOggPages() {
     $ogg_pages = substr_count($this->datastreamContent, 'OggS');
     $assertion = $ogg_pages !== 0;
     $pass = "{$this->datastream} datastream asserts that it contains {$ogg_pages} Ogg pages (even a very small file should contain several).";
@@ -666,6 +680,7 @@ class OGGDatastreamValidator extends DatastreamValidator {
     $message = $assertion ? $pass : $fail;
     $this->addResult($assertion, $message);
   }
+
 }
 
 /**
@@ -678,12 +693,13 @@ class OGGDatastreamValidator extends DatastreamValidator {
  * second, we know that the file will contain the declaration 'matroska' soon
  * after.
  */
+// @codingStandardsIgnoreLine
 class MKVDatastreamValidator extends DatastreamValidator {
 
   /**
    * Asserts that the datastream is an EBML-format file.
    */
-  protected function assertEBMLFormat() {
+  protected function assertEbmlFormat() {
     $assertion = substr(bin2hex($this->datastreamContent), 0, 8) == '1a45dfa3';
     $pass = "{$this->datastream} datastream asserts that it is an EBML-formatted file";
     $fail = "{$this->datastream} datastream is not an EBML-formatted file.";
@@ -701,4 +717,5 @@ class MKVDatastreamValidator extends DatastreamValidator {
     $message = $assertion ? $pass : $fail;
     $this->addResult($assertion, $message);
   }
+
 }

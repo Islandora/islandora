@@ -28,7 +28,6 @@ function islandora_datastream_version_table($datastream) {
     $row = array();
     $reponsibility = $parent->owner;
     foreach ($audit_values as $audit_value) {
-      $internal = $datastream_version->createdDate;
       if ($audit_value['date'] == $datastream_version->createdDate) {
         $reponsibility = $audit_value['responsibility'];
       }
@@ -142,15 +141,17 @@ function islandora_delete_datastream_version_form_submit(array $form, array &$fo
   }
   catch (Exception $e) {
     drupal_set_message(t('Error deleting version %v of %s datastream from object %o %e', array(
-          '%v' => $version,
-          '%s' => $datastream_id,
-          '%o' => $object->label,
-          '%e' => $e->getMessage())), 'error');
+      '%v' => $version,
+      '%s' => $datastream_id,
+      '%o' => $object->label,
+      '%e' => $e->getMessage(),
+    )), 'error');
   }
 
   drupal_set_message(t('%d datastream version successfully deleted from Islandora object %o', array(
-        '%d' => $datastream_id,
-        '%o' => $object->label)));
+    '%d' => $datastream_id,
+    '%o' => $object->label,
+  )));
 
   $form_state['redirect'] = "islandora/object/{$object->id}/datastream/{$datastream->id}/version";
 }
@@ -224,9 +225,10 @@ function islandora_revert_datastream_version_form_submit(array $form, array &$fo
   }
 
   drupal_set_message(t('%d datastream successfully reverted to version %v for Islandora object %o', array(
-        '%d' => $datastream_to_revert->id,
-        '%v' => $version,
-        '%o' => $islandora_object->label)));
+    '%d' => $datastream_to_revert->id,
+    '%v' => $version,
+    '%o' => $islandora_object->label,
+  )));
 
   $form_state['redirect'] = "islandora/object/{$islandora_object->id}/datastream/{$datastream_to_revert->id}/version";
 }
@@ -235,9 +237,9 @@ function islandora_revert_datastream_version_form_submit(array $form, array &$fo
  * Process available dsids, mime and extensions for a given object.
  *
  * @param AbstractObject $object
- *   The FedoraObject to process available extensions
+ *   The FedoraObject to process available extensions.
  *
- * @return array()
+ * @return array
  *   An associative array, merged from calls to
  *   islandora_get_datastreams_requirements_from_content_models()
  *   and an objects dsid's.
@@ -272,7 +274,7 @@ function islandora_get_object_extensions(AbstractObject $object) {
  * @return array
  *   The drupal form definition.
  */
-function islandora_datastream_version_replace_form($form, &$form_state, AbstractDatastream $datastream) {
+function islandora_datastream_version_replace_form(array $form, array &$form_state, AbstractDatastream $datastream) {
   module_load_include('inc', 'islandora', 'includes/content_model');
   module_load_include('inc', 'islandora', 'includes/utilities');
   module_load_include('inc', 'islandora', 'includes/mimetype.utils');
@@ -330,7 +332,7 @@ function islandora_datastream_version_replace_form($form, &$form_state, Abstract
  * @param array $form_state
  *   The Drupal form state.
  */
-function islandora_datastream_version_replace_form_submit($form, &$form_state) {
+function islandora_datastream_version_replace_form_submit(array $form, array &$form_state) {
   $object = islandora_object_load($form_state['object_id']);
   $form_state['redirect'] = "islandora/object/{$object->id}";
   $file = file_load($form_state['values']['file']);
@@ -363,7 +365,7 @@ function islandora_datastream_version_replace_form_submit($form, &$form_state) {
  * Gets Audit datastream values from foxml.
  *
  * @param string $pid
- *   PID of parent object
+ *   PID of parent object.
  *
  * @return array
  *   Array of audit values

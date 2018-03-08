@@ -18,16 +18,16 @@ function islandora_download_datastream(AbstractDatastream $datastream) {
 /**
  * Callback function to view or download a datastream.
  *
- * @note
- *  This function calls exit().
- *
  * @param AbstractDatastream $datastream
  *   The datastream to view/download.
  * @param bool $download
  *   If TRUE the file is download to the user computer for viewing otherwise it
  *   will attempt to display in the browser natively.
  * @param int $version
- *   The version of the datastream to display
+ *   The version of the datastream to display.
+ *
+ * @note
+ *  This function calls exit().
  */
 function islandora_view_datastream(AbstractDatastream $datastream, $download = FALSE, $version = NULL) {
   module_load_include('inc', 'islandora', 'includes/mimetype.utils');
@@ -120,19 +120,19 @@ function islandora_view_datastream(AbstractDatastream $datastream, $download = F
  * - fdsa
  * - 2132
  *
- * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24
- * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.26
- *
  * @param string $header_value
  *   The value from the headers.
  *
  * @return array
  *   An array containing all the etags present.
+ *
+ * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24
+ * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.26
  */
 function islandora_parse_http_match_headers($header_value) {
   $matches = array();
   // Match the CSV-like structure supported by the HTTP headers.
-  $count = preg_match_all('/(((W\/)?("?)(\*|.+?)\4)(, +)?)/', $header_value, $matches);
+  preg_match_all('/(((W\/)?("?)(\*|.+?)\4)(, +)?)/', $header_value, $matches);
   // The fifth sub-expression/group is which will contain the etags.
   return $matches[5];
 }
@@ -268,7 +268,7 @@ function islandora_datastream_get_human_readable_size(AbstractDatastream $datast
  * @param string $type
  *   One of:
  *   - download
- *   - view
+ *   - view.
  * @param int $version
  *   (Optional) The version of the datastream to get a URL for.
  *
@@ -380,7 +380,7 @@ function islandora_view_datastream_set_chunk_headers(AbstractDatastream $datastr
       $c_start = $size - substr($range, 1);
     }
     else {
-      $range  = explode('-', $range);
+      $range   = explode('-', $range);
       $c_start = $range[0];
       $c_end   = (isset($range[1]) && is_numeric($range[1])) ? $range[1] : $size;
     }
@@ -395,8 +395,8 @@ function islandora_view_datastream_set_chunk_headers(AbstractDatastream $datastr
       header("Content-Range: bytes $start-$end/$size");
       exit;
     }
-    $start  = $c_start;
-    $end    = $c_end;
+    $start = $c_start;
+    $end   = $c_end;
     // Calculate new content length.
     $length = $end - $start + 1;
     header('HTTP/1.1 206 Partial Content');
@@ -418,7 +418,7 @@ function islandora_view_datastream_set_chunk_headers(AbstractDatastream $datastr
  * @param array $params
  *   An associate array containing the start and ending chunk bytes.
  */
-function islandora_view_datastream_deliver_chunks(AbstractDatastream $datastream, $params) {
+function islandora_view_datastream_deliver_chunks(AbstractDatastream $datastream, array $params) {
   $file_uri = islandora_view_datastream_retrieve_file_uri($datastream);
   // The meat of this has been taken from:
   // http://mobiforge.com/design-development/content-delivery-mobile-devices.
@@ -445,14 +445,14 @@ function islandora_view_datastream_deliver_chunks(AbstractDatastream $datastream
  * File locks are used to ensure the datastream is completely downloaded before
  * attempting to serve up chunks from the file.
  *
- * @throws RepositoryException|Exception
- *   Exceptions may be thrown if the file was unable to be reliably acquired.
- *
  * @param AbstractDatastream $datastream
  *   An AbstractDatastream representing a datastream on a Fedora object.
  *
  * @return string
  *   The URI of the file.
+ *
+ * @throws RepositoryException|Exception
+ *   Exceptions may be thrown if the file was unable to be reliably acquired.
  */
 function islandora_view_datastream_retrieve_file_uri(AbstractDatastream $datastream) {
   module_load_include('inc', 'islandora', 'includes/mimetype.utils');

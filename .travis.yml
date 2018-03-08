@@ -4,17 +4,17 @@ language: php
 
 matrix:
   include:
-   #5.3.3 Ubuntu Precise exceptions
-    - php: 5.3.3
+   #5.3 Ubuntu Precise exceptions
+    - php: 5.3
       dist: precise
       env: FEDORA_VERSION="3.5"
-    - php: 5.3.3
+    - php: 5.3
       dist: precise
       env: FEDORA_VERSION="3.6.2"
-    - php: 5.3.3
+    - php: 5.3
       dist: precise
       env: FEDORA_VERSION="3.7.0"
-    - php: 5.3.3
+    - php: 5.3
       dist: precise
       env: FEDORA_VERSION="3.8.1"
 php:
@@ -38,7 +38,9 @@ branches:
     - secure: "nTv2Zb/qKlECK+xE5ahbfXI9ZZbf2ZMd796q7oPlTxUwvu6nomHnUOjJATl6tq2cj23PyJ89Jlgl5cMZ5h0QMUzYpN5hPyY6oCJxWgFamFaE3bv5E/rBd1f6WVTJW7S4UKn8Mr9R2PrX+ZxQZGVIigAfR8VfhQuP8PcuO5eMLBk="
 before_install:
   - export ISLANDORA_DIR=$TRAVIS_BUILD_DIR
+  - export TOOLS_DIR=$HOME/tools/
   - $TRAVIS_BUILD_DIR/tests/scripts/travis_setup.sh
+  - $TRAVIS_BUILD_DIR/tests/scripts/phpcs_setup.sh
   - cd $HOME/drupal-*
 before_script:
   # Mysql might time out for long tests, increase the wait timeout.
@@ -47,7 +49,7 @@ before_script:
 script:
   - ant -buildfile sites/all/modules/islandora/build.xml lint
   - $ISLANDORA_DIR/tests/scripts/line_endings.sh sites/all/modules/islandora
-  - drush coder-review --reviews=production,security,style,i18n,potx,sniffer islandora
+  - $TOOLS_DIR/vendor/bin/phpcs --standard=drupal,drupalpractice --ignore=vendor,*.md,*.info,*.txt sites/all/modules/islandora
   - phpcpd --names *.module,*.inc,*.test sites/all/modules/islandora
   - php scripts/run-tests.sh --php `phpenv which php` --url http://localhost:8081 --verbose "Islandora"
 after_failure:

@@ -1,7 +1,6 @@
 <?php
 
 /**
- * @file
  * Tests to see if the hooks get called when appropriate.
  *
  * In the test module 'islandora_derivatives_test' there are implementations
@@ -10,7 +9,6 @@
  *
  * To make sense of these tests reference islandora_derivatives_test.module.
  */
-
 class IslandoraDerivativesTestCase extends IslandoraWebTestCase {
 
   /**
@@ -44,16 +42,6 @@ class IslandoraDerivativesTestCase extends IslandoraWebTestCase {
     $this->cache = new SimpleCache();
     $this->repository = new FedoraRepository($this->api, $this->cache);
     $this->pid = $this->randomName() . ":" . $this->randomName();
-  }
-
-  /**
-   * Free any objects/resources created for this test.
-   *
-   * @see IslandoraWebTestCase::tearDown()
-   */
-  public function tearDown() {
-    $tuque = islandora_get_tuque_connection();
-    parent::tearDown();
   }
 
   /**
@@ -156,7 +144,7 @@ class IslandoraDerivativesTestCase extends IslandoraWebTestCase {
   /**
    * Tests derivative hook filtering based upon source_dsid.
    */
-  public function testDerivativeFilteringOnSourceDSID() {
+  public function testDerivativeFilteringOnSourceDsid() {
     global $_islandora_derivative_test_derivative_functions;
     $_islandora_derivative_test_derivative_functions = array();
     $object = $this->constructBaseObject();
@@ -182,7 +170,7 @@ class IslandoraDerivativesTestCase extends IslandoraWebTestCase {
   /**
    * Tests that only functions were the source_dsid is NULL are fired.
    */
-  public function testNULLSourceDSID() {
+  public function testNullSourceDsid() {
     global $_islandora_derivative_test_derivative_functions;
     $_islandora_derivative_test_derivative_functions = array();
     $this->constructBaseObject();
@@ -205,7 +193,7 @@ class IslandoraDerivativesTestCase extends IslandoraWebTestCase {
   /**
    * Tests that when no source_dsid all derivative functions are called.
    */
-  public function testNoSourceDSIDNoForce() {
+  public function testNoSourceDsidNoForce() {
     global $_islandora_derivative_test_derivative_functions;
     $_islandora_derivative_test_derivative_functions = array();
     $object = $this->constructBaseObject();
@@ -227,7 +215,7 @@ class IslandoraDerivativesTestCase extends IslandoraWebTestCase {
   /**
    * Tests that when no source_dsid all derivative functions are called.
    */
-  public function testNoSourceDSIDForce() {
+  public function testNoSourceDsidForce() {
     global $_islandora_derivative_test_derivative_functions;
     $_islandora_derivative_test_derivative_functions = array();
     $object = $this->constructBaseObject();
@@ -290,7 +278,7 @@ class IslandoraDerivativesTestCase extends IslandoraWebTestCase {
    * @return AbstractObject
    *   The modified AbstractObject.
    */
-  public function constructDERIVDatastream(AbstractObject $object) {
+  public function constructDerivDatastream(AbstractObject $object) {
     $dsid = 'DERIV';
     $ds = $object->constructDatastream($dsid);
     $ds->label = 'Test';
@@ -308,7 +296,7 @@ class IslandoraDerivativesTestCase extends IslandoraWebTestCase {
    * @return AbstractObject
    *   The modified AbstractObject.
    */
-  public function constructNOSOURCEDatastream(AbstractObject $object) {
+  public function constructNosourceDatastream(AbstractObject $object) {
     $dsid = 'NOSOURCE';
     $ds = $object->constructDatastream($dsid);
     $ds->label = 'Test';
@@ -326,7 +314,7 @@ class IslandoraDerivativesTestCase extends IslandoraWebTestCase {
    * @return AbstractObject
    *   The modified AbstractObject.
    */
-  public function constructSOMEWEIRDDATASTREAMDatastream(AbstractObject $object) {
+  public function constructSomeweirddatastreamDatastream(AbstractObject $object) {
     $dsid = 'SOMEWEIRDDATASTREAM';
     $ds = $object->constructDatastream($dsid);
     $ds->label = 'Test';
@@ -334,4 +322,5 @@ class IslandoraDerivativesTestCase extends IslandoraWebTestCase {
     $object->ingestDatastream($ds);
     return $object;
   }
+
 }

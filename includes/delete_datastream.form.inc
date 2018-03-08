@@ -127,19 +127,22 @@ function islandora_delete_datastream_form_submit(array $form, array &$form_state
   }
   catch (Exception $e) {
     drupal_set_message(t('Error deleting %s datastream from object %o %e', array(
-          '%s' => $datastream_id,
-          '%o' => $object->label,
-          '%e' => $e->getMessage())), 'error');
+      '%s' => $datastream_id,
+      '%o' => $object->label,
+      '%e' => $e->getMessage(),
+    )), 'error');
   }
   if ($deleted) {
     drupal_set_message(t('%d datastream sucessfully deleted from Islandora object %o', array(
-          '%d' => $datastream_id,
-          '%o' => $object->label)));
+      '%d' => $datastream_id,
+      '%o' => $object->label,
+    )));
   }
   else {
     drupal_set_message(t('Error deleting %s datastream from object %o', array(
-          '%s' => $datastream_id,
-          '%o' => $object->label)), 'error');
+      '%s' => $datastream_id,
+      '%o' => $object->label,
+    )), 'error');
   }
   $form_state['redirect'] = "islandora/object/{$object->id}";
 }

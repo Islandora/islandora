@@ -1,9 +1,8 @@
 <?php
+
 /**
- * @file
  * Islandora extensions for DrupalUnitTestCase.
  */
-
 class IslandoraUnitTestCase extends DrupalUnitTestCase {
 
   /**
@@ -21,7 +20,7 @@ class IslandoraUnitTestCase extends DrupalUnitTestCase {
    * @param array $args
    *   The arguments for that method.
    */
-  public function __call($method, $args) {
+  public function __call($method, array $args) {
     module_load_include('inc', 'islandora', 'tests/includes/utilities');
     $params = array('db_access' => FALSE);
     $utilities = new IslandoraTestUtilities($this->configuration, $params);
@@ -40,7 +39,7 @@ class IslandoraUnitTestCase extends DrupalUnitTestCase {
    * @param IslandoraTestUtilities $utility
    *   An instance of IslandoraTestUtilities with populated results.
    */
-  public function parseUtilityResults($utility) {
+  public function parseUtilityResults(IslandoraTestUtilities $utility) {
     foreach ($utility->getResults() as $result) {
       $this->assert($result->getType(), $result->getMessage(), 'Islandora', $result->getCaller());
     }

@@ -175,7 +175,7 @@ function drush_islandora_solution_pack_install_content_models() {
   if (module_exists($module)) {
     $info = islandora_solution_packs_get_required_objects($module);
     $objects_to_add = array();
-    foreach ($info['objects'] as $key => $candidate) {
+    foreach ($info['objects'] as $candidate) {
       if (in_array('fedora-system:ContentModel-3.0', $candidate->models)) {
         $objects_to_add[] = $candidate;
       }

@@ -1,6 +1,6 @@
 <?php
+
 /**
- * @file
  * Utilities classes for simpletest.
  *
  * These utilities are shared between the Islandora Web and Unit test cases and
@@ -12,7 +12,6 @@
  * more methods for result-passing could potentially be added to this without
  * breaking existing implementations.
  */
-
 class IslandoraTestUtilities extends IslandoraTestUtilityClass {
 
   protected $configuration;
@@ -31,7 +30,7 @@ class IslandoraTestUtilities extends IslandoraTestUtilityClass {
    * @param array $params
    *   Any additional parameters the method called may need to function.
    */
-  public function __construct($configuration, array $params = array()) {
+  public function __construct(array $configuration, array $params = array()) {
     $this->configuration = $configuration;
     $this->params = $params;
     $connection = new RepositoryConnection($this->configuration['fedora_url'], $this->configuration['admin_user'], $this->configuration['admin_pass']);
@@ -111,7 +110,7 @@ class IslandoraTestUtilities extends IslandoraTestUtilityClass {
    * @return bool
    *   TRUE on success, FALSE on fail.
    */
-  public function assertDatastreams($object, array $datastreams) {
+  public function assertDatastreams(AbstractObject $object, array $datastreams) {
     if (!self::assertFedoraObject($object)) {
       $this->addResult(FALSE, "Failed. Object passed in is invalid.", 'Islandora');
     }
@@ -136,7 +135,7 @@ class IslandoraTestUtilities extends IslandoraTestUtilityClass {
    * @param array $datastreams
    *   An array of datastreams to confirm not present.
    */
-  public function assertNoDatastreams($object, array $datastreams) {
+  public function assertNoDatastreams(AbstractObject $object, array $datastreams) {
     if (!self::assertFedoraObject($object)) {
       $this->addResult(FALSE, "Failed. Object passed in is invalid.", 'Islandora');
       return;

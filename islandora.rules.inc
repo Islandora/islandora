@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Does rule type stuff,
+ * Does rule type stuff,.
  */
 
 /**
@@ -157,7 +157,6 @@ function islandora_rules_base_xpath_parameters() {
     ),
   );
 }
-
 
 /**
  * Implements hook_rules_condition_info().
@@ -397,7 +396,7 @@ function islandora_rules_datastream_load_domxpath($string) {
  *   A loaded Drupal taxonomy vocabulary object, in which terms are understood
  *   to be namespace prefixes and descriptions are the namespace URIs.
  */
-function islandora_rules_datastream_load_namespace_vocab($xpath, $xpath_vocab) {
+function islandora_rules_datastream_load_namespace_vocab(DOMXPath $xpath, $xpath_vocab) {
   foreach (taxonomy_get_tree($xpath_vocab->vid, 0, 1, FALSE) as $term) {
     $xpath->registerNamespace($term->name, $term->description);
   }
@@ -499,7 +498,7 @@ function islandora_rules_data_info() {
  *   The object on which to set the property, described by $info['property'].
  * @param array $options
  *   An array of options... Not sure how it's used? Not touched by us, in any
- *   case. :P
+ *   case. :P.
  * @param string $name
  *   The name of the property to set, as used by Rules.
  * @param string $type
@@ -510,7 +509,7 @@ function islandora_rules_data_info() {
  *   - property: A string indicate the actual property on the $data we wish to
  *     set.
  */
-function islandora_rules_property_get($data, array $options, $name, $type, $info) {
+function islandora_rules_property_get($data, array $options, $name, $type, array $info) {
   return $data->$info['property'];
 }
 
@@ -536,7 +535,7 @@ function islandora_rules_property_get($data, array $options, $name, $type, $info
  *   - property: A string indicate the actual property on the $data we wish to
  *     set.
  */
-function islandora_rules_property_set(&$data, $name, $value, $langcode, $type, $info) {
+function islandora_rules_property_set(&$data, $name, $value, $langcode, $type, array $info) {
   $data->$info['property'] = $value;
 }
 

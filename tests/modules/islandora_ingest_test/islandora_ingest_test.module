@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Implements hooks that get tested by islandora_hooks.test
+ * Implements hooks that get tested by islandora_hooks.test.
  */
 
 /**
@@ -14,6 +14,7 @@ function islandora_ingest_test_menu() {
       'title' => 'Ingest Form',
       'page callback' => 'islandora_ingest_test_ingest',
       'type' => MENU_LOCAL_ACTION,
+      // No access restriction because its a test module.
       'access callback' => TRUE,
     ),
   );
