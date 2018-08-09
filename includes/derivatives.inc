@@ -159,10 +159,8 @@ function islandora_derivative_logging(array $logging_results) {
         $message_status = 'warning';
       }
       drupal_set_message(l($result_message, 'islandora/event-status'), $message_status, FALSE);
-      if (isset($_SESSION['messages']['warning'])) {
-        if (isset($_SESSION['messages']['status'])) {
-          unset($_SESSION['messages']['status']);
-        }
+      if (isset($_SESSION['messages']['warning']) && isset($_SESSION['messages']['status'])) {
+        unset($_SESSION['messages']['status']);
       }
     }
   }
