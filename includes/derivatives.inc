@@ -131,9 +131,9 @@ function islandora_derivative_logging(array $logging_results) {
     'success' => t('Derivatives successfully created.'),
     'incomplete' => t('Not all derivatives successfully created.  Please check log messages'),
   );
-  $result_message = $result_messages['success'];
   foreach ($logging_results as $result) {
     foreach ($result['messages'] as $message) {
+      $result_message = $result_messages['success'];
       $message_status = 'status';
       if ($message['type'] === 'dsm') {
         if (isset($message['severity']) && $message['severity'] != 'status') {
@@ -158,7 +158,7 @@ function islandora_derivative_logging(array $logging_results) {
         $result_message = $result_messages['incomplete'];
         $message_status = 'warning';
       }
-      drupal_set_message(l($result_message, 'islandora/event-status'), $message_status, FALSE);
+      drupal_set_message(l(filter_xss($result_message), 'islandora/event-status'), $message_status, FALSE);
       if (isset($_SESSION['messages']['warning']) && isset($_SESSION['messages']['status'])) {
         unset($_SESSION['messages']['status']);
       }
