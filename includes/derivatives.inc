@@ -127,7 +127,6 @@ function islandora_do_derivatives(AbstractObject $object, array $options) {
  *       watchdog if not defined.
  */
 function islandora_derivative_logging(array $logging_results) {
-
   $result_messages = array(
     'success' => t('Derivatives successfully created.'),
     'incomplete' => t('Not all derivatives successfully created.  Please check log messages'),
