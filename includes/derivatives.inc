@@ -127,6 +127,12 @@ function islandora_do_derivatives(AbstractObject $object, array $options) {
  *       watchdog if not defined.
  */
 function islandora_derivative_logging(array $logging_results) {
+
+  $result_messages = array(
+    'success' => t('Derivatives successfully created.'),
+    'incomplete' => t('Not all derivatives successfully created.  Please check log messages'),
+  );
+  $result_message = $result_messages['success'];
   foreach ($logging_results as $result) {
     foreach ($result['messages'] as $message) {
       if ($message['type'] === 'dsm') {
@@ -141,7 +147,6 @@ function islandora_derivative_logging(array $logging_results) {
             'message' => filter_xss(format_string($message['message'], isset($message['message_sub']) ? $message['message_sub'] : array())),
             'severity' => 'status',
           );
-          drupal_set_message(l(t('Derivatives successfully created.'), 'islandora/event-status'), 'status', FALSE);
         }
       }
       else {
@@ -150,6 +155,13 @@ function islandora_derivative_logging(array $logging_results) {
         // call_user_func until such time as the @ignore changes
         // are merged into the standard release for Coder.
         call_user_func('watchdog', 'islandora_derivatives', $message['message'], isset($message['message_sub']) ? $message['message_sub'] : array(), isset($message['severity']) ? $message['severity'] : WATCHDOG_NOTICE);
+        $result_message = $result_messages['incomplete'];
+      }
+      drupal_set_message(l($result_message, 'islandora/event-status'), 'status', FALSE);
+
+      // If there is more than one message something has gone wrong.
+      if (isset($_SESSION['messages']['status'][1])) {
+        $_SESSION['messages']['status'] = array(l($result_messages['incomplete'], 'islandora/event-status'));
       }
     }
   }
