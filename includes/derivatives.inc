@@ -128,8 +128,8 @@ function islandora_do_derivatives(AbstractObject $object, array $options) {
  */
 function islandora_derivative_logging(array $logging_results) {
   $result_messages = array(
-    'success' => t('Derivatives successfully created.'),
-    'incomplete' => t('Not all derivatives successfully created.  Please check log messages'),
+    'success' => l(t('Derivatives successfully created'), 'islandora/event-status'),
+    'incomplete' => l(t('Not all derivatives successfully created.  Please check log messages'), 'islandora/event-status'),
   );
   foreach ($logging_results as $result) {
     foreach ($result['messages'] as $message) {
@@ -158,7 +158,8 @@ function islandora_derivative_logging(array $logging_results) {
         $result_message = $result_messages['incomplete'];
         $message_status = 'warning';
       }
-      drupal_set_message(l(filter_xss($result_message), 'islandora/event-status'), filter_xss($message_status), FALSE);
+      drupal_set_message(filter_xss($result_message), filter_xss($message_status), FALSE);
+
       if (isset($_SESSION['messages']['warning']) && isset($_SESSION['messages']['status'])) {
         unset($_SESSION['messages']['status']);
       }
