@@ -156,21 +156,24 @@ WHERE {
   } .
   FILTER (!bound(?model))
 
-  # Filter by "parent" relationships - isMemberOf, isMemberOfCollection, isPageOf. 
-  FILTER (?p = <fedora-rels-ext:isMemberOfCollection> || ?p = <fedora-rels-ext:isMemberOf> || ?p = <islandora:isPageOf>)
+  # Filter by "parent" relationships
+  FILTER (!dead_parent_relationships)
  
-# Exclude objects with live parents - isMemberOf, isMemberOfCollection, isPageOf.
- OPTIONAL {
-    {?object <fedora-rels-ext:isMemberOfCollection> ?liveparent }
-    UNION {?object <fedora-rels-ext:isMemberOf> ?liveparent } 
-    UNION { ?object <islandora:isPageOf> ?liveparent } .
-   ?liveparent <fedora-model:hasModel> <info:fedora/fedora-system:FedoraObject-3.0> .
+  # Exclude objects with live parents - isMemberOf, isMemberOfCollection, isPageOf.
+  OPTIONAL {
+    !live_parent_relationships .
+    ?liveparent <fedora-model:hasModel> <info:fedora/fedora-system:FedoraObject-3.0> .
   }
   !optionals
   !filters
   FILTER (!bound(?liveparent))
 } ORDER BY ?object
 EOQ;
+  $parent_relationships = array('<fedora-rels-ext:isMemberOfCollection>', '<fedora-rels-ext:isMemberOf>', '<islandora:isPageOf>');
+  if (module_exists('islandora_compound_object')) {
+    $predicate = variable_get('islandora_compound_object_relationship', 'isConstituentOf');
+    $parent_relationships[] = "<fedora-rels-ext:$predicate>";
+  }
 
   $optionals = (array) module_invoke('islandora_xacml_api', 'islandora_basic_collection_get_query_optionals', 'view');
   $filter_modules = array(
@@ -184,10 +187,15 @@ EOQ;
   $filter_map = function ($filter) {
     return "FILTER($filter)";
   };
+  $parent_map = function ($parent) {
+    return "?object $parent ?liveparent";
+  };
   // Use separate queries for different object types.
   $sparql_query_objects = format_string($object_query, array(
     '!optionals' => !empty($optionals) ? ('OPTIONAL {{' . implode('} UNION {', $optionals) . '}}') : '',
     '!filters' => !empty($filters) ? implode(' ', array_map($filter_map, $filters)) : '',
+    '!dead_parent_relationships' => '?p = ' . implode(' || ?p = ', $parent_relationships),
+    '!live_parent_relationships' => '{' . implode(' } UNION { ', array_map($parent_map,$parent_relationships)) . '}',
   ));
   $results = $connection->repository->ri->sparqlQuery($sparql_query_objects);
   return $results;
