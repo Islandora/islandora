@@ -145,7 +145,7 @@ function islandora_get_orphaned_objects() {
   $connection = islandora_get_tuque_connection();
   // SPARQL: get orphaned objects, exclude any with a living parent.
   $object_query = <<<EOQ
-PREFIX islandora: <http://islandora.ca/ontology/relsext#>
+!prefix
 SELECT DISTINCT ?object ?title 
 WHERE {
   ?object <fedora-model:hasModel> <info:fedora/fedora-system:FedoraObject-3.0> ;
@@ -169,11 +169,7 @@ WHERE {
   FILTER (!bound(?liveparent))
 } ORDER BY ?object
 EOQ;
-  $parent_relationships = array('<fedora-rels-ext:isMemberOfCollection>', '<fedora-rels-ext:isMemberOf>', '<islandora:isPageOf>');
-  if (module_exists('islandora_compound_object')) {
-    $predicate = variable_get('islandora_compound_object_relationship', 'isConstituentOf');
-    $parent_relationships[] = "<fedora-rels-ext:$predicate>";
-  }
+  $parent_relationships = module_invoke_all('islandora_solution_pack_child_relationships');
 
   $optionals = (array) module_invoke('islandora_xacml_api', 'islandora_basic_collection_get_query_optionals', 'view');
   $filter_modules = array(
@@ -194,8 +190,9 @@ EOQ;
   $sparql_query_objects = format_string($object_query, array(
     '!optionals' => !empty($optionals) ? ('OPTIONAL {{' . implode('} UNION {', $optionals) . '}}') : '',
     '!filters' => !empty($filters) ? implode(' ', array_map($filter_map, $filters)) : '',
-    '!dead_parent_relationships' => '?p = ' . implode(' || ?p = ', $parent_relationships),
-    '!live_parent_relationships' => '{' . implode(' } UNION { ', array_map($parent_map,$parent_relationships)) . '}',
+    '!dead_parent_relationships' => '?p = ' . implode(' || ?p = ', $parent_relationships['predicate']),
+    '!live_parent_relationships' => '{' . implode(' } UNION { ', array_map($parent_map, $parent_relationships['predicate'])) . '}',
+    '!prefix' => implode("\n", $parent_relationships['prefix']),
   ));
   $results = $connection->repository->ri->sparqlQuery($sparql_query_objects);
   return $results;

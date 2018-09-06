@@ -966,3 +966,21 @@ function hook_islandora_datastream_filename_alter(&$filename, AbstractDatastream
     );
   }
 }
+
+/**
+ * Allow solution packs to register relationships used for children.
+ *
+ * @return array
+ *   - prefix (array): This is is a valid snip-it of SPARQL to register prefixes used in the predicates array.
+ *   - predicate (array): This array contains predicates used by the solution pack for child objects.
+ */
+function hook_islandora_solution_pack_child_relationships() {
+  return array(
+    'prefix' => array('PREFIX islandora: <http://islandora.ca/ontology/relsext#>'),
+    'predicate' => array(
+      '<fedora-rels-ext:isMemberOfCollection>',
+      '<fedora-rels-ext:isMemberOf>',
+      '<islandora:isPageOf>',
+    ),
+  );
+}

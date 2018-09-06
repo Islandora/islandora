@@ -2215,3 +2215,10 @@ function islandora_islandora_breadcrumbs_backends() {
     ),
   );
 }
+
+/**
+ * Implements hook_islandora_solution_pack_child_relationships
+ */
+function islandora_islandora_solution_pack_child_relationships() {
+  return array('predicate' => array(), 'prefix' => array());
+}
