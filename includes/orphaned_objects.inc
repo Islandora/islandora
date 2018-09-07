@@ -169,7 +169,7 @@ WHERE {
   FILTER (!bound(?liveparent))
 } ORDER BY ?object
 EOQ;
-  $parent_relationships = module_invoke_all('islandora_solution_pack_child_relationships');
+  $parent_relationships = module_invoke_all('islandora_solution_pack_child_relationships', 'all');
   if (count($parent_relationships['predicate']) == 0) {
     // No predicates to search for. Exit early.
     return array();

@@ -970,17 +970,26 @@ function hook_islandora_datastream_filename_alter(&$filename, AbstractDatastream
 /**
  * Allow solution packs to register relationships used for children.
  *
+ * @param string|array $cmodels
+ *   This takes either:
+ *      - string: the string 'all'. Function returns all child relationships.
+ *      - array: an array of cmodel PIDs to return the relationships for.
+ *
  * @return array
- *   - prefix (array): This is is a valid snip-it of SPARQL to register prefixes used in the predicates array.
- *   - predicate (array): This array contains predicates used by the solution pack for child objects.
+ *   - prefix (array): This is is a valid snip-it of SPARQL to register
+ *     prefixes used in the predicates array.
+ *   - predicate (array): This array contains predicates used by the solution
+ *     pack for child objects.
  */
-function hook_islandora_solution_pack_child_relationships() {
-  return array(
-    'prefix' => array('PREFIX islandora: <http://islandora.ca/ontology/relsext#>'),
-    'predicate' => array(
-      '<fedora-rels-ext:isMemberOfCollection>',
-      '<fedora-rels-ext:isMemberOf>',
-      '<islandora:isPageOf>',
-    ),
-  );
+function hook_islandora_solution_pack_child_relationships($cmodels) {
+  if ($cmodels === 'all' or in_array('my:cmodel_pid', $cmodels)) {
+    return array(
+      'prefix' => array('PREFIX islandora: <http://islandora.ca/ontology/relsext#>'),
+      'predicate' => array(
+        '<fedora-rels-ext:isMemberOfCollection>',
+        '<fedora-rels-ext:isMemberOf>',
+        '<islandora:isPageOf>',
+      ),
+    );
+  }
 }

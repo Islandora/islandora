@@ -2219,6 +2219,8 @@ function islandora_islandora_breadcrumbs_backends() {
 /**
  * Implements hook_islandora_solution_pack_child_relationships
  */
-function islandora_islandora_solution_pack_child_relationships() {
+function islandora_islandora_solution_pack_child_relationships($cmodels) {
+  // Return empty arrays from core implementation so that these keys always
+  // exist when the hook is called, even if no module responds.
   return array('predicate' => array(), 'prefix' => array());
 }
