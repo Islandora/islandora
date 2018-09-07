@@ -982,7 +982,7 @@ function hook_islandora_datastream_filename_alter(&$filename, AbstractDatastream
  *     pack for child objects.
  */
 function hook_islandora_solution_pack_child_relationships($cmodels) {
-  if ($cmodels === 'all' or in_array('my:cmodel_pid', $cmodels)) {
+  if ($cmodels === 'all' || in_array('my:cmodel_pid', $cmodels)) {
     return array(
       'prefix' => array('PREFIX islandora: <http://islandora.ca/ontology/relsext#>'),
       'predicate' => array(
