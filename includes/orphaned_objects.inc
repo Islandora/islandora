@@ -159,7 +159,7 @@ WHERE {
   # Filter by "parent" relationships
   FILTER (!dead_parent_relationships)
  
-  # Exclude objects with live parents - isMemberOf, isMemberOfCollection, isPageOf.
+  # Exclude objects with live parents
   OPTIONAL {
     !live_parent_relationships .
     ?liveparent <fedora-model:hasModel> <info:fedora/fedora-system:FedoraObject-3.0> .
@@ -170,7 +170,10 @@ WHERE {
 } ORDER BY ?object
 EOQ;
   $parent_relationships = module_invoke_all('islandora_solution_pack_child_relationships');
-
+  if (count($parent_relationships['predicate']) == 0) {
+    // No predicates to search for. Exit early.
+    return array();
+  }
   $optionals = (array) module_invoke('islandora_xacml_api', 'islandora_basic_collection_get_query_optionals', 'view');
   $filter_modules = array(
     'islandora_xacml_api',
