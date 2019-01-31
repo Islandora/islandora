@@ -8,7 +8,7 @@ function checkReturn {
   if [ $1 -ne 0 ]; then
     OUTPUT=$1
   fi
-}  
+}
 
 # Lint
 find $TRAVIS_BUILD_DIR -type f \( -name '*.php' -o -name '*.inc' -o -name '*.module' -o -name '*.install' -o -name '*.test' \) -print0 | xargs -0 -n1 php -l
@@ -32,7 +32,7 @@ if [ "$(phpenv version-name)" != "5.3.3" ]; then
   else
     DRUPAL_SNIFFS="Drupal"
   fi
-  /usr/bin/phpcs --standard=$DRUPAL_SNIFFS --extensions="php,module,inc,install,test" --ignore="*.md" $TRAVIS_BUILD_DIR
+  /usr/bin/phpcs --standard=$DRUPAL_SNIFFS --extensions="php,module,inc,install,test" --ignore="vendor,*.info,*.txt,*.md" $TRAVIS_BUILD_DIR
   checkReturn $?
 fi
 

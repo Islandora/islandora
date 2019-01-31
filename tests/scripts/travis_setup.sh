@@ -54,6 +54,7 @@ else
   echo "Could not find drush"
   exit 1
 fi
+/usr/bin/drush version
 
 if [ -f "$HOME/.config/composer/vendor/bin/phpcs" ]; then
   sudo ln -s $HOME/.config/composer/vendor/bin/phpcs /usr/bin/phpcs
@@ -63,6 +64,7 @@ else
   echo "Did not find phpcs"
   exit 1
 fi
+/usr/bin/phpcs --version
 
 # PHP Copy-Paste Detection installation.
 composer global require --dev sebastian/phpcpd
@@ -74,6 +76,7 @@ else
   echo "Did not find phpcpd"
   exit 1
 fi
+/usr/bin/phpcpd --version
 
 # Drupal installation.
 phpenv rehash
