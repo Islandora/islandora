@@ -6,7 +6,7 @@
  */
 
 /**
- *
+ * Auth token tests.
  */
 class IslandoraAuthtokensTestCase extends IslandoraWebTestCase {
 
@@ -19,13 +19,6 @@ class IslandoraAuthtokensTestCase extends IslandoraWebTestCase {
       'description' => 'Ensure the correct functionality of the tokens to pass authorization to Djatoka in Islandora.',
       'group' => 'Islandora',
     );
-  }
-
-  /**
-   * Set up data for the tests.
-   */
-  public function setUp() {
-    parent::setUp();
   }
 
   /**

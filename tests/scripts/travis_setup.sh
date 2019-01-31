@@ -61,6 +61,7 @@ elif [ -f "$HOME/.composer/vendor/bin/phpcs" ]; then
   sudo ln -s $HOME/.composer/vendor/bin/phpcs /usr/bin/phpcs
 else
   echo "Did not find phpcs"
+  exit 1
 fi
 
 # PHP Copy-Paste Detection installation.
@@ -71,6 +72,7 @@ elif [ -f "$HOME/.composer/vendor/bin/phpcpd" ]; then
   sudo ln -s $HOME/.composer/vendor/bin/phpcpd /usr/local/bin/phpcpd
 else
   echo "Did not find phpcpd"
+  exit 1
 fi
 
 # Drupal installation.
