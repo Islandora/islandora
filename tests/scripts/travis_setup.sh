@@ -76,7 +76,7 @@ else
   echo "Did not find phpcpd"
   exit 1
 fi
-/usr/bin/phpcpd --version
+/usr/local/bin/phpcpd --version
 
 # Drupal installation.
 phpenv rehash
