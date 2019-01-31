@@ -208,7 +208,7 @@ class IslandoraDerivativesTestCase extends IslandoraWebTestCase {
   /**
    * Tests that when no source_dsid all derivative functions are called.
    */
-  public function testNoSourceDSIDNoForce() {
+  public function testNoSourceDsidNoForce() {
     global $_islandora_derivative_test_derivative_functions;
     $_islandora_derivative_test_derivative_functions = array();
     $object = $this->constructBaseObject();
