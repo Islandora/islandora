@@ -1666,19 +1666,11 @@ function islandora_file_mimetype_mapping_alter(&$mapping) {
 /**
  * Hookable object access callback.
  *
- * @param string $op
- *   String identifying an operation to check. Should correspond to a
- *   permission declared via hook_permission().
- * @param AbstractObject $object
- *   An object to check for permissions.
- * @param object $user
- *   An optional loaded user object. Defaults to the global $user.
- *
  * @return bool
  *   TRUE if at least one implementation of hook_islandora_object_access()
  *   returned TRUE, and no implementation return FALSE; FALSE otherwise.
  */
-function islandora_object_access($op, AbstractObject $object, $user = NULL) {
+function islandora_object_access($op, $object, $user = NULL) {
   $cache = &drupal_static(__FUNCTION__);
 
   if (!is_object($object)) {
@@ -1727,7 +1719,7 @@ function islandora_islandora_object_access($op, AbstractObject $object, $user) {
  *
  * Positive permissions on object access suggests on the datastream.
  */
-function islandora_datastream_access($op, AbstractDatastream $datastream, $user = NULL) {
+function islandora_datastream_access($op, $datastream, $user = NULL) {
   $cache = &drupal_static(__FUNCTION__);
 
   if (!is_object($datastream)) {
