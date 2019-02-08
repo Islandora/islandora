@@ -866,14 +866,14 @@ function islandora_user_access($object_or_datastream, array $permissions, array 
  *
  * @param string $perm
  *   User permission to test for.
- * @param AbstractObject $object
+ * @param AbstractObject|string $object
  *   The object to test, if NULL given the object doesn't exist or is
  *   inaccessible.
  *
  * @return bool
  *   TRUE if the user is allowed to access this object, FALSE otherwise.
  */
-function islandora_object_access_callback($perm, AbstractObject $object = NULL) {
+function islandora_object_access_callback($perm, $object = NULL) {
   module_load_include('inc', 'islandora', 'includes/utilities');
 
   if (!$object && !islandora_describe_repository()) {
@@ -1331,7 +1331,7 @@ function islandora_tokened_datastream_load($datastream_id, array $map) {
  * @param string $datastream_id
  *   The DSID of the datastream specified as '%islandora_datastream' to fetch
  *   from the given object in the menu path identified by '%islandora_object'.
- * @param mixed $object_id
+ * @param AbstractObject|string $object_id
  *   The object to load the datastream from.  This can be a Fedora PID or
  *   an instantiated IslandoraAbstractObject as it implements __toString()
  *   returning the PID.
@@ -1665,6 +1665,14 @@ function islandora_file_mimetype_mapping_alter(&$mapping) {
 
 /**
  * Hookable object access callback.
+ *
+ * @param string $op
+ *   String identifying an operation to check. Should correspond to a
+ *   permission declared via hook_permission().
+ * @param AbstractObject|string $object
+ *   An object to check for permissions.
+ * @param object $user
+ *   An optional loaded user object. Defaults to the global $user.
  *
  * @return bool
  *   TRUE if at least one implementation of hook_islandora_object_access()
