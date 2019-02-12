@@ -710,7 +710,7 @@ function islandora_viewers_form($variable_id = NULL, $mimetype = NULL, $model = 
  * given, than any viewer that supports either the give $mimetype or $model will
  * be listed.
  *
- * @param array $mimetype
+ * @param array|string $mimetype
  *   List of mimetypes that the viewer supports.
  * @param string $content_model
  *   Specify a content model to return only viewers that support the content
@@ -719,7 +719,7 @@ function islandora_viewers_form($variable_id = NULL, $mimetype = NULL, $model = 
  * @return array
  *   Viewer definitions, or FALSE if none are found.
  */
-function islandora_get_viewers(array $mimetype = array(), $content_model = NULL) {
+function islandora_get_viewers($mimetype = array(), $content_model = NULL) {
   $viewers = array();
   $defined_viewers = module_invoke_all('islandora_viewer_info');
 
