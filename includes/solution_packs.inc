@@ -630,7 +630,7 @@ function islandora_check_object_status(AbstractObject $object_definition) {
  *
  * @param string $variable_id
  *   The ID of the Drupal variable to save the viewer settings in.
- * @param string $mimetype
+ * @param string|array $mimetype
  *   The table will be populated with viewers supporting this mimetype.
  * @param string $model
  *   The table will be populated with viewers supporting this content model.
