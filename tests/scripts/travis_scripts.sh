@@ -35,8 +35,11 @@ if [ "$(phpenv version-name)" != "5.3.3" ]; then
   else
     DRUPAL_SNIFFS="Drupal"
   fi
+  if [ -z "$CODESNIFFER_IGNORE" ]; then
+    CODESNIFFER_IGNORE="vendor,*.info,*.txt,*.md"
+  fi
   echo "PHP Codesniffer"
-  /usr/bin/phpcs --standard=$DRUPAL_SNIFFS --extensions="php,module,inc,install,test" --ignore="vendor,*.info,*.txt,*.md" $TRAVIS_BUILD_DIR
+  /usr/bin/phpcs --standard=$DRUPAL_SNIFFS --extensions="php,module,inc,install,test" --ignore="$CODESNIFFER_IGNORE" $TRAVIS_BUILD_DIR
   checkReturn $?
 else
   echo "Skipping PHP Codesniffer for PHP 5.3.3"
