@@ -920,14 +920,14 @@ function islandora_object_datastream_tokened_access_callback($perm, $object = NU
  *
  * @param array $perms
  *   Array of user permission to test for.
- * @param AbstractObject $object
- *   The object to test, if NULL given the object doesn't exist or is
+ * @param AbstractObject|bool|NULL $object
+ *   The object to test, if NULL or false given the object doesn't exist or is
  *   inaccessible.
  *
  * @return bool
  *   TRUE if the user is allowed to access this object, FALSE otherwise.
  */
-function islandora_object_manage_access_callback(array $perms, AbstractObject $object = NULL) {
+function islandora_object_manage_access_callback(array $perms, $object = NULL) {
   module_load_include('inc', 'islandora', 'includes/utilities');
 
   if (!$object && !islandora_describe_repository()) {
