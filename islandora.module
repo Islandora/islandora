@@ -920,7 +920,7 @@ function islandora_object_datastream_tokened_access_callback($perm, $object = NU
  *
  * @param array $perms
  *   Array of user permission to test for.
- * @param AbstractObject|bool|NULL $object
+ * @param AbstractObject|bool|null $object
  *   The object to test, if NULL or false given the object doesn't exist or is
  *   inaccessible.
  *
