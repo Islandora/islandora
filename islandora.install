@@ -61,6 +61,7 @@ function islandora_uninstall() {
     'islandora_breadcrumbs_backends',
     'islandora_render_context_ingeststep',
     'islandora_deny_inactive_and_deleted',
+    'islandora_imageserver_settings',
   );
   array_walk($variables, 'variable_del');
 }
@@ -143,4 +144,69 @@ function islandora_update_7001(&$sandbox) {
 function islandora_update_7002() {
   // Removing as the deprecation has been removed.
   variable_del('islandora_deprecation_return_false_when_datastream_exists');
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Try to auto-configure the image server settings in core based on
+ * the Internet Archive Bookreader and/or Openseadragon settings.
+ */
+function islandora_update_7003() {
+  module_load_include('inc', 'islandora', 'includes/imageserver');
+  if (islandora_imageserver_get_settings()['type'] != 'none') {
+    return t('Settings have already been configured manually.');
+  }
+  if (module_exists('islandora_openseadragon')) {
+    $openseadragon_settings = array(
+      'type' => variable_get('islandora_openseadragon_tilesource', 'djatoka'),
+    );
+    if ($openseadragon_settings['type'] == 'djatoka') {
+      $openseadragon_settings['url'] = variable_get('islandora_openseadragon_djatoka_url', 'adore-djatoka/resolver');
+    }
+    else {
+      $openseadragon_settings['url'] = variable_get('islandora_openseadragon_iiif_url', 'iiif');
+      $openseadragon_settings['iiif_token_header'] = variable_get('islandora_openseadragon_iiif_token_header', FALSE);
+      $openseadragon_settings['iiif_identifier'] = str_replace('[islandora_openseadragon:', '[islandora:', variable_get('islandora_openseadragon_iiif_identifier', '[islandora_openseadragon:url_token]'));
+    }
+  }
+  if (module_exists('islandora_internet_archive_bookreader')) {
+    $iabv_settings = array(
+      'type' => variable_get('islandora_internet_archive_bookreader_pagesource', 'djatoka'),
+    );
+    if ($iabv_settings['type'] == 'djatoka') {
+      $iabv_settings['url'] = variable_get('islandora_paged_content_djatoka_url', 'http://localhost:8080/adore-djatoka');
+    }
+    else {
+      $iabv_settings['url'] = variable_get('islandora_internet_archive_bookreader_iiif_url', 'iiif');
+      $iabv_settings['iiif_token_header'] = variable_get('islandora_internet_archive_bookreader_iiif_token_header', FALSE);
+      $iabv_settings['iiif_identifier'] = str_replace('[islandora_iareader:', '[islandora:', variable_get('islandora_internet_archive_bookreader_iiif_identifier', '[islandora_iareader:url_token]'));
+    }
+  }
+  if (isset($openseadragon_settings) && isset($iabv_settings)) {
+    if (count(array_diff($openseadragon_settings, $iabv_settings)) == 0) {
+      // Settings are the same, use for core imageserver variables.
+      $new_settings = $openseadragon_settings;
+    }
+    else {
+      // We could not migrate your settings to the new place. This stops the
+      // other two modules from deleting your settings.
+      throw new DrupalUpdateException('Islandora image server settings could NOT be configured automatically, please set them manually at Admin -> Islandora -> Image Server configuration and then run updates again.');
+    }
+  }
+  elseif (isset($openseadragon_settings)) {
+    $new_settings = $openseadragon_settings;
+  }
+  elseif (isset($iabv_settings)) {
+    $new_settings = $iabv_settings;
+  }
+  if (isset($new_settings)) {
+    if ($new_settings['type'] == 'djatoka' && !preg_match('~resolver$~', $new_settings['url'])) {
+      // IABV javascript added resolver to URL, Openseadragon did not.
+      $new_settings['url'] = rtrim($new_settings['url'], '/') . '/resolver';
+    }
+    // We have migrated your settings to the new place.
+    variable_set('islandora_imageserver_settings', $new_settings);
+    return t("Islandora image server settings configured automatically.");
+  }
 }

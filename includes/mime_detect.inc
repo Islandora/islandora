@@ -59,7 +59,17 @@ class MimeDetect {
    * $this->get_extension('image/jpeg') will always return 'jpg'.
    */
   protected $protectedMimeTypes = array();
+  /**
+   * Protected file extensions.
+   *
+   * @var array
+   */
   protected $protectedFileExtensions;
+  /**
+   * Extension exceptions.
+   *
+   * @var array
+   */
   protected $extensionExceptions = array(
     // XXX: Deprecated... Only here due to old 'tif' => 'image/tif' mapping...
     // The correct MIMEtype is 'image/tiff'.

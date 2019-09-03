@@ -13,6 +13,11 @@
  */
 class DublinCore {
 
+  /**
+   * Dublin Core fields.
+   *
+   * @var array|\DublinCore
+   */
   public $dc = array(
     'dc:title' => array(),
     'dc:creator' => array(),
@@ -30,6 +35,12 @@ class DublinCore {
     'dc:coverage' => array(),
     'dc:rights' => array(),
   );
+
+  /**
+   * Owner name.
+   *
+   * @var string
+   */
   public $owner;
 
   /**

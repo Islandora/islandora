@@ -72,6 +72,8 @@ define('ISLANDORA_MIME_TYPES_AUTOCOMPLETE', 'islandora/autocomplete/mime-types')
 
 const ISLANDORA_BREADCRUMB_LEGACY_BACKEND = 'islandora_breadcrumbs_legacy_sparql';
 
+const ISLANDORA_IMAGESERVER_DEFAULT_TOKEN = "[islandora:url_token]";
+
 /**
  * Implements hook_menu().
  *
@@ -416,6 +418,24 @@ function islandora_menu() {
     'page arguments' => array('islandora_deleted_objects_manage_form'),
     'type' => MENU_SUGGESTED_ITEM,
     'access arguments' => array(ISLANDORA_MANAGE_DELETED_OBJECTS),
+  );
+  $items['admin/islandora/image_server'] = array(
+    'title' => 'Image server configuration',
+    'description' => 'Define the settings for your local image server',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('islandora_imageserver_admin_form'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'includes/imageserver.inc',
+  );
+  $items['admin/islandora/image_server/reset'] = array(
+    'title' => 'Image server configuration reset confirmation',
+    'description' => 'Image server configuration reset confirmation',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('islandora_imageserver_admin_reset_confirm_form'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_CALLBACK,
+    'file' => 'includes/imageserver.inc',
   );
 
   return $items;
@@ -2229,4 +2249,91 @@ function islandora_islandora_solution_pack_child_relationships($cmodels) {
   // Return empty arrays from core implementation so that these keys always
   // exist when the hook is called, even if no module responds.
   return array('predicate' => array(), 'prefix' => array());
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function islandora_token_info() {
+  $info = array();
+
+  $info['types']['islandora'] = array(
+    'name' => t('Islandora'),
+    'description' => t('Tokens for building IIIF identifer in Islandora.'),
+    'needs-data' => 'islandora',
+  );
+
+  $info['tokens']['islandora']['pid'] = array(
+    'name' => t('PID'),
+    'description' => t('The objects PID.'),
+  );
+
+  $info['tokens']['islandora']['dsid'] = array(
+    'name' => t('DSID'),
+    'description' => t('The objects DSID.'),
+  );
+
+  $info['tokens']['islandora']['url'] = array(
+    'name' => t('URL'),
+    'description' => t('The URL to the object in Islandora.'),
+  );
+
+  $info['tokens']['islandora']['url_token'] = array(
+    'name' => t('URL with Token'),
+    'description' => t('The URL to the object in Islandora with token in the query string.'),
+  );
+
+  $info['tokens']['islandora']['token'] = array(
+    'name' => t('Token'),
+    'description' => t('The token that can be used to access the object in Islandora.'),
+  );
+
+  return $info;
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function islandora_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $replacements = array();
+
+  if ($type != 'islandora' || !isset($data['islandora'])) {
+    return $replacements;
+  }
+
+  $pid = $data['islandora']['pid'];
+  $dsid = $data['islandora']['dsid'];
+  $token = $data['islandora']['token'];
+
+  foreach ($tokens as $name => $original) {
+    if ($name == 'pid') {
+      $replacements[$original] = $pid;
+    }
+    elseif ($name == 'dsid') {
+      $replacements[$original] = $dsid;
+    }
+    elseif ($name == 'token') {
+      $replacements[$original] = $token;
+    }
+    elseif ($name == 'url' || $name == 'url_token') {
+      $options = array(
+        'absolute' => TRUE,
+        'language' => language_default(),
+        'https' => (function_exists('drupal_is_https') ?
+          drupal_is_https() :
+          (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')
+        ),
+      );
+
+      if ($name == 'url_token') {
+        $options['query'] = array(
+          'token' => $token,
+        );
+      }
+
+      $replacements[$original] = url("islandora/object/{$pid}/datastream/{$dsid}/view", $options);
+    }
+  }
+
+  return $replacements;
 }

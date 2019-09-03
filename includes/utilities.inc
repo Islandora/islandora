@@ -267,9 +267,9 @@ function islandora_escape_pid_for_function($pid) {
  *   below are fine.
  *
  * @code
- *  'islandora',
- *  'islandora:',
- *  'islandora:1234',
+ *   'islandora',
+ *   'islandora:',
+ *   'islandora:1234',
  * @endcode
  *
  * @return string
@@ -291,9 +291,9 @@ function islandora_get_namespace($id) {
  *   below are fine.
  *
  * @code
- *  'islandora',
- *  'islandora:',
- *  'islandora:1234',
+ *   'islandora',
+ *   'islandora:',
+ *   'islandora:1234',
  * @endcode
  *
  * @return bool

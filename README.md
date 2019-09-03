@@ -63,7 +63,47 @@ By default, objects with the [Fedora state](https://wiki.duraspace.org/display/F
 * A [detailed tutorial](https://github.com/Islandora/islandora/wiki/Multi-paged-Ingest-Forms) on extending the multi-page ingest forms is available on the Github (developers') Wiki.
 * Additional modules developed by members of the Islandora community to extend Islandora can be found on the curated [Islandora Awesome](https://github.com/Islandora-Labs/islandora_awesome) list.
 
-## Documentation
+### Image Server configuration
+
+
+#### Drupal
+
+In Administration » Islandora » Image Server configuration
+
+Choose the type of image server (Djatoka or IIIF).
+
+Set the URL.
+
+#### Djatoka
+
+![Configuration](https://user-images.githubusercontent.com/2857697/63660444-1a24c400-c77c-11e9-831d-5f3fc71b085e.png)
+
+#### IIIF
+
+![Configuration](https://user-images.githubusercontent.com/2857697/63660476-43455480-c77c-11e9-8460-c3d2639e7575.png)
+
+If using IIIF choose to send token as a header and choose the token to use.
+
+Any [IIIF](http://iiif.io) image server can be used with the IIIF tile source. The IIIF tile source provides a templated identifier which the IIIF server must be configured to resolve. This could be the full URL to the datastream to be displayed or something more complex.
+
+The [Cantaloupe 🍈](https://medusa-project.github.io/cantaloupe/) IIIF image server can be configured to resolve these identifiers using the [`HttpResolver`](https://medusa-project.github.io/cantaloupe/manual/3.3/resolvers.html#HttpResolver) with no prefix specified.
+
+#### Apache Reverse Proxy
+
+Reverse proxy config: We make the assumption that we (reverse) proxy Djatoka, to fix the same-origin issue.
+
+For Apache, with Drupal running on the same box as Apache, a couple lines like:
+
+```
+ProxyPass /adore-djatoka http://localhost:8080/adore-djatoka
+ProxyPassReverse /adore-djatoka http://localhost:8080/adore-djatoka
+```
+
+in the Apache config somewhere (either the main apache.conf, httpd.conf, or in and arbitrarily named `*.conf` in your Apache's conf.d directory should suffice to establish the reverse proxy.
+
+In Debian derived systems one will need to create location entries for each proxy or remove the Deny from All in mod_proxy's conf file.
+
+# Documentation
 
 Further documentation for this module is available at [our documentation wiki](https://wiki.duraspace.org/display/ISLANDORA/Islandora+Core+Module).
 

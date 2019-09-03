@@ -19,12 +19,32 @@
  */
 class IslandoraTestUtilities extends IslandoraTestUtilityClass {
 
+  /**
+   * The test configuration.
+   *
+   * @var array
+   */
   protected $configuration;
 
+  /**
+   * The parameters.
+   *
+   * @var array
+   */
   protected $params;
 
+  /**
+   * Test results.
+   *
+   * @var array
+   */
   public $results = array();
 
+  /**
+   * A repository object.
+   *
+   * @var \FedoraRepository
+   */
   protected $repository;
 
   /**
