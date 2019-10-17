@@ -3,9 +3,9 @@
   "description": "Core Islandora module",
   "type": "drupal-module",
   "keywords": ["Drupal", "Islandora"],
-  "homepage": "https://github.com/islandora/islandora",
+  "homepage": "https://github.com/Islandora/islandora",
   "support": {
-    "issues": "https://github.com/islandora/documentation/issues"
+    "issues": "https://github.com/Islandora/documentation/issues"
   },
   "repositories": [
     {
