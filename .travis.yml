@@ -1,43 +1,44 @@
 sudo: true
 language: php
 php:
-  - 7.2
-  - 7.3
-
+- 7.2
+- 7.3
 matrix:
-    fast_finish: true
-    allow_failures:
-      - php: 7.3
-      
+  fast_finish: true
+  allow_failures:
+  - php: 7.3
 services:
-  - mysql
-
+- mysql
 branches:
   only:
-    - /^8.x/
-    - /master/
-
+  - "/^8.x/"
+  - "/master/"
 before_install:
-  - export SCRIPT_DIR=$HOME/islandora/.scripts
-  - export DRUPAL_DIR=/opt/drupal
-  - export COMPOSER_PATH="/home/travis/.phpenv/versions/$TRAVIS_PHP_VERSION/bin/composer"
-
+- export SCRIPT_DIR=$HOME/islandora/.scripts
+- export DRUPAL_DIR=/opt/drupal
+- export COMPOSER_PATH="/home/travis/.phpenv/versions/$TRAVIS_PHP_VERSION/bin/composer"
 install:
-  - git clone https://github.com/Islandora/documentation.git $HOME/islandora
-  - $SCRIPT_DIR/travis_setup_drupal.sh
-  - git -C "$TRAVIS_BUILD_DIR" checkout -b travis-testing
-  - cd $DRUPAL_DIR;
-  - COMPOSER_MEMORY_LIMIT=-1 php -d memory_limit=-1 $COMPOSER_PATH config repositories.local path "$TRAVIS_BUILD_DIR"
-  - COMPOSER_MEMORY_LIMIT=-1 php -d memory_limit=-1 $COMPOSER_PATH require "islandora/islandora:dev-travis-testing as dev-8.x-1.x" --prefer-source --update-with-dependencies
-  - cd web; drush --uri=127.0.0.1:8282 en -y islandora
-  - (drush -y --uri=127.0.0.1:8282 en islandora_core_feature; drush -y --uri=127.0.0.1:8282 fim islandora_core_feature)
-  - drush -y --uri=127.0.0.1:8282 en islandora_audio islandora_breadcrumbs islandora_iiif islandora_image islandora_video
-  - (drush -y --uri=127.0.0.1:8282 en islandora_text_extraction_defaults; drush -y --uri=127.0.0.1:8282 fim islandora_text_extraction_defaults)
-
+- git clone https://github.com/Islandora/documentation.git $HOME/islandora
+- "$SCRIPT_DIR/travis_setup_drupal.sh"
+- git -C "$TRAVIS_BUILD_DIR" checkout -b travis-testing
+- cd $DRUPAL_DIR;
+- COMPOSER_MEMORY_LIMIT=-1 php -d memory_limit=-1 $COMPOSER_PATH config repositories.local
+  path "$TRAVIS_BUILD_DIR"
+- COMPOSER_MEMORY_LIMIT=-1 php -d memory_limit=-1 $COMPOSER_PATH require "islandora/islandora:dev-travis-testing
+  as dev-8.x-1.x" --prefer-source --update-with-dependencies
+- cd web; drush --uri=127.0.0.1:8282 en -y islandora
+- "(drush -y --uri=127.0.0.1:8282 en islandora_core_feature; drush -y --uri=127.0.0.1:8282
+  fim islandora_core_feature)"
+- drush -y --uri=127.0.0.1:8282 en islandora_audio islandora_breadcrumbs islandora_iiif
+  islandora_image islandora_video
+- "(drush -y --uri=127.0.0.1:8282 en islandora_text_extraction_defaults; drush -y
+  --uri=127.0.0.1:8282 fim islandora_text_extraction_defaults)"
 script:
-  - $SCRIPT_DIR/travis_scripts.sh
-  - $SCRIPT_DIR/run-tests.sh "islandora"
-  - $SCRIPT_DIR/run-tests.sh "islandora_breadcrumbs"
-
+- "$SCRIPT_DIR/travis_scripts.sh"
+- $SCRIPT_DIR/run-tests.sh "islandora"
+- $SCRIPT_DIR/run-tests.sh "islandora_breadcrumbs"
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+- bash <(curl -s https://codecov.io/bash)
+notifications:
+  slack:
+    secure: OJpZ+eonqGHoO8KwGk/0qQ/3b2TdwpP1kCtJHmpOtcVyUUJSRvY1+i8L+a8bl4NtUuVO3PMwoUBwwzhQTuneIPiYRLZ8iJsR+4wT83cp+qwzeTObWASrbEMpb49O2jya54PQJVWCI/LQLRMiQZGIrwA++NpjPTvKVZluKj6xH+I=
