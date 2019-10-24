@@ -44,4 +44,4 @@ after_success:
 
 notifications:
   slack:
-    secure: OJpZ+eonqGHoO8KwGk/0qQ/3b2TdwpP1kCtJHmpOtcVyUUJSRvY1+i8L+a8bl4NtUuVO3PMwoUBwwzhQTuneIPiYRLZ8iJsR+4wT83cp+qwzeTObWASrbEMpb49O2jya54PQJVWCI/LQLRMiQZGIrwA++NpjPTvKVZluKj6xH+I=
+    secure: $SLACK_NOTIFICATION_KEY
