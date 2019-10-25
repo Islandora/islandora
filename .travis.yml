@@ -44,4 +44,5 @@ after_success:
 
 notifications:
   slack:
+    on_success: change
     secure: $SLACK_NOTIFICATION_KEY
