@@ -24,9 +24,34 @@ class IslandoraCommands extends DrushCommands {
   }
 
   /**
-   * Validate the provided userid.
+   * Add the userid option.
+   *
+   * @hook option migrate:rollback
+   * @option userid User ID to rollback the migration.
+   */
+  public function optionsetRollbackUser($options = ['userid' => self::REQ]) {
+  }
+
+  /**
+   * Implement migrate import validate hook.
    *
    * @hook validate migrate:import
+   */
+  public function validateUserImport(CommandData $commandData) {
+    $this->validateUser($commandData);;
+  }
+
+  /**
+   * Implement migrate rollback validate hook.
+   *
+   * @hook validate migrate:rollback
+   */
+  public function validateUserRollback(CommandData $commandData) {
+    $this->validateUser($commandData);
+  }
+
+  /**
+   * Validate the provided userid.
    */
   public function validateUser(CommandData $commandData) {
     $userid = $commandData->input()->getOption('userid');
@@ -39,11 +64,27 @@ class IslandoraCommands extends DrushCommands {
   }
 
   /**
-   * Switch the active user account to perform the import.
+   * Implement migrate import pre-command hook.
    *
    * @hook pre-command migrate:import
    */
   public function preImport(CommandData $commandData) {
+    $this->switchUser($commandData);
+  }
+
+  /**
+   * Implement migrate rollback pre-command hook.
+   *
+   * @hook pre-command migrate:rollback
+   */
+  public function preRollback(CommandData $commandData) {
+    $this->switchUser($commandData);
+  }
+
+  /**
+   * Switch the active user account using the provided userid.
+   */
+  public function switchUser(CommandData $commandData) {
     $userid = $commandData->input()->getOption('userid');
     if ($userid) {
       $account = User::load($userid);
@@ -64,11 +105,27 @@ class IslandoraCommands extends DrushCommands {
   }
 
   /**
-   * Switch the user back once the migration is complete.
+   * Implement migrate import post-command hook.
    *
    * @hook post-command migrate:import
    */
   public function postImport($result, CommandData $commandData) {
+    $this->switchUserBack($commandData);
+  }
+
+  /**
+   * Implement migrate rollback post-command hook.
+   *
+   * @hook post-command migrate:rollback
+   */
+  public function postRollback($result, CommandData $commandData) {
+    $this->switchUserBack($commandData);
+  }
+
+  /**
+   * Switch the user back.
+   */
+  public function switchUserBack(CommandData $commandData) {
     if ($commandData->input()->getOption('userid')) {
       $accountSwitcher = \Drupal::service('account_switcher');
       $this->logger()->notice(dt(
