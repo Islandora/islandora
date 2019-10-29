@@ -53,7 +53,7 @@ class IslandoraCommands extends DrushCommands {
   /**
    * Validate the provided userid.
    */
-  public function validateUser(CommandData $commandData) {
+  protected function validateUser(CommandData $commandData) {
     $userid = $commandData->input()->getOption('userid');
     if ($userid) {
       $account = User::load($userid);
@@ -84,7 +84,7 @@ class IslandoraCommands extends DrushCommands {
   /**
    * Switch the active user account using the provided userid.
    */
-  public function switchUser(CommandData $commandData) {
+  protected function switchUser(CommandData $commandData) {
     $userid = $commandData->input()->getOption('userid');
     if ($userid) {
       $account = User::load($userid);
@@ -125,7 +125,7 @@ class IslandoraCommands extends DrushCommands {
   /**
    * Switch the user back.
    */
-  public function switchUserBack(CommandData $commandData) {
+  protected function switchUserBack(CommandData $commandData) {
     if ($commandData->input()->getOption('userid')) {
       $accountSwitcher = \Drupal::service('account_switcher');
       $this->logger()->notice(dt(
