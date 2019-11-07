@@ -189,7 +189,6 @@ class EventGenerator implements EventGeneratorInterface {
       ->sort($media->getEntityType()->getKey('revision'), 'DESC')
       ->pager(50)
       ->execute();
-    // \Drupal::logger('revision array')->notice('<pre><code>' . print_r(array_keys($result), TRUE) . '</code></pre>');
     return array_keys($result);
   }
 
