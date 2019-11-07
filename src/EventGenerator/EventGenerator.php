@@ -100,13 +100,14 @@ class EventGenerator implements EventGeneratorInterface {
       $event["type"] = ucfirst($data["event"]);
       $event["summary"] = ucfirst($data["event"]) . " a " . ucfirst($entity_type);
     }
-    $isNewRev = FALSE;
-    if ($entity->getEntityType()->isRevisionable()) {
-      \Drupal::logger('islandora')->notice('its revisionable');
-      $isNewRev = $this->isNewRevision($entity);
-      \Drupal::logger('is new revision')->notice($isNewRev);
+
+    if ($data['event'] != "Generate Derivative") {
+      $isNewRev = FALSE;
+      if ($entity->getEntityType()->isRevisionable()) {
+        $isNewRev = $this->isNewRevision($entity);
+      }
+      $event["object"]["isNewVersion"] = $isNewRev;
     }
-    $event["object"]["isNewVersion"] = $isNewRev;
 
     // Add REST links for non-file entities.
     if ($entity_type != 'file') {
@@ -187,7 +188,6 @@ class EventGenerator implements EventGeneratorInterface {
       ->allRevisions()
       ->condition($media->getEntityType()->getKey('id'), $media->id())
       ->sort($media->getEntityType()->getKey('revision'), 'DESC')
-      ->pager(50)
       ->execute();
     return array_keys($result);
   }
