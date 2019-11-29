@@ -222,7 +222,7 @@ function islandora_file_delete(FileInterface $file) {
 function islandora_taxonomy_term_insert(TermInterface $term) {
   $utils = \Drupal::service('islandora.utils');
 
-  // Execute delete reactions.
+  // Execute index reactions.
   $utils->executeTermReactions('\Drupal\islandora\Plugin\ContextReaction\IndexReaction', $term);
 }
 
@@ -232,7 +232,7 @@ function islandora_taxonomy_term_insert(TermInterface $term) {
 function islandora_taxonomy_term_update(TermInterface $term) {
   $utils = \Drupal::service('islandora.utils');
 
-  // Execute delete reactions.
+  // Execute index reactions.
   $utils->executeTermReactions('\Drupal\islandora\Plugin\ContextReaction\IndexReaction', $term);
 }
 
