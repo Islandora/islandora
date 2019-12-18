@@ -104,8 +104,8 @@ class IslandoraSettingsForm extends ConfigFormBase {
     $form[self::FEDORA_URL] = [
       '#type' => 'textfield',
       '#title' => $this->t('Fedora URL'),
-      '#attributes' => array('readonly' => 'readonly'),
-      '#default_value' => t($fedora_url),
+      '#attributes' => ['readonly' => 'readonly'],
+      '#default_value' => $fedora_url,
     ];
 
     $selected_bundles = $config->get(self::GEMINI_PSEUDO);

@@ -8,6 +8,9 @@ action.configuration.generate_image_derivative:
     event:
       type: text
       label: 'Event Type'
+    destination_media_type:
+      type: text
+      label: 'Destination media type'
     source_term_uri:
       type: text
       label: 'Source term uri'

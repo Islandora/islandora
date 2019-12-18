@@ -1,6 +1,6 @@
-action.configuration.generate_video_derivative:
+action.configuration.generate_audio_derivative:
   type: mapping
-  label: 'Generate a video derivative...'
+  label: 'Generate a audio derivative...'
   mapping:
     queue:
       type: text
@@ -8,6 +8,9 @@ action.configuration.generate_video_derivative:
     event:
       type: text
       label: 'Event Type'
+    destination_media_type:
+      type: text
+      label: 'Destination media type'
     source_term_uri:
       type: text
       label: 'Source term uri'
@@ -16,7 +19,7 @@ action.configuration.generate_video_derivative:
       label: 'Destination term uri'
     mimetype:
       type: text
-      label: 'Video Mimetype'
+      label: 'Audio Mimetype'
     args:
       type: text
       label: 'FFMpeg Arguments'

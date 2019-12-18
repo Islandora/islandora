@@ -3,14 +3,14 @@
 namespace Drupal\Tests\islandora_text_extraction\Functional;
 
 use Drupal\Core\Url;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\islandora\Functional\IslandoraFunctionalTestBase;
 
 /**
  * Simple test to ensure that main page loads with module enabled.
  *
  * @group islandora_text_extraction
  */
-class LoadTest extends BrowserTestBase {
+class LoadTest extends IslandoraFunctionalTestBase {
 
   /**
    * Modules to enable.
@@ -29,7 +29,7 @@ class LoadTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  public function setUp() {
     parent::setUp();
     $this->user = $this->drupalCreateUser(['administer site configuration']);
     $this->drupalLogin($this->user);

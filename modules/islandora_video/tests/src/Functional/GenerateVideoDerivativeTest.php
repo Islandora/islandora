@@ -19,10 +19,7 @@ class GenerateVideoDerivativeTest extends GenerateDerivativeTestBase {
   /**
    * @covers \Drupal\islandora_video\Plugin\Action\GenerateVideoDerivative::defaultConfiguration
    * @covers \Drupal\islandora_video\Plugin\Action\GenerateVideoDerivative::buildConfigurationForm
-   * @covers \Drupal\islandora\Plugin\Action\AbstractGenerateDerivative::defaultConfiguration
-   * @covers \Drupal\islandora\Plugin\Action\AbstractGenerateDerivative::buildConfigurationForm
-   * @covers \Drupal\islandora\Plugin\Action\AbstractGenerateDerivative::submitConfigurationForm
-   * @covers \Drupal\islandora\Plugin\Action\AbstractGenerateDerivative::execute
+   * @covers \Drupal\islandora_video\Plugin\Action\GenerateVideoDerivative::validateConfigurationForm
    */
   public function testGenerateVideoDerivativeFromScratch() {
 
@@ -46,6 +43,7 @@ class GenerateVideoDerivativeTest extends GenerateDerivativeTestBase {
     $this->getSession()->getPage()->fillField('edit-label', "Generate video test derivative");
     $this->getSession()->getPage()->fillField('edit-id', "generate_video_test_derivative");
     $this->getSession()->getPage()->fillField('edit-queue', "generate-video-test-derivative");
+    $this->getSession()->getPage()->fillField('edit-destination-media-type', $this->testMediaType->label());
     $this->getSession()->getPage()->fillField("edit-source-term", $this->preservationMasterTerm->label());
     $this->getSession()->getPage()->fillField("edit-derivative-term", $this->serviceFileTerm->label());
     $this->getSession()->getPage()->fillField('edit-mimetype', "video/mp4");

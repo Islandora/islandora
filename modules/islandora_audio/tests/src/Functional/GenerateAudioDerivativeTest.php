@@ -46,6 +46,7 @@ class GenerateAudioDerivativeTest extends GenerateDerivativeTestBase {
     $this->getSession()->getPage()->fillField('edit-label', "Generate audio test derivative");
     $this->getSession()->getPage()->fillField('edit-id', "generate_audio_test_derivative");
     $this->getSession()->getPage()->fillField('edit-queue', "generate-audio-test-derivative");
+    $this->getSession()->getPage()->fillField('edit-destination-media-type', $this->testMediaType->label());
     $this->getSession()->getPage()->fillField("edit-source-term", $this->preservationMasterTerm->label());
     $this->getSession()->getPage()->fillField("edit-derivative-term", $this->serviceFileTerm->label());
     $this->getSession()->getPage()->fillField('edit-mimetype', "audio/mpeg");
