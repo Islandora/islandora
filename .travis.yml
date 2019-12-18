@@ -38,6 +38,10 @@ script:
   - $SCRIPT_DIR/travis_scripts.sh
   - $SCRIPT_DIR/run-tests.sh "islandora"
   - $SCRIPT_DIR/run-tests.sh "islandora_breadcrumbs"
+  - $SCRIPT_DIR/run-tests.sh "islandora_image
+  - $SCRIPT_DIR/run-tests.sh "islandora_audio"
+  - $SCRIPT_DIR/run-tests.sh "islandora_video"
+  - $SCRIPT_DIR/run-tests.sh "islandora_text_extraction"
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
