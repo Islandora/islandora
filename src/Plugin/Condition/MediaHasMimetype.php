@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @Condition(
  *   id = "media_has_mimetype",
- *   label = @Translation("Media has Mime type"),
+ *   label = @Translation("Node has Media with Mime type"),
  *   context_definitions = {
  *     "node" = @ContextDefinition("entity:node", label = @Translation("node"))
  *   }
