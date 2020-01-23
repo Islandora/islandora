@@ -156,7 +156,6 @@ class EventGenerator implements EventGeneratorInterface {
         "mediaType" => "application/json",
       ];
     }
-
     return json_encode($event);
   }
 

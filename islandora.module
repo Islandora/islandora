@@ -106,7 +106,6 @@ function islandora_node_delete(NodeInterface $node) {
  */
 function islandora_media_insert(MediaInterface $media) {
   $utils = \Drupal::service('islandora.utils');
-
   // Execute index reactions.
   $utils->executeMediaReactions('\Drupal\islandora\Plugin\ContextReaction\IndexReaction', $media);
 
@@ -136,7 +135,6 @@ function islandora_media_update(MediaInterface $media) {
 
   // Execute index reactions.
   $utils->executeMediaReactions('\Drupal\islandora\Plugin\ContextReaction\IndexReaction', $media);
-
   // Does it have a source field?
   $source_field = $media_source_service->getSourceFieldName($media->bundle());
   if (empty($source_field)) {
@@ -147,7 +145,6 @@ function islandora_media_update(MediaInterface $media) {
   if ($media->get($source_field)->equals($media->original->get($source_field))) {
     return;
   }
-
   // If it has a parent node...
   $node = $utils->getParentNode($media);
   if ($node) {
@@ -157,6 +154,7 @@ function islandora_media_update(MediaInterface $media) {
       $node,
       $media
     );
+    $utils->executeMediaReactions('\Drupal\islandora\Plugin\ContextReaction\DerivativeFileReaction', $media);
   }
 }
 
@@ -168,6 +166,19 @@ function islandora_media_delete(MediaInterface $media) {
 
   // Execute delete reactions.
   $utils->executeMediaReactions('\Drupal\islandora\Plugin\ContextReaction\DeleteReaction', $media);
+}
+
+/**
+ * Implements hook_ENTITYTYPE_postsave().
+ */
+function islandora_media_postsave(EntityInterface $media, $op) {
+
+  $utils = \Drupal::service('islandora.utils');
+  // Add derived file to the media.
+  if ($op == 'insert') {
+    $utils->executeMediaReactions('\Drupal\islandora\Plugin\ContextReaction\DerivativeFileReaction', $media);
+  }
+
 }
 
 /**

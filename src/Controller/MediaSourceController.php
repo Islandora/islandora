@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Drupal\media\Entity\Media;
 
 /**
  * Class MediaSourceController.
@@ -207,6 +208,55 @@ class MediaSourceController extends ControllerBase {
     // We'd have 404'd already if node didn't exist, so no need to check.
     // Just hack it out of the route match.
     $node = $route_match->getParameter('node');
+    return AccessResult::allowedIf($node->access('update', $account) && $account->hasPermission('create media'));
+  }
+
+  /**
+   * Adds file to existing media.
+   *
+   * @param \Drupal\media\Entity\Media $media
+   *   The media to which file is added.
+   * @param string $destination_field
+   *   The name of the media field to add file reference.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   201 on success with a Location link header.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
+   */
+  public function attachToMedia(
+    Media $media,
+    string $destination_field,
+    Request $request) {
+    $content_location = $request->headers->get('Content-Location', "");
+    $contents = $request->getContent();
+    if ($contents) {
+      $file = file_save_data($contents, $content_location, FILE_EXISTS_REPLACE);
+      $media->{$destination_field}->setValue([
+        'target_id' => $file->id(),
+      ]);
+      $media->save();
+    }
+    return new Response("<h1>Complete</h1>");
+  }
+
+  /**
+   * Checks for permissions to update a node and update media.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   Account for user making the request.
+   * @param \Drupal\Core\Routing\RouteMatch $route_match
+   *   Route match to get Node from url params.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   Access result.
+   */
+  public function attachToMediaAccess(AccountInterface $account, RouteMatch $route_match) {
+    $media = $route_match->getParameter('media');
+    $node = $this->utils->getParentNode($media);
     return AccessResult::allowedIf($node->access('update', $account) && $account->hasPermission('create media'));
   }
 

@@ -1,0 +1,13 @@
+islandora_text_extraction.attach_file_to_media:
+  path: '/media/add_ocr/{media}/{destination_field}/{destination_text_field}'
+  defaults:
+    _controller: '\Drupal\islandora_text_extraction\Controller\MediaSourceController::attachToMedia'
+  methods: [GET, PUT]
+  requirements:
+    _custom_access: '\Drupal\islandora\Controller\MediaSourceController::attachToMediaAccess'
+  options:
+    _auth: ['basic_auth', 'cookie', 'jwt_auth']
+    no_cache: 'TRUE'
+    parameters:
+      media:
+        type: entity:media

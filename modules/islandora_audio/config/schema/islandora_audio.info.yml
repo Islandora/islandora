@@ -1,0 +1,28 @@
+action.configuration.generate_audio_derivative:
+  type: mapping
+  label: 'Generate a audio derivative...'
+  mapping:
+    queue:
+      type: text
+      label: 'Queue'
+    event:
+      type: text
+      label: 'Event Type'
+    source_term_uri:
+      type: text
+      label: 'Source term uri'
+    derivative_term_uri:
+      type: text
+      label: 'Destination term uri'
+    mimetype:
+      type: text
+      label: 'Audio Mimetype'
+    args:
+      type: text
+      label: 'FFMpeg Arguments'
+    scheme:
+      type: text
+      label: 'Flysystem scheme'
+    path:
+      type: text
+      label: 'File path with extension'

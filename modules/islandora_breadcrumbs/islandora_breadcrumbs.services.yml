@@ -1,6 +1,0 @@
-services:
-  islandora_breadcrumbs.breadcrumb:
-    class: Drupal\islandora_breadcrumbs\IslandoraBreadcrumbBuilder
-    arguments: ['@entity_type.manager', '@config.factory']
-    tags:
-      - { name: breadcrumb_builder, priority: 100 }

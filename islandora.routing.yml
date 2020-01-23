@@ -57,3 +57,17 @@ islandora.media_source_put_to_node:
     _custom_access: '\Drupal\islandora\Controller\MediaSourceController::putToNodeAccess'
   options:
     _auth: ['basic_auth', 'cookie', 'jwt_auth']
+
+islandora.attach_file_to_media:
+  path: '/media/add_derivative/{media}/{destination_field}'
+  defaults:
+    _controller: '\Drupal\islandora\Controller\MediaSourceController::attachToMedia'
+  methods: [GET, PUT]
+  requirements:
+    _custom_access: '\Drupal\islandora\Controller\MediaSourceController::attachToMediaAccess'
+  options:
+    _auth: ['basic_auth', 'cookie', 'jwt_auth']
+    no_cache: 'TRUE'
+    parameters:
+      media:
+        type: entity:media

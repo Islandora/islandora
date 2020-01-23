@@ -9,6 +9,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\islandora\MediaSource\MediaSourceService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\file\Entity\File;
 
 /**
  * Deletes a media and its source file.
@@ -101,6 +102,15 @@ class DeleteMediaAndFile extends ActionBase implements ContainerFactoryPluginInt
       $source_field = $this->mediaSourceService->getSourceFieldName($entity->bundle());
       foreach ($entity->get($source_field)->referencedEntities() as $file) {
         $file->delete();
+        // Check for non-source fields;
+        foreach ($entity->getFieldDefinitions() as $field) {
+          if ($field->getType() == 'file') {
+            $fid = $entity->get($field->getName())->getValue()[0]['target_id'];
+            if ($fid) {
+              File::load($fid)->delete();
+            }
+          }
+        }
       }
       $entity->delete();
     }
