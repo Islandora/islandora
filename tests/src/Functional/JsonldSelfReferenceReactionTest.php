@@ -28,7 +28,7 @@ class JsonldSelfReferenceReactionTest extends IslandoraFunctionalTestBase {
       ->setBundleMapping(['types' => $types])
       ->setFieldMapping('created', $created_mapping)
       ->setFieldMapping('title', [
-        'properties' => ['dc:title'],
+        'properties' => ['dcterms:title'],
         'datatype' => 'xsd:string',
       ])
       ->save();

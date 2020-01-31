@@ -51,6 +51,7 @@ function islandora_rdf_namespaces() {
   return [
     'ldp'  => 'http://www.w3.org/ns/ldp#',
     'dc11' => 'http://purl.org/dc/elements/1.1/',
+    'dcterms' => 'http://purl.org/dc/terms/',
     'nfo' => 'http://www.semanticdesktop.org/ontologies/2007/03/22/nfo/v1.1/',
     'ebucore' => 'http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#',
     'fedora' => 'http://fedora.info/definitions/v4/repository#',
