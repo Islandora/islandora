@@ -7,12 +7,15 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Provides breadcrumbs for nodes using a configured entity reference field.
  */
 class IslandoraBreadcrumbBuilder implements BreadcrumbBuilderInterface {
+  use StringTranslationTrait;
 
   /**
    * The configuration.
@@ -63,6 +66,7 @@ class IslandoraBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $nid = $route_match->getRawParameters()->get('node');
     $node = $this->nodeStorage->load($nid);
     $breadcrumb = new Breadcrumb();
+    $breadcrumb->addLink(Link::createFromRoute($this->t('Home'), '<front>'));
 
     $chain = [];
     $this->walkMembership($node, $chain);
