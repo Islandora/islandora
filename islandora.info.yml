@@ -31,3 +31,4 @@ dependencies:
   - content_translation
   - flysystem
   - token
+  - transliterate_filenames
