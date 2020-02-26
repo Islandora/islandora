@@ -128,8 +128,9 @@ class Fedora implements FlysystemPluginInterface, ContainerFactoryPluginInterfac
       $response = $this->fedora->getResourceHeaders('');
       $statusCode = $response->getStatusCode();
       $message = '%url returned %status';
-    } catch (ConnectException $e) {
-      // Fedora is unavailable
+    }
+    catch (ConnectException $e) {
+      // Fedora is unavailable.
       $message = '%url is unavailable, cannot connect.';
       $statusCode = 500;
     }
