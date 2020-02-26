@@ -10,6 +10,7 @@ use Drupal\flysystem\Plugin\FlysystemPluginInterface;
 use Drupal\flysystem\Plugin\FlysystemUrlTrait;
 use Drupal\islandora\Flysystem\Adapter\FedoraAdapter;
 use Drupal\jwt\Authentication\Provider\JwtAuth;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Client;
 use Islandora\Chullo\IFedoraApi;
@@ -123,20 +124,27 @@ class Fedora implements FlysystemPluginInterface, ContainerFactoryPluginInterfac
    */
   public function ensure($force = FALSE) {
     // Check fedora root for sanity.
-    $response = $this->fedora->getResourceHeaders('');
-
-    if ($response->getStatusCode() != 200) {
-      return [[
-        'severity' => RfcLogLevel::ERROR,
-        'message' => '%url returned %status',
-        'context' => [
-          '%url' => $this->fedora->getBaseUri(),
-          '%status' => $response->getStatusCode(),
+    try {
+      $response = $this->fedora->getResourceHeaders('');
+      $statusCode = $response->getStatusCode();
+      $message = '%url returned %status';
+    } catch (ConnectException $e) {
+      // Fedora is unavailable
+      $message = '%url is unavailable, cannot connect.';
+      $statusCode = 500;
+    }
+    if ($statusCode != 200) {
+      return [
+        [
+          'severity' => RfcLogLevel::ERROR,
+          'message' => $message,
+          'context' => [
+            '%url' => $this->fedora->getBaseUri(),
+            '%status' => $statusCode,
+          ],
         ],
-      ],
       ];
     }
-
     return [];
   }
 
