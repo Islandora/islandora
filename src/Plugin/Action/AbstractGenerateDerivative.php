@@ -160,7 +160,7 @@ class AbstractGenerateDerivative extends EmitEvent {
     // Find the term for the derivative and use it to set the destination url
     // in the data array.
     $derivative_term = $this->utils->getTermForUri($this->configuration['derivative_term_uri']);
-    if (!$source_term) {
+    if (!$derivative_term) {
       throw new \RuntimeException("Could not locate derivative term with uri" . $this->configuration['derivative_term_uri'], 500);
     }
 
