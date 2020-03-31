@@ -44,6 +44,9 @@ class JsonldTypeAlterReaction extends NormalizerAlterReaction {
 
     // Search for the entity in the graph.
     foreach ($normalized['@graph'] as &$elem) {
+      if (!is_array($elem['@type'])) {
+        $elem['@type'] = [$elem['@type']];
+      }
       if ($elem['@id'] === $this->getSubjectUrl($entity)) {
         foreach ($entity->get($config['source_field'])->getValue() as $type) {
           // If the configured field is using an entity reference,
