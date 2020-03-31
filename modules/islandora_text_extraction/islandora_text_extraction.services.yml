@@ -1,0 +1,8 @@
+services:
+  logger.channel.islandora_text_extraction:
+      parent: logger.channel_base
+      arguments: ['islandora_text_extraction']
+  islandora_text_extraction.search_reindexer:
+    class: Drupal\islandora_text_extraction\SearchReindexer
+    arguments: ['@islandora.utils', '@logger.channel.islandora_text_extraction']
+
