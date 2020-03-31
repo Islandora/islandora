@@ -1,0 +1,51 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - media.type.extracted_text
+  enforced:
+    module:
+      - islandora_text_extraction_defaults
+  module:
+    - media
+id: media.extracted_text
+targetEntityType: media
+bundle: extracted_text 
+types:
+  - 'pcdm:File'
+fieldMappings:
+  name:
+    properties:
+      - 'dcterms:title'
+      - 'rdf:label'
+  created:
+    properties:
+      - 'schema:dateCreated'
+    datatype_callback:
+      callable: 'Drupal\rdf\CommonDataConverter::dateIso8601Value'
+  changed:
+    properties:
+      - 'schema:dateModified'
+    datatype_callback:
+      callable: 'Drupal\rdf\CommonDataConverter::dateIso8601Value'
+  uid:
+    properties:
+      - 'schema:author'
+    mapping_type: rel
+  field_mime_type:
+    properties:
+      - 'ebucore:hasMimeType'
+  field_media_of:
+    properties:
+      - 'pcdm:fileOf'
+    mapping_type: rel
+  field_original_name:
+    properties:
+      - 'premis3:originalName'
+  field_tags:
+    properties:
+      - 'schema:additionalType'
+    mapping_type: rel
+  field_file_size:
+    properties:
+      - 'premis:hasSize'
