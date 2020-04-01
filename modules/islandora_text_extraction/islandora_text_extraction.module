@@ -34,11 +34,11 @@ function islandora_text_extraction_media_presave(MediaInterface $media) {
     return;
   }
   $text = $media->get('field_edited_text')->getValue();
-  if (!$text) {
-    $file_id = $media->get('field_media_file')->getValue()[0]['target_id'];
-    $file = File::load($file_id);
-    $data = file_get_contents($file->getFileUri());
-    $data = nl2br($data);
+  $file_id = $media->get('field_media_file')->getValue()[0]['target_id'];
+  $file = File::load($file_id);
+  $data = file_get_contents($file->getFileUri());
+  $data = nl2br($data);
+  if ($text !== $data) {
     $media->set('field_edited_text', $data);
     $media->field_edited_text->format = 'basic_html';
   }
