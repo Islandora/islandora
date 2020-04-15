@@ -18,7 +18,7 @@
     "drupal/search_api": "~1.8",
     "islandora/jsonld": "dev-8.x-1.x",
     "stomp-php/stomp-php": "4.*",
-    "drupal/jwt": "1.0.0-alpha6",
+    "drupal/jwt": "1.0.0-beta1",
     "drupal/filehash": "^1.1",
     "drupal/prepopulate" : "^2.2",
     "drupal/eva" : "^2.0",
