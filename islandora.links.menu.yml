@@ -11,3 +11,10 @@ system.islandora_settings:
   parent: system.admin_config_islandora
   route_name: system.islandora_settings 
   description: 'Confgure core Islandora settings'
+
+# Field to RDF property mappings
+system.islandora_rdf_mappings:
+  title: 'RDF field mappings'
+  parent: system.admin_reports
+  description: 'List of configured Drupal field to RDF property mappings.'
+  route_name: system.islandora_rdf_mappings
