@@ -1,0 +1,7 @@
+image_media_form_defaults:
+  version: 1.x
+  js:
+    js/image_media_form_defaults.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
