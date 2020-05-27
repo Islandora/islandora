@@ -317,6 +317,23 @@ function islandora_preprocess_node(&$variables) {
 }
 
 /**
+ * Implements hook_form_alter().
+ */
+function islandora_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $media_add_forms = ['media_audio_add_form', 'media_document_add_form',
+    'media_extracted_text_add_form', 'media_file_add_form', 'media_image_add_form',
+    'media_fits_technical_metadata_add_form', 'media_video_add_form'];
+
+  if (in_array($form['#form_id'], $media_add_forms)) {
+    $params = \Drupal::request()->query->all();
+    $media_of_nid = $params['edit']['field_media_of']['widget'][0]['target_id'];
+    $node = \Drupal::entityTypeManager()->getStorage('node')->load($media_of_nid);
+    $title = $node->getTitle();
+    $form['name']['widget'][0]['value']['#default_value'] = $title;
+  }
+}
+
+/**
  * Implements hook_entity_form_display_alter().
  */
 function islandora_entity_form_display_alter(&$form_display, $context) {
@@ -466,5 +483,18 @@ function islandora_preprocess_views_view_table(&$variables) {
       ];
       drupal_attach_tabledrag($variables, $options);
     }
+  }
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function islandora_page_attachments(array &$attachments) {
+  $current_path = \Drupal::service('path.current')->getPath();
+  $path_args = explode('/', ltrim($current_path, '/'));
+  // Need to populate the "Alt text" field using JavaScript since it is not part of
+  // the rendered form, it is added via Ajax on file upload.
+  if (count($path_args) >= 3 && $path_args[0] == 'media' && $path_args[1] == 'add' && $path_args[2] == 'image') {
+    $attachments['#attached']['library'][] = 'islandora/image_media_form_defaults';
   }
 }
