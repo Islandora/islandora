@@ -100,15 +100,20 @@ class RdfMappingsReportController extends ControllerBase {
         ];
         $vocab_table_rows = [];
         foreach ($terms as $t) {
+          $ld_uri = NULL;
           $term = Term::load($t->tid);
           foreach ($uri_fields as $uri_field) {
             if ($term->hasField($uri_field) && !$term->get($uri_field)->isEmpty()) {
-              $uri = $term->get($uri_field)->first()->getValue();
+              $ld_uri = $term->get($uri_field)->first()->getValue();
               continue;
             }
           }
-          if (isset($uri) && !is_null($uri) && array_key_exists('uri', $uri)) {
-            $vocab_table_rows[] = [$term->getName(), $term->id(), $uri['uri']];
+          if (is_array($ld_uri) && array_key_exists('uri', $ld_uri)) {
+            $vocab_table_rows[] = [
+              $term->getName(),
+              $term->id(),
+              $ld_uri['uri'],
+            ];
           }
           else {
             $vocab_table_rows[] = [$term->getName(), $term->id(), t('None')];
