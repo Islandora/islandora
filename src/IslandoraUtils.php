@@ -265,7 +265,7 @@ class IslandoraUtils {
   }
 
   /**
-   * Gets the taxonomy term associated with an external uri.
+   * Gets the external uri associated with a taxonomy term.
    *
    * @param \Drupal\taxonomy\TermInterface $term
    *   Taxonomy term.
