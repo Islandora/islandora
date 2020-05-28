@@ -12,9 +12,9 @@ system.islandora_settings:
   route_name: system.islandora_settings 
   description: 'Confgure core Islandora settings'
 
-# Field to RDF property mappings
+# RDF property mappings
 system.islandora_rdf_mappings:
-  title: 'RDF field mappings'
+  title: 'Field and term RDF mappings'
   parent: system.admin_reports
-  description: 'List of configured Drupal field to RDF property mappings.'
+  description: 'List of configured Drupal field to RDF property mappings and taxonomy term linked data URIs.'
   route_name: system.islandora_rdf_mappings

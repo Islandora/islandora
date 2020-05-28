@@ -16,12 +16,12 @@ system.islandora_settings:
   requirements:
     _permission: 'administer site configuration'
 
-# RDF mappings report
+# RDF properties report
 system.islandora_rdf_mappings:
   path: '/admin/reports/islandora/rdf_mappings'
   defaults:
     _controller: '\Drupal\islandora\Controller\RdfMappingsReportController::main'
-    _title: 'Drupal field to RDF property mappings'
+    _title: 'Field and term RDF mappings'
   requirements:
     _permission: 'administer site configuration'
 

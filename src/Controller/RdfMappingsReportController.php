@@ -18,10 +18,9 @@ class RdfMappingsReportController extends ControllerBase {
    *   Markup of the tables.
    */
   public function main() {
-
     $markup = '';
-    $entity_types = ['node', 'media'];
 
+    // Configured namespaces.
     $namespaces = rdf_get_namespaces();
     $namespaces_table_rows = [];
     foreach ($namespaces as $alias => $namespace_uri) {
@@ -38,6 +37,8 @@ class RdfMappingsReportController extends ControllerBase {
     $markup .= '<details><summary>' . t('RDF namespaces used in field mappings') .
       '</summary><div class="details-wrapper">' . $namespaces_table_markup . '</div></details>';
 
+    // Node and media field to RDF property mappings.
+    $entity_types = ['node', 'media'];
     $markup .= '<h2>' . t('Field mappings') . '</h2>';
     foreach ($entity_types as $entity_type) {
       $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo($entity_type);
@@ -70,9 +71,11 @@ class RdfMappingsReportController extends ControllerBase {
       }
     }
 
-    // Taxonomy terms with external URIs.
-    $markup .= '<h2>' . t('Taxonomy terms with external URIs') . '</h2>';
+    // Taxonomy terms with external URIs or authority links.
+    $markup .= '<h2>' . t('Taxonomy terms with external URIs or authority links') . '</h2>';
     $utils = \Drupal::service('islandora.utils');
+    $uri_fields = $utils->getUriFieldNamesForTerms();
+
     $vocabs = Vocabulary::loadMultiple();
     foreach ($vocabs as $vid => $vocab) {
       $vocab_table_header = [];
@@ -90,16 +93,25 @@ class RdfMappingsReportController extends ControllerBase {
         $markup .= $vocab_table_markup;
       }
       else {
-        $vocab_table_header = [t('Term'), t('Term ID'), t('External URI')];
+        $vocab_table_header = [
+          t('Term'),
+          t('Term ID'),
+          t('External URI or Authority link'),
+        ];
         $vocab_table_rows = [];
         foreach ($terms as $t) {
           $term = Term::load($t->tid);
-          $uri = $utils->getUriForTerm($term);
-          if (is_null($uri)) {
-            $vocab_table_rows[] = [$term->getName(), $term->id(), t('None')];
+          foreach ($uri_fields as $uri_field) {
+            if ($term->hasField($uri_field) && !$term->get($uri_field)->isEmpty()) {
+              $uri = $term->get($uri_field)->first()->getValue();
+              continue;
+            }
+          }
+          if (isset($uri) && !is_null($uri) && array_key_exists('uri', $uri)) {
+            $vocab_table_rows[] = [$term->getName(), $term->id(), $uri['uri']];
           }
           else {
-            $vocab_table_rows[] = [$term->getName(), $term->id(), $uri];
+            $vocab_table_rows[] = [$term->getName(), $term->id(), t('None')];
           }
         }
         $vocab_table = [
