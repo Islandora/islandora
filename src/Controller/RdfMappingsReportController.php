@@ -5,6 +5,8 @@ namespace Drupal\islandora\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
 
 /**
  * RDF mappings report controller.
@@ -109,14 +111,16 @@ class RdfMappingsReportController extends ControllerBase {
             }
           }
           if (is_array($ld_uri) && array_key_exists('uri', $ld_uri)) {
+            $term_link = Link::fromTextAndUrl($term->getName(), Url::fromUri('internal:/taxonomy/term/' . $term->id()));
             $vocab_table_rows[] = [
-              $term->getName(),
+              $term_link,
               $term->id(),
               $ld_uri['uri'],
             ];
           }
           else {
-            $vocab_table_rows[] = [$term->getName(), $term->id(), t('None')];
+            $term_link = Link::fromTextAndUrl($term->getName(), Url::fromUri('internal:/taxonomy/term/' . $term->id()));
+            $vocab_table_rows[] = [$term_link, $term->id(), t('None')];
           }
         }
         $vocab_table = [
