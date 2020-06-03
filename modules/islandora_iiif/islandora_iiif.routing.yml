@@ -4,6 +4,6 @@ islandora_iiif.islandora_iiif_config_form:
     _form: '\Drupal\islandora_iiif\Form\IslandoraIIIFConfigForm'
     _title: 'IslandoraIIIFConfigForm'
   requirements:
-    _permission: 'access administration pages'
+    _permission: 'administer site configuration'
   options:
     _admin_route: TRUE
