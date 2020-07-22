@@ -107,7 +107,8 @@ class IslandoraBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
     // Find the next in the chain, if there are any.
     if ($entity->hasField($this->config->get('referenceField')) &&
-      !$entity->get($this->config->get('referenceField'))->isEmpty()) {
+      !$entity->get($this->config->get('referenceField'))->isEmpty() &&
+      $entity->get($this->config->get('referenceField'))->entity instanceof EntityInterface) {
       $this->walkMembership($entity->get($this->config->get('referenceField'))->entity, $crumbs);
     }
   }
