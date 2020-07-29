@@ -61,7 +61,7 @@ $ drush en islandora_core_feature
 $ drush mim islandora_tags
 ```
 
-## Configuration
+## Configuration!!
 
 ![image](https://user-images.githubusercontent.com/20773151/67234502-ac171900-f41b-11e9-964e-c7d4cfadbd67.png)
 
