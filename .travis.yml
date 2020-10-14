@@ -20,7 +20,7 @@ branches:
   only:
     - /^8.x/
     - /master/
-    - /fix-travis/
+    - /^fix-/
 
 before_install:
   - export SCRIPT_DIR=$HOME/islandora/.scripts
