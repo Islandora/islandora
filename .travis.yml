@@ -24,7 +24,7 @@ branches:
 
 before_install:
   - export SCRIPT_DIR=$HOME/islandora/.scripts
-  - export CUSTOM_SCRIPT=$DRUPAL_DIR/web/modules/custom/islandora/.scripts
+  - export CUSTOM_SCRIPT_DIR=$DRUPAL_DIR/web/modules/custom/islandora/.scripts
   - export DRUPAL_DIR=/opt/drupal
   - export COMPOSER_PATH="/home/travis/.phpenv/versions/$TRAVIS_PHP_VERSION/bin/composer"
   - phpenv config-rm xdebug.ini
@@ -43,16 +43,12 @@ install:
 
 script:
   - $SCRIPT_DIR/travis_scripts.sh
-  - $SCRIPT_DIR/run-tests.sh $TESTSUITE "islandora"
-  - $SCRIPT_DIR/run-tests.sh $TESTSUITE "islandora_breadcrumbs"
-  - $SCRIPT_DIR/run-tests.sh $TESTSUITE "islandora_image"
-  - $SCRIPT_DIR/run-tests.sh $TESTSUITE "islandora_audio"
-  - $SCRIPT_DIR/run-tests.sh $TESTSUITE "islandora_video"
-  - $SCRIPT_DIR/run-tests.sh $TESTSUITE "islandora_text_extraction"
-  - phpdbg -qrr phpunit
-
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - $CUSTOM_SCRIPT_DIR/run-tests.sh "$TESTSUITE" "islandora"
+  - $CUSTOM_SCRIPT_DIR/run-tests.sh "$TESTSUITE" "islandora_breadcrumbs"
+  - $CUSTOM_SCRIPT_DIR/run-tests.sh "$TESTSUITE" "islandora_image"
+  - $CUSTOM_SCRIPT_DIR/run-tests.sh "$TESTSUITE" "islandora_audio"
+  - $CUSTOM_SCRIPT_DIR/run-tests.sh "$TESTSUITE" "islandora_video"
+  - $CUSTOM_SCRIPT_DIR/run-tests.sh "$TESTSUITE" "islandora_text_extraction"
 
 notifications:
   slack:
