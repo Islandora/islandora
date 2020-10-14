@@ -7,4 +7,4 @@ if [ "$1" == "unit" ]; then
 elif [ "$1" == "functional" ]; then
   TYPE="--type=IslandoraFunctionalTestBase,WebDriverTestBase"
 fi
-php core/scripts/run-tests.sh --suppress-deprecations --concurrency=2 --url http://127.0.0.1:8282 --verbose --php `which php` --module "$2" $TYPE
+php core/scripts/run-tests.sh --suppress-deprecations --concurrency 2 --url http://127.0.0.1:8282 --verbose --php `which php` --module "$2" $TYPE
