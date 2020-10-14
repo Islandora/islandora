@@ -6,7 +6,7 @@ php:
 
 env:
   - TESTSUITE=unit
-  - TESTSUITE=integration
+  - TESTSUITE=functional
 
 matrix:
     fast_finish: true
