@@ -24,8 +24,8 @@ branches:
 
 before_install:
   - export SCRIPT_DIR=$HOME/islandora/.scripts
-  - export CUSTOM_SCRIPT_DIR=$DRUPAL_DIR/web/modules/custom/islandora/.scripts
   - export DRUPAL_DIR=/opt/drupal
+  - export CUSTOM_SCRIPT_DIR=$DRUPAL_DIR/web/modules/custom/islandora/.scripts
   - export COMPOSER_PATH="/home/travis/.phpenv/versions/$TRAVIS_PHP_VERSION/bin/composer"
   - phpenv config-rm xdebug.ini
 
