@@ -23,7 +23,12 @@ class IslandoraFunctionalTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['context_ui', 'field_ui', 'islandora'];
+  protected static $modules = [
+    'context_ui',
+    'field_ui',
+    'islandora',
+    'menu_link_content',
+  ];
 
   /**
    * {@inheritdoc}

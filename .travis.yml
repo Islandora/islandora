@@ -4,6 +4,11 @@ php:
   - 7.2
   - 7.3
 
+env:
+  - TESTSUITE=kernel
+  - TESTSUITE=functional
+  - TESTSUITE=functional-javascript
+
 matrix:
     fast_finish: true
     allow_failures:
@@ -20,7 +25,9 @@ branches:
 before_install:
   - export SCRIPT_DIR=$HOME/islandora/.scripts
   - export DRUPAL_DIR=/opt/drupal
+  - export PHPUNIT_FILE=$TRAVIS_BUILD_DIR/phpunit.xml
   - export COMPOSER_PATH="/home/travis/.phpenv/versions/$TRAVIS_PHP_VERSION/bin/composer"
+  - phpenv config-rm xdebug.ini
 
 install:
   - git clone https://github.com/Islandora/documentation.git $HOME/islandora
@@ -33,18 +40,13 @@ install:
   - cd web
   - drush --uri=127.0.0.1:8282 en -y islandora_audio islandora_breadcrumbs islandora_iiif islandora_image islandora_video islandora_text_extraction_defaults
   - drush --uri=127.0.0.1:8282 fim -y islandora_core_feature,islandora_text_extraction_defaults
+  - mkdir -p $DRUPAL_DIR/web/sites/simpletest/browser_output
+  - cp $PHPUNIT_FILE $DRUPAL_DIR/web/core/phpunit.xml
 
 script:
   - $SCRIPT_DIR/travis_scripts.sh
-  - $SCRIPT_DIR/run-tests.sh "islandora"
-  - $SCRIPT_DIR/run-tests.sh "islandora_breadcrumbs"
-  - $SCRIPT_DIR/run-tests.sh "islandora_image"
-  - $SCRIPT_DIR/run-tests.sh "islandora_audio"
-  - $SCRIPT_DIR/run-tests.sh "islandora_video"
-  - $SCRIPT_DIR/run-tests.sh "islandora_text_extraction"
-
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - cd $DRUPAL_DIR/web/core
+  - $DRUPAL_DIR/vendor/bin/phpunit --verbose --testsuite "$TESTSUITE"
 
 notifications:
   slack:
