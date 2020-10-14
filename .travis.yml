@@ -4,6 +4,10 @@ php:
   - 7.2
   - 7.3
 
+env:
+  - TESTSUITE=unit
+  - TESTSUITE=integration
+
 matrix:
     fast_finish: true
     allow_failures:
@@ -16,11 +20,14 @@ branches:
   only:
     - /^8.x/
     - /master/
+    - /fix-travis/
 
 before_install:
   - export SCRIPT_DIR=$HOME/islandora/.scripts
+  - export CUSTOM_SCRIPT=$DRUPAL_DIR/web/modules/custom/islandora/.scripts
   - export DRUPAL_DIR=/opt/drupal
   - export COMPOSER_PATH="/home/travis/.phpenv/versions/$TRAVIS_PHP_VERSION/bin/composer"
+  - phpenv config-rm xdebug.ini
 
 install:
   - git clone https://github.com/Islandora/documentation.git $HOME/islandora
@@ -36,12 +43,13 @@ install:
 
 script:
   - $SCRIPT_DIR/travis_scripts.sh
-  - $SCRIPT_DIR/run-tests.sh "islandora"
-  - $SCRIPT_DIR/run-tests.sh "islandora_breadcrumbs"
-  - $SCRIPT_DIR/run-tests.sh "islandora_image"
-  - $SCRIPT_DIR/run-tests.sh "islandora_audio"
-  - $SCRIPT_DIR/run-tests.sh "islandora_video"
-  - $SCRIPT_DIR/run-tests.sh "islandora_text_extraction"
+  - $SCRIPT_DIR/run-tests.sh $TESTSUITE "islandora"
+  - $SCRIPT_DIR/run-tests.sh $TESTSUITE "islandora_breadcrumbs"
+  - $SCRIPT_DIR/run-tests.sh $TESTSUITE "islandora_image"
+  - $SCRIPT_DIR/run-tests.sh $TESTSUITE "islandora_audio"
+  - $SCRIPT_DIR/run-tests.sh $TESTSUITE "islandora_video"
+  - $SCRIPT_DIR/run-tests.sh $TESTSUITE "islandora_text_extraction"
+  - phpdbg -qrr phpunit
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
