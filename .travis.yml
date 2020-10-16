@@ -7,6 +7,7 @@ php:
 env:
   - TESTSUITE=unit
   - TESTSUITE=functional
+  - TESTSUITE=function-javascript
 
 matrix:
     fast_finish: true
@@ -26,6 +27,7 @@ before_install:
   - export SCRIPT_DIR=$HOME/islandora/.scripts
   - export DRUPAL_DIR=/opt/drupal
   - export CUSTOM_SCRIPT_DIR=$TRAVIS_BUILD_DIR/.scripts
+  - export PHPUNIT_FILE=$TRAVIS_BUILD_DIR/phpunit.xml
   - export COMPOSER_PATH="/home/travis/.phpenv/versions/$TRAVIS_PHP_VERSION/bin/composer"
   - phpenv config-rm xdebug.ini
 
@@ -43,12 +45,7 @@ install:
 
 script:
   - $SCRIPT_DIR/travis_scripts.sh
-  - $CUSTOM_SCRIPT_DIR/run-tests.sh "$TESTSUITE" "islandora"
-  - $CUSTOM_SCRIPT_DIR/run-tests.sh "$TESTSUITE" "islandora_breadcrumbs"
-  - $CUSTOM_SCRIPT_DIR/run-tests.sh "$TESTSUITE" "islandora_image"
-  - $CUSTOM_SCRIPT_DIR/run-tests.sh "$TESTSUITE" "islandora_audio"
-  - $CUSTOM_SCRIPT_DIR/run-tests.sh "$TESTSUITE" "islandora_video"
-  - $CUSTOM_SCRIPT_DIR/run-tests.sh "$TESTSUITE" "islandora_text_extraction"
+  - $CUSTOM_SCRIPT_DIR/run-tests.sh "$TESTSUITE"
 
 notifications:
   slack:
