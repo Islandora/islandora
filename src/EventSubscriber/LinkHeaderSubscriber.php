@@ -291,7 +291,7 @@ abstract class LinkHeaderSubscriber implements EventSubscriberInterface {
             break;
 
           default:
-            continue;
+            continue 2;
         }
 
         // Skip route if the user doesn't have access.
