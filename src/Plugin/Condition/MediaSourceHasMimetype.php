@@ -44,20 +44,24 @@ class MediaSourceHasMimetype extends ConditionPluginBase {
    * {@inheritdoc}
    */
   public function evaluate() {
-    foreach ($this->getContexts() as $context) {
-      if ($context->hasContextValue()) {
-        $entity = $context->getContextValue();
-        $mid = $entity->id();
-        if ($mid && !empty($this->configuration['mimetype'])) {
-          $source = $entity->getSource();
+    if (empty($this->configuration['mimetype']) && !$this->isNegated()) {
+      return TRUE;
+    }
+    $media = $this->getContext('media');
+    if ($media->hasContextValue()) {
+      $entity = $media->getContextValue();
+      $mid = $entity->id();
+      if ($mid) {
+        $source = $entity->getSource();
+        if ($source) {
           $source_file = File::load($source->getSourceFieldValue($entity));
           if ($this->configuration['mimetype'] == $source_file->getMimeType()) {
-            return !$this->isNegated();
+            return TRUE;
           }
         }
       }
     }
-    return $this->isNegated();
+    return FALSE;
   }
 
   /**
