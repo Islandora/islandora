@@ -142,7 +142,7 @@ class AbstractGenerateDerivative extends EmitEvent {
     // url in the data array.
     $source_term = $this->utils->getTermForUri($this->configuration['source_term_uri']);
     if (!$source_term) {
-      throw new \RuntimeException("Could not locate source term with uri" . $this->configuration['source_term_uri'], 500);
+      throw new \RuntimeException("Could not locate source term with uri: " . $this->configuration['source_term_uri'], 500);
     }
 
     $source_media = $this->utils->getMediaWithTerm($entity, $source_term);
@@ -161,7 +161,7 @@ class AbstractGenerateDerivative extends EmitEvent {
     // in the data array.
     $derivative_term = $this->utils->getTermForUri($this->configuration['derivative_term_uri']);
     if (!$derivative_term) {
-      throw new \RuntimeException("Could not locate derivative term with uri" . $this->configuration['derivative_term_uri'], 500);
+      throw new \RuntimeException("Could not locate taxonomy term with uri: " . $this->configuration['derivative_term_uri'], 500);
     }
 
     $route_params = [
