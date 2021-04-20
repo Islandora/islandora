@@ -34,6 +34,7 @@ class IslandoraSettingsForm extends ConfigFormBase {
     'month',
     'year',
   ];
+  const RDF_NAMESPACES = 'rdf_namespaces';
 
   /**
    * To list the available bundle types.
@@ -184,6 +185,17 @@ class IslandoraSettingsForm extends ConfigFormBase {
         '#default_value' => $selected_bundles,
       ],
     ];
+
+    $rdf_namespaces = '';
+    foreach ($config->get('rdf_namespaces') as $namespace) {
+      $rdf_namespaces .= $namespace['prefix'] . '|' . $namespace['namespace'] . "\n";
+    }
+    $form[self::RDF_NAMESPACES] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('RDF Namespaces'),
+      '#default_value' => $rdf_namespaces,
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -259,6 +271,22 @@ class IslandoraSettingsForm extends ConfigFormBase {
         );
       }
     }
+
+    // Validate RDF Namespaces.
+    foreach (preg_split("/[\r\n]+/", $form_state->getValue(self::RDF_NAMESPACES)) as $line) {
+      if (empty($line)) {
+        continue;
+      }
+      $namespace = explode("|", trim($line));
+      if (empty($namespace[0]) || empty($namespace[1])) {
+        $form_state->setErrorByName(
+          self::RDF_NAMESPACES,
+          $this->t("RDF Namespace form is malformed on line '@line'",
+            ['@line' => trim($line)]
+          )
+        );
+      }
+    }
   }
 
   /**
@@ -285,10 +313,25 @@ class IslandoraSettingsForm extends ConfigFormBase {
       }
     }
 
+    $namespaces_array = [];
+    foreach (preg_split("/[\r\n]+/", $form_state->getValue(self::RDF_NAMESPACES)) as $line) {
+      if (empty($line)) {
+        continue;
+      }
+      $namespace = explode("|", trim($line));
+      if (!empty($namespace[0]) && !empty($namespace[1])) {
+        $namespaces_array[] = [
+          'prefix' => trim($namespace[0]),
+          'namespace' => trim($namespace[1]),
+        ];
+      }
+    }
+
     $config
       ->set(self::BROKER_URL, $form_state->getValue(self::BROKER_URL))
       ->set(self::JWT_EXPIRY, $form_state->getValue(self::JWT_EXPIRY))
       ->set(self::GEMINI_PSEUDO, $pseudo_types)
+      ->set(self::RDF_NAMESPACES, $namespaces_array)
       ->save();
 
     parent::submitForm($form, $form_state);
