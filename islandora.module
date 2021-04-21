@@ -44,31 +44,6 @@ function islandora_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_rdf_namespaces().
- */
-function islandora_rdf_namespaces() {
-  // Yes, it's amazing, rdf is not registered by default!
-  return [
-    'ldp'  => 'http://www.w3.org/ns/ldp#',
-    'dc11' => 'http://purl.org/dc/elements/1.1/',
-    'dcterms' => 'http://purl.org/dc/terms/',
-    'nfo' => 'http://www.semanticdesktop.org/ontologies/2007/03/22/nfo/v1.1/',
-    'ebucore' => 'http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#',
-    'fedora' => 'http://fedora.info/definitions/v4/repository#',
-    'owl' => 'http://www.w3.org/2002/07/owl#',
-    'ore' => 'http://www.openarchives.org/ore/terms/',
-    'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-    'islandora' => 'http://islandora.ca/',
-    'pcdm' => 'http://pcdm.org/models#',
-    'use' => 'http://pcdm.org/use#',
-    'iana' => 'http://www.iana.org/assignments/relation/',
-    'premis' => 'http://www.loc.gov/premis/rdf/v1#',
-    'premis3' => 'http://www.loc.gov/premis/rdf/v3/',
-    'co' => 'http://purl.org/co/',
-  ];
-}
-
-/**
  * Implements hook_node_insert().
  */
 function islandora_node_insert(NodeInterface $node) {

@@ -6,6 +6,13 @@
  */
 
 /**
+ * Adds common namespaces to jsonld.settings.
+ */
+function islandora_install() {
+  update_jsonld_included_namespaces();
+}
+
+/**
  * Delete the 'delete_media' action we used to provide, if it exists.
  *
  * Use the core 'media_delete_action' instead.
@@ -88,5 +95,82 @@ function islandora_update_8005() {
       $config->clear('source.keys');
       $config->save(TRUE);
     }
+  }
+}
+
+/**
+ * Adds adds previously hardcoded namespaces to configuration.
+ */
+function islandora_update_8006() {
+  update_jsonld_included_namespaces();
+}
+
+/**
+ * Used by install and update_8006 to add namespaces to jsonld.settings.yml.
+ */
+function update_jsonld_included_namespaces() {
+  $namespaces = [
+    [
+      'prefix' => 'ldp',
+      'namespace' => 'http://www.w3.org/ns/ldp#',
+    ], [
+      'prefix' => 'dc11',
+      'namespace' => 'http://purl.org/dc/elements/1.1/',
+    ], [
+      'prefix' => 'dcterms',
+      'namespace' => 'http://purl.org/dc/terms/',
+    ], [
+      'prefix' => 'nfo',
+      'namespace' => 'http://www.semanticdesktop.org/ontologies/2007/03/22/nfo/v1.1/',
+    ], [
+      'prefix' => 'ebucore',
+      'namespace' => 'http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#',
+    ], [
+      'prefix' => 'fedora',
+      'namespace' => 'http://fedora.info/definitions/v4/repository#',
+    ], [
+      'prefix' => 'owl',
+      'namespace' => 'http://www.w3.org/2002/07/owl#',
+    ], [
+      'prefix' => 'ore',
+      'namespace' => 'http://www.openarchives.org/ore/terms/',
+    ], [
+      'prefix' => 'rdf',
+      'namespace' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+    ], [
+      'prefix' => 'rdau',
+      'namespace' => 'http://rdaregistry.info/Elements/u/',
+    ], [
+      'prefix' => 'islandora',
+      'namespace' => 'http://islandora.ca/',
+    ], [
+      'prefix' => 'pcdm',
+      'namespace' => 'http://pcdm.org/models#',
+    ], [
+      'prefix' => 'use',
+      'namespace' => 'http://pcdm.org/use#',
+    ], [
+      'prefix' => 'iana',
+      'namespace' => 'http://www.iana.org/assignments/relation/',
+    ], [
+      'prefix' => 'premis',
+      'namespace' => 'http://www.loc.gov/premis/rdf/v1#',
+    ], [
+      'prefix' => 'premis3',
+      'namespace' => 'http://www.loc.gov/premis/rdf/v3/',
+    ], [
+      'prefix' => 'co',
+      'namespace' => 'http://purl.org/co/',
+    ],
+  ];
+
+  $config = \Drupal::configFactory()->getEditable('jsonld.settings');
+  if ($config && !is_array($config->get('rdf_namespaces'))) {
+    $config->set('rdf_namespaces', $namespaces);
+    $config->save(TRUE);
+  }
+  else {
+    \Drupal::logger('islandora')
+      ->warning("Could not find required jsonld.settings to add default RDF namespaces.");
   }
 }
