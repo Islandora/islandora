@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Url;
 use Stomp\Client;
 use Stomp\Exception\StompException;
 use Stomp\StatefulStomp;
@@ -184,6 +185,13 @@ class IslandoraSettingsForm extends ConfigFormBase {
         '#default_value' => $selected_bundles,
       ],
     ];
+
+    $form['rdf_namespaces'] = [
+      '#type' => 'link',
+      '#title' => $this->t('Update RDF namespace configurations in the JSON-LD module settings.'),
+      '#url' => Url::fromRoute('system.jsonld_settings'),
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
