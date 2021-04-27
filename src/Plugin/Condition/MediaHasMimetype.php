@@ -151,7 +151,7 @@ class MediaHasMimetype extends ConditionPluginBase implements ContainerFactoryPl
       $mimetypes = explode(',', str_replace(' ', '', $this->configuration['mimetypes']));
       foreach ($media as $medium) {
         $file = $this->mediaSource->getSourceFile($medium);
-        if (in_array($file->getMimeType(), $mimetypes)) {
+        if ($file && in_array($file->getMimeType(), $mimetypes)) {
           return TRUE;
         }
       }
