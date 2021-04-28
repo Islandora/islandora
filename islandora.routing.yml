@@ -16,6 +16,15 @@ system.islandora_settings:
   requirements:
     _permission: 'administer site configuration'
 
+# RDF properties report
+system.islandora_rdf_mappings:
+  path: '/admin/reports/islandora/rdf_mappings'
+  defaults:
+    _controller: '\Drupal\islandora\Controller\RdfMappingsReportController::main'
+    _title: 'Field and term RDF mappings'
+  requirements:
+    _permission: 'administer site configuration'
+
 islandora.add_member_to_node_page:
   path: '/node/{node}/members/add'
   defaults:
