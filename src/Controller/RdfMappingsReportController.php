@@ -3,15 +3,85 @@
 namespace Drupal\islandora\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\islandora\IslandoraUtils;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * RDF mappings report controller.
  */
 class RdfMappingsReportController extends ControllerBase {
+
+  /**
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  private $renderer;
+
+  /**
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  private $entityFieldManager;
+
+  /**
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  private $entityTypeBundleInfo;
+
+  /**
+   * @var \Drupal\islandora\IslandoraUtils
+   */
+  private $utils;
+
+  /**
+   * Ctor.
+   *
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   Renderer service.
+   * @param \Drupal\Core\Entity\EntityTypeFieldManagerInterface $entity_field_manager
+   *   EntityFieldManager service.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   EntityTypeBundleInfo service.
+   * @param \Drupal\islandora\IslandoraUtils $utils
+   *   Islandora utils.
+   *
+   * @return \Drupal\islandora\Controller\RdfMappingsReportController
+   *   Controller instance.
+   */
+  public function __construct(
+    RendererInterface $renderer,
+    EntityFieldManagerInterface $entity_field_manager,
+    EntityTypeBundleInfoInterface $entity_type_bundle_info,
+    IslandoraUtils $utils
+  ) {
+    $this->renderer = $renderer;
+    $this->entityFieldManager = $entity_field_manager;
+    $this->entityTypeBundleInfo = $entity_type_bundle_info;
+    $this->utils = $utils;
+  }
+
+  /**
+   * Controller's create method for dependecy injection.
+   *
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The App Container.
+   *
+   * @return \Drupal\islandora\Controller\RdfMappingsReportController
+   *   Controller instance.
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('renderer'),
+      $container->get('entity_field.manager'),
+      $container->get('entity_type.bundle.info'),
+      $container->get('islandora.utils')
+    );
+  }
 
   /**
    * Output the RDF mappings report.
@@ -34,7 +104,7 @@ class RdfMappingsReportController extends ControllerBase {
       '#header' => $namespaces_table_header,
       '#rows' => $namespaces_table_rows,
     ];
-    $namespaces_table_markup = \Drupal::service('renderer')->render($namespaces_table);
+    $namespaces_table_markup = $this->renderer->render($namespaces_table);
 
     $markup .= '<details><summary>' . t('RDF namespaces used in field mappings') .
       '</summary><div class="details-wrapper">' . $namespaces_table_markup . '</div></details>';
@@ -43,7 +113,7 @@ class RdfMappingsReportController extends ControllerBase {
     $entity_types = ['node', 'media'];
     $markup .= '<h2>' . t('Field mappings') . '</h2>';
     foreach ($entity_types as $entity_type) {
-      $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo($entity_type);
+      $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type);
       foreach ($bundles as $name => $attr) {
         $rdf_mappings = rdf_get_mapping($entity_type, $name);
         $rdf_types = $rdf_mappings->getPreparedBundleMapping();
@@ -54,7 +124,7 @@ class RdfMappingsReportController extends ControllerBase {
         else {
           $markup .= '<h3>' . $attr['label'] . ' (' . $entity_type . ') - no RDF type mapping</h3>';
         }
-        $fields = \Drupal::entityManager()->getFieldDefinitions($entity_type, $name);
+        $fields = $this->entityFieldManager->getFieldDefinitions($entity_type, $name);
         $mappings_table_rows = [];
         foreach ($fields as $field_name => $field_object) {
           $field_mappings = $rdf_mappings->getPreparedFieldMapping($field_name);
@@ -80,15 +150,14 @@ class RdfMappingsReportController extends ControllerBase {
           '#header' => $mappings_header,
           '#rows' => $mappings_table_rows,
         ];
-        $mappings_table_markup = \Drupal::service('renderer')->render($mappings_table);
+        $mappings_table_markup = $this->renderer->render($mappings_table);
         $markup .= $mappings_table_markup;
       }
     }
 
     // Taxonomy terms with external URIs or authority links.
     $markup .= '<h2>' . t('Taxonomy terms with external URIs or authority links') . '</h2>';
-    $utils = \Drupal::service('islandora.utils');
-    $uri_fields = $utils->getUriFieldNamesForTerms();
+    $uri_fields = $this->utils->getUriFieldNamesForTerms();
 
     $vocabs = Vocabulary::loadMultiple();
     foreach ($vocabs as $vid => $vocab) {
@@ -103,7 +172,7 @@ class RdfMappingsReportController extends ControllerBase {
       else {
         $markup .= '<h3>' . $vocab->label() . ' (' . $vid . ') - no RDF type mapping</h3>';
       }
-      $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree($vid);
+      $terms = $this->entityTypeManager()->getStorage('taxonomy_term')->loadTree($vid);
       if (count($terms) == 0) {
         $vocab_table_rows[] = [t('No terms in this vocabulary.')];
         $vocab_table = [
@@ -111,7 +180,7 @@ class RdfMappingsReportController extends ControllerBase {
           '#header' => $vocab_table_header,
           '#rows' => $vocab_table_rows,
         ];
-        $vocab_table_markup = \Drupal::service('renderer')->render($vocab_table);
+        $vocab_table_markup = $this->renderer->render($vocab_table);
         $markup .= $vocab_table_markup;
       }
       else {
@@ -149,7 +218,7 @@ class RdfMappingsReportController extends ControllerBase {
           '#rows' => $vocab_table_rows,
         ];
       }
-      $vocab_table_markup = \Drupal::service('renderer')->render($vocab_table);
+      $vocab_table_markup = $this->renderer->render($vocab_table);
       $markup .= $vocab_table_markup;
     }
 
