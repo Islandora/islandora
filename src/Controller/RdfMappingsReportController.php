@@ -19,21 +19,29 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class RdfMappingsReportController extends ControllerBase {
 
   /**
+   * Renderer service.
+   *
    * @var \Drupal\Core\Render\RendererInterface
    */
   private $renderer;
 
   /**
+   * Entity Field Manager service.
+   *
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
   private $entityFieldManager;
 
   /**
+   * Entity Type Bundle Info service.
+   *
    * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
    */
   private $entityTypeBundleInfo;
 
   /**
+   * Islandora utils.
+   *
    * @var \Drupal\islandora\IslandoraUtils
    */
   private $utils;
@@ -43,7 +51,7 @@ class RdfMappingsReportController extends ControllerBase {
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   Renderer service.
-   * @param \Drupal\Core\Entity\EntityTypeFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   EntityFieldManager service.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   EntityTypeBundleInfo service.
