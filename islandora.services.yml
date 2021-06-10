@@ -54,3 +54,8 @@ services:
     arguments: ['@entity_type.manager', '@entity_field.manager', '@context.manager', '@flysystem_factory', '@language_manager']
   islandora.entity_mapper:
     class: Islandora\Crayfish\Commons\EntityMapper\EntityMapper
+  islandora.stomp.auth_header_listener:
+    class: Drupal\islandora\EventSubscriber\StompHeaderEventSubscriber
+    arguments: ['@jwt.authentication.jwt']
+    tags:
+      - { name: event_subscriber }

@@ -3,14 +3,8 @@
 namespace Drupal\islandora\Plugin\Action;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Messenger\MessengerInterface;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\jwt\Authentication\Provider\JwtAuth;
 use Drupal\islandora\EventGenerator\EmitEvent;
-use Drupal\islandora\EventGenerator\EventGeneratorInterface;
 use Drupal\islandora\MediaSource\MediaSourceService;
-use Stomp\StatefulStomp;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -32,71 +26,14 @@ class EmitMediaEvent extends EmitEvent {
   protected $mediaSource;
 
   /**
-   * Constructs a EmitEvent action.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   Current user.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   Entity type manager.
-   * @param \Drupal\islandora\EventGenerator\EventGeneratorInterface $event_generator
-   *   EventGenerator service to serialize AS2 events.
-   * @param \Stomp\StatefulStomp $stomp
-   *   Stomp client.
-   * @param \Drupal\jwt\Authentication\Provider\JwtAuth $auth
-   *   JWT Auth client.
-   * @param \Drupal\islandora\MediaSource\MediaSourceService $media_source
-   *   Media source service.
-   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
-   *   The messenger.
-   */
-  public function __construct(
-    array $configuration,
-    $plugin_id,
-    $plugin_definition,
-    AccountInterface $account,
-    EntityTypeManagerInterface $entity_type_manager,
-    EventGeneratorInterface $event_generator,
-    StatefulStomp $stomp,
-    JwtAuth $auth,
-    MediaSourceService $media_source,
-    MessengerInterface $messenger
-  ) {
-    parent::__construct(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $account,
-      $entity_type_manager,
-      $event_generator,
-      $stomp,
-      $auth,
-      $messenger
-    );
-    $this->mediaSource = $media_source;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('current_user'),
-      $container->get('entity_type.manager'),
-      $container->get('islandora.eventgenerator'),
-      $container->get('islandora.stomp'),
-      $container->get('jwt.authentication.jwt'),
-      $container->get('islandora.media_source_service'),
-      $container->get('messenger')
-    );
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+
+    $instance->setMediaSourceService($container->get('islandora.media_source_service'));
+
+    return $instance;
   }
 
   /**
@@ -106,6 +43,13 @@ class EmitMediaEvent extends EmitEvent {
     $data = parent::generateData($entity);
     $data['source_field'] = $this->mediaSource->getSourceFieldName($entity->bundle());
     return $data;
+  }
+
+  /**
+   * Setter for the media source service.
+   */
+  public function setMediaSourceService(MediaSourceService $media_source) {
+    $this->mediaSource = $media_source;
   }
 
 }
