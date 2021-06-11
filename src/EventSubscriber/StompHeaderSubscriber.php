@@ -36,7 +36,7 @@ class StompHeaderEventSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     return [
-      StompHeaderEventInterface::EVENT_NAME => 'baseAuth',
+      StompHeaderEventInterface::EVENT_NAME => ['baseAuth', -100],
     ];
   }
 
