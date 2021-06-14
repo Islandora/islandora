@@ -37,4 +37,20 @@ interface StompHeaderEventInterface {
    */
   public function getUser();
 
+  /**
+   * Fetch the data to be sent in the body of the request.
+   *
+   * @return array
+   *   The array of data.
+   */
+  public function getData();
+
+  /**
+   * Fetch the configuration of the action, for context.
+   *
+   * @return array
+   *   The array of configuration for the upstream action.
+   */
+  public function getConfiguration();
+
 }

@@ -6,6 +6,7 @@ use Drupal\islandora\Event\StompHeaderEventInterface;
 use Drupal\jwt\Authentication\Provider\JwtAuth;
 
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -14,6 +15,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Base STOMP header listener.
  */
 class StompHeaderEventSubscriber implements EventSubscriberInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The JWT auth service.
