@@ -105,18 +105,22 @@ class EmitFileEvent extends EmitEvent {
    * {@inheritdoc}
    */
   protected function generateData(EntityInterface $entity) {
-    $uri = $entity->getFileUri();
-    $scheme = StreamWrapperManager::getScheme($uri);
-    $flysystem_config = Settings::get('flysystem');
-
     $data = parent::generateData($entity);
-    if (isset($flysystem_config[$scheme]) && $flysystem_config[$scheme]['driver'] == 'fedora') {
-      // Fdora $uri for files may contain ':///' so we need to replace
-      // the three / with two.
-      if (strpos($uri, $scheme . ':///') !== FALSE) {
-        $uri = str_replace($scheme . ':///', $scheme . '://', $uri);
+
+    // This function is called on Media and File entity types.
+    if (method_exists($entity, 'getFileUri')) {
+      $uri = $entity->getFileUri();
+      $scheme = StreamWrapperManager::getScheme($uri);
+      $flysystem_config = Settings::get('flysystem');
+
+      if (isset($flysystem_config[$scheme]) && $flysystem_config[$scheme]['driver'] == 'fedora') {
+        // Fdora $uri for files may contain ':///' so we need to replace
+        // the three / with two.
+        if (strpos($uri, $scheme . ':///') !== FALSE) {
+          $uri = str_replace($scheme . ':///', $scheme . '://', $uri);
+        }
+        $data['fedora_uri'] = str_replace("$scheme://", $flysystem_config[$scheme]['config']['root'], $uri);
       }
-      $data['fedora_uri'] = str_replace("$scheme://", $flysystem_config[$scheme]['config']['root'], $uri);
     }
     return $data;
   }
