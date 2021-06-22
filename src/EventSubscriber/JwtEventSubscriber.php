@@ -19,6 +19,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class JwtEventSubscriber implements EventSubscriberInterface {
 
+  const AUDIENCE = 'islandora';
+
   /**
    * User storage to load users.
    *
@@ -100,6 +102,7 @@ class JwtEventSubscriber implements EventSubscriberInterface {
     $event->addClaim('sub', $this->currentUser->getAccountName());
     $event->addClaim('roles', $this->currentUser->getRoles(FALSE));
 
+    $event->addClaim('aud', [static::AUDIENCE]);
   }
 
   /**
@@ -110,6 +113,10 @@ class JwtEventSubscriber implements EventSubscriberInterface {
    */
   public function validate(JwtAuthValidateEvent $event) {
     $token = $event->getToken();
+
+    if (!in_array(static::AUDIENCE, $token->getClaim('aud'), TRUE)) {
+      $event->invalidate('Missing audience entry.');
+    }
 
     $uid = $token->getClaim('webid');
     $name = $token->getClaim('sub');

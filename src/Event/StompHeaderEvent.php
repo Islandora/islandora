@@ -11,7 +11,7 @@ use Symfony\Component\EventDispatcher\Event;
 /**
  * Event used to build headers for STOMP.
  */
-class StompHeaderEvent implements StompHeaderEventInterface {
+class StompHeaderEvent extends Event implements StompHeaderEventInterface {
 
   /**
    * Stashed entity, for context.
