@@ -114,7 +114,14 @@ class JwtEventSubscriber implements EventSubscriberInterface {
   public function validate(JwtAuthValidateEvent $event) {
     $token = $event->getToken();
 
-    if (!in_array(static::AUDIENCE, $token->getClaim('aud'), TRUE)) {
+    $aud = $token->getClaim('aud');
+
+    if (!$aud) {
+      // Deprecation cycle: Avoid invalidating if there's no "aud" claim, to
+      // allow tokens in flight before the introduction of this claim to remain
+      // valid.
+    }
+    elseif (!in_array(static::AUDIENCE, $aud, TRUE)) {
       $event->invalidate('Missing audience entry.');
       return;
     }
