@@ -116,6 +116,7 @@ class JwtEventSubscriber implements EventSubscriberInterface {
 
     if (!in_array(static::AUDIENCE, $token->getClaim('aud'), TRUE)) {
       $event->invalidate('Missing audience entry.');
+      return;
     }
 
     $uid = $token->getClaim('webid');
