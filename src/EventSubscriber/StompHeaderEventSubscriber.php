@@ -37,15 +37,16 @@ class StompHeaderEventSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     return [
-      StompHeaderEventInterface::EVENT_NAME => ['baseAuth', -100],
+      StompHeaderEventInterface::EVENT_NAME => ['baseHeaders', -100],
     ];
   }
 
   /**
-   * Event callback; generate and add base authorization header if none is set.
+   * Event callback; generate and add base/default headers if not set.
    */
-  public function baseAuth(StompHeaderEventInterface $stomp_event) {
+  public function baseHeaders(StompHeaderEventInterface $stomp_event) {
     $headers = $stomp_event->getHeaders();
+
     if (!$headers->has('Authorization')) {
       $token = $this->auth->generateToken();
       if (empty($token)) {
@@ -56,6 +57,13 @@ class StompHeaderEventSubscriber implements EventSubscriberInterface {
       else {
         $headers->set('Authorization', "Bearer $token");
       }
+    }
+
+    // In ActiveMQ, STOMP messages are not persistent by default; however, we
+    // would like them to persist, by default... make it so, unless something
+    // else has already set the header.
+    if (!$headers->has('persistent')) {
+      $headers->set('persistent', 'true');
     }
 
   }
