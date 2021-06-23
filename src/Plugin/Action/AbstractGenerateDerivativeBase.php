@@ -15,6 +15,7 @@ use Drupal\jwt\Authentication\Provider\JwtAuth;
 use Drupal\token\TokenInterface;
 use Stomp\StatefulStomp;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * A base class for constructor/creator derivative generators.
@@ -103,13 +104,13 @@ class AbstractGenerateDerivativeBase extends EmitEvent {
         EntityTypeManagerInterface $entity_type_manager,
         EventGeneratorInterface $event_generator,
         StatefulStomp $stomp,
-        JwtAuth $auth,
         IslandoraUtils $utils,
         MediaSourceService $media_source,
         TokenInterface $token,
         MessengerInterface $messenger,
         ConfigFactoryInterface $config,
-        EntityFieldManagerInterface $entity_field_manager
+        EntityFieldManagerInterface $entity_field_manager,
+        EventDispatcherInterface $event_dispatcher
     ) {
     $this->utils = $utils;
     $this->mediaSource = $media_source;
@@ -125,8 +126,8 @@ class AbstractGenerateDerivativeBase extends EmitEvent {
           $entity_type_manager,
           $event_generator,
           $stomp,
-          $auth,
-          $messenger
+          $messenger,
+          $event_dispatcher
       );
   }
 
@@ -142,13 +143,13 @@ class AbstractGenerateDerivativeBase extends EmitEvent {
           $container->get('entity_type.manager'),
           $container->get('islandora.eventgenerator'),
           $container->get('islandora.stomp'),
-          $container->get('jwt.authentication.jwt'),
           $container->get('islandora.utils'),
           $container->get('islandora.media_source_service'),
           $container->get('token'),
           $container->get('messenger'),
           $container->get('config.factory'),
-          $container->get('entity_field.manager')
+          $container->get('entity_field.manager'),
+          $container->get('event_dispatcher')
       );
   }
 
