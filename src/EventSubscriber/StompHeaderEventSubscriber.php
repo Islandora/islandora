@@ -5,10 +5,8 @@ namespace Drupal\islandora\EventSubscriber;
 use Drupal\islandora\Event\StompHeaderEventInterface;
 use Drupal\jwt\Authentication\Provider\JwtAuth;
 
-use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
-use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -61,4 +59,5 @@ class StompHeaderEventSubscriber implements EventSubscriberInterface {
     }
 
   }
+
 }

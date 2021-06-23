@@ -11,7 +11,6 @@ use Drupal\islandora\IslandoraUtils;
 use Drupal\islandora\EventGenerator\EmitEvent;
 use Drupal\islandora\EventGenerator\EventGeneratorInterface;
 use Drupal\islandora\MediaSource\MediaSourceService;
-use Drupal\jwt\Authentication\Provider\JwtAuth;
 use Drupal\token\TokenInterface;
 use Stomp\StatefulStomp;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -81,8 +80,6 @@ class AbstractGenerateDerivativeBase extends EmitEvent {
    *   EventGenerator service to serialize AS2 events.
    * @param \Stomp\StatefulStomp $stomp
    *   Stomp client.
-   * @param \Drupal\jwt\Authentication\Provider\JwtAuth $auth
-   *   JWT Auth client.
    * @param \Drupal\islandora\IslandoraUtils $utils
    *   Islandora utility functions.
    * @param \Drupal\islandora\MediaSource\MediaSourceService $media_source
@@ -95,6 +92,8 @@ class AbstractGenerateDerivativeBase extends EmitEvent {
    *   The system file config.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   Field Manager service.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   Event dispatcher service.
    */
   public function __construct(
         array $configuration,
