@@ -2,15 +2,9 @@
 
 namespace Drupal\islandora\Plugin\Action;
 
-use Drupal\islandora\EventGenerator\EmitEvent;
-use Drupal\islandora\IslandoraUtils;
-use Drupal\islandora\MediaSource\MediaSourceService;
-use Drupal\token\TokenInterface;
-
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Emits a Node event.
