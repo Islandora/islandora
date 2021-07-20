@@ -7,7 +7,8 @@
 
   // Gets current parameters minus ones provided by the form.
   function getParams(query_parameter, recurse_parameter) {
-    var params = Drupal.Views.parseQueryString(window.location.href);
+    const url_search_params = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(url_search_params.entries());
     // Remove Advanced Search Query Parameters.
     const param_match = "query\\[\\d+\\]\\[.+\\]".replace("query", query_parameter);
     const param_regex = new RegExp(param_match, "g");
@@ -97,13 +98,19 @@
           //
           // Logic server side / client side should match to generate the 
           // appropriate URL with javascript enabled or disable.
-          $form.submit(function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            const inputs = $form.serializeArray();
-            const href = url(inputs, settings.islandora_advanced_search_form);
-            window.history.pushState(null, document.title, href);
-          });
+          //
+          // If a route is set for the view display that this form is derived
+          // from, and we are not on the same page as that route, rely on the
+          // normal submit which will redirect to the appropriate page. 
+          if (!settings.islandora_advanced_search_form.redirect) {
+            $form.submit(function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              const inputs = $form.serializeArray();
+              const href = url(inputs, settings.islandora_advanced_search_form);
+              window.history.pushState(null, document.title, href);
+            });
+          }
           // Reset should trigger refresh of AJAX Blocks / Views.
           $form.find('input[data-drupal-selector = "edit-reset"]').mousedown(function (e) {
             const inputs = [];

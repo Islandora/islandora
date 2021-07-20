@@ -5,10 +5,15 @@ namespace Drupal\islandora_advanced_search\Form;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\islandora_advanced_search\AdvancedSearchQuery;
 use Drupal\islandora_advanced_search\AdvancedSearchQueryTerm;
 use Drupal\islandora_advanced_search\GetConfigTrait;
+use Drupal\views\DisplayPluginCollection;
+use Drupal\views\Entity\View;
+use Drupal\views\Plugin\views\display\PathPluginBase;
+use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -47,10 +52,18 @@ class AdvancedSearchForm extends FormBase {
   protected $request;
 
   /**
+   * The current route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $currentRouteMatch;
+
+  /**
    * Class constructor.
    */
-  public function __construct(Request $request) {
+  public function __construct(Request $request, RouteMatchInterface $current_route_match) {
     $this->request = $request;
+    $this->currentRouteMatch = $current_route_match;
   }
 
   /**
@@ -58,7 +71,8 @@ class AdvancedSearchForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('request_stack')->getMasterRequest()
+      $container->get('request_stack')->getMasterRequest(),
+      $container->get('current_route_match')
     );
   }
 
@@ -187,12 +201,38 @@ class AdvancedSearchForm extends FormBase {
   }
 
   /**
+   * Gets the route name for the view display used to derive this forms block.
+   *
+   * @return string|null
+   *   The route name for the view display that was used to create this
+   *   forms block.
+   */
+  protected function getRouteName(FormStateInterface $form_state) {
+    $view = $form_state->get('view');
+    $display = $form_state->get('display');
+    $display_handlers = new DisplayPluginCollection($view->getExecutable(), Views::pluginManager('display'));
+    $display_handler = $display_handlers->get($display['id']);
+    if ($display_handler instanceof PathPluginBase) {
+      return $display_handler->getRouteName();
+    }
+    return NULL;
+  }
+
+  /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, array $fields = [], string $context_filter = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, View $view = NULL, array $display = [], array $fields = [], string $context_filter = NULL) {
+    // Keep reference to view and display as the submit handler may use them
+    // to redirect the user to the search page.
+    $form_state->set('view', $view);
+    $form_state->set('display', $display);
+    $route_name = $this->getRouteName($form_state);
+    $requires_redirect = $route_name ? $this->currentRouteMatch->getRouteName() !== $route_name : FALSE;
+
     $form['#attached']['library'][] = 'islandora_advanced_search/advanced.search.form';
     $form['#attached']['drupalSettings']['islandora_advanced_search_form'] = [
       'id' => Html::getId($this->getFormId()),
+      'redirect' => $requires_redirect,
       'query_parameter' => AdvancedSearchQuery::getQueryParameter(),
       'recurse_parameter' => AdvancedSearchQuery::getRecurseParameter(),
       'mapping' => [
@@ -353,8 +393,9 @@ class AdvancedSearchForm extends FormBase {
     }
     $terms = array_filter($terms);
     $recurse = filter_var($values['recursive'], FILTER_VALIDATE_BOOLEAN);
+    $route = $this->getRouteName($form_state);
     $advanced_search_query = new AdvancedSearchQuery();
-    return $advanced_search_query->toUrl($this->request, $terms, $recurse);
+    return $advanced_search_query->toUrl($this->request, $terms, $recurse, $route);
   }
 
   /**

@@ -3,6 +3,8 @@
 namespace Drupal\islandora_advanced_search;
 
 use Drupal\block\Entity\Block;
+use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
+use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Url;
 use Drupal\islandora_advanced_search\Form\SettingsForm;
 use Drupal\islandora_advanced_search\Plugin\Block\AdvancedSearchBlock;
@@ -223,9 +225,18 @@ class AdvancedSearchQuery {
    * @return \Drupal\Core\Url
    *   Url for the given request combined with search query parameters.
    */
-  public function toUrl(Request $request, array $terms, bool $recurse) {
-    $url = Url::createFromRequest($request);
+  public function toUrl(Request $request, array $terms, bool $recurse, $route = NULL) {
     $query_params = $request->query->all();
+    if ($route) {
+      $url = Url::fromRoute($route);
+      // The form that built the url may use AJAX, but we are redirecting to a
+      // new page, so it should be disabled.
+      unset($query_params[FormBuilderInterface::AJAX_FORM_REQUEST]);
+      unset($query_params[MainContentViewSubscriber::WRAPPER_FORMAT]);
+    }
+    else {
+      $url = Url::createFromRequest($request);
+    }
     unset($query_params[$this->queryParameter]);
     foreach ($terms as $term) {
       $query_params[$this->queryParameter][] = $term->toQueryParams();

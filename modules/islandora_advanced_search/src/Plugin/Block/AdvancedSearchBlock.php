@@ -371,7 +371,7 @@ class AdvancedSearchBlock extends BlockBase implements ContainerFactoryPluginInt
     foreach ($this->configuration[self::SETTING_FIELDS] as $identifier) {
       $configured_fields[$identifier] = $fields[$identifier];
     }
-    return $this->formBuilder->getForm('Drupal\islandora_advanced_search\Form\AdvancedSearchForm', $configured_fields, $this->configuration[self::SETTING_CONTEXTUAL_FILTER]);
+    return $this->formBuilder->getForm('Drupal\islandora_advanced_search\Form\AdvancedSearchForm', $this->view, $this->display, $configured_fields, $this->configuration[self::SETTING_CONTEXTUAL_FILTER]);
   }
 
   /**
