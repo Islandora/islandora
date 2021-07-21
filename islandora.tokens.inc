@@ -8,6 +8,8 @@
  */
 
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\media\Entity\Media;
+use Drupal\file\Entity\File;
 
 /**
  * Implements hook_token_info().
