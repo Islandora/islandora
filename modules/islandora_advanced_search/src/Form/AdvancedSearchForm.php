@@ -392,7 +392,7 @@ class AdvancedSearchForm extends FormBase {
       $terms[] = AdvancedSearchQueryTerm::fromUserInput($term);
     }
     $terms = array_filter($terms);
-    $recurse = filter_var($values['recursive'], FILTER_VALIDATE_BOOLEAN);
+    $recurse = filter_var(isset($values['recursive']) ? $values['recursive'] : FALSE, FILTER_VALIDATE_BOOLEAN);
     $route = $this->getRouteName($form_state);
     $advanced_search_query = new AdvancedSearchQuery();
     return $advanced_search_query->toUrl($this->request, $terms, $recurse, $route);
