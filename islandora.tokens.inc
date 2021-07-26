@@ -151,7 +151,7 @@ function islandora_url_to_service_file_media_by_mimetype($node, $mime_type) {
         if (!is_null($fid_value)) {
           $file = File::load($fid_value);
           if ($file) {
-            $url = $file->getFileUri();
+            $url = $islandora_utils->getDownloadUrl($file);
             return $url;
           }
         }
