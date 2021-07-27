@@ -7,6 +7,7 @@
 - [Configuring Solr](#configuring-solr)
 - [Configure Collection Search](#configure-collection-search)
 - [Configure Views](#configure-views)
+  - [Exposed Form](#exposed-form)
   - [Collection Search](#collection-search)
   - [Paging](#paging)
   - [Sorting](#sorting)
@@ -95,6 +96,21 @@ The configuration of views is outside of the scope of this document, please read
 the [Drupal Documentation](https://www.drupal.org/docs/8/core/modules/views), as
 well as the
 [Search API Documentation](https://www.drupal.org/docs/contributed-modules/search-api).
+
+### Exposed Form
+
+Solr views allow the user to configure an exposed form (_optionally as a
+block_). This form / block is **different** from the
+[Advanced Search Block](#advanced-search-block). This module does not make any
+changes to the form, but this form can cause the Advanced Search Block to not
+function if configured incorrectly.
+
+The Advanced Search Block requires that if present the Exposed forms
+`Exposed form style` is set to `Basic` rather than `Input Required`. As
+`Input Required` will prevent any search from occurring unless the user puts an
+additional query in the Exposed form as well.
+
+![Form Style](./docs/basic-input.png)
 
 ### Collection Search
 
@@ -193,6 +209,11 @@ one corresponds to direct children, this will enable the recursive search
 checkbox.
 
 ![image](./docs/advanced_search_block_settings.png)
+
+> N.B. Be aware that the Search views [Exposed Form](#exposed-form) can have an
+> affect on the function of the
+> [Advanced Search Block](#advanced-search-block). Please refer to that section
+> to learn more.
 
 ## Documentation
 
