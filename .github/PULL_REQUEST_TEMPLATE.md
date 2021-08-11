@@ -15,7 +15,6 @@ A in-depth description of the changes made by this PR. Technical details and
 * Changes x feature to such that y
 * Added x
 * Removed y
-* Does this change require documentation to be updated? 
 * Does this change add any new dependencies? 
 * Does this change require any other modifications to be made to the repository
  (i.e. Regeneration activity, etc.)? 
@@ -28,6 +27,13 @@ A description of what steps someone could take to:
 * Test that the Pull Request does what is intended.
 * Please be as detailed as possible.
 * Good testing instructions help get your PR completed faster.
+
+# Documentation Status
+
+* Does this change existing behaveiour that's currently documented?
+* Does this change require new pages or sections of documentation?
+* Who does this need to be documented for?
+* Associated documentation pull request(s): ___  or documentation issue ___
 
 # Additional Notes:
 Any additional information that you think would be helpful when reviewing this
