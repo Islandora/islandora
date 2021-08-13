@@ -30,7 +30,7 @@ A description of what steps someone could take to:
 
 # Documentation Status
 
-* Does this change existing behaveiour that's currently documented?
+* Does this change existing behaviour that's currently documented?
 * Does this change require new pages or sections of documentation?
 * Who does this need to be documented for?
 * Associated documentation pull request(s): ___  or documentation issue ___
