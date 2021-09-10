@@ -34,6 +34,7 @@ class IslandoraSettingsForm extends ConfigFormBase {
     'min',
     'minute',
     'hour',
+    'day',
     'week',
     'month',
     'year',
