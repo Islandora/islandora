@@ -2,6 +2,7 @@
 
 namespace Drupal\islandora\EventSubscriber;
 
+use Drupal\islandora\Event\StompHeaderEventException;
 use Drupal\islandora\Event\StompHeaderEventInterface;
 use Drupal\jwt\Authentication\Provider\JwtAuth;
 
