@@ -50,7 +50,7 @@ class FedoraAdapter implements AdapterInterface {
    * {@inheritdoc}
    */
   public function has($path) {
-    $response = $this->fedora->getResourceHeaders($path);
+    $response = $this->fedora->getResourceHeaders($path, ['Connection' => 'close']);
     return $response->getStatusCode() == 200;
   }
 
@@ -77,7 +77,7 @@ class FedoraAdapter implements AdapterInterface {
    * {@inheritdoc}
    */
   public function readStream($path) {
-    $response = $this->fedora->getResource($path);
+    $response = $this->fedora->getResource($path, ['Connection' => 'close']);
 
     if ($response->getStatusCode() != 200) {
       return FALSE;
@@ -184,7 +184,10 @@ class FedoraAdapter implements AdapterInterface {
       return [];
     }
     // Get the resource from Fedora.
-    $response = $this->fedora->getResource($normalized, ['Accept' => 'application/ld+json']);
+    $response = $this->fedora->getResource($normalized, [
+      'Accept' => 'application/ld+json',
+      'Connection' => 'close',
+    ]);
     $jsonld = (string) $response->getBody();
     $graph = json_decode($jsonld, TRUE);
 
@@ -379,7 +382,7 @@ class FedoraAdapter implements AdapterInterface {
    *   NULL if no tombstone, TRUE if tombstone deleted, FALSE otherwise.
    */
   private function deleteTombstone($path) {
-    $response = $this->fedora->getResourceHeaders($path);
+    $response = $this->fedora->getResourceHeaders($path, ['Connection' => 'close']);
     $return = NULL;
     if ($response->getStatusCode() == 410) {
       $return = FALSE;
