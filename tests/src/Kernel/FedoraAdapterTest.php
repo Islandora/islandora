@@ -51,8 +51,8 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
     $response = $prophecy->reveal();
 
     $prophecy = $this->prophesize(IFedoraApi::class);
-    $prophecy->getResourceHeaders('')->willReturn($response);
-    $prophecy->getResource('')->willReturn($response);
+    $prophecy->getResourceHeaders('', ['Connection' => 'close'])->willReturn($response);
+    $prophecy->getResource('', ['Connection' => 'close'])->willReturn($response);
     $api = $prophecy->reveal();
 
     $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)
@@ -69,8 +69,8 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
     $response = $prophecy->reveal();
 
     $prophecy = $this->prophesize(IFedoraApi::class);
-    $prophecy->getResourceHeaders('')->willReturn($response);
-    $prophecy->getResource('')->willReturn($response);
+    $prophecy->getResourceHeaders('', ['Connection' => 'close'])->willReturn($response);
+    $prophecy->getResource('', ['Connection' => 'close'])->willReturn($response);
     $api = $prophecy->reveal();
 
     $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)
@@ -95,7 +95,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
     $response = $prophecy->reveal();
 
     $prophecy = $this->prophesize(IFedoraApi::class);
-    $prophecy->getResourceHeaders('')->willReturn($response);
+    $prophecy->getResourceHeaders('', ['Connection' => 'close'])->willReturn($response);
     $api = $prophecy->reveal();
 
     $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)
@@ -122,7 +122,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
 
     $prophecy = $this->createAdapterBase();
 
-    $fedora_prophecy->getResourceHeaders('')->willReturn($prophecy->reveal());
+    $fedora_prophecy->getResourceHeaders('', ['Connection' => 'close'])->willReturn($prophecy->reveal());
 
     $api = $fedora_prophecy->reveal();
 
@@ -139,7 +139,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
     $fedora_prophecy = $this->prophesize(IFedoraApi::class);
     $prophecy = $this->prophesize(Response::class);
     $prophecy->getStatusCode()->willReturn(500);
-    $fedora_prophecy->getResourceHeaders('')->willReturn($prophecy->reveal());
+    $fedora_prophecy->getResourceHeaders('', ['Connection' => 'close'])->willReturn($prophecy->reveal());
 
     $prophecy = $this->prophesize(Response::class);
     $prophecy->getStatusCode()->willReturn(500);
@@ -176,7 +176,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
         '<http://www.w3.org/ns/ldp#RDFSource>;rel="type"',
       ]);
 
-    $fedora_prophecy->getResourceHeaders('')->willReturn($prophecy->reveal());
+    $fedora_prophecy->getResourceHeaders('', ['Connection' => 'close'])->willReturn($prophecy->reveal());
 
     $api = $fedora_prophecy->reveal();
 
@@ -196,7 +196,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
     $prophecy->getStatusCode()->willReturn(204);
 
     $fedora_prophecy->deleteResource('')->willReturn($prophecy->reveal());
-    $fedora_prophecy->getResourceHeaders('')->willReturn($prophecy->reveal());
+    $fedora_prophecy->getResourceHeaders('', ['Connection' => 'close'])->willReturn($prophecy->reveal());
     $api = $fedora_prophecy->reveal();
 
     $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)
@@ -242,7 +242,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
     $tombstone_prophecy->getStatusCode()->willReturn(204);
 
     $fedora_prophecy->deleteResource('')->willReturn($prophecy->reveal());
-    $fedora_prophecy->getResourceHeaders('')
+    $fedora_prophecy->getResourceHeaders('', ['Connection' => 'close'])
       ->willReturn($head_prophecy->reveal());
     $fedora_prophecy->deleteResource('some-path-to-a-tombstone')
       ->willReturn($tombstone_prophecy->reveal());
@@ -273,7 +273,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
     $tombstone_prophecy->getStatusCode()->willReturn(500);
 
     $fedora_prophecy->deleteResource('')->willReturn($prophecy->reveal());
-    $fedora_prophecy->getResourceHeaders('')
+    $fedora_prophecy->getResourceHeaders('', ['Connection' => 'close'])
       ->willReturn($head_prophecy->reveal());
     $fedora_prophecy->deleteResource('some-path-to-a-tombstone')
       ->willReturn($tombstone_prophecy->reveal());
@@ -606,7 +606,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
     $response = $prophecy->reveal();
 
     $fedora_prophecy = $this->prophesize(IFedoraApi::class);
-    $fedora_prophecy->getResource(Argument::any())->willReturn($response);
+    $fedora_prophecy->getResource(Argument::any(), ['Connection' => 'close'])->willReturn($response);
 
     $prophecy = $this->prophesize(Response::class);
     $prophecy->getStatusCode()->willReturn(201);
@@ -633,7 +633,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
     $prophecy->getHeader('Content-Length')->willReturn([strlen("DERP")]);
     $response = $prophecy->reveal();
 
-    $fedora_prophecy->getResourceHeaders(Argument::any())
+    $fedora_prophecy->getResourceHeaders(Argument::any(), ['Connection' => 'close'])
       ->willReturn($response);
 
     $prophecy = $this->prophesize(Response::class);

@@ -96,7 +96,7 @@ class FedoraAdapter implements AdapterInterface {
    * {@inheritdoc}
    */
   public function getMetadata($path) {
-    $response = $this->fedora->getResourceHeaders($path);
+    $response = $this->fedora->getResourceHeaders($path, ['Connection' => 'close']);
 
     if ($response->getStatusCode() != 200) {
       return FALSE;
