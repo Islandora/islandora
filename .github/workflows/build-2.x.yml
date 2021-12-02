@@ -95,7 +95,7 @@ jobs:
           cd $DRUPAL_DIR
           composer config repositories.local path "$GITHUB_WORKSPACE/build_dir"
           composer config minimum-stability dev
-          composer config prefer-stable
+          composer config prefer-stable true
           composer require "islandora/islandora:dev-github-testing as dev-2.x"
 
       - name: Install modules
