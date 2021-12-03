@@ -27,7 +27,6 @@ dependencies:
   - drupal:media
   - drupal:prepopulate
   - drupal:features_ui
-  - drupal:migrate_tools
   - drupal:migrate_source_csv
   - drupal:content_translation
   - drupal:flysystem

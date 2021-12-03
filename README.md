@@ -40,7 +40,6 @@ Installing via composer will download all required libraries and modules.  Howev
 - [eva](http://drupal.org/project/eva)
 - [features](http://drupal.org/project/features)
 - [migrate_plus](http://drupal.org/project/migrate_plus)
-- [migrate_tools](http://drupal.org/project/migrate_tools)
 - [migrate_source_csv](http://drupal.org/project/migrate_source_csv)
 - [flysystem](http://drupal.org/project/flysystem)
 
@@ -48,6 +47,8 @@ It also requires the following PHP libraries:
 
 - [Crayfish Commons](https://packagist.org/packages/islandora/crayfish-commons)
 - [Stomp PHP](http://drupal.org/project/)
+
+If you are using a Drush version less than 10.4 you will also need to install and enable [migrate_tools](http://drupal.org/project/migrate_tools) separately.
 
 ## Installation
 
