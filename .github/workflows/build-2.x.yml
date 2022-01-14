@@ -161,8 +161,8 @@ jobs:
       - name: Checkout islandora_ci
         uses: actions/checkout@v2
         with:
-          repository: whikloj/islandora_ci
-          ref: fix-things
+          repository: islandora/islandora_ci
+          ref: github-actions
           path: islandora_ci
 
       - name: Setup PHP
