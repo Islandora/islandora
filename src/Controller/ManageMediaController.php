@@ -45,13 +45,19 @@ class ManageMediaController extends ManageMembersController {
    *   Whether we can or can't show the "thing".
    */
   public function access(RouteMatch $route_match) {
+    // Route match is being used as opposed to slugs as there are a few
+    // admin routes being altered.
+    // @see: \Drupal\islandora\EventSubscriber\AdminViewsRouteSubscriber::alterRoutes().
     if ($route_match->getParameters()->has('node')) {
       $node = $route_match->getParameter('node');
       if (!$node instanceof NodeInterface) {
         $node = Node::load($node);
       }
-      if ($this->utils->isIslandoraType($node->getEntityTypeId(), $node->bundle())) {
-        return AccessResult::allowed();
+      // Ensure there's actually a node before referencing it.
+      if ($node) {
+        if ($this->utils->isIslandoraType($node->getEntityTypeId(), $node->bundle())) {
+          return AccessResult::allowed();
+        }
       }
     }
     return AccessResult::forbidden();
