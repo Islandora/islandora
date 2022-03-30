@@ -3,8 +3,6 @@
 namespace Drupal\islandora\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;
-use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -32,6 +30,13 @@ class NodeHasAncestor extends ConditionPluginBase implements ContainerFactoryPlu
   protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
+   * Islandora utils.
+   *
+   * @var \Drupal\islandora\IslandoraUtils
+   */
+  protected IslandoraUtils $utils;
+
+  /**
    * Constructor for the ancestor condition.
    *
    * @param array $configuration
@@ -45,10 +50,13 @@ class NodeHasAncestor extends ConditionPluginBase implements ContainerFactoryPlu
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The Drupal entity type manager.
+   * @param \Drupal\islandora\IslandoraUtils $islandora_utils
+   *   Islandora utils service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, IslandoraUtils $islandora_utils) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityTypeManager = $entity_type_manager;
+    $this->utils = $islandora_utils;
   }
 
   /**
@@ -60,6 +68,7 @@ class NodeHasAncestor extends ConditionPluginBase implements ContainerFactoryPlu
       $plugin_id,
       $plugin_definition,
       $container->get('entity_type.manager'),
+      $container->get('islandora.utils')
     );
   }
 
@@ -141,46 +150,8 @@ class NodeHasAncestor extends ConditionPluginBase implements ContainerFactoryPlu
       return FALSE;
     }
 
-    $ancestors = [];
-    $this->findAncestors($node, $ancestors);
+    $ancestors = $this->utils->findAncestors($node);
     return !empty(array_intersect($this->configuration['ancestor_nids'], $ancestors));
-  }
-
-  /**
-   * Recursively finds ancestors of an entity.
-   *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   *  The entity being checked.
-   * @param array $ancestors
-   *  The array of ancestors, passed by reference.
-   */
-  protected function findAncestors(ContentEntityInterface $entity, array &$ancestors): void {
-    $parents = $this->getParents($entity);
-    foreach ($parents as $parent) {
-      if (!isset($ancestors[$parent->id()])) {
-        $ancestors[$parent->id()] = $parent->id();
-        $this->findAncestors($parent, $ancestors);
-      }
-    }
-  }
-
-  /**
-   * Helper that gets the immediate parents of a node.
-   *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   *   The entity being checked.
-   *
-   * @return array
-   *   An array of entity objects keyed by field item deltas.
-   */
-  protected function getParents(ContentEntityInterface $entity): array {
-    if ($entity->hasField($this->configuration['parent_reference_field'])) {
-      $field = $entity->get($this->configuration['parent_reference_field']);
-      if (!$field->isEmpty()) {
-        return $field->referencedEntities();
-      }
-    }
-    return [];
   }
 
   /**
