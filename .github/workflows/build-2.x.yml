@@ -19,7 +19,6 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    continue-on-error: ${{ matrix.allowed_failure }}
     strategy:
       fail-fast: false
       matrix:
@@ -197,6 +196,7 @@ jobs:
           cd $DRUPAL_DIR
           chmod -R u+w web/sites/default
           mkdir -p web/sites/simpletest/browser_output
+        continue-on-error: ${{ matrix.allowed_failure }}
 
       - name: Setup composer paths
         run: |
@@ -211,15 +211,18 @@ jobs:
           cd $DRUPAL_DIR/web
           drush --uri=127.0.0.1:8282 en -y islandora_audio islandora_breadcrumbs islandora_iiif islandora_image islandora_video islandora_text_extraction_defaults
           drush --uri=127.0.0.1:8282 fim -y islandora_core_feature,islandora_text_extraction_defaults
+        continue-on-error: ${{ matrix.allowed_failure }}
 
       - name: Copy PHPunit file
         run: cp $PHPUNIT_FILE $DRUPAL_DIR/web/core/phpunit.xml
 
       - name: Test scripts
         run: $SCRIPT_DIR/travis_scripts.sh
+        continue-on-error: ${{ matrix.allowed_failure }}
 
       - name: PHPUNIT tests
         run: |
           cd $DRUPAL_DIR/web/core
           $DRUPAL_DIR/vendor/bin/phpunit --verbose --testsuite "${{ matrix.test-suite }}"
+        continue-on-error: ${{ matrix.allowed_failure }}
 
