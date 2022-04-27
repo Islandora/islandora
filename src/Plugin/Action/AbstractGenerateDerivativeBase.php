@@ -5,6 +5,7 @@ namespace Drupal\islandora\Plugin\Action;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\islandora\IslandoraUtils;
@@ -109,7 +110,8 @@ class AbstractGenerateDerivativeBase extends EmitEvent {
         MessengerInterface $messenger,
         ConfigFactoryInterface $config,
         EntityFieldManagerInterface $entity_field_manager,
-        EventDispatcherInterface $event_dispatcher
+        EventDispatcherInterface $event_dispatcher,
+        LoggerChannelInterface $channel
     ) {
     $this->utils = $utils;
     $this->mediaSource = $media_source;
@@ -126,7 +128,8 @@ class AbstractGenerateDerivativeBase extends EmitEvent {
           $event_generator,
           $stomp,
           $messenger,
-          $event_dispatcher
+          $event_dispatcher,
+          $channel
       );
   }
 
@@ -148,7 +151,8 @@ class AbstractGenerateDerivativeBase extends EmitEvent {
           $container->get('messenger'),
           $container->get('config.factory'),
           $container->get('entity_field.manager'),
-          $container->get('event_dispatcher')
+          $container->get('event_dispatcher'),
+          $container->get('logger.channel.islandora')
       );
   }
 
