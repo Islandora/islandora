@@ -95,6 +95,8 @@ class AbstractGenerateDerivativeBase extends EmitEvent {
    *   Field Manager service.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   Event dispatcher service.
+   * @param \Drupal\Core\Logger\LoggerChannelInterface $channel
+   *   The logger channel.
    */
   public function __construct(
         array $configuration,

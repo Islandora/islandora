@@ -69,10 +69,11 @@ abstract class EmitEvent extends ConfigurableActionBase implements ContainerFact
   protected $messenger;
 
   /**
-   * The logger
+   * The logger.
+   *
    * @var \Drupal\Core\Logger\LoggerChannelInterface
    */
-  protected $logger_channel;
+  protected $logger;
 
   /**
    * Constructs a EmitEvent action.
@@ -95,7 +96,7 @@ abstract class EmitEvent extends ConfigurableActionBase implements ContainerFact
    *   The messenger.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   Event dispatcher service.
-   * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
+   * @param \Drupal\Core\Logger\LoggerChannelInterface $channel
    *   Logger channel.
    */
   public function __construct(
@@ -117,7 +118,7 @@ abstract class EmitEvent extends ConfigurableActionBase implements ContainerFact
     $this->stomp = $stomp;
     $this->messenger = $messenger;
     $this->eventDispatcher = $event_dispatcher;
-    $this->logger_channel = $channel;
+    $this->logger = $channel;
   }
 
   /**
@@ -163,19 +164,19 @@ abstract class EmitEvent extends ConfigurableActionBase implements ContainerFact
       );
     }
     catch (StompHeaderEventException $e) {
-      $this->logger_channel->error($e->getMessage());
+      $this->logger->error($e->getMessage());
       $this->messenger->addError($e->getMessage());
       return;
     }
     catch (StompException $e) {
-      $this->logger_channel->error("Unable to connect to JMS Broker: @msg",
+      $this->logger->error("Unable to connect to JMS Broker: @msg",
       ["@msg" => $e->getMessage()]);
       $this->messenger->addWarning("Unable to connect to JMS Broker, items might not be synchronized to external services.");
       return;
     }
     catch (\RuntimeException $e) {
       // Notify the user the event couldn't be generated and abort.
-      $this->logger_channel->error(
+      $this->logger->error(
         $this->t('Error generating event: @msg', ['@msg' => $e->getMessage()])
       );
       $this->messenger->addError(
@@ -192,7 +193,7 @@ abstract class EmitEvent extends ConfigurableActionBase implements ContainerFact
     }
     catch (StompException $e) {
       // Log it.
-      $this->logger_channel->error(
+      $this->logger->error(
         'Error publishing message: @msg',
         ['@msg' => $e->getMessage()]
       );
