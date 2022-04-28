@@ -146,6 +146,11 @@ abstract class EmitEvent extends ConfigurableActionBase implements ContainerFact
     // Generate event as stomp message.
     try {
       if (is_null($this->stomp->getClient()->getProtocol())) {
+        // getProtocol() can return NULL but that causes a larger problem.
+        // So attempt to disconnect + connect to re-establish the connection or
+        // throw a StompException.
+        // see: https://github.com/stomp-php/stomp-php/issues/167
+        // see: https://github.com/stomp-php/stomp-php/blob/3a9347a11743d0b79fd60564f356bc3efe40e615/src/Client.php#L429-L434
         $this->stomp->getClient()->disconnect();
         $this->stomp->getClient()->connect();
       }
@@ -169,8 +174,7 @@ abstract class EmitEvent extends ConfigurableActionBase implements ContainerFact
       return;
     }
     catch (StompException $e) {
-      $this->logger->error("Unable to connect to JMS Broker: @msg",
-      ["@msg" => $e->getMessage()]);
+      $this->logger->error("Unable to connect to JMS Broker: @msg", ["@msg" => $e->getMessage()]);
       $this->messenger->addWarning("Unable to connect to JMS Broker, items might not be synchronized to external services.");
       return;
     }
