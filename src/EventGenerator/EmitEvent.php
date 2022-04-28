@@ -149,8 +149,8 @@ abstract class EmitEvent extends ConfigurableActionBase implements ContainerFact
         // getProtocol() can return NULL but that causes a larger problem.
         // So attempt to disconnect + connect to re-establish the connection or
         // throw a StompException.
-        // see: https://github.com/stomp-php/stomp-php/issues/167
-        // see: https://github.com/stomp-php/stomp-php/blob/3a9347a11743d0b79fd60564f356bc3efe40e615/src/Client.php#L429-L434
+        // @see https://github.com/stomp-php/stomp-php/issues/167
+        // @see https://github.com/stomp-php/stomp-php/blob/3a9347a11743d0b79fd60564f356bc3efe40e615/src/Client.php#L429-L434
         $this->stomp->getClient()->disconnect();
         $this->stomp->getClient()->connect();
       }
