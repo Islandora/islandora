@@ -35,7 +35,7 @@ class IslandoraImageFormatterTest extends IslandoraFunctionalTestBase {
       'settings' => [
         'image_style' => NULL,
         'image_link' => 'content',
-        'image_loading' => 'lazy',
+        'image_loading' => ['attribute' => 'lazy'],
       ],
     ];
     $display = $this->container->get('entity_display.repository')->getViewDisplay('media', $testImageMediaType->id(), 'default');
