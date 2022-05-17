@@ -32,7 +32,11 @@ class IslandoraImageFormatterTest extends IslandoraFunctionalTestBase {
     // Also, only show the image on display to remove clutter.
     $display_options = [
       'type' => 'islandora_image',
-      'settings' => ['image_style' => NULL, 'image_link' => 'content', 'image_loading' => 'lazy'],
+      'settings' => [
+        'image_style' => NULL,
+        'image_link' => 'content',
+        'image_loading' => 'lazy',
+      ],
     ];
     $display = $this->container->get('entity_display.repository')->getViewDisplay('media', $testImageMediaType->id(), 'default');
     $display->setComponent('field_media_image', $display_options)
