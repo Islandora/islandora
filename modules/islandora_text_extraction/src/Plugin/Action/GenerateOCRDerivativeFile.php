@@ -12,7 +12,7 @@ use Drupal\islandora\Plugin\Action\AbstractGenerateDerivativeMediaFile;
  *
  * @Action(
  *   id = "generate_extracted_text_file",
- *   label = @Translation("Generate an Extracted Text derivative file"),
+ *   label = @Translation("Generate Extracted Text for Media Attachment"),
  *   type = "media"
  * )
  */
