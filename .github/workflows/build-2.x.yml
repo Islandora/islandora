@@ -140,7 +140,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: islandora/islandora_ci
-          ref: github-actions
+          #ref: github-actions
+          ref: adam-vessey-patch-1
           path: islandora_ci
 
       - name: Setup PHP
