@@ -4,7 +4,7 @@ namespace Drupal\islandora\Commands;
 
 use Consolidation\AnnotatedCommand\CommandData;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Session\AccountProxy;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\Core\Session\UserSession;
 use Drush\Commands\DrushCommands;
@@ -39,7 +39,7 @@ class IslandoraCommands extends DrushCommands {
   /**
    * {@inheritdoc}
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, AccountProxy $current_user, AccountSwitcherInterface $account_switcher) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, AccountProxyInterface $current_user, AccountSwitcherInterface $account_switcher) {
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $current_user;
     $this->accountSwitcher = $account_switcher;
