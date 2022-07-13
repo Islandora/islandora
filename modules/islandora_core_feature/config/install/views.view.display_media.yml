@@ -1,5 +1,5 @@
 langcode: en
-status: true
+status: false 
 dependencies:
   config:
     - core.entity_view_mode.media.source
@@ -14,7 +14,7 @@ dependencies:
 id: display_media
 label: 'Media EVAs'
 module: views
-description: 'Displays media for content as EVA''s per model.'
+description: 'Displays media for content as EVA''s per model. Only enable if field_media_of is configured on a media type.'
 tag: ''
 base_table: media_field_data
 base_field: mid
