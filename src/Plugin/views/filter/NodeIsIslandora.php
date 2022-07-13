@@ -7,6 +7,8 @@ use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Drupal\views\Plugin\ViewsHandlerManager;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\islandora\IslandoraUtils;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 
 /**
  * Views Filter to show only Islandora nodes.
@@ -18,11 +20,25 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class NodeIsIslandora extends FilterPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-  * Views Handler Plugin Manager.
-  *
-  * @var \Drupal\views\Plugin\ViewsHandlerManager
-  */
+   * Views Handler Plugin Manager.
+   *
+   * @var \Drupal\views\Plugin\ViewsHandlerManager
+   */
   protected $joinHandler;
+
+  /**
+   * Islandora Utils.
+   *
+   * @var \Drupal\islandora\IslandoraUtils
+   */
+  protected $utils;
+
+  /**
+   * The entity type bundle info service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  protected $entityTypeBundleInfo;
 
   /**
    * Constructs a Node is Islandora views filter plugin.
@@ -35,19 +51,27 @@ class NodeIsIslandora extends FilterPluginBase implements ContainerFactoryPlugin
    *   The plugin implementation definition.
    * @param \Drupal\views\Plugin\ViewsHandlerManager $join_handler
    *   Views Handler Plugin Manager.
+   * @param \Drupal\islandora\IslandoraUtils $islandora_utils
+   *   Islandora utilities.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ViewsHandlerManager $join_handler) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ViewsHandlerManager $join_handler, IslandoraUtils $islandora_utils, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->joinHandler = $join_handler;
+    $this->utils = $islandora_utils;
+    $this->entityTypeBundleInfo = $entity_type_bundle_info;
   }
 
-   /**
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration, $plugin_id, $plugin_definition,
-      $container->get('plugin.manager.views.join')
+      $container->get('plugin.manager.views.join'),
+      $container->get('islandora.utils'),
+      $container->get('entity_type.bundle.info')
     );
   }
 
@@ -65,11 +89,10 @@ class NodeIsIslandora extends FilterPluginBase implements ContainerFactoryPlugin
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $types = [];
-    $utils = \Drupal::service('islandora.utils');
-    foreach (\Drupal::service('entity_type.bundle.info')->getBundleInfo('node') as $bundle_id => $bundle) {
-        if ($utils->isIslandoraType('node', $bundle_id)) {
-            $types[] = $bundle['label'] . ' (' . $bundle_id . ')' ;
-        }
+    foreach ($this->entityTypeBundleInfo->getBundleInfo('node') as $bundle_id => $bundle) {
+      if ($this->utils->isIslandoraType('node', $bundle_id)) {
+        $types[] = $bundle['label'] . ' (' . $bundle_id . ')' ;
+      }
     }
     $form['info'] = [
       '#type' => 'item',
@@ -97,11 +120,10 @@ class NodeIsIslandora extends FilterPluginBase implements ContainerFactoryPlugin
    */
   public function query() {
     $types = [];
-    $utils = \Drupal::service('islandora.utils');
-    foreach (array_keys(\Drupal::service('entity_type.bundle.info')->getBundleInfo('node')) as $bundle_id) {
-        if ($utils->isIslandoraType('node', $bundle_id)) {
-            $types[] = $bundle_id;
-        }
+    foreach (array_keys($this->entityTypeBundleInfo->getBundleInfo('node')) as $bundle_id) {
+      if ($this->utils->isIslandoraType('node', $bundle_id)) {
+        $types[] = $bundle_id;
+      }
     }
     $condition = ($this->options['negated']) ? 'NOT IN' : 'IN';
     $query_base_table = $this->relationship ?: $this->view->storage->get('base_table');
@@ -119,3 +141,4 @@ class NodeIsIslandora extends FilterPluginBase implements ContainerFactoryPlugin
   }
 
 }
+
