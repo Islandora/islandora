@@ -20,6 +20,31 @@ use Drupal\Islandora\IslandoraUtils;
  */
 class NodeIsIslandoraObject extends ConditionPluginBase implements ContainerFactoryPluginInterface {
 
+  /**
+   * Islandora Utils.
+   *
+   * @var \Drupal\islandora\IslandoraUtils
+   */
+  protected $utils;
+  
+   /**
+   * Constructs a Node is Islandora Condition plugin.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\islandora\IslandoraUtils $islandora_utils
+   *   Islandora utilities.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle service.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, IslandoraUtils $islandora_utils) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->utils = $islandora_utils;
+  }
 
   /**
    * {@inheritdoc}
@@ -28,7 +53,8 @@ class NodeIsIslandoraObject extends ConditionPluginBase implements ContainerFact
     return new static(
       $configuration,
       $plugin_id,
-      $plugin_definition
+      $plugin_definition,
+      $container->get('islandora.utils')
     );
   }
 
@@ -40,9 +66,8 @@ class NodeIsIslandoraObject extends ConditionPluginBase implements ContainerFact
     if (!$node) {
       return FALSE;
     }
-    // Islandora objects are determined by Islandora Utils.
-    $utils = \Drupal::service('islandora.utils');
-    if ($utils->isIslandoraType('node',$node->bundle())) {
+    // Determine if node is Islandora.
+    if ($this->utils->isIslandoraType('node', $node->bundle())) {
       return TRUE;
     }
   }

@@ -91,13 +91,14 @@ class NodeIsIslandora extends FilterPluginBase implements ContainerFactoryPlugin
     $types = [];
     foreach ($this->entityTypeBundleInfo->getBundleInfo('node') as $bundle_id => $bundle) {
       if ($this->utils->isIslandoraType('node', $bundle_id)) {
-        $types[] = $bundle['label'] . ' (' . $bundle_id . ')' ;
+        $types[] = "{$bundle['label']} ($bundle_id)";
       }
     }
+    $types_list = implode(', ', $types);
     $form['info'] = [
       '#type' => 'item',
       '#title' => 'Information',
-      '#description' => t("Configured Islandora bundles: ") . implode(', ', $types),
+      '#description' => t("Configured Islandora bundles: {$types_list} "),
     ];
     $form['negated'] = [
       '#type' => 'checkbox',
@@ -139,6 +140,5 @@ class NodeIsIslandora extends FilterPluginBase implements ContainerFactoryPlugin
     $node_table_alias = $this->query->addTable('node', $this->relationship, $join);
     $this->query->addWhere($this->options['group'], "$node_table_alias.type", $types, $condition);
   }
-
 }
 
