@@ -26,8 +26,8 @@ class NodeIsIslandoraObject extends ConditionPluginBase implements ContainerFact
    * @var \Drupal\islandora\IslandoraUtils
    */
   protected $utils;
-  
-   /**
+
+  /**
    * Constructs a Node is Islandora Condition plugin.
    *
    * @param array $configuration
@@ -38,8 +38,6 @@ class NodeIsIslandoraObject extends ConditionPluginBase implements ContainerFact
    *   The plugin implementation definition.
    * @param \Drupal\islandora\IslandoraUtils $islandora_utils
    *   Islandora utilities.
-   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
-   *   The entity type bundle service.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, IslandoraUtils $islandora_utils) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
