@@ -98,7 +98,7 @@ class NodeIsIslandora extends FilterPluginBase implements ContainerFactoryPlugin
     $form['info'] = [
       '#type' => 'item',
       '#title' => 'Information',
-      '#description' => t("Configured Islandora bundles: {$types_list} "),
+      '#description' => t("Configured Islandora bundles: @types", ['@types' => $types_list]),
     ];
     $form['negated'] = [
       '#type' => 'checkbox',
@@ -140,5 +140,6 @@ class NodeIsIslandora extends FilterPluginBase implements ContainerFactoryPlugin
     $node_table_alias = $this->query->addTable('node', $this->relationship, $join);
     $this->query->addWhere($this->options['group'], "$node_table_alias.type", $types, $condition);
   }
+
 }
 
