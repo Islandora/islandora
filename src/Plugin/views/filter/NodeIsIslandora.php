@@ -142,4 +142,3 @@ class NodeIsIslandora extends FilterPluginBase implements ContainerFactoryPlugin
   }
 
 }
-
