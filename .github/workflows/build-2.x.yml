@@ -26,8 +26,8 @@ jobs:
         test-suite: ["kernel", "functional", "functional-javascript"]
         drupal-version: ["9.3.x", "9.4.x", "9.5.x-dev", "10.0.x-dev"]
         mysql: ["8.0"]
-        allowed_failure: [false]
         include:
+          - allowed_failure: false
           - php-versions: "8.1"
             allowed_failure: true
         exclude:
