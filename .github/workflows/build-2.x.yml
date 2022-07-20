@@ -29,14 +29,15 @@ jobs:
         allowed_failure: [false]
         include:
           - php-versions: "8.1"
-            drupal-version: "9.4.x"
             allowed_failure: true
-          - php-versions: "8.1"
-            drupal-version: "9.5.x-dev"
+          - drupal-version: "10.0.x-dev"
             allowed_failure: true
-          - php-versions: "8.1"
+        exclude:
+          - php-versions: "7.4"
             drupal-version: "10.0.x-dev"
-            allowed_failure: true
+          - php-versions: "8.0"
+            drupal-version: "10.0.x-dev"
+
 
     name: PHP ${{ matrix.php-versions }} | drupal ${{ matrix.drupal-version }} | mysql ${{ matrix.mysql }} | test-suite ${{ matrix.test-suite }}
 
