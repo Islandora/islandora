@@ -44,8 +44,7 @@ islandora.upload_children:
   options:
     _admin_route: 'TRUE'
   requirements:
-    _access: 'TRUE'
-    #_permssion: 'create node,create media'
+    _custom_access: '\Drupal\islandora\Form\AddChildrenForm::access'
 
 islandora.add_media_to_node_page:
   path: '/node/{node}/media/add'
