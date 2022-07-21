@@ -120,7 +120,6 @@ jobs:
 
         # needed for FunctionalJavascript
       - name: Set up chromedriver
-        uses: actions/checkout@v2
         uses: nanasess/setup-chromedriver@v1
         run: |
           export DISPLAY=:99
