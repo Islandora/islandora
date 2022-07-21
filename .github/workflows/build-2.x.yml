@@ -119,8 +119,10 @@ jobs:
         run: $SCRIPT_DIR/travis_scripts.sh
 
         # needed for FunctionalJavascript
-      - name: Set up chromedriver
+      - name: Setup chromedriver
         uses: nanasess/setup-chromedriver@v1
+
+      - name: Start chromedriver
         run: |
           export DISPLAY=:99
           chromedriver --url-base=/wd/hub &
