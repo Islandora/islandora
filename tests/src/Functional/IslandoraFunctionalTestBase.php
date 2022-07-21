@@ -278,11 +278,13 @@ EOD;
    * Creates a test context.
    */
   protected function createContext($label, $name) {
-    $this->drupalPostForm('admin/structure/context/add', [
+    $this->drupalGet('admin/structure/context/add');
+    $values = [
       'label' => $label,
       'name' => $name,
-    ],
-      $this->t('Save'));
+    ];
+    $this->submitForm($values, 'Save');
+
     $this->assertSession()->statusCodeEquals(200);
   }
 
@@ -455,3 +457,4 @@ EOD;
   }
 
 }
+
