@@ -125,7 +125,7 @@ jobs:
       - name: Start chromedriver
         run: |
           export DISPLAY=:99
-          chromedriver --port=4444 
+          chromedriver --port=4444 &
 
       - name: PHPUNIT tests
         run: |
