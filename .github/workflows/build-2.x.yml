@@ -23,11 +23,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ["7.4", "8.0"]
         # PHP 8.1 fails - see https://github.com/Islandora/islandora/issues/887
+        php-versions: ["7.4", "8.0"]
+        # test-suite functional-javascript will appear to pass but will skip tests; missing chromedriver.
         test-suite: ["kernel", "functional", "functional-javascript"]
-        drupal-version: ["9.3.x", "9.4.x", "9.5.x-dev"]
         # Not yet Drupal 10 ready - see https://github.com/Islandora/islandora/issues/888
+        drupal-version: ["9.3.x", "9.4.x", "9.5.x-dev"]
         mysql: ["8.0"]
         allowed_failure: [false]
 
@@ -117,15 +118,6 @@ jobs:
 
       - name: Test scripts
         run: $SCRIPT_DIR/travis_scripts.sh
-
-        # needed for FunctionalJavascript
-      - name: Setup chromedriver
-        uses: nanasess/setup-chromedriver@v1
-
-      - name: Start chromedriver
-        run: |
-          export DISPLAY=:99
-          chromedriver --port=4444 --no-sandbox --url-base=/wd/hub &
 
       - name: PHPUNIT tests
         run: |
