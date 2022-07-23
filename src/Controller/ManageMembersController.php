@@ -88,7 +88,8 @@ class ManageMembersController extends EntityController {
    */
   public function addToNodePage(NodeInterface $node) {
     $field = IslandoraUtils::MEMBER_OF_FIELD;
-    return $this->generateTypeList(
+
+    $add_node_list = $this->generateTypeList(
       'node',
       'node_type',
       'node.add',
@@ -96,6 +97,13 @@ class ManageMembersController extends EntityController {
       $field,
       ['query' => ["edit[$field][widget][0][target_id]" => $node->id()]]
     );
+
+    return [
+      '#type' => 'markup',
+      '#markup' => $this->t("These available content types below have <em>@field</em> and it is configured to allow this content type.",
+        ['@field' => $field]),
+      'add_node' => $add_node_list,
+    ];
   }
 
   /**
