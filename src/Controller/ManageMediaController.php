@@ -25,7 +25,7 @@ class ManageMediaController extends ManageMembersController {
   public function addToNodePage(NodeInterface $node) {
     $field = IslandoraUtils::MEDIA_OF_FIELD;
 
-    return $this->generateTypeList(
+    $add_media_list = $this->generateTypeList(
       'media',
       'media_type',
       'entity.media.add_form',
@@ -33,6 +33,13 @@ class ManageMediaController extends ManageMembersController {
       $field,
       ['query' => ["edit[$field][widget][0][target_id]" => $node->id()]]
     );
+
+    return [
+      '#type' => 'markup',
+      '#markup' => $this->t("These available media types below have <em>@field</em> and it is configured to allow this content type.",
+        ['@field' => $field]),
+      'add_media' => $add_media_list,
+    ];
   }
 
   /**
