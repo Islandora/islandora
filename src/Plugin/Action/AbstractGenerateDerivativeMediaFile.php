@@ -88,16 +88,10 @@ class AbstractGenerateDerivativeMediaFile extends AbstractGenerateDerivativeBase
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
-
     $map = $this->entityFieldManager->getFieldMapByFieldType('file');
     $file_fields = $map['media'];
     $file_options = array_combine(array_keys($file_fields), array_keys($file_fields));
-
-    $map = $this->entityFieldManager->getFieldMapByFieldType('image');
-    $image_fields = $map['media'];
-    $image_options = array_combine(array_keys($image_fields), array_keys($image_fields));
-
-    $file_options = array_merge(['' => ''], $file_options, $image_options);
+    $file_options = array_merge(['' => ''], $file_options);
     $form['event']['#disabled'] = 'disabled';
 
     $form['destination_field_name'] = [
