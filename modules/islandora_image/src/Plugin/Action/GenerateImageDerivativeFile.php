@@ -34,7 +34,23 @@ class GenerateImageDerivativeFile extends AbstractGenerateDerivativeMediaFile {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
-    $form['mimetype']['#description'] = $this->t('Mimetype to convert to (e.g. application/xml, etc...)');
+    $map = $this->entityFieldManager->getFieldMapByFieldType('image');
+    $file_fields = $map['media'];
+    $file_options = array_combine(array_keys($file_fields), array_keys($file_fields));
+    $file_options = array_merge(['' => ''], $file_options);
+    // @todo figure out how to write to thumbnail, which is not a real field.
+    //   see https://github.com/Islandora/islandora/issues/891.
+    unset($file_options['thumbnail']);
+
+    $form['destination_field_name'] = [
+      '#required' => TRUE,
+      '#type' => 'select',
+      '#options' => $file_options,
+      '#title' => $this->t('Destination Image field Name'),
+      '#default_value' => $this->configuration['destination_field_name'],
+      '#description' => $this->t('Image field on Media to hold derivative.  Cannot be the same as source'),
+    ];
+
     $form['mimetype']['#value'] = 'image/jpeg';
     $form['mimetype']['#type'] = 'hidden';
     return $form;
