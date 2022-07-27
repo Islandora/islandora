@@ -313,6 +313,7 @@ class IIIFManifest extends StylePluginBase {
     $options = parent::defineOptions();
 
     $options['iiif_tile_field'] = ['default' => ''];
+    $options['iiif_ocr_file_field'] = ['default' => ''];
 
     return $options;
   }
@@ -367,6 +368,15 @@ class IIIFManifest extends StylePluginBase {
       // we have more than one option to choose from
       // otherwise could lock up the form when setting up a View.
       '#required' => count($field_options) > 0,
+    ];
+
+    $form['iiif_ocr_file_field'] = [
+      '#title' => $this->t('Structured OCR data file field'),
+      '#type' => 'checkboxes',
+      '#default_value' => $this->options['iiif_ocr_file_field'],
+      '#description' => $this->t('The source of structured OCR text for each entity.'),
+      '#options' => $field_options,
+      '#required' => FALSE,
     ];
   }
 
