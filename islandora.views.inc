@@ -37,4 +37,16 @@ function islandora_views_data_alter(&$data) {
       'id' => 'islandora_node_has_media_use',
     ],
   ];
+
+  // Add Is Islandora filter.
+  $data['node_field_data']['islandora_node_is_islandora'] = [
+    'title' => t('Node is Islandora'),
+    'group' => t('Content'),
+    'filter' => [
+      'title' => t('Node is Islandora'),
+      'help' => t('Node has a content type that possesses the mandatory Islandora fields.'),
+      'field' => 'nid',
+      'id' => 'islandora_node_is_islandora',
+    ],
+  ];
 }
