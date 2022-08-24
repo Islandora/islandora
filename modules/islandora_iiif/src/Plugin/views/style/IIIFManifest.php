@@ -189,7 +189,7 @@ class IIIFManifest extends StylePluginBase {
    */
   protected function getTileSourceFromRow(ResultRow $row, $iiif_address, $iiif_base_id) {
     $canvases = [];
-    foreach ($this->options['iiif_tile_field'] as $iiif_tile_field) {
+    foreach (array_filter(array_values($this->options['iiif_tile_field'])) as $iiif_tile_field) {
       $viewsField = $this->view->field[$iiif_tile_field];
       $entity = $viewsField->getEntity($row);
 
