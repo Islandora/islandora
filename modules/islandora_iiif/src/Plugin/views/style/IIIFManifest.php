@@ -191,6 +191,7 @@ class IIIFManifest extends StylePluginBase {
     $canvases = [];
     foreach (array_filter(array_values($this->options['iiif_tile_field'])) as $iiif_tile_field) {
       $viewsField = $this->view->field[$iiif_tile_field];
+      $ocrField = array_pop(array_filter(array_values($this->options['iiif_ocr_file_field'])));
       $entity = $viewsField->getEntity($row);
 
       if (isset($entity->{$viewsField->definition['field_name']})) {
