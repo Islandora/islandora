@@ -191,20 +191,25 @@ class IIIFManifest extends StylePluginBase {
     $canvases = [];
     foreach (array_filter(array_values($this->options['iiif_tile_field'])) as $iiif_tile_field) {
       $viewsField = $this->view->field[$iiif_tile_field];
-      $ocrField = array_pop(array_filter(array_values($this->options['iiif_ocr_file_field'])));
+      $iiif_ocr_file_field = array_filter(array_values($this->options['iiif_ocr_file_field']));
+      $ocrField = count($iiif_ocr_file_field) > 0 ? $this->view->field[$iiif_ocr_file_field[0]] : NULL;
       $entity = $viewsField->getEntity($row);
 
       if (isset($entity->{$viewsField->definition['field_name']})) {
 
         /** @var \Drupal\Core\Field\FieldItemListInterface $images */
-        $images = $entity->{$viewsField->definition['field_name']};
+        $images = $entity->{$viewsField->definition['field_name']}; 
         foreach ($images as $image) {
           if (!$image->entity->access('view')) {
             // If the user does not have permission to view the file, skip it.
             continue;
           }
+
+        $ocrs = $entity->{$ocrField->definition['field_name']}; 
+
           // Create the IIIF URL for this file
           // Visiting $iiif_url will resolve to the info.json for the image.
+          $ocr = isset($ocrs[$i]) ? $ocrs[$i] : NULL;
           $file_url = $image->entity->createFileUrl(FALSE);
           $mime_type = $image->entity->getMimeType();
           $iiif_url = rtrim($iiif_address, '/') . '/' . urlencode($file_url);
@@ -242,8 +247,7 @@ class IIIFManifest extends StylePluginBase {
               }
             }
           }
-
-          $canvases[] = [
+          $tmp_canvas = [
             // @see https://iiif.io/api/presentation/2.1/#canvas
             '@id' => $canvas_id,
             '@type' => 'sc:Canvas',
@@ -272,6 +276,17 @@ class IIIFManifest extends StylePluginBase {
               ],
             ],
           ];
+
+          if (isset($ocr)) {
+            $tmp_canvas['seeAlso'] = [
+              '@id' => $ocr->entity->createFileUrl(FALSE),
+              'format' => 'text/vnd.hocr+html',
+              'profile' => 'http://kba.cloud/hocr-spec',
+              'label' => 'hOCR embedded text',
+            ];
+          }
+
+          $canvases[] = $tmp_canvas;
         }
       }
     }
