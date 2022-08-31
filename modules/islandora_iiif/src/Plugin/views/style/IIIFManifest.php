@@ -198,6 +198,10 @@ class IIIFManifest extends StylePluginBase {
         /** @var \Drupal\Core\Field\FieldItemListInterface $images */
         $images = $entity->{$viewsField->definition['field_name']};
         foreach ($images as $image) {
+          if (!$image->entity->access('view')) {
+            // If the user does not have permission to view the file, skip it.
+            continue;
+          }
           // Create the IIIF URL for this file
           // Visiting $iiif_url will resolve to the info.json for the image.
           $file_url = $image->entity->createFileUrl(FALSE);
