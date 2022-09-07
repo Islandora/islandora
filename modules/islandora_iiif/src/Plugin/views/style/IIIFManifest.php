@@ -191,13 +191,13 @@ class IIIFManifest extends StylePluginBase {
     $canvases = [];
     foreach (array_filter(array_values($this->options['iiif_tile_field'])) as $iiif_tile_field) {
       $viewsField = $this->view->field[$iiif_tile_field];
-      $iiif_ocr_file_field = array_filter(array_values($this->options['iiif_ocr_file_field']));
+      $iiif_ocr_file_field = !empty($this->options['iiif_ocr_file_field']) ? array_filter(array_values($this->options['iiif_ocr_file_field'])): array();
       $ocrField = count($iiif_ocr_file_field) > 0 ? $this->view->field[$iiif_ocr_file_field[0]] : NULL;
       $entity = $viewsField->getEntity($row);
 
       if (isset($entity->{$viewsField->definition['field_name']})) {
 
-        /** @var \Drupal\Core\Field\FieldItemListInterface $images */
+        /** @var \Drupal\Core\Field\FieldItemListInterface $images */ 
         $images = $entity->{$viewsField->definition['field_name']}; 
         foreach ($images as $image) {
           if (!$image->entity->access('view')) {
@@ -209,7 +209,7 @@ class IIIFManifest extends StylePluginBase {
 
           // Create the IIIF URL for this file
           // Visiting $iiif_url will resolve to the info.json for the image.
-          $ocr = isset($ocrs[$i]) ? $ocrs[$i] : NULL;
+          $ocr = isset($ocrs[$i]) ? $ocrs[$i] : FALSE;
           $file_url = $image->entity->createFileUrl(FALSE);
           $mime_type = $image->entity->getMimeType();
           $iiif_url = rtrim($iiif_address, '/') . '/' . urlencode($file_url);
