@@ -97,6 +97,7 @@ class GenerateOCRDerivativeFile extends AbstractGenerateDerivativeMediaFile {
       case 'hocr':
         $this->configuration['args'] = '-c tessedit_create_hocr=1 -c hocr_font_info=0';
         break;
+
       case 'plain_text':
         $his->configuration['args'] = '';
         break;
