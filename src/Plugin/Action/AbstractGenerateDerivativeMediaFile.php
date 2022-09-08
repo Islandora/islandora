@@ -5,6 +5,7 @@ namespace Drupal\islandora\Plugin\Action;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+
 /**
  * Emits a Node for generating derivatives event.
  *
@@ -38,8 +39,8 @@ class AbstractGenerateDerivativeMediaFile extends AbstractGenerateDerivativeBase
    */
   protected function generateData(EntityInterface $entity) {
     $data = parent::generateData($entity);
-    if (get_class($entity) != 'Drupal\media\Entity\Media') { 
-      throw new \RuntimeException("Entity {$entity->getEntityTypeId()} {$entity->id()} is not a media", 500); 
+    if (get_class($entity) != 'Drupal\media\Entity\Media') {
+      throw new \RuntimeException("Entity {$entity->getEntityTypeId()} {$entity->id()} is not a media", 500);
     }
     $source_file = $this->mediaSource->getSourceFile($entity);
     if (!$source_file) {
