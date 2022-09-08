@@ -191,7 +191,7 @@ class IIIFManifest extends StylePluginBase {
     $canvases = [];
     foreach (array_filter(array_values($this->options['iiif_tile_field'])) as $iiif_tile_field) {
       $viewsField = $this->view->field[$iiif_tile_field];
-      $iiif_ocr_file_field = !empty($this->options['iiif_ocr_file_field']) ? array_filter(array_values($this->options['iiif_ocr_file_field'])): array();
+      $iiif_ocr_file_field = !empty($this->options['iiif_ocr_file_field']) ? array_filter(array_values($this->options['iiif_ocr_file_field'])) : [];
       $ocrField = count($iiif_ocr_file_field) > 0 ? $this->view->field[$iiif_ocr_file_field[0]] : NULL;
       $entity = $viewsField->getEntity($row);
 
@@ -205,7 +205,7 @@ class IIIFManifest extends StylePluginBase {
             continue;
           }
 
-        $ocrs = $entity->{$ocrField->definition['field_name']};
+          $ocrs = $entity->{$ocrField->definition['field_name']};
 
           // Create the IIIF URL for this file
           // Visiting $iiif_url will resolve to the info.json for the image.
