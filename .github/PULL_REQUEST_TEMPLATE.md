@@ -40,4 +40,4 @@ Any additional information that you think would be helpful when reviewing this
  PR.
 
 # Interested parties
-Tag (@ mention) interested parties or, if unsure, @Islandora/8-x-committers
+Tag (@ mention) interested parties or, if unsure, @Islandora/committers
