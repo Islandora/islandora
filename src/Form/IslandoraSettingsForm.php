@@ -357,22 +357,23 @@ class IslandoraSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * Removes the Fedora Pseudo field from any entity bundles that have be unselected.
+   * Removes the Fedora URI field from entity bundles that have be unselected.
    *
    * @param array $current_config
-   *   The current set of entity type & bundle to have the pseudo field, format {bundle}:{entity_type}
+   *   The current set of entity types & bundles to have the pseudo field,
+   *   format {bundle}:{entity_type}.
    * @param array $new_config
-   *   The new set of entity type & bundle to have the pseudo field, format {bundle}:{entity_type}
+   *   The new set of entity types & bundles to have the pseudo field, format
+   *   {bundle}:{entity_type}.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   private function updateEntityViewConfiguration(array $current_config, array $new_config) {
-    $cache_tags = [];
     $removed = array_diff($current_config, $new_config);
+    $added = array_diff($new_config, $current_config);
     $entity_view_display = $this->entityTypeManager->getStorage('entity_view_display');
-    // types being removed
     foreach ($removed as $bundle_type) {
       [$bundle, $type_id] = explode(":", $bundle_type);
       $results = $entity_view_display->getQuery()
@@ -384,10 +385,13 @@ class IslandoraSettingsForm extends ConfigFormBase {
       foreach ($entities as $entity) {
         $entity->removeComponent(self::GEMINI_PSEUDO_FIELD);
         $entity->save();
-        $cache_tags = array_merge($cache_tags, $entity->getCacheTags());
       }
     }
-    $entity_view_display->resetCache();
-    Cache::invalidateTags($cache_tags);
+    if (count($removed) > 0 || count($added) > 0) {
+      // If we added or cleared a type then clear the extra_fields cache.
+      // @see Drupal/Core/Entity/EntityFieldManager::getExtraFields
+      Cache::invalidateTags(["entity_field_info"]);
+    }
   }
+
 }
