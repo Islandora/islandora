@@ -5,3 +5,11 @@ islandora_iiif.settings:
     iiif_server:
       type: string
       label: 'IIIF Server Url'
+
+views.style.iiif_manifest:
+  type: views_style
+  mapping:
+    iiif_tile_field:
+      type: sequence
+      sequence:
+        type: string
