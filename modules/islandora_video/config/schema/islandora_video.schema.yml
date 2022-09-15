@@ -29,3 +29,6 @@ action.configuration.generate_video_derivative:
     path:
       type: text
       label: 'File path with extension'
+
+field.formatter.settings.islandora_file_video:
+  type: field.formatter.settings.file_video

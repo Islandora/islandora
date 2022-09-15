@@ -29,3 +29,6 @@ action.configuration.generate_audio_derivative:
     path:
       type: text
       label: 'File path with extension'
+
+field.formatter.settings.islandora_file_audio:
+  type: field.formatter.settings.file_audio

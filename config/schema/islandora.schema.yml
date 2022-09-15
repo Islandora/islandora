@@ -87,6 +87,14 @@ condition.plugin.node_has_term:
     logic:
       type: string
       label: 'Logic (AND or OR)'
+    tids:
+      type: sequence
+      sequence:
+        type: mapping
+        mapping:
+          target_id:
+            type: integer
+            label: The target taxonomy term IDs
 
 condition.plugin.node_has_parent:
   type: condition.plugin
@@ -158,6 +166,76 @@ condition.plugin.node_had_namespace:
     pid_field:
       type: ignore
       label: 'PID field'
+      
 field.formatter.settings.islandora_image:
   type: field.formatter.settings.image
   label: 'Islandora image field display format settings'
+
+condition.plugin.islandora_entity_bundle:
+  type: condition.plugin
+  mapping:
+    bundles:
+      type: sequence
+      sequence:
+        type: string
+
+condition.plugin.media_source_mimetype:
+  type: condition.plugin
+  mapping:
+    mimetype:
+      type: string
+
+reaction.plugin.alter_jsonld_type:
+  type: islandora.reaction_plugin_with_saved
+  mapping:
+    source_field:
+      type: string
+
+islandora.reaction_plugin_with_saved:
+  type: reaction.plugin
+  mapping:
+    saved:
+      type: boolean
+      label: Default config upstream; however, left undefined in the schema.
+
+reaction.plugin.islandora_map_uri_predicate:
+  type: islandora.reaction_plugin_with_saved
+  mapping:
+    drupal_uri_predicate:
+      type: string
+
+reaction.plugin.view_mode_alter:
+  type: islandora.reaction_plugin_with_saved
+  mapping:
+    mode:
+      type: string
+      label: The view mode to which to switch
+
+islandora.reaction.actions:
+  type: islandora.reaction_plugin_with_saved
+  mapping:
+    actions:
+      type: sequence
+      sequence:
+        type: string
+
+reaction.plugin.index:
+  type: islandora.reaction.actions
+
+reaction.plugin.delete:
+  type: islandora.reaction.actions
+
+reaction.plugin.derivative:
+  type: islandora.reaction.actions
+
+field.widget.settings.media_track:
+  type: field.widget.settings.file_generic
+
+field.field_settings.media_track:
+  type: field.field_settings.file
+  mapping:
+    languages:
+      type: string
+
+field.storage_settings.media_track:
+  type: field.storage_settings.file
