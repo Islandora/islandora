@@ -423,7 +423,7 @@ function islandora_entity_extra_field_info() {
   if (!empty($pseudo_bundles)) {
     foreach ($pseudo_bundles as $key) {
       [$bundle, $content_entity] = explode(":", $key);
-      $extra_field[$content_entity][$bundle]['display']['field_gemini_uri'] = [
+      $extra_field[$content_entity][$bundle]['display'][IslandoraSettingsForm::GEMINI_PSEUDO_FIELD] = [
         'label' => t('Fedora URI'),
         'description' => t('The URI to the persistent'),
         'weight' => 100,
