@@ -2,8 +2,10 @@
 
 namespace Drupal\islandora\Form;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Site\Settings;
@@ -39,6 +41,7 @@ class IslandoraSettingsForm extends ConfigFormBase {
     'month',
     'year',
   ];
+  const GEMINI_PSEUDO_FIELD = 'field_gemini_uri';
 
   /**
    * To list the available bundle types.
@@ -55,20 +58,31 @@ class IslandoraSettingsForm extends ConfigFormBase {
   private $brokerPassword;
 
   /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  private $entityTypeManager;
+
+  /**
    * Constructs a \Drupal\system\ConfigFormBase object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The EntityTypeBundleInfo service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The EntityTypeManager service.
    */
   public function __construct(
     ConfigFactoryInterface $config_factory,
-    EntityTypeBundleInfoInterface $entity_type_bundle_info
+    EntityTypeBundleInfoInterface $entity_type_bundle_info,
+    EntityTypeManagerInterface $entity_type_manager
   ) {
     $this->setConfigFactory($config_factory);
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
     $this->brokerPassword = $this->config(self::CONFIG_NAME)->get(self::BROKER_PASSWORD);
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -78,6 +92,7 @@ class IslandoraSettingsForm extends ConfigFormBase {
     return new static(
           $container->get('config.factory'),
           $container->get('entity_type.bundle.info'),
+          $container->get('entity_type.manager')
       );
   }
 
@@ -308,7 +323,7 @@ class IslandoraSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->configFactory->getEditable(self::CONFIG_NAME);
 
-    $pseudo_types = array_filter($form_state->getValue(self::GEMINI_PSEUDO));
+    $new_pseudo_types = array_filter($form_state->getValue(self::GEMINI_PSEUDO));
 
     $broker_password = $form_state->getValue(self::BROKER_PASSWORD);
 
@@ -326,15 +341,57 @@ class IslandoraSettingsForm extends ConfigFormBase {
       }
     }
 
+    // Check for types being unset and remove the field from them first.
+    $current_pseudo_types = $config->get(self::GEMINI_PSEUDO);
+    $this->updateEntityViewConfiguration($current_pseudo_types, $new_pseudo_types);
+
     $config
       ->set(self::BROKER_URL, $form_state->getValue(self::BROKER_URL))
       ->set(self::JWT_EXPIRY, $form_state->getValue(self::JWT_EXPIRY))
       ->set(self::UPLOAD_FORM_LOCATION, $form_state->getValue(self::UPLOAD_FORM_LOCATION))
       ->set(self::UPLOAD_FORM_ALLOWED_MIMETYPES, $form_state->getValue(self::UPLOAD_FORM_ALLOWED_MIMETYPES))
-      ->set(self::GEMINI_PSEUDO, $pseudo_types)
+      ->set(self::GEMINI_PSEUDO, $new_pseudo_types)
       ->save();
 
     parent::submitForm($form, $form_state);
+  }
+
+  /**
+   * Removes the Fedora URI field from entity bundles that have be unselected.
+   *
+   * @param array $current_config
+   *   The current set of entity types & bundles to have the pseudo field,
+   *   format {bundle}:{entity_type}.
+   * @param array $new_config
+   *   The new set of entity types & bundles to have the pseudo field, format
+   *   {bundle}:{entity_type}.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  private function updateEntityViewConfiguration(array $current_config, array $new_config) {
+    $removed = array_diff($current_config, $new_config);
+    $added = array_diff($new_config, $current_config);
+    $entity_view_display = $this->entityTypeManager->getStorage('entity_view_display');
+    foreach ($removed as $bundle_type) {
+      [$bundle, $type_id] = explode(":", $bundle_type);
+      $results = $entity_view_display->getQuery()
+        ->condition('bundle', $bundle)
+        ->condition('targetEntityType', $type_id)
+        ->exists('content.' . self::GEMINI_PSEUDO_FIELD . '.region')
+        ->execute();
+      $entities = $entity_view_display->loadMultiple($results);
+      foreach ($entities as $entity) {
+        $entity->removeComponent(self::GEMINI_PSEUDO_FIELD);
+        $entity->save();
+      }
+    }
+    if (count($removed) > 0 || count($added) > 0) {
+      // If we added or cleared a type then clear the extra_fields cache.
+      // @see Drupal/Core/Entity/EntityFieldManager::getExtraFields
+      Cache::invalidateTags(["entity_field_info"]);
+    }
   }
 
 }
