@@ -277,7 +277,7 @@ class IIIFManifest extends StylePluginBase {
             ],
           ];
 
-          if (isset($ocr)) {
+          if (isset($ocr) && $ocr != FALSE) {
             $tmp_canvas['seeAlso'] = [
               '@id' => $ocr->entity->createFileUrl(FALSE),
               'format' => 'text/vnd.hocr+html',
