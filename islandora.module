@@ -27,6 +27,7 @@ use Drupal\file\FileInterface;
 use Drupal\taxonomy\TermInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\serialization\Normalizer\CacheableNormalizerInterface;
+use Drupal\Core\Entity\EntityForm;
 
 /**
  * Implements hook_help().
@@ -320,7 +321,7 @@ function islandora_form_alter(&$form, FormStateInterface $form_state, $form_id) 
     'media_extracted_text_add_form', 'media_file_add_form', 'media_image_add_form',
     'media_fits_technical_metadata_add_form', 'media_video_add_form',
   ];
-  //kint($form);
+
   if (in_array($form['#form_id'], $media_add_forms)) {
     $params = \Drupal::request()->query->all();
 
@@ -330,6 +331,51 @@ function islandora_form_alter(&$form, FormStateInterface $form_state, $form_id) 
       if ($node) {
         $form['name']['widget'][0]['value']['#default_value'] = $node->getTitle();
       }
+    }
+  }
+
+  $form_object = $form_state->getFormObject();
+
+  $utils = \Drupal::service('islandora.utils');
+
+//  kint($form,$form_state);
+
+  if($form_object instanceof EntityForm) {
+    $entity = $form_object->getEntity();
+    if ($utils->isIslandoraType($entity->getEntityTypeId(), $entity->bundle()) && strpos($form['#form_id'], 'delete_form') !== FALSE) {
+      $form['delete_associated_content'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Delete all associated medias and nodes'),
+      );
+
+      $medias = $utils->getMedia($form_state->getFormObject()->getEntity());
+      $media_list = "";
+
+      foreach($medias as $media){
+        $media_list.= "<li>{$media->getName()}</li>";
+      }
+
+      $form['media_items'] = array(
+        '#suffix' => "<ul>{$media_list}</ul>", // Add markup after form item
+      );
+
+      $form['actions']['submit']['#submit'][] = 'islandora_object_delete_form_submit';
+      return $form;
+    }
+  }
+  return $form;
+}
+
+function islandora_object_delete_form_submit($form, &$form_state){
+
+  $result = $form_state->getValues('delete_associated_content');
+  $utils = \Drupal::service('islandora.utils');
+
+  if($result['delete_associated_content'] == 1) {
+
+    $medias = $utils->getMedia($form_state->getFormObject()->getEntity());
+    foreach ($medias as $media) {
+      $media->delete();
     }
   }
 }
@@ -551,26 +597,5 @@ function islandora_preprocess_views_view_table(&$variables) {
   }
 }
 
-function islandora_form_node_islandora_object_delete_form_alter(&$form, &$form_state){
-  $form['delete_associated_content'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Delete all associated medias and nodes'),
-  );
 
-  $form['actions']['submit']['#submit'][] = 'islandora_form_node_islandora_object_delete_form_submit';
-  return $form;
-}
-
-function islandora_form_node_islandora_object_delete_form_submit($form, &$form_state){
-
-  $result = $form_state->getValues('delete_associated_content');
-
-  if($result['delete_associated_content'] == 1) {
-    $utils = \Drupal::service('islandora.utils');
-    $medias = $utils->getMedia($form_state->getFormObject()->getEntity());
-    foreach ($medias as $media) {
-      $media->delete();
-    }
-  }
-}
 
