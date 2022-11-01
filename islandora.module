@@ -333,12 +333,11 @@ function islandora_form_alter(&$form, FormStateInterface $form_state, $form_id) 
     }
   }
   $form_object = $form_state->getFormObject();
-
   $utils = \Drupal::service('islandora.utils');
 
   if ($form_object instanceof EntityForm) {
     $entity = $form_object->getEntity();
-    if ($utils->isIslandoraType($entity->getEntityTypeId(), $entity->bundle()) && strpos($form['#form_id'], 'delete_form') !== FALSE) {
+    if ($entity->getEntityTypeId() == "node" && $utils->isIslandoraType($entity->getEntityTypeId(), $entity->bundle()) && strpos($form['#form_id'], 'delete_form') !== FALSE) {
       $form['delete_associated_content'] = [
         '#type' => 'checkbox',
         '#title' => t('Delete all associated medias and nodes'),
