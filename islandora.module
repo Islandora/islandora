@@ -324,7 +324,6 @@ function islandora_form_alter(&$form, FormStateInterface $form_state, $form_id) 
 
   if (in_array($form['#form_id'], $media_add_forms)) {
     $params = \Drupal::request()->query->all();
-
     if (isset($params['edit'])) {
       $media_of_nid = $params['edit']['field_media_of']['widget'][0]['target_id'];
       $node = \Drupal::entityTypeManager()->getStorage('node')->load($media_of_nid);
@@ -333,31 +332,28 @@ function islandora_form_alter(&$form, FormStateInterface $form_state, $form_id) 
       }
     }
   }
-
   $form_object = $form_state->getFormObject();
 
   $utils = \Drupal::service('islandora.utils');
 
-//  kint($form,$form_state);
-
-  if($form_object instanceof EntityForm) {
+  if ($form_object instanceof EntityForm) {
     $entity = $form_object->getEntity();
     if ($utils->isIslandoraType($entity->getEntityTypeId(), $entity->bundle()) && strpos($form['#form_id'], 'delete_form') !== FALSE) {
-      $form['delete_associated_content'] = array(
+      $form['delete_associated_content'] = [
         '#type' => 'checkbox',
         '#title' => t('Delete all associated medias and nodes'),
-      );
+      ];
 
       $medias = $utils->getMedia($form_state->getFormObject()->getEntity());
       $media_list = "";
 
-      foreach($medias as $media){
-        $media_list.= "<li>{$media->getName()}</li>";
+      foreach ($medias as $media) {
+        $media_list .= "<li>{$media->getName()}</li>";
       }
 
-      $form['media_items'] = array(
-        '#suffix' => "<ul>{$media_list}</ul>", // Add markup after form item
-      );
+      $form['media_items'] = [
+        '#suffix' => "<ul>{$media_list}</ul>",
+      ];
 
       $form['actions']['submit']['#submit'][] = 'islandora_object_delete_form_submit';
       return $form;
@@ -366,12 +362,15 @@ function islandora_form_alter(&$form, FormStateInterface $form_state, $form_id) 
   return $form;
 }
 
-function islandora_object_delete_form_submit($form, &$form_state){
+/**
+ * Implements a submit handler for the delete form.
+ */
+function islandora_object_delete_form_submit($form, &$form_state) {
 
   $result = $form_state->getValues('delete_associated_content');
   $utils = \Drupal::service('islandora.utils');
 
-  if($result['delete_associated_content'] == 1) {
+  if ($result['delete_associated_content'] == 1) {
 
     $medias = $utils->getMedia($form_state->getFormObject()->getEntity());
     foreach ($medias as $media) {
@@ -393,7 +392,6 @@ function islandora_field_widget_image_image_form_alter(&$element, $form_state, $
 function islandora_add_default_image_alt_text($element, $form_state, $form) {
   if ($element['alt']['#access']) {
     $params = \Drupal::request()->query->all();
-
     if (isset($params['edit'])) {
       $media_of_nid = $params['edit']['field_media_of']['widget'][0]['target_id'];
       $node = \Drupal::entityTypeManager()->getStorage('node')->load($media_of_nid);
@@ -471,7 +469,7 @@ function islandora_entity_extra_field_info() {
   if (!empty($pseudo_bundles)) {
     foreach ($pseudo_bundles as $key) {
       [$bundle, $content_entity] = explode(":", $key);
-      $extra_field[$content_entity][$bundle]['display']['field_gemini_uri'] = [
+      $extra_field[$content_entity][$bundle]['display'][IslandoraSettingsForm::GEMINI_PSEUDO_FIELD] = [
         'label' => t('Fedora URI'),
         'description' => t('The URI to the persistent'),
         'weight' => 100,
@@ -596,6 +594,3 @@ function islandora_preprocess_views_view_table(&$variables) {
     }
   }
 }
-
-
-
