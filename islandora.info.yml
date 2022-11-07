@@ -13,22 +13,23 @@ dependencies:
   - drupal:text
   - drupal:options
   - drupal:link
-  - drupal:jsonld
-  - drupal:search_api
-  - drupal:jwt
+  - jsonld:jsonld
+  - search_api:search_api
+  - jwt:jwt
   - drupal:rest
-  - drupal:filehash
+  - filehash:filehash
   - drupal:basic_auth
-  - drupal:context_ui
+  - context:context_ui
   - drupal:action
-  - drupal:eva
+  - eva:eva
   - drupal:taxonomy
   - drupal:views_ui
   - drupal:media
-  - drupal:prepopulate
-  - drupal:features_ui
-  - drupal:migrate_source_csv
+  - prepopulate:prepopulate
+  - features:features_ui
+  - migrate_source_csv:migrate_source_csv
   - drupal:content_translation
-  - drupal:flysystem
-  - drupal:token
-  - drupal:file_replace
+  - flysystem:flysystem
+  - token:token
+  - file_replace:file_replace
+  - ctools:ctools

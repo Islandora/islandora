@@ -37,14 +37,15 @@ islandora.add_member_to_node_page:
     _entity_create_any_access: 'node'
 
 islandora.upload_children:
-  path: '/node/{node}/members/upload'
+  path: '/node/{node}/members/upload/{step}'
   defaults:
-    _form: '\Drupal\islandora\Form\AddChildrenForm'
+    _wizard: '\Drupal\islandora\Form\AddChildrenWizard\ChildForm'
     _title: 'Upload Children'
+    step: 'type_selection'
   options:
     _admin_route: 'TRUE'
   requirements:
-    _custom_access: '\Drupal\islandora\Form\AddChildrenForm::access'
+    _custom_access: '\Drupal\islandora\Form\AddChildrenWizard\Access::childAccess'
 
 islandora.add_media_to_node_page:
   path: '/node/{node}/media/add'
@@ -58,14 +59,15 @@ islandora.add_media_to_node_page:
     _entity_create_any_access: 'media'
 
 islandora.upload_media:
-  path: '/node/{node}/media/upload'
+  path: '/node/{node}/media/upload/{step}'
   defaults:
-    _form: '\Drupal\islandora\Form\AddMediaForm'
+    _wizard: '\Drupal\islandora\Form\AddChildrenWizard\MediaForm'
     _title: 'Add media'
+    step: 'type_selection'
   options:
     _admin_route: 'TRUE'
   requirements:
-    _custom_access: '\Drupal\islandora\Form\AddMediaForm::access'
+    _custom_access: '\Drupal\islandora\Form\AddChildrenWizard\Access::mediaAccess'
 
 islandora.media_source_update:
   path: '/media/{media}/source'

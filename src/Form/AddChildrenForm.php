@@ -229,7 +229,7 @@ class AddChildrenForm extends AddMediaForm {
    * @param \Drupal\Core\Routing\RouteMatch $route_match
    *   The current routing match.
    *
-   * @return \Drupal\Core\Access\AccessResultAllowed|\Drupal\Core\Access\AccessResultForbidden
+   * @return \Drupal\Core\Access\AccessResultInterface
    *   Whether we can or can't show the "thing".
    */
   public function access(RouteMatch $route_match) {
