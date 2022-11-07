@@ -1,0 +1,107 @@
+<?php
+
+/**
+ * @file
+ * Contains islandora_fits.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\media\MediaInterface;
+use Drupal\file\Entity\File;
+use Drupal\media\Entity\Media;
+use Drupal\node\Entity\NodeType;
+
+/**
+ * Implements hook_help().
+ */
+function islandora_fits_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the islandora_fits module.
+    case 'help.page.islandora_fits':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Enables Technical Metadata derivative generation') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function islandora_fits_theme($existing, $type, $theme, $path) {
+  return [
+    'fits' => [
+      'variables' => [
+        'title' => 'FITS data',
+        'link' => NULL,
+        'output' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function islandora_fits_entity_extra_field_info() {
+  $entityFieldManager = \Drupal::service('entity_field.manager');
+  $node_types = NodeType::loadMultiple();
+  $extra = [];
+  $types = [];
+  foreach ($node_types as $node_type) {
+    $types[] = $node_type->get('type');
+  }
+
+  foreach ($types as $bundle) {
+    $fields = $entityFieldManager->getFieldDefinitions('node', $bundle);
+    if (array_key_exists('field_model', $fields) && array_key_exists('field_member_of', $fields)) {
+      $extra['node'][$bundle]['display']['islandora_fits_checksum'] = [
+        'label' => t('File Checksum'),
+        'description' => t('Checksum as discovered by FITs webservice'),
+        'weight' => 100,
+        'visible' => TRUE,
+      ];
+    }
+  }
+  return $extra;
+}
+
+/**
+ * Implements hook_entity_view().
+ */
+function islandora_fits_entity_view(array &$build, $entity, $display, $view_mode) {
+  $route_match_item = \Drupal::routeMatch()->getParameters()->all();
+  $current_entity = reset($route_match_item);
+
+  if ($entity === $current_entity) {
+    $medias = \Drupal::entityQuery(
+      'media')
+      ->condition('field_media_of', $entity->id())
+      ->condition('bundle', 'fits_technical_metadata')
+      ->execute();
+    $mid = \reset($medias);
+    if ($mid) {
+      $fits = Media::load($mid);
+      $checksum = $fits->get('fits_ois_file_information_md5che')->value;
+      if ($checksum) {
+        $build['islandora_fits_checksum'] = [
+          '#type' => 'container',
+          '#attributes' => [
+            'id' => 'field-islandora-checksum',
+          ],
+          'checksum' => [
+            '#type' => 'item',
+            '#title' => t('MD5 Checksum'),
+            'internal_uri' => [
+              '#type' => 'markup',
+              '#markup' => $checksum,
+            ],
+          ],
+        ];
+      }
+
+    }
+  }
+}

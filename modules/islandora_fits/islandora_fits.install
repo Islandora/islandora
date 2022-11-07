@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * @file
+ * Install/update hook implementations.
+ */
+
+
+use Drupal\field\Entity\FieldConfig;
+
+/**
+ * Implements hook_install().
+ */
+function islandora_fits_install($is_syncing) {
+
+  if (!_islandora_fits_term_exists()) {
+    $callable = $is_syncing ? [\Drupal::messenger(), 'addStatus'] : [\Drupal::messenger(), 'addWarning'];
+    $callable(t('A term in the taxonomy @vid with the URI @uri does not appear to exist. The @migration_id migration can be executed to create it.', [
+      '@vid' => 'islandora_media_use',
+      '@uri' => 'https://projects.iq.harvard.edu/fits',
+      '@migration_id' => 'islandora_fits_tags',
+    ]));
+  }
+
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function islandora_fits_requirements($phase) : array {
+  $requirements = [];
+
+  if ($phase == 'runtime') {
+    $term_exists = _islandora_fits_term_exists();
+    $requirements['islandora_fits_term_exists'] = [
+      'title' => t('FITS Term Exists'),
+      'value' => $term_exists ? t('Exists') : t('Does not exist'),
+      'description' => t('Whether or not a term with the URI targeted by default FITS derivative configuration exists. If derivative configurations were made to target another URI, this can probably be ignored.'),
+      'severity' => $term_exists ? REQUIREMENT_OK : REQUIREMENT_WARNING
+    ];
+  }
+
+  return $requirements;
+}
+
+/**
+ * Helper; determine if a term with the target URI exists.
+ *
+ * @return bool
+ *   TRUE if a term (at least one) with the target URI exists; otherwise, FALSE.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ */
+function _islandora_fits_term_exists() {
+  $table_exists = \Drupal::database()->schema()->tableExists('taxonomy_term__field_external_uri');
+  if (!$table_exists) {
+    // XXX: If the table does not exist, then avoid attempting to make a query
+    // making use of the non-existent table.
+    return FALSE;
+  }
+
+  $query = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->getQuery()
+    ->condition('vid', 'islandora_media_use')
+    ->condition('field_external_uri.uri', 'https://projects.iq.harvard.edu/fits')
+    ->count();
+  $count = $query->execute();
+  return $count > 0;
+}

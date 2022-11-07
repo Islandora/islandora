@@ -1,0 +1,4 @@
+services:
+  islandora_fits.transformxml:
+    class: Drupal\islandora_fits\Services\XMLTransform
+    arguments: ['@renderer','@entity_field.manager', '@messenger']

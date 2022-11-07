@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_file_size
+    - media.type.fits_technical_metadata
+  enforced:
+    module:
+      - islandora_fits
+id: media.fits_technical_metadata.field_file_size
+field_name: field_file_size
+entity_type: media
+bundle: fits_technical_metadata
+label: 'File size'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

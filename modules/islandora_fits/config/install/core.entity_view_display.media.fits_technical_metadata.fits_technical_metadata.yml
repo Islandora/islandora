@@ -1,0 +1,56 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.fits_technical_metadata
+    - field.field.media.fits_technical_metadata.field_media_file
+    - image.style.thumbnail
+    - media.type.fits_technical_metadata
+  module:
+    - image
+    - islandora_fits
+    - user
+  enforced:
+    module:
+      - islandora_fits
+id: media.fits_technical_metadata.fits_technical_metadata
+targetEntityType: media
+bundle: fits_technical_metadata
+mode: fits_technical_metadata
+content:
+  created:
+    label: hidden
+    type: timestamp
+    weight: 0
+    region: content
+    settings:
+      date_format: medium
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+  field_media_file:
+    weight: 6
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: fits_formatter
+    region: content
+  thumbnail:
+    type: image
+    weight: 5
+    label: hidden
+    settings:
+      image_style: thumbnail
+      image_link: ''
+    region: content
+    third_party_settings: {  }
+  uid:
+    label: hidden
+    type: author
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  langcode: true
+  name: true

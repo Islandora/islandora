@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.fits_ois_file_information_md5che
+    - media.type.fits_technical_metadata
+  module:
+    - text
+id: media.fits_technical_metadata.fits_ois_file_information_md5che
+field_name: fits_ois_file_information_md5che
+entity_type: media
+bundle: fits_technical_metadata
+label: OIS_File_Information_Md5checksum
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text

@@ -1,0 +1,6 @@
+
+islandora_fits:
+  version: 1.x
+  css:
+    theme:
+      css/islandora_fits.css: {}

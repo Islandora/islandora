@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_media_of
+    - media.type.fits_technical_metadata
+  enforced:
+    module:
+      - islandora_fits
+id: media.fits_technical_metadata.field_media_of
+field_name: field_media_of
+entity_type: media
+bundle: fits_technical_metadata
+label: 'Media of'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings: {  }
+field_type: entity_reference

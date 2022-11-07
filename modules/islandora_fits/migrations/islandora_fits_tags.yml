@@ -1,0 +1,25 @@
+---
+id: islandora_fits_tags
+migration_tags:
+  - islandora
+migration_group: islandora
+label: "FITS Term(s)"
+source:
+  plugin: embedded_data
+  data_rows:
+    - vid: islandora_media_use
+      name: FITS File
+      description: Technical Metadata associated with an original media file
+      uri: https://projects.iq.harvard.edu/fits
+  ids:
+    uri:
+      type: string
+process:
+  vid: vid
+  name: name
+  description: description
+  field_external_uri/uri: uri
+destination:
+  plugin: entity:taxonomy_term
+migration_dependencies:
+  required: { }
