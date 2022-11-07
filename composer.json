@@ -41,6 +41,9 @@
   "suggest": {
     "drupal/transliterate_filenames": "Sanitizes filenames when they are uploaded so they don't break your repository."
   },
+  "conflict": {
+    "islandora-rdm/islandora_fits": "*"
+  },
   "license": "GPL-2.0-or-later",
   "authors": [
     {
