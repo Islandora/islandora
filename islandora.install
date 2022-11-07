@@ -5,6 +5,10 @@
  * Install/update hook implementations.
  */
 
+use Drupal\Core\Extension\ExtensionNameLengthException;
+use Drupal\Core\Extension\MissingDependencyException;
+use Drupal\Core\Utility\UpdateException;
+
 /**
  * Adds common namespaces to jsonld.settings.
  */
@@ -173,4 +177,38 @@ function update_jsonld_included_namespaces() {
     \Drupal::logger('islandora')
       ->warning("Could not find required jsonld.settings to add default RDF namespaces.");
   }
+}
+
+/**
+ * Ensure that ctools is enabled.
+ */
+function islandora_update_8007() {
+  $module_handler = \Drupal::moduleHandler();
+  if ($module_handler->moduleExists('ctools')) {
+    return t('The "@module_name" module is already enabled, no action necessary.', [
+      '@module_name' => 'ctools',
+    ]);
+  }
+
+  /** @var \Drupal\Core\Extension\ModuleInstallerInterface $installer */
+  $installer = \Drupal::service('module_installer');
+
+  try {
+    if ($installer->install(['ctools'], TRUE)) {
+      return t('The "@module_name" module was enabled successfully.', [
+        '@module_name' => 'ctools',
+      ]);
+    }
+  }
+  catch (ExtensionNameLengthException | MissingDependencyException $e) {
+    throw new UpdateException('Failed; ensure that the ctools module is available in the Drupal installation.', 0, $e);
+  }
+  catch (\Exception $e) {
+    throw new UpdateException('Failed; encountered an exception while trying to enable ctools.', 0, $e);
+  }
+
+  // Theoretically impossible to hit, as ModuleInstaller::install() only returns
+  // TRUE (or throws/propagates an exception), but... probably a good idea to
+  // have the here, just in case?
+  throw new UpdateException('Failed; hit the end of the update hook implementation, which is not expected.');
 }

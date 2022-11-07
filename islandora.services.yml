@@ -59,3 +59,19 @@ services:
     arguments: ['@jwt.authentication.jwt']
     tags:
       - { name: event_subscriber }
+  islandora.upload_children.batch_processor:
+    class: Drupal\islandora\Form\AddChildrenWizard\ChildBatchProcessor
+    arguments:
+      - '@entity_type.manager'
+      - '@database'
+      - '@current_user'
+      - '@messenger'
+      - '@date.formatter'
+  islandora.upload_media.batch_processor:
+    class: Drupal\islandora\Form\AddChildrenWizard\MediaBatchProcessor
+    arguments:
+      - '@entity_type.manager'
+      - '@database'
+      - '@current_user'
+      - '@messenger'
+      - '@date.formatter'
