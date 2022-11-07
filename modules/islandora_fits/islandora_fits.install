@@ -5,16 +5,15 @@
  * Install/update hook implementations.
  */
 
-
-use Drupal\field\Entity\FieldConfig;
-
 /**
  * Implements hook_install().
  */
 function islandora_fits_install($is_syncing) {
 
   if (!_islandora_fits_term_exists()) {
-    $callable = $is_syncing ? [\Drupal::messenger(), 'addStatus'] : [\Drupal::messenger(), 'addWarning'];
+    $callable = $is_syncing
+      ? [\Drupal::messenger(), 'addStatus']
+      : [\Drupal::messenger(), 'addWarning'];
     $callable(t('A term in the taxonomy @vid with the URI @uri does not appear to exist. The @migration_id migration can be executed to create it.', [
       '@vid' => 'islandora_media_use',
       '@uri' => 'https://projects.iq.harvard.edu/fits',
@@ -36,7 +35,7 @@ function islandora_fits_requirements($phase) : array {
       'title' => t('FITS Term Exists'),
       'value' => $term_exists ? t('Exists') : t('Does not exist'),
       'description' => t('Whether or not a term with the URI targeted by default FITS derivative configuration exists. If derivative configurations were made to target another URI, this can probably be ignored.'),
-      'severity' => $term_exists ? REQUIREMENT_OK : REQUIREMENT_WARNING
+      'severity' => $term_exists ? REQUIREMENT_OK : REQUIREMENT_WARNING,
     ];
   }
 

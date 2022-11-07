@@ -4,17 +4,15 @@ namespace Drupal\islandora_fits\Services;
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\DependencyInjection\ServiceProviderBase;
-use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\media\MediaInterface;
-use DrupalCodeGenerator\Command\Drupal_8\Form\Simple;
 
 /**
- * Class XMLTransform.
+ * Transform FITS XML for display and storage.
  */
 class XMLTransform extends ServiceProviderBase {
   /**
@@ -52,7 +50,7 @@ class XMLTransform extends ServiceProviderBase {
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
    */
-  public function __construct(RendererInterface $renderer, EntityFieldManager $entityManager, MessengerInterface $messenger) {
+  public function __construct(RendererInterface $renderer, EntityManagerInterface $entityManager, MessengerInterface $messenger) {
     $this->renderer = $renderer;
     $this->entityManager = $entityManager;
     $this->messenger = $messenger;
@@ -109,15 +107,24 @@ class XMLTransform extends ServiceProviderBase {
         foreach ($vals_array as $field => $val_array) {
           if (!array_key_exists($field, $rows) && $field != 'Filepath') {
             $rows[$field] = [
-              ['data' => Xss::filter($field), 'class' => 'islandora_fits_table_labels'],
+              [
+                'data' => Xss::filter($field),
+                'class' => 'islandora_fits_table_labels',
+              ],
             ];
             foreach ($val_array as $value) {
               if (!isset($rows[$field]['value'])) {
-                $rows[$field]['value'] = ['data' => Xss::filter($value), 'class' => 'islandora_fits_table_values'];
+                $rows[$field]['value'] = [
+                  'data' => Xss::filter($value),
+                  'class' => 'islandora_fits_table_values',
+                ];
               }
               else {
                 $data = $rows[$field]['value']['data'] .= ' - ' . Xss::filter($value);
-                $rows[$field]['value'] = ['data' => $data, 'class' => 'islandora_fits_table_values'];
+                $rows[$field]['value'] = [
+                  'data' => $data,
+                  'class' => 'islandora_fits_table_values',
+                ];
               }
             }
           }
@@ -163,7 +170,7 @@ class XMLTransform extends ServiceProviderBase {
    *
    * Once it has these it passes them off recursively.
    *
-   * @param  \SimpleXMLElement
+   * @param \SimpleXMLElement $xml
    *   The SimpleXMLElement to parse.
    *
    * @return array
