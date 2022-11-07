@@ -36,8 +36,11 @@ class ManageMediaController extends ManageMembersController {
 
     return [
       '#type' => 'markup',
-      '#markup' => $this->t("These available media types below have <em>@field</em> and it is configured to allow this content type.",
-        ['@field' => $field]),
+      '#markup' => $this->t("The following media types can be added because they have the <code>@field</code> field. <a href=@manage_media_page>Manage media types</a>.",
+        [
+          '@field' => $field,
+          '@manage_media_page' => '/admin/structure/media',
+        ]),
       'add_media' => $add_media_list,
     ];
   }
