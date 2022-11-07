@@ -29,7 +29,8 @@
     "drupal/flysystem" : "^2.0@alpha",
     "islandora/crayfish-commons": "^2",
     "drupal/file_replace": "^1.1",
-    "drupal/ctools": "^3.8 || ^4"
+    "drupal/ctools": "^3.8 || ^4",
+    "ext-SimpleXML": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "^6",
