@@ -100,8 +100,11 @@ class ManageMembersController extends EntityController {
 
     return [
       '#type' => 'markup',
-      '#markup' => $this->t("These available content types below have <em>@field</em> and it is configured to allow this content type.",
-        ['@field' => $field]),
+      '#markup' => $this->t("The following content types can be added because they have the <code>@field</code> field. <a href=@manage_content_types>Manage content types</a>.",
+        [
+          '@field' => $field,
+          '@manage_content_types' => '/admin/structure/types',
+        ]),
       'add_node' => $add_node_list,
     ];
   }
