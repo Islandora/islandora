@@ -28,6 +28,7 @@ use Drupal\taxonomy\TermInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\serialization\Normalizer\CacheableNormalizerInterface;
 use Drupal\Core\Entity\EntityForm;
+use Drupal\file\Entity\File;
 
 /**
  * Implements hook_help().
@@ -337,25 +338,34 @@ function islandora_form_alter(&$form, FormStateInterface $form_state, $form_id) 
 
   if ($form_object instanceof EntityForm) {
     $entity = $form_object->getEntity();
+
     if ($entity->getEntityTypeId() == "node" && $utils->isIslandoraType($entity->getEntityTypeId(), $entity->bundle()) && strpos($form['#form_id'], 'delete_form') !== FALSE) {
-      $form['delete_associated_content'] = [
-        '#type' => 'checkbox',
-        '#title' => t('Delete all associated medias and nodes'),
-      ];
-
       $medias = $utils->getMedia($form_state->getFormObject()->getEntity());
-      $media_list = "";
+      if (count($medias) != 0) {
+        $form['delete_associated_content'] = [
+          '#type' => 'checkbox',
+          '#title' => t('Delete all associated medias and nodes'),
+        ];
 
-      foreach ($medias as $media) {
-        $media_list .= "<li>{$media->getName()}</li>";
+        foreach ($medias as  $media) {
+          $media_list[] = $media->getName();
+        }
+        $form['media_items'] = [
+          '#theme' => 'item_list',
+          '#type' => 'ul',
+          '#items' => $media_list,
+          '#attributes' => ['class' => 'mylist'],
+          '#wrapper_attributes' => ['class' => 'container'],
+          '#attached' => [
+            'library' => [
+              'islandora/drupal.islandora.theme_css',
+            ],
+          ],
+        ];
+
+        $form['actions']['submit']['#submit'][] = 'islandora_object_delete_form_submit';
+        return $form;
       }
-
-      $form['media_items'] = [
-        '#suffix' => "<ul>{$media_list}</ul>",
-      ];
-
-      $form['actions']['submit']['#submit'][] = 'islandora_object_delete_form_submit';
-      return $form;
     }
   }
   return $form;
@@ -371,10 +381,123 @@ function islandora_object_delete_form_submit($form, &$form_state) {
 
   if ($result['delete_associated_content'] == 1) {
 
-    $medias = $utils->getMedia($form_state->getFormObject()->getEntity());
-    foreach ($medias as $media) {
-      $media->delete();
+    $node = $form_state->getFormObject()->getEntity();
+    $medias = $utils->getMedia($node);
+    $media_list = "";
+
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $entity_field_manager = \Drupal::service('entity_field.manager');
+    $current_user = \Drupal::currentUser();
+    $logger = \Drupal::logger('logger.channel.islandora');
+    $messenger = \Drupal::messenger();
+
+    $total_count = 0;
+    $delete_media = [];
+    $delete_media_translations = [];
+    $delete_files = [];
+    $inaccessible_entities = [];
+    $media_storage = $entity_type_manager->getStorage('media');
+    $file_storage = $entity_type_manager->getStorage('file');
+
+    foreach ($medias as $id => $media) {
+      $media_list .= $id . ", ";
+      $lang = $media->language()->getId();
+      $selected_langcodes[$lang] = $lang;
+
+      if (!$media->access('delete', $current_user)) {
+        $inaccessible_entities[] = $media;
+        continue;
+      }
+      // Check for files.
+      $fields = $entity_field_manager->getFieldDefinitions('media', $media->bundle());
+      foreach ($fields as $field) {
+        $type = $field->getType();
+        if ($type == 'file' || $type == 'image') {
+          $target_id = $media->get($field->getName())->target_id;
+          $file = File::load($target_id);
+          if ($file) {
+            if (!$file->access('delete', $current_user)) {
+              $inaccessible_entities[] = $file;
+              continue;
+            }
+            $delete_files[$file->id()] = $file;
+            $total_count++;
+          }
+        }
+      }
+
+      foreach ($selected_langcodes as $langcode) {
+        // We're only working with media, which are translatable.
+        $entity = $media->getTranslation($langcode);
+        if ($entity->isDefaultTranslation()) {
+          $delete_media[$id] = $entity;
+          unset($delete_media_translations[$id]);
+          $total_count += count($entity->getTranslationLanguages());
+        }
+        elseif (!isset($delete_media[$id])) {
+          $delete_media_translations[$id][] = $entity;
+        }
+      }
     }
+
+    if ($delete_media) {
+      $media_storage->delete($delete_media);
+      foreach ($delete_media as $media) {
+        $logger->notice('The media %label has been deleted.', [
+          '%label' => $media->label(),
+        ]);
+      }
+    }
+
+    if ($delete_files) {
+      $file_storage->delete($delete_files);
+      foreach ($delete_files as $media) {
+        $logger->notice('The file %label has been deleted.', [
+          '%label' => $media->label(),
+        ]);
+      }
+    }
+
+    if ($delete_media_translations) {
+      foreach ($delete_media_translations as $id => $translations) {
+        $media = $medias[$id];
+        foreach ($translations as $translation) {
+          $media->removeTranslation($translation->language()->getId());
+        }
+        $media->save();
+        foreach ($translations as $translation) {
+          $logger->notice('The media %label @language translation has been deleted', [
+            '%label' => $media->label(),
+            '@language' => $translation->language()->getName(),
+          ]);
+        }
+        $total_count += count($translations);
+      }
+    }
+
+    if ($inaccessible_entities) {
+      $messenger->addWarning("@count items has not been deleted because you do not have the necessary permissions.", [
+        '@count' => count($inaccessible_entities),
+      ]);
+    }
+
+    $build = [
+      'heading' => [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => t("The repository item @node and @media", [
+          '@node' => $node->getTitle(),
+          '@media' => \Drupal::translation()->formatPlural(
+            substr_count($media_list, ",") + 1, 'the media with the id @media has been deleted.',
+            'the medias with the id @media have been deleted.',
+            ['@media' => mb_substr($media_list, 0, strlen($media_list) - 2)]),
+        ]),
+      ],
+    ];
+
+    $message = \Drupal::service('renderer')->renderPlain($build);
+    $messenger->deleteByType('status');
+    $messenger->addStatus($message);
   }
 }
 
