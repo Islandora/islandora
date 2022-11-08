@@ -7,17 +7,18 @@ namespace Drupal\Tests\islandora\Functional;
  *
  * @group islandora
  */
-class DeleteNodeWithMedia extends IslandoraFunctionalTestBase {
+class DeleteNodeWithMediaAndFile extends IslandoraFunctionalTestBase {
 
   /**
    * Tests delete Node and its assoicated media.
    */
-  public function testDeleteNodeWithMedia() {
+  public function testDeleteNodeWithMediaAndFile() {
     $account = $this->drupalCreateUser([
       'delete any media',
       'create media',
       'view media',
       'bypass node access',
+      'access files overview',
     ]);
     $this->drupalLogin($account);
 
@@ -81,14 +82,18 @@ class DeleteNodeWithMedia extends IslandoraFunctionalTestBase {
     $assert_session->pageTextContains('Media2');
     $this->submitForm($delete, 'Delete');
 
-    $assert_session->pageTextContains('Media1');
-    $assert_session->pageTextContains('Media2');
+    $assert_session->pageTextContains($media1->id());
+    $assert_session->pageTextContains($media2->id());
 
     $this->drupalGet("media/1/delete");
     $assert_session->pageTextContains('Page not found');
 
     $this->drupalGet("media/2/delete");
     $assert_session->pageTextContains('Page not found');
+
+    $this->drupalGet("/admin/content/files");
+    $assert_session->pageTextNotContains('test.jpeg');
+
   }
 
 }

@@ -347,9 +347,12 @@ function islandora_form_alter(&$form, FormStateInterface $form_state, $form_id) 
           '#title' => t('Delete all associated medias and nodes'),
         ];
 
-        foreach ($medias as  $media) {
+        $media_list = [];
+
+        foreach ($medias as $media) {
           $media_list[] = $media->getName();
         }
+
         $form['media_items'] = [
           '#theme' => 'item_list',
           '#type' => 'ul',
@@ -451,9 +454,9 @@ function islandora_object_delete_form_submit($form, &$form_state) {
 
     if ($delete_files) {
       $file_storage->delete($delete_files);
-      foreach ($delete_files as $media) {
+      foreach ($delete_files as $file) {
         $logger->notice('The file %label has been deleted.', [
-          '%label' => $media->label(),
+          '%label' => $file->label(),
         ]);
       }
     }
