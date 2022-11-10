@@ -7,7 +7,7 @@ Provides actions to extract and store technical metadata using a FITS microservi
 - `islandora` and `islandora_core_feature`
 - A CrayFits microservice
 - A message broker (e.g. Activemq) for Islandora
-- `islandora-connector-derivative` (from [Alpaca](https://github.com/Islandora/Alpaca/tree/2.x/islandora-connector-derivative)) configured for CrayFits 
+- An [Alpaca](https://github.com/Islandora/Alpaca/tree/2.x/islandora-connector-derivative) `islandora-connector-derivative` configured for CrayFits. The default configuration in this module assumes the queue is named `islandora-connector-fits`.
 
 ## Installation
 
