@@ -1,60 +1,71 @@
 # Islandora FITS
-Config module to make Islandora aware of FITS microservice
+
+Provides actions to extract and store technical metadata using a FITS microservice (CrayFits).
+
+## Requirements
+
+- `islandora` and `islandora_core_feature`
+- A CrayFits microservice
+- A message broker (e.g. Activemq) for Islandora
+- `islandora-connector-derivative` (from [Alpaca](https://github.com/Islandora/Alpaca/tree/2.x/islandora-connector-derivative)) configured for CrayFits 
 
 ## Installation
-#### Install this module
-Install and enable this module in the usual way.  On installation the module will
-add a context causing the creation of A FITS media when an Original File media is ingested; however, this process is
-predicated on the existence of an `islandora_media_use` term with an external URI of `https://projects.iq.harvard.
-edu/fits`--the `islandora_fits_tags` migration might be executed to create such a term.
 
-#### Install FITS Webservice
-FITS XMLs are generated from an easily installed web service.
-Get the latest fits.zip and fits.war from https://projects.iq.harvard.edu/fits/downloads
-(on my box I had to install a missing zip library with
-‘sudo apt-get install php7.1-zip’)
+For a full digital repository solution (including CrayFits), see our [installation documentation](https://islandora.github.io/documentation/installation/).
 
-Install following their instructions.
-Copy the `.war` file to your webapps directory and test.
-Edit the `catalina.properties` file on the Drupal server by adding the
-following two lines to the bottom of the file:
+To download/enable just this module, use the following from the command line:
 
-```properties
-fits.home=/\<path-to-fits>/fits
-shared.loader=/\<path-to-fits>/fits/lib/*.jar
-```
-
-Restart Tomcat and test with:
 ```bash
-curl -k -F datafile="@/path/to/myfile.jpg" http://example.com:8080/fits/examine
+$ composer require islandora/islandora
+$ drush en islandora_core_feature
+$ drush mim islandora_tags
+$ drush en islandora_fits
+$ drush mim islandora_fits_tags
 ```
-(note: the ‘@’ is required.)
 
-#### Installing Microservice
-Get code from https://github.com/roblib/CrayFits and install.  This code can live anywhere, including an external server,
-but most installations will have it at `/var/www/html`.
+### Configuration installed automatically
 
-The App runs by entering:
-```bash
-php bin/console server:start *:8050
-```
-in the App root folder.
-The server is stopped with:
-```bash
-php bin/console server:stop
-```
-On a production machine you'd probably want to configure an additional
-port in Apache.
+On installation this module will:
 
-Note: The location of the FITS webserver is stored in the `.env` file in the
-root dir of the Symfony app.  This will have to be reconfigured if the FITS
-server is anywhere other than `localhost:8080/fits`
+* Create a new media type, "FITS Technical metadata."
+* Create a new Action, "FITS - Generate a Technical metadata derivative", based on the FITS
+Action plugin, "Generate a Technical metadata derivative," provided by this module.
+* Add a Context, "Technical Metadata on Ingest", which causes FITS derivatives to be created
+from media tagged "Original File".
 
-#### Adding FITs requests to the queue
-Copy the file `assets/ca.islandora.alpaca.connector.ocr.blueprint.xml`
-to `/opt/karak/deploy` on your server.  There is no need to restart.
+To create FITS derivatives, the Context requires the existence of an `islandora_media_use` term with
+an external URI of `https://projects.iq.harvard.edu/fits`. The `islandora_fits_tags`
+migration will create such a term.
 
-#### Adding Checksum to Display
-A pseudo field with the computed checksum can be added to Repository Item
-display.  Navigate to `admin/structure/types/manage/islandora_object/display`
-to enable or disable display of `File Checksum`.
+### File Checksum pseudo field
+
+A "File Checksum" pseudo field can be added to the display of nodes. It contains the MD5 checksum
+stored in a "FITS Technical metadata"-type media that is attached to that node. In the default
+configuration, this value is the MD5 checksum of the file tagged "Original File".
+
+## Documentation
+
+Further documentation for this module is available on the [Islandora documentation site](https://islandora.github.io/documentation/).
+
+## Troubleshooting/Issues
+
+Having problems or solved a problem? Check out the Islandora google groups for a solution.
+
+* [Islandora Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/islandora)
+* [Islandora Dev Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/islandora-dev)
+
+## Sponsors
+
+* UPEI
+
+## Development
+
+If you would like to contribute, please get involved by attending our weekly [Tech Call](https://github.com/Islandora/islandora-community/wiki/Weekly-Open-Tech-Call). We love to hear from you!
+
+If you would like to contribute code to the project, you need to be covered by an Islandora Foundation [Contributor License Agreement](https://github.com/Islandora/islandora-community/wiki/Onboarding-Checklist#contributor-license-agreements) or [Corporate Contributor License Agreement](https://github.com/Islandora/islandora-community/wiki/Onboarding-Checklist#contributor-license-agreements). Please see the [Contributor License Agreements](https://github.com/Islandora/islandora-community/wiki/Contributor-License-Agreements) page on the islandora-community wiki for more information.
+
+We recommend using the [islandora-playbook](https://github.com/Islandora-Devops/islandora-playbook) or [isle-dc](https://github.com/Islandora-Devops/isle-dc) to get started.
+
+## License
+
+[GPLv2](http://www.gnu.org/licenses/gpl-2.0.txt)
