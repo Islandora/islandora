@@ -357,8 +357,8 @@ function islandora_form_alter(&$form, FormStateInterface $form_state, $form_id) 
           '#theme' => 'item_list',
           '#type' => 'ul',
           '#items' => $media_list,
-          '#attributes' => ['class' => 'mylist'],
-          '#wrapper_attributes' => ['class' => 'container'],
+          '#attributes' => ['class' => ['islandora-media-items']],
+          '#wrapper_attributes' => ['class' => ['container']],
           '#attached' => [
             'library' => [
               'islandora/drupal.islandora.theme_css',

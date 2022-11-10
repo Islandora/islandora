@@ -1,0 +1,5 @@
+drupal.islandora.theme_css:
+  version: VERSION
+  css:
+    theme:
+      css/islandora.theme.css: {}
