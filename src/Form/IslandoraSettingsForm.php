@@ -42,6 +42,7 @@ class IslandoraSettingsForm extends ConfigFormBase {
     'year',
   ];
   const GEMINI_PSEUDO_FIELD = 'field_gemini_uri';
+  const NODE_DELETE_MEDIA_AND_FILES = 'delete_media_and_files';
 
   /**
    * To list the available bundle types.
@@ -201,6 +202,14 @@ class IslandoraSettingsForm extends ConfigFormBase {
       $fedora_url = NULL;
     }
 
+    $form[self::NODE_DELETE_MEDIA_AND_FILES] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Node Delete with Media and Files'),
+      '#description' => $this->t('adds a checkbox in the "Delete" tab of islandora objects to delete media and files associated with the object.'
+      ),
+      '#default_value' => (bool) $config->get(self::NODE_DELETE_MEDIA_AND_FILES),
+    ];
+
     $form[self::FEDORA_URL] = [
       '#type' => 'textfield',
       '#title' => $this->t('Fedora URL'),
@@ -351,6 +360,7 @@ class IslandoraSettingsForm extends ConfigFormBase {
       ->set(self::UPLOAD_FORM_LOCATION, $form_state->getValue(self::UPLOAD_FORM_LOCATION))
       ->set(self::UPLOAD_FORM_ALLOWED_MIMETYPES, $form_state->getValue(self::UPLOAD_FORM_ALLOWED_MIMETYPES))
       ->set(self::GEMINI_PSEUDO, $new_pseudo_types)
+      ->set(self::NODE_DELETE_MEDIA_AND_FILES, $form_state->getValue(self::NODE_DELETE_MEDIA_AND_FILES))
       ->save();
 
     parent::submitForm($form, $form_state);

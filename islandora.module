@@ -333,10 +333,12 @@ function islandora_form_alter(&$form, FormStateInterface $form_state, $form_id) 
       }
     }
   }
+
   $form_object = $form_state->getFormObject();
   $utils = \Drupal::service('islandora.utils');
+  $config = \Drupal::config('islandora.settings')->get('delete_media_and_files');
 
-  if ($form_object instanceof EntityForm) {
+  if ($config == 1 && $form_object instanceof EntityForm) {
     $entity = $form_object->getEntity();
 
     if ($entity->getEntityTypeId() == "node" && $utils->isIslandoraType($entity->getEntityTypeId(), $entity->bundle()) && strpos($form['#form_id'], 'delete_form') !== FALSE) {
