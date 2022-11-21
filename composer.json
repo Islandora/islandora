@@ -21,7 +21,7 @@
     "stomp-php/stomp-php": "4.* || ^5",
     "drupal/filehash": "^1.1 || ^2",
     "drupal/prepopulate" : "^2.2",
-    "drupal/eva" : "^2.0",
+    "drupal/eva" : "^3.0",
     "drupal/features" : "^3.7",
     "drupal/migrate_plus" : "^6",
     "drupal/migrate_source_csv" : "^3.4",
