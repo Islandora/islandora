@@ -280,8 +280,7 @@ class MediaSourceController extends ControllerBase {
    */
   public function attachToMediaAccess(AccountInterface $account, RouteMatch $route_match) {
     $media = $route_match->getParameter('media');
-    $node = $this->utils->getParentNode($media);
-    return AccessResult::allowedIf($node->access('update', $account) && $account->hasPermission('create media'));
+    return AccessResult::allowedIf($media->access('update', $account));
   }
 
 }

@@ -7,7 +7,10 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
- * Emits a Node for generating derivatives event.
+ * Emits a Media for generating derivatives event.
+ *
+ * Attaches the result as a file in a file field on the emitting
+ * Media ("multi-file media").
  *
  * @Action(
  *   id = "generate_derivative_file",
@@ -88,19 +91,33 @@ class AbstractGenerateDerivativeMediaFile extends AbstractGenerateDerivativeBase
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
+
     $map = $this->entityFieldManager->getFieldMapByFieldType('file');
     $file_fields = $map['media'];
     $file_options = array_combine(array_keys($file_fields), array_keys($file_fields));
-    $file_options = array_merge(['' => ''], $file_options);
+
+    $map = $this->entityFieldManager->getFieldMapByFieldType('image');
+    $image_fields = $map['media'];
+    $image_options = array_combine(array_keys($image_fields), array_keys($image_fields));
+
+    $file_options = array_merge(['' => ''], $file_options, $image_options);
+
+    // @todo figure out how to write to thumbnail, which is not a real field.
+    //   see https://github.com/Islandora/islandora/issues/891.
+    unset($file_options['thumbnail']);
+
     $form['event']['#disabled'] = 'disabled';
 
     $form['destination_field_name'] = [
       '#required' => TRUE,
       '#type' => 'select',
       '#options' => $file_options,
-      '#title' => $this->t('Destination File field Name'),
+      '#title' => $this->t('Destination File field'),
       '#default_value' => $this->configuration['destination_field_name'],
-      '#description' => $this->t('File field on Media Type to hold derivative.  Cannot be the same as source'),
+      '#description' => $this->t('This Action stores a derivative file
+       in a File or Image field on a media. The destination field
+       must be an additional field, not the media\'s main storage field.
+       Selected destination field must be present on the media.'),
     ];
 
     $form['args'] = [

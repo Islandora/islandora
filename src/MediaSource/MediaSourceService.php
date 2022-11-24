@@ -268,8 +268,8 @@ class MediaSourceService {
         'uri' => $content_location,
         'filename' => $this->fileSystem->basename($content_location),
         'filemime' => $mimetype,
-        'status' => FILE_STATUS_PERMANENT,
       ]);
+      $file->setPermanent();
 
       // Validate file extension.
       $source_field_config = $this->entityTypeManager->getStorage('field_config')->load("media.$bundle.$source_field");
@@ -349,8 +349,8 @@ class MediaSourceService {
         'uri' => $content_location,
         'filename' => $this->fileSystem->basename($content_location),
         'filemime' => $mimetype,
-        'status' => FILE_STATUS_PERMANENT,
       ]);
+      $file->setPermanent();
 
       // Validate file extension.
       $bundle = $media->bundle();
