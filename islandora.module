@@ -444,13 +444,13 @@ function islandora_object_delete_form_submit($form, &$form_state) {
     }
 
     if ($delete_media) {
-      foreach ($delete_media as $media) {
+      foreach ($delete_media as $id => $media) {
         try {
           $media->delete();
+          $media_list .= $id . ", ";
           $logger->notice('The media %label has been deleted.', [
             '%label' => $media->label(),
           ]);
-          $media_list .= $id . ", ";
         }
         catch (Exception $e) {
           $entity_protected_medias[] = $id;
