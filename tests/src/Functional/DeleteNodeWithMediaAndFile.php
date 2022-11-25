@@ -19,6 +19,7 @@ class DeleteNodeWithMediaAndFile extends IslandoraFunctionalTestBase {
       'view media',
       'bypass node access',
       'access files overview',
+      'administer site configuration',
     ]);
     $this->drupalLogin($account);
 
@@ -74,6 +75,10 @@ class DeleteNodeWithMediaAndFile extends IslandoraFunctionalTestBase {
       'field_media_of' => ['target_id' => $node->id()],
     ]);
     $media2->save();
+
+    $this->drupalGet("admin/config/islandora/core");
+    $assert_session->pageTextContains('Node Delete with Media and Files');
+    \Drupal::configFactory()->getEditable('islandora.settings')->set('delete_media_and_files', TRUE)->save();
 
     $delete = ['delete_associated_content' => TRUE];
 

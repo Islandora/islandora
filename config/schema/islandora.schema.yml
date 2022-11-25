@@ -14,6 +14,9 @@ islandora.settings:
     jwt_expiry:
       type: string
       label: 'How long JWTs should last before expiring.'
+    delete_media_and_files:
+      type: boolean
+      label: 'Node Delete with Media and Files'
     upload_form_location:
       type: string
       label: 'Upload Form Location'
@@ -166,7 +169,7 @@ condition.plugin.node_had_namespace:
     pid_field:
       type: ignore
       label: 'PID field'
-      
+
 field.formatter.settings.islandora_image:
   type: field.formatter.settings.image
   label: 'Islandora image field display format settings'

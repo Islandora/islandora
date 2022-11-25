@@ -373,6 +373,7 @@ function islandora_form_alter(&$form, FormStateInterface $form_state, $form_id) 
       }
     }
   }
+
   return $form;
 }
 
@@ -390,7 +391,6 @@ function islandora_object_delete_form_submit($form, &$form_state) {
     $medias = $utils->getMedia($node);
     $media_list = "";
 
-    $entity_type_manager = \Drupal::entityTypeManager();
     $entity_field_manager = \Drupal::service('entity_field.manager');
     $current_user = \Drupal::currentUser();
     $logger = \Drupal::logger('logger.channel.islandora');
@@ -398,14 +398,12 @@ function islandora_object_delete_form_submit($form, &$form_state) {
 
     $total_count = 0;
     $delete_media = [];
-    $delete_media_translations = [];
-    $delete_files = [];
+    $media_translations = [];
+    $media_files = [];
+    $entity_protected_medias = [];
     $inaccessible_entities = [];
-    $media_storage = $entity_type_manager->getStorage('media');
-    $file_storage = $entity_type_manager->getStorage('file');
 
     foreach ($medias as $id => $media) {
-      $media_list .= $id . ", ";
       $lang = $media->language()->getId();
       $selected_langcodes[$lang] = $lang;
 
@@ -425,7 +423,7 @@ function islandora_object_delete_form_submit($form, &$form_state) {
               $inaccessible_entities[] = $file;
               continue;
             }
-            $delete_files[$file->id()] = $file;
+            $media_files[$id][$file->id()] = $file;
             $total_count++;
           }
         }
@@ -436,32 +434,48 @@ function islandora_object_delete_form_submit($form, &$form_state) {
         $entity = $media->getTranslation($langcode);
         if ($entity->isDefaultTranslation()) {
           $delete_media[$id] = $entity;
-          unset($delete_media_translations[$id]);
+          unset($media_translations[$id]);
           $total_count += count($entity->getTranslationLanguages());
         }
         elseif (!isset($delete_media[$id])) {
-          $delete_media_translations[$id][] = $entity;
+          $media_translations[$id][] = $entity;
         }
       }
     }
 
     if ($delete_media) {
-      $media_storage->delete($delete_media);
       foreach ($delete_media as $media) {
-        $logger->notice('The media %label has been deleted.', [
-          '%label' => $media->label(),
-        ]);
+        try {
+          $media->delete();
+          $logger->notice('The media %label has been deleted.', [
+            '%label' => $media->label(),
+          ]);
+          $media_list .= $id . ", ";
+        }
+        catch (Exception $e) {
+          $entity_protected_medias[] = $id;
+        }
       }
     }
 
+    $delete_files = array_filter($media_files, function ($media) use ($entity_protected_medias) {
+      return !in_array($media, $entity_protected_medias);
+    }, ARRAY_FILTER_USE_KEY);
+
     if ($delete_files) {
-      $file_storage->delete($delete_files);
-      foreach ($delete_files as $file) {
-        $logger->notice('The file %label has been deleted.', [
-          '%label' => $file->label(),
-        ]);
+      foreach ($delete_files as $files_array) {
+        foreach ($files_array as $file) {
+          $file->delete();
+          $logger->notice('The file %label has been deleted.', [
+            '%label' => $file->label(),
+          ]);
+        }
       }
     }
+
+    $delete_media_translations = array_filter($media_translations, function ($media) use ($entity_protected_medias) {
+      return !in_array($media, $entity_protected_medias);
+    }, ARRAY_FILTER_USE_KEY);
 
     if ($delete_media_translations) {
       foreach ($delete_media_translations as $id => $translations) {
