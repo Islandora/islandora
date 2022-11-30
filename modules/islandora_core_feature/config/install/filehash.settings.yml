@@ -18,7 +18,7 @@ algos:
   sha3_384: '0'
   sha3_512: '0'
 dedupe: 0
-rehash: false
-original: false
+rehash: true
+original: true
 dedupe_original: false
 mime_types: {  }
