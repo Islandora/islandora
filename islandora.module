@@ -515,7 +515,7 @@ function islandora_preprocess_views_view_table(&$variables) {
 
   // Check for a weight selector field.
   foreach ($variables['view']->field as $field_key => $field) {
-    if ($field->options['plugin_id'] == 'integer_weight_selector') {
+    if ($field->getPluginId() == 'integer_weight_selector') {
 
       // Check if the weight selector is on the first column.
       $is_first_column = array_search($field_key, array_keys($variables['view']->field)) > 0 ? FALSE : TRUE;
