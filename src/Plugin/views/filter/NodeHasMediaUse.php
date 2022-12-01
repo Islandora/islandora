@@ -18,10 +18,10 @@ class NodeHasMediaUse extends FilterPluginBase {
    * {@inheritdoc}
    */
   protected function defineOptions() {
-    return [
-      'use_uri' => ['default' => NULL],
-      'negated' => ['default' => FALSE],
-    ];
+    $options = parent::defineOptions();
+    $options['use_uri'] = ['default' => NULL];
+    $options['negated'] = ['default' => FALSE];
+    return $options;
   }
 
   /**
