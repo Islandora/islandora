@@ -205,7 +205,7 @@ class IslandoraSettingsForm extends ConfigFormBase {
     $form[self::NODE_DELETE_MEDIA_AND_FILES] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Node Delete with Media and Files'),
-      '#description' => $this->t('adds a checkbox in the "Delete" tab of islandora objects to delete media and files associated with the object.'
+      '#description' => $this->t('Adds a checkbox in the "Delete" tab of islandora objects to delete media and files associated with the object.'
       ),
       '#default_value' => (bool) $config->get(self::NODE_DELETE_MEDIA_AND_FILES),
     ];

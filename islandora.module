@@ -355,7 +355,16 @@ function islandora_form_alter(&$form, FormStateInterface $form_state, $form_id) 
           $media_list[] = $media->getName();
         }
 
-        $form['media_items'] = [
+        $form['container'] = [
+          '#type' => 'container',
+          '#states' => [
+            'visible' => [
+              ':input[name="delete_associated_content"]' => ['checked' => TRUE],
+            ],
+          ],
+        ];
+
+        $form['container']['media_items'] = [
           '#theme' => 'item_list',
           '#type' => 'ul',
           '#items' => $media_list,
@@ -363,7 +372,7 @@ function islandora_form_alter(&$form, FormStateInterface $form_state, $form_id) 
           '#wrapper_attributes' => ['class' => ['container']],
           '#attached' => [
             'library' => [
-              'islandora/drupal.islandora.theme_css',
+              'islandora/islandora',
             ],
           ],
         ];
@@ -380,7 +389,7 @@ function islandora_form_alter(&$form, FormStateInterface $form_state, $form_id) 
 /**
  * Implements a submit handler for the delete form.
  */
-function islandora_object_delete_form_submit($form, &$form_state) {
+function islandora_object_delete_form_submit($form, FormStateInterface $form_state) {
 
   $result = $form_state->getValues('delete_associated_content');
   $utils = \Drupal::service('islandora.utils');
@@ -389,14 +398,13 @@ function islandora_object_delete_form_submit($form, &$form_state) {
 
     $node = $form_state->getFormObject()->getEntity();
     $medias = $utils->getMedia($node);
-    $media_list = "";
+    $media_list = [];
 
     $entity_field_manager = \Drupal::service('entity_field.manager');
     $current_user = \Drupal::currentUser();
     $logger = \Drupal::logger('logger.channel.islandora');
     $messenger = \Drupal::messenger();
 
-    $total_count = 0;
     $delete_media = [];
     $media_translations = [];
     $media_files = [];
@@ -424,7 +432,6 @@ function islandora_object_delete_form_submit($form, &$form_state) {
               continue;
             }
             $media_files[$id][$file->id()] = $file;
-            $total_count++;
           }
         }
       }
@@ -435,7 +442,6 @@ function islandora_object_delete_form_submit($form, &$form_state) {
         if ($entity->isDefaultTranslation()) {
           $delete_media[$id] = $entity;
           unset($media_translations[$id]);
-          $total_count += count($entity->getTranslationLanguages());
         }
         elseif (!isset($delete_media[$id])) {
           $media_translations[$id][] = $entity;
@@ -447,7 +453,7 @@ function islandora_object_delete_form_submit($form, &$form_state) {
       foreach ($delete_media as $id => $media) {
         try {
           $media->delete();
-          $media_list .= $id . ", ";
+          $media_list[] = $id;
           $logger->notice('The media %label has been deleted.', [
             '%label' => $media->label(),
           ]);
@@ -490,12 +496,11 @@ function islandora_object_delete_form_submit($form, &$form_state) {
             '@language' => $translation->language()->getName(),
           ]);
         }
-        $total_count += count($translations);
       }
     }
 
     if ($inaccessible_entities) {
-      $messenger->addWarning("@count items has not been deleted because you do not have the necessary permissions.", [
+      $messenger->addWarning("@count items have not been deleted because you do not have the necessary permissions.", [
         '@count' => count($inaccessible_entities),
       ]);
     }
@@ -507,9 +512,10 @@ function islandora_object_delete_form_submit($form, &$form_state) {
         '#value' => t("The repository item @node and @media", [
           '@node' => $node->getTitle(),
           '@media' => \Drupal::translation()->formatPlural(
-            substr_count($media_list, ",") + 1, 'the media with the id @media has been deleted.',
-            'the medias with the id @media have been deleted.',
-            ['@media' => mb_substr($media_list, 0, strlen($media_list) - 2)]),
+            count($media_list), 'the media with the id @media has been deleted.',
+            'the medias with the ids @media have been deleted.',
+            ['@media' => implode(", ", $media_list)],
+          ),
         ]),
       ],
     ];
