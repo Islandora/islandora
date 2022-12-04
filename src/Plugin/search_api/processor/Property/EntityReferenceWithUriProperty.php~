@@ -47,8 +47,8 @@ class EntityReferenceWithUriProperty extends ConfigurablePropertyBase {
     ];
     $form['require_all'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Require all terms'),
-      '#description' => $this->t('Only index related entities that have all the listed terms.'),
+      '#title' => 'Require all terms',
+      '#description' => 'Only index related entities that have all the listed terms.',
       '#default_value' => $configuration['require_all'],
     ];
     // Store the target type of the field, it's a pain to get it when indexing.
