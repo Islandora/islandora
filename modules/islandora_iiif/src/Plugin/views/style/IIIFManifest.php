@@ -205,11 +205,13 @@ class IIIFManifest extends StylePluginBase {
             continue;
           }
 
-          $ocrs = $entity->{$ocrField->definition['field_name']};
+          if (!is_null($ocrField)) {
+            $ocrs = $entity->{$ocrField->definition['field_name']};
+            $ocr = isset($ocrs[$i]) ? $ocrs[$i] : FALSE;
+          }
 
           // Create the IIIF URL for this file
           // Visiting $iiif_url will resolve to the info.json for the image.
-          $ocr = isset($ocrs[$i]) ? $ocrs[$i] : FALSE;
           $file_url = $image->entity->createFileUrl(FALSE);
           $mime_type = $image->entity->getMimeType();
           $iiif_url = rtrim($iiif_address, '/') . '/' . urlencode($file_url);
