@@ -157,6 +157,10 @@ abstract class EmitEvent extends ConfigurableActionBase implements ContainerFact
 
       $user = $this->entityTypeManager->getStorage('user')->load($this->account->id());
       $data = $this->generateData($entity);
+      // If $data is the bool false, then abort. No error, but don't emit event.
+      if ($data === FALSE) {
+        return;
+      }
 
       $event = $this->eventDispatcher->dispatch(
         StompHeaderEvent::EVENT_NAME,

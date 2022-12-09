@@ -60,6 +60,13 @@ class AbstractGenerateDerivative extends AbstractGenerateDerivativeBase {
       throw new \RuntimeException("Could not locate taxonomy term with uri: " . $this->configuration['derivative_term_uri'], 500);
     }
 
+    // See if there is a destination media already set, and abort if it's the
+    // same as the source media. Dont cause an error, just don't continue.
+    $derivative_media = $this->utils->getMediaWithTerm($entity, $derivative_term);
+    if (!is_null($derivative_media) && $derivative_media->id() == $source_media->id()) {
+      return FALSE;
+    }
+
     $route_params = [
       'node' => $entity->id(),
       'media_type' => $this->configuration['destination_media_type'],
