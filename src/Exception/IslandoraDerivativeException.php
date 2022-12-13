@@ -7,6 +7,5 @@ namespace Drupal\islandora\Exception;
  *
  * @package islandora
  */
-class IslandoraDerivativeException extends \RuntimeException
-{
+class IslandoraDerivativeException extends \RuntimeException {
 }
