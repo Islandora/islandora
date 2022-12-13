@@ -14,6 +14,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\islandora\Event\StompHeaderEvent;
 use Drupal\islandora\Event\StompHeaderEventException;
+use Drupal\islandora\Exception\IslandoraDerivativeException;
 use Stomp\Exception\StompException;
 use Stomp\StatefulStomp;
 use Stomp\Transport\Message;
@@ -157,10 +158,6 @@ abstract class EmitEvent extends ConfigurableActionBase implements ContainerFact
 
       $user = $this->entityTypeManager->getStorage('user')->load($this->account->id());
       $data = $this->generateData($entity);
-      // If $data is the bool false, then abort. No error, but don't emit event.
-      if ($data === FALSE) {
-        return;
-      }
 
       $event = $this->eventDispatcher->dispatch(
         StompHeaderEvent::EVENT_NAME,
@@ -171,6 +168,10 @@ abstract class EmitEvent extends ConfigurableActionBase implements ContainerFact
         $this->eventGenerator->generateEvent($entity, $user, $data),
         $event->getHeaders()->all()
       );
+    }
+    catch (IslandoraDerivativeException $e) {
+      $this->logger->info($e->getMessage());
+      return;
     }
     catch (StompHeaderEventException $e) {
       $this->logger->error($e->getMessage());

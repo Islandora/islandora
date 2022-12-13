@@ -5,6 +5,7 @@ namespace Drupal\islandora\Plugin\Action;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\islandora\Exception\IslandoraDerivativeException;
 
 /**
  * Emits a Node event.
@@ -64,7 +65,7 @@ class AbstractGenerateDerivative extends AbstractGenerateDerivativeBase {
     // same as the source media. Dont cause an error, just don't continue.
     $derivative_media = $this->utils->getMediaWithTerm($entity, $derivative_term);
     if (!is_null($derivative_media) && $derivative_media->id() == $source_media->id()) {
-      return FALSE;
+      throw new IslandoraDerivativeException("Halting derivative, as source and target media are the same. Derivative term: [" . $this->configuration['derivative_term_uri'] . "] Source term: [" . $this->configuration['source_term_uri'] . "] Node id: [". $entity->id() . "].",  500);
     }
 
     $route_params = [
