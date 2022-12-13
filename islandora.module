@@ -183,7 +183,8 @@ function islandora_file_insert(FileInterface $file) {
  */
 function islandora_file_update(FileInterface $file) {
   // Exit early if unchanged.
-  if ($file->filehash != NULL && $file->original->filehash != NULL && $file->filehash['sha1'] == $file->original->filehash['sha1']) {
+  if ($file->hasField('sha1') && $file->original->hasField('sha1')
+    && $file->sha1->getString() == $file->original->sha1->getString()) {
     return;
   }
 
