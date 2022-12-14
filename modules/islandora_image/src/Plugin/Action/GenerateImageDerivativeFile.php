@@ -51,7 +51,7 @@ class GenerateImageDerivativeFile extends AbstractGenerateDerivativeMediaFile {
       '#title' => $this->t('Destination Image field'),
       '#default_value' => $this->configuration['destination_field_name'],
       '#description' => $this->t('This Action stores the derivative in an
-       Image field. If you need to store the result in a File field, use
+       Image field. If creating a Tiff or JP2, instead use
        "Generate a Derivative File for Media Attachment". Selected target field
        must be an additional field, not the media\'s main storage field.
        Selected target field must be present on the media.'),
