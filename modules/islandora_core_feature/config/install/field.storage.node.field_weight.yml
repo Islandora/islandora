@@ -14,6 +14,8 @@ module: core
 locked: false
 cardinality: 1
 translatable: true
-indexes: {  }
+indexes:
+  value:
+    - value
 persist_with_no_fields: false
 custom_storage: false
