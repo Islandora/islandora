@@ -289,8 +289,18 @@ class MediaSourceService {
       }
 
       $directory = $this->fileSystem->dirname($content_location);
+      
+      // Check if the directory is writable.
+      if (!is_writable(dirname($directory))) {
+        $parent_directory = dirname($directory);
+        $error_current_user = shell_exec('whoami');
+        $sanitized_current_user = str_replace(array("\n", "\r"), '', $error_current_user);
+        throw new HttpException(500, "The user '$sanitized_current_user' does not have permissions to write to: '$parent_directory' . Error");
+      }
+
+
       if (!$this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
-        throw new HttpException(500, "The destination directory does not exist, could not be created, or is not writable");
+        throw new HttpException(500, "The destination directory does not exist, could not be created, or is not writable: $directory");
       }
 
       // Copy over the file content.
