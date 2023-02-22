@@ -231,6 +231,21 @@ reaction.plugin.delete:
 reaction.plugin.derivative:
   type: islandora.reaction.actions
 
+search_api.property_configuration.entity_reference_with_term:
+  type: mapping
+  label: 'Entity reference filtered by term configuration'
+  mapping:
+    filter_terms:
+      type: sequence
+      label: 'Filter terms to find on related entities'
+      orderby: value
+    require_all:
+      type: boolean
+      label: 'Whether to require all terms, or any term.'
+    target_type:
+      type: string
+      label: 'The target entity type of this field.'
+
 field.widget.settings.media_track:
   type: field.widget.settings.file_generic
 
