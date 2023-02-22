@@ -2,6 +2,9 @@
 
 namespace Drupal\islandora\Plugin\search_api\processor;
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\islandora\Plugin\search_api\processor\Property\EntityReferenceWithUriProperty;
 use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\Item\ItemInterface;
@@ -33,6 +36,13 @@ class EntityReferenceWithUri extends ProcessorPluginBase {
   protected IslandoraUtils $utils;
 
   /**
+   * Entity Type Manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManager
+   */
+  protected EntityTypeManager $entityTypeManager;
+
+  /**
    * Constructor.
    *
    * @param array $configuration
@@ -46,15 +56,19 @@ class EntityReferenceWithUri extends ProcessorPluginBase {
    *   The plugin implementation definition.
    * @param \Drupal\islandora\IslandoraUtils $utils
    *   Islandora utils.
+   * @param \Drupal\Core\Entity\EntityTypeManager $entityTypeManager
+   *   Drupal Entity Type Manager.
    */
   public function __construct(
     array $configuration,
           $plugin_id,
           $plugin_definition,
-    IslandoraUtils $utils
+    IslandoraUtils $utils,
+    EntityTypeManager $entityTypeManager
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->utils = $utils;
+    $this->entityTypeManager = $entityTypeManager;
   }
 
   /**
@@ -66,6 +80,7 @@ class EntityReferenceWithUri extends ProcessorPluginBase {
       $plugin_id,
       $plugin_definition,
       $container->get('islandora.utils'),
+      $container->get('entity_type.manager'),
     );
   }
 
@@ -81,7 +96,7 @@ class EntityReferenceWithUri extends ProcessorPluginBase {
     $entity_type = $datasource->getEntityTypeId();
 
     // Get all configured Entity Relation fields for this entity type.
-    $fields = \Drupal::entityTypeManager()->getStorage('field_config')->loadByProperties([
+    $fields = $this->entityTypeManager->getStorage('field_config')->loadByProperties([
       'entity_type' => $entity_type,
       'field_type' => 'entity_reference',
     ]);
@@ -97,7 +112,7 @@ class EntityReferenceWithUri extends ProcessorPluginBase {
           '@label' => $field->label(),
           '@bundle' => $field->getTargetBundle(),
         ]),
-        'description' => $this->t('Index the target entity, but only if the target entity has a taxonomy term.'),
+        'description' => $this->t('Index the related entity, but only if the target entity has a taxonomy term.'),
         'type' => 'string',
         'processor_id' => $this->getPluginId(),
         'settings' => [
@@ -114,6 +129,7 @@ class EntityReferenceWithUri extends ProcessorPluginBase {
 
   /**
    * {@inheritdoc}
+   * @throws \Drupal\search_api\SearchApiException
    */
   public function addFieldValues(ItemInterface $item) {
     // Skip if no Entity Reference with URI fields are configured.
@@ -144,9 +160,13 @@ class EntityReferenceWithUri extends ProcessorPluginBase {
         foreach ($content_entity->get($field_name)->getValue() as $values) {
           foreach ($values as $value) {
             // Load the entity stored in our field.
-            $target_entity = \Drupal::entityTypeManager()
-              ->getStorage($entity_type)
-              ->load($value);
+            try {
+              $target_entity = $this->entityTypeManager
+                ->getStorage($entity_type)
+                ->load($value);
+            } catch (InvalidPluginDefinitionException $e) {
+            } catch (PluginNotFoundException $e) {
+            }
             // Load the taxonomy terms on the entity stored in our field.
             $referenced_terms = array_merge($referenced_terms, array_filter($target_entity->referencedEntities(), function ($entity) {
               if ($entity->getEntityTypeId() != 'taxonomy_term') {
