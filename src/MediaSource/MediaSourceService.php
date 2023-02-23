@@ -295,7 +295,7 @@ class MediaSourceService {
         $error_current_user = shell_exec('whoami');
         $sanitized_current_user = str_replace(array("\n", "\r"), '', $error_current_user);
         $error_message = "The destination directory does not exist, could not be created, or is not writable by $sanitized_current_user: $directory";
-        watchdog('media_source_service', $error_message, [], WATCHDOG_ERROR);
+        $this->logger->error($error_message);
         throw new HttpException(500, "An error occurred while processing your request. Please contact the website administrator.");
       }
 
