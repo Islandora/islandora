@@ -289,11 +289,11 @@ class MediaSourceService {
       }
 
       $directory = $this->fileSystem->dirname($content_location);
-      
+
       if (!$this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
         $parent_directory = dirname($directory);
         $error_current_user = shell_exec('whoami');
-        $sanitized_current_user = str_replace(array("\n", "\r"), '', $error_current_user);
+        $sanitized_current_user = str_replace(["\n", "\r"], '', $error_current_user);
         $error_message = "The destination directory does not exist, could not be created, or is not writable by $sanitized_current_user: $directory";
         $this->logger->error($error_message);
         throw new HttpException(500, "An error occurred while processing your request. Please contact the website administrator.");
