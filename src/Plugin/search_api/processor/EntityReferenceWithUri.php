@@ -129,7 +129,6 @@ class EntityReferenceWithUri extends ProcessorPluginBase {
 
   /**
    * {@inheritdoc}
-   * @throws \Drupal\search_api\SearchApiException
    */
   public function addFieldValues(ItemInterface $item) {
     // Skip if no Entity Reference with URI fields are configured.
@@ -164,8 +163,10 @@ class EntityReferenceWithUri extends ProcessorPluginBase {
               $target_entity = $this->entityTypeManager
                 ->getStorage($entity_type)
                 ->load($value);
-            } catch (InvalidPluginDefinitionException $e) {
-            } catch (PluginNotFoundException $e) {
+            }
+            catch (InvalidPluginDefinitionException $e) {
+            }
+            catch (PluginNotFoundException $e) {
             }
             // Load the taxonomy terms on the entity stored in our field.
             $referenced_terms = array_merge($referenced_terms, array_filter($target_entity->referencedEntities(), function ($entity) {
