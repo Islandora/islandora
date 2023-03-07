@@ -14,6 +14,14 @@ use Drupal\Component\Plugin\Exception\ContextException;
 class IslandoraContextManager extends ContextManager {
 
   /**
+   * Allow the contexts to be reset before evaluation.
+   */
+  protected function resetContextEvaluation() {
+    $this->contexts = [];
+    $this->contextConditionsEvaluated = FALSE;
+  }
+
+  /**
    * Evaluate all context conditions.
    *
    * @param \Drupal\Core\Plugin\Context\Context[] $provided
@@ -22,7 +30,9 @@ class IslandoraContextManager extends ContextManager {
   public function evaluateContexts(array $provided = []) {
 
     $this->activeContexts = [];
-
+    // XXX: Ensure that no earlier executed contexts in the request are still
+    // present.
+    $this->resetContextEvaluation();
     /** @var \Drupal\context\ContextInterface $context */
     foreach ($this->getContexts() as $context) {
       if ($this->evaluateContextConditions($context, $provided) && !$context->disabled()) {
