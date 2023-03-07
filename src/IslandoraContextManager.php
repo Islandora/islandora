@@ -31,8 +31,10 @@ class IslandoraContextManager extends ContextManager {
 
     $this->activeContexts = [];
     // XXX: Ensure that no earlier executed contexts in the request are still
-    // present.
-    $this->resetContextEvaluation();
+    // present when being triggered via Islandora's ContextProviders.
+    if (!empty($provided)) {
+      $this->resetContextEvaluation();
+    }
     /** @var \Drupal\context\ContextInterface $context */
     foreach ($this->getContexts() as $context) {
       if ($this->evaluateContextConditions($context, $provided) && !$context->disabled()) {
