@@ -31,6 +31,9 @@ services:
   logger.channel.islandora:
       parent: logger.channel_base
       arguments: ['islandora']
+  logger.channel.fedora_flysystem:
+      parent: logger.channel_base
+      arguments: ['fedora_flysystem']
   islandora.media_route_context_provider:
     class: Drupal\islandora\ContextProvider\MediaRouteContextProvider
     arguments: ['@current_route_match']

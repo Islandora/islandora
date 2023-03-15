@@ -27,7 +27,7 @@
     "drupal/prepopulate" : "^2.2",
     "drupal/search_api": "^1.8",
     "drupal/token" : "^1.3",
-    "islandora/crayfish-commons": "^3",
+    "islandora/crayfish-commons": "dev-upgrade-5.4-symfony",
     "islandora/jsonld": "^2",
     "stomp-php/stomp-php": "4.* || ^5"
   },
