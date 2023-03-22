@@ -27,13 +27,14 @@
     "drupal/prepopulate" : "^2.2",
     "drupal/search_api": "^1.8",
     "drupal/token" : "^1.3",
-    "islandora/crayfish-commons": "dev-upgrade-5.4-symfony",
+    "islandora/chullo": "^1.3",
+    "islandora/fedora-entity-mapper": "1.x-dev",
     "islandora/jsonld": "^2",
     "stomp-php/stomp-php": "4.* || ^5"
   },
   "require-dev": {
     "phpunit/phpunit": "^6",
-    "squizlabs/php_codesniffer": "2.7.1",
+    "squizlabs/php_codesniffer": "^2.7.1",
     "drupal/coder": "*",
     "sebastian/phpcpd": "*"
   },
