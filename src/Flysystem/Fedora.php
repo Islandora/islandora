@@ -88,11 +88,7 @@ class Fedora implements FlysystemPluginInterface, ContainerFactoryPluginInterfac
     // Construct guzzle client to middleware that adds JWT.
     $stack = HandlerStack::create();
     $stack->push(static::addJwt($container->get('jwt.authentication.jwt')));
-    $client = new Client([
-      'handler' => $stack,
-      'base_uri' => $configuration['root'],
-    ]);
-    $fedora = new FedoraApi($client);
+    $fedora = FedoraApi::createWithHandler($configuration['root'], $stack);
 
     // Return it.
     return new static(

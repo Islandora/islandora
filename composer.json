@@ -27,7 +27,7 @@
     "drupal/prepopulate" : "^2.2",
     "drupal/search_api": "^1.8",
     "drupal/token" : "^1.3",
-    "islandora/chullo": "^1.3",
+    "islandora/chullo": "dev-update-dependencies",
     "islandora/fedora-entity-mapper": "1.x-dev",
     "islandora/jsonld": "^2",
     "stomp-php/stomp-php": "4.* || ^5"
