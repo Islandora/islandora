@@ -13,9 +13,8 @@ use Drupal\islandora\Flysystem\Adapter\FedoraAdapter;
 use Drupal\jwt\Authentication\Provider\JwtAuth;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Client;
-use Islandora\Chullo\IFedoraApi;
 use Islandora\Chullo\FedoraApi;
+use Islandora\Chullo\IFedoraApi;
 use Psr\Http\Message\RequestInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
@@ -50,11 +49,11 @@ class Fedora implements FlysystemPluginInterface, ContainerFactoryPluginInterfac
    */
   protected $languageManager;
 
-    /**
-     * Logger.
-     *
-     * @var \Drupal\Core\Logger\LoggerChannelInterface
-     */
+  /**
+   * Logger.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   */
   protected $logger;
 
   /**
@@ -67,6 +66,7 @@ class Fedora implements FlysystemPluginInterface, ContainerFactoryPluginInterfac
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   Language manager.
    * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
+   *   The fedora adapter logger channel.
    */
   public function __construct(
     IFedoraApi $fedora,

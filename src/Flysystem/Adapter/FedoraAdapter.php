@@ -34,11 +34,11 @@ class FedoraAdapter implements AdapterInterface {
    */
   protected $mimeTypeGuesser;
 
-    /**
-     * Logger.
-     *
-     * @var \Drupal\Core\Logger\LoggerChannelInterface
-     */
+  /**
+   * Logger.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   */
   protected $logger;
 
   /**
@@ -49,6 +49,7 @@ class FedoraAdapter implements AdapterInterface {
    * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mime_type_guesser
    *   Mimetype guesser.
    * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
+   *   The fedora adapter logger channel.
    */
   public function __construct(
     IFedoraApi $fedora,
