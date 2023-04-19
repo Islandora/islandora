@@ -23,7 +23,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
    *
    * @var \Prophecy\Prophecy\ObjectProphecy
    */
-  private $mime_guesser;
+  private $mimeGuesser;
 
   /**
    * A logger prophecy.
@@ -33,13 +33,13 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   private $logger;
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function setUp() {
-      parent::setUp();
-      $this->mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)
-        ->reveal();
-      $this->logger = $this->prophesize(LoggerChannelInterface::class)->reveal();
+    parent::setUp();
+    $this->mimeGuesser = $this->prophesize(MimeTypeGuesserInterface::class)
+      ->reveal();
+    $this->logger = $this->prophesize(LoggerChannelInterface::class)->reveal();
   }
 
   /**
@@ -80,7 +80,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
     $prophecy->getResource('', ['Connection' => 'close'])->willReturn($response);
     $api = $prophecy->reveal();
 
-    return new FedoraAdapter($api, $this->mime_guesser, $this->logger);
+    return new FedoraAdapter($api, $this->mimeGuesser, $this->logger);
   }
 
   /**
@@ -95,7 +95,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
     $prophecy->getResource('', ['Connection' => 'close'])->willReturn($response);
     $api = $prophecy->reveal();
 
-    return new FedoraAdapter($api, $this->mime_guesser, $this->logger);
+    return new FedoraAdapter($api, $this->mimeGuesser, $this->logger);
   }
 
   /**
@@ -117,7 +117,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
     $prophecy->getResourceHeaders('', ['Connection' => 'close'])->willReturn($response);
     $api = $prophecy->reveal();
 
-    return new FedoraAdapter($api, $this->mime_guesser, $this->logger);
+    return new FedoraAdapter($api, $this->mimeGuesser, $this->logger);
   }
 
   /**
@@ -142,7 +142,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
 
     $api = $fedora_prophecy->reveal();
 
-    return new FedoraAdapter($api, $this->mime_guesser, $this->logger);
+    return new FedoraAdapter($api, $this->mimeGuesser, $this->logger);
   }
 
   /**
@@ -162,7 +162,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
 
     $api = $fedora_prophecy->reveal();
 
-    return new FedoraAdapter($api, $this->mime_guesser, $this->logger);
+    return new FedoraAdapter($api, $this->mimeGuesser, $this->logger);
   }
 
   /**
@@ -190,7 +190,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
 
     $api = $fedora_prophecy->reveal();
 
-    return new FedoraAdapter($api, $this->mime_guesser, $this->logger);
+    return new FedoraAdapter($api, $this->mimeGuesser, $this->logger);
   }
 
   /**
@@ -206,7 +206,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
     $fedora_prophecy->getResourceHeaders('', ['Connection' => 'close'])->willReturn($prophecy->reveal());
     $api = $fedora_prophecy->reveal();
 
-    return new FedoraAdapter($api, $this->mime_guesser, $this->logger);
+    return new FedoraAdapter($api, $this->mimeGuesser, $this->logger);
   }
 
   /**
@@ -222,7 +222,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
 
     $api = $fedora_prophecy->reveal();
 
-    return new FedoraAdapter($api, $this->mime_guesser, $this->logger);
+    return new FedoraAdapter($api, $this->mimeGuesser, $this->logger);
   }
 
   /**
@@ -250,7 +250,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
 
     $api = $fedora_prophecy->reveal();
 
-    return new FedoraAdapter($api, $this->mime_guesser, $this->logger);
+    return new FedoraAdapter($api, $this->mimeGuesser, $this->logger);
   }
 
   /**
@@ -278,7 +278,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
 
     $api = $fedora_prophecy->reveal();
 
-    return new FedoraAdapter($api, $this->mime_guesser, $this->logger);
+    return new FedoraAdapter($api, $this->mimeGuesser, $this->logger);
   }
 
   /**
@@ -639,7 +639,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
 
     $api = $fedora_prophecy->reveal();
 
-    $adapter = new FedoraAdapter($api, $this->mime_guesser, $this->logger);
+    $adapter = new FedoraAdapter($api, $this->mimeGuesser, $this->logger);
 
     $this->assertTrue($adapter->rename('', '') == TRUE, "rename() must return TRUE on success");
   }
@@ -656,7 +656,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
 
     $api = $fedora_prophecy->reveal();
 
-    $adapter = new FedoraAdapter($api, $this->mime_guesser, $this->logger);
+    $adapter = new FedoraAdapter($api, $this->mimeGuesser, $this->logger);
 
     $this->assertTrue($adapter->createDir('', $this->prophesize(Config::class)
       ->reveal()) == FALSE, "createDir() must return FALSE on fail");
