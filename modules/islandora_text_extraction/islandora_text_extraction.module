@@ -40,6 +40,10 @@ function islandora_text_extraction_media_presave(MediaInterface $media) {
       $file = File::load($file_id);
       if ($file) {
         $data = file_get_contents($file->getFileUri());
+        // Check if it's already markup like hOCR
+        if (substr($data, 0, 4) == '<xml') {
+          return;
+        }
         $data = nl2br($data);
         $media->set('field_edited_text', $data);
         $media->field_edited_text->format = 'basic_html';
