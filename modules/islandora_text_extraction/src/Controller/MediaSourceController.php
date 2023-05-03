@@ -108,9 +108,8 @@ class MediaSourceController extends ControllerBase {
         $this->getLogger('islandora')->warning("Field $destination_field is not defined in  Media Type {$media->bundle()}");
       }
       if ($media->hasField($destination_text_field)) {
-        // TODO: The request actually has a malformed parameter string, ?text_format=plain_text?connection_close=true.
-        // But that's a Tesseract issue.
-        if (substr($request->query->get('text_format'), 0, 10) == 'plain_text' ) {
+        // @todo The request actually has a malformed parameter string, ?text_format=plain_text?connection_close=true.
+        if (substr($request->query->get('text_format'), 0, 10) == 'plain_text') {
           $contents = nl2br($contents);
         }
         $media->{$destination_text_field}->setValue($contents);
