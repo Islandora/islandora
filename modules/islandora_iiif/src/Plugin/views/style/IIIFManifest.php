@@ -3,8 +3,9 @@
 namespace Drupal\islandora_iiif\Plugin\views\style;
 
 use Drupal\Core\Config\ImmutableConfig;
-use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
@@ -210,33 +211,9 @@ class IIIFManifest extends StylePluginBase {
     $canvases = [];
     foreach (array_filter(array_values($this->options['iiif_tile_field'])) as $iiif_tile_field) {
       $viewsField = $this->view->field[$iiif_tile_field];
-      $iiif_ocr_file_field = !empty($this->options['iiif_ocr_file_field']) ? array_filter(array_values($this->options['iiif_ocr_file_field'])) : [];
-      
-      $ocrField = count($iiif_ocr_file_field) > 0 ? $this->view->field[$iiif_ocr_file_field[0]] : NULL;
       $entity = $viewsField->getEntity($row);
 
-      if ($ocrField) {
-        $ocr_entity = $entity;
-        $ocr_field_name = $ocrField->definition['field_name'];
-        if (!is_null($ocrField_name)) {
-          $ocrs = $ocr_entity->{$ocr_field_name};
-          $ocr = isset($ocrs[$i]) ? $ocrs[$i] : FALSE;
-          $ocr_url = $ocr->entity->createFileUrl(FALSE);
-        }
-      }
-      else if ($structured_text_term) {
-        $parent_node = $this->utils->getParentNode($entity);
-        $ocr_entity_array = $this->utils->getMediaReferencingNodeAndTerm($parent_node, $structured_text_term);
-        $ocr_entity_id = is_array($ocr_entity_array) ? array_shift($ocr_entity_array) : NULL;
-        $ocr_entity = $ocr_entity_id ? $this->entityTypeManager->getStorage('media')->load($ocr_entity_id) : NULL;
-        $ocr_file_source = $ocr_entity ? $ocr_entity->getSource() : NULL;
-        $ocr_fid = $ocr_file_source->getSourceFieldValue($ocr_entity);
-        $ocr_file = $this->entityTypeManager->getStorage('file')->load($ocr_fid);
-        $ocr_url = $ocr_file->createFileUrl(FALSE);
-      }
-
       if (isset($entity->{$viewsField->definition['field_name']})) {
-
         /** @var \Drupal\Core\Field\FieldItemListInterface $images */
         $images = $entity->{$viewsField->definition['field_name']};
         foreach ($images as $i => $image) {
@@ -287,7 +264,7 @@ class IIIFManifest extends StylePluginBase {
             ],
           ];
 
-          if ($ocr_url) {
+          if ($ocr_url = $this->getOcrUrl($entity, $structured_text_term)) {
             $tmp_canvas['seeAlso'] = [
               '@id' => $ocr_url,
               'format' => 'text/vnd.hocr+html',
@@ -346,6 +323,47 @@ class IIIFManifest extends StylePluginBase {
       }
     }
     return [$width, $height];
+  }
+
+  /**
+   * Retrieves a URL text with positional data such as hOCR
+   * 
+   * @param EntityInterface $entity
+   *   The entity at the current row.
+   * @param \Drupal\taxonomy\TermInterface|null $structured_text_term
+   *   The term that structured text media references, if any.
+   
+   * return String|FALSE
+   *   The absolute URL of the current row's structured text, 
+   * or FALSE if none.
+   */
+  protected function getOcrUrl(EntityInterface $entity, $structured_text_term) {
+    $ocr_url = FALSE;
+    $iiif_ocr_file_field = !empty($this->options['iiif_ocr_file_field']) ? array_filter(array_values($this->options['iiif_ocr_file_field'])) : [];
+    $ocrField = count($iiif_ocr_file_field) > 0 ? $this->view->field[$iiif_ocr_file_field[0]] : NULL;
+    if ($ocrField) {
+      $ocr_entity = $entity;
+      $ocr_field_name = $ocrField->definition['field_name'];
+      if (!is_null($ocrField_name)) {
+        $ocrs = $ocr_entity->{$ocr_field_name};
+        $ocr = isset($ocrs[$i]) ? $ocrs[$i] : FALSE;
+        $ocr_url = $ocr->entity->createFileUrl(FALSE);
+      }
+    }
+    else if ($structured_text_term) {
+      $parent_node = $this->utils->getParentNode($entity);
+      $ocr_entity_array = $this->utils->getMediaReferencingNodeAndTerm($parent_node, $structured_text_term);
+      $ocr_entity_id = is_array($ocr_entity_array) ? array_shift($ocr_entity_array) : NULL;
+      $ocr_entity = $ocr_entity_id ? $this->entityTypeManager->getStorage('media')->load($ocr_entity_id) : NULL;
+      if ($ocr_entity) {
+        $ocr_file_source = $ocr_entity->getSource();
+        $ocr_fid = $ocr_file_source->getSourceFieldValue($ocr_entity);
+        $ocr_file = $this->entityTypeManager->getStorage('file')->load($ocr_fid);
+        $ocr_url = $ocr_file->createFileUrl(FALSE);
+      }
+    }
+
+    return $ocr_url;
   }
 
   /**
