@@ -2,22 +2,23 @@
 
 namespace Drupal\islandora_iiif\Plugin\views\style;
 
-use Drupal\views\Plugin\views\style\StylePluginBase;
+use Drupal\Core\Config\ImmutableConfig;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
+use Drupal\islandora\IslandoraUtils;
+use Drupal\views\Plugin\views\style\StylePluginBase;
 use Drupal\views\ResultRow;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Drupal\Core\Config\ImmutableConfig;
-use Drupal\Core\File\FileSystemInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\ServerException;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provide serializer format for IIIF Manifest.
@@ -32,6 +33,13 @@ use GuzzleHttp\Exception\ServerException;
  * )
  */
 class IIIFManifest extends StylePluginBase {
+
+/**
+   * Islandora utility functions.
+   *
+   * @var \Drupal\islandora\IslandoraUtils
+   */
+  protected $utils;
 
   /**
    * {@inheritdoc}
@@ -93,16 +101,9 @@ class IIIFManifest extends StylePluginBase {
   protected $messenger;
 
   /**
-   * Module Handler for running hooks.
-   *
-   * @var \Drupal\Core\Extention\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, SerializerInterface $serializer, Request $request, ImmutableConfig $iiif_config, EntityTypeManagerInterface $entity_type_manager, FileSystemInterface $file_system, Client $http_client, MessengerInterface $messenger, ModuleHandlerInterface $moduleHandler) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, SerializerInterface $serializer, Request $request, ImmutableConfig $iiif_config, EntityTypeManagerInterface $entity_type_manager, FileSystemInterface $file_system, Client $http_client, MessengerInterface $messenger, IslandoraUtils $utils) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->serializer = $serializer;
@@ -112,7 +113,8 @@ class IIIFManifest extends StylePluginBase {
     $this->fileSystem = $file_system;
     $this->httpClient = $http_client;
     $this->messenger = $messenger;
-    $this->moduleHandler = $moduleHandler;
+    $this->utils = $utils;
+
   }
 
   /**
@@ -130,18 +132,8 @@ class IIIFManifest extends StylePluginBase {
       $container->get('file_system'),
       $container->get('http_client'),
       $container->get('messenger'),
-      $container->get('module_handler')
+      $container->get('islandora.utils')
     );
-  }
-
-  /**
-   * Return the request property.
-   *
-   * @return \Symfony\Component\HttpFoundation\Request
-   *   The Symfony request object
-   */
-  public function getRequest() {
-    return $this->request;
   }
 
   /**
@@ -160,6 +152,11 @@ class IIIFManifest extends StylePluginBase {
       array_pop($url_components);
       $content_path = implode('/', $url_components);
       $iiif_base_id = $request_host . '/' . $content_path;
+
+      /**
+       * @var \Drupal\taxonomy\TermInterface|null
+       */
+      $structured_text_term = $this->utils->getTermForUri($this->options['structured_text_term_uri']);
 
       // @see https://iiif.io/api/presentation/2.1/#manifest
       $json += [
@@ -180,7 +177,7 @@ class IIIFManifest extends StylePluginBase {
       // For each row in the View result.
       foreach ($this->view->result as $row) {
         // Add the IIIF URL to the image to print out as JSON.
-        $canvases = $this->getTileSourceFromRow($row, $iiif_address, $iiif_base_id);
+        $canvases = $this->getTileSourceFromRow($row, $iiif_address, $iiif_base_id, $structured_text_term);
         foreach ($canvases as $tile_source) {
           $json['sequences'][0]['canvases'][] = $tile_source;
         }
@@ -189,9 +186,6 @@ class IIIFManifest extends StylePluginBase {
     unset($this->view->row_index);
 
     $content_type = 'json';
-
-    // Give other modules a chance to alter the manifest.
-    $this->moduleHandler->alter('islandora_iiif_manifest', $json, $this);
 
     return $this->serializer->serialize($json, $content_type, ['views_style_plugin' => $this]);
   }
@@ -206,17 +200,40 @@ class IIIFManifest extends StylePluginBase {
    * @param string $iiif_base_id
    *   The URL for the request, minus the last part of the URL,
    *   which is likely "manifest".
+   * @param \Drupal\taxonomy\TermInterface|null $structured_text_term
+   *   The term that structured text media references, if any.
    *
    * @return array
    *   List of IIIF URLs to display in the Openseadragon viewer.
    */
-  protected function getTileSourceFromRow(ResultRow $row, $iiif_address, $iiif_base_id) {
+  protected function getTileSourceFromRow(ResultRow $row, $iiif_address, $iiif_base_id, $structured_text_term) {
     $canvases = [];
     foreach (array_filter(array_values($this->options['iiif_tile_field'])) as $iiif_tile_field) {
       $viewsField = $this->view->field[$iiif_tile_field];
       $iiif_ocr_file_field = !empty($this->options['iiif_ocr_file_field']) ? array_filter(array_values($this->options['iiif_ocr_file_field'])) : [];
+      
       $ocrField = count($iiif_ocr_file_field) > 0 ? $this->view->field[$iiif_ocr_file_field[0]] : NULL;
       $entity = $viewsField->getEntity($row);
+
+      if ($ocrField) {
+        $ocr_entity = $entity;
+        $ocr_field_name = $ocrField->definition['field_name'];
+        if (!is_null($ocrField_name)) {
+          $ocrs = $ocr_entity->{$ocr_field_name};
+          $ocr = isset($ocrs[$i]) ? $ocrs[$i] : FALSE;
+          $ocr_url = $ocr->entity->createFileUrl(FALSE);
+        }
+      }
+      else if ($structured_text_term) {
+        $parent_node = $this->utils->getParentNode($entity);
+        $ocr_entity_array = $this->utils->getMediaReferencingNodeAndTerm($parent_node, $structured_text_term);
+        $ocr_entity_id = is_array($ocr_entity_array) ? array_shift($ocr_entity_array) : NULL;
+        $ocr_entity = $ocr_entity_id ? $this->entityTypeManager->getStorage('media')->load($ocr_entity_id) : NULL;
+        $ocr_file_source = $ocr_entity ? $ocr_entity->getSource() : NULL;
+        $ocr_fid = $ocr_file_source->getSourceFieldValue($ocr_entity);
+        $ocr_file = $this->entityTypeManager->getStorage('file')->load($ocr_fid);
+        $ocr_url = $ocr_file->createFileUrl(FALSE);
+      }
 
       if (isset($entity->{$viewsField->definition['field_name']})) {
 
@@ -226,11 +243,6 @@ class IIIFManifest extends StylePluginBase {
           if (!$image->entity->access('view')) {
             // If the user does not have permission to view the file, skip it.
             continue;
-          }
-
-          if (!is_null($ocrField)) {
-            $ocrs = $entity->{$ocrField->definition['field_name']};
-            $ocr = isset($ocrs[$i]) ? $ocrs[$i] : FALSE;
           }
 
           // Create the IIIF URL for this file
@@ -243,35 +255,8 @@ class IIIFManifest extends StylePluginBase {
           $canvas_id = $iiif_base_id . '/canvas/' . $entity->id();
           $annotation_id = $iiif_base_id . '/annotation/' . $entity->id();
 
-          // Try to fetch the IIIF metadata for the image.
-          try {
-            $info_json = $this->httpClient->get($iiif_url)->getBody();
-            $resource = json_decode($info_json, TRUE);
-            $width = $resource['width'];
-            $height = $resource['height'];
-          }
-          catch (ClientException | ServerException | ConnectException $e) {
-            // If we couldn't get the info.json from IIIF
-            // try seeing if we can get it from Drupal.
-            if (empty($width) || empty($height)) {
-              // Get the image properties so we know the image width/height.
-              $properties = $image->getProperties();
-              $width = isset($properties['width']) ? $properties['width'] : 0;
-              $height = isset($properties['height']) ? $properties['height'] : 0;
-
-              // If this is a TIFF AND we don't know the width/height
-              // see if we can get the image size via PHP's core function.
-              if ($mime_type === 'image/tiff' && !$width || !$height) {
-                $uri = $image->entity->getFileUri();
-                $path = $this->fileSystem->realpath($uri);
-                $image_size = getimagesize($path);
-                if ($image_size) {
-                  $width = $image_size[0];
-                  $height = $image_size[1];
-                }
-              }
-            }
-          }
+          [$width, $height] = $this->getCanvasDimensions($iiif_url, $image, $mime_type);
+          
           $tmp_canvas = [
             // @see https://iiif.io/api/presentation/2.1/#canvas
             '@id' => $canvas_id,
@@ -302,21 +287,14 @@ class IIIFManifest extends StylePluginBase {
             ],
           ];
 
-          if (isset($ocr) && $ocr != FALSE) {
+          if ($ocr_url) {
             $tmp_canvas['seeAlso'] = [
-              '@id' => $ocr->entity->createFileUrl(FALSE),
+              '@id' => $ocr_url,
               'format' => 'text/vnd.hocr+html',
               'profile' => 'http://kba.cloud/hocr-spec',
               'label' => 'hOCR embedded text',
             ];
           }
-
-          // Give other modules a chance to alter the canvas.
-          $alter_options = [
-            'options' => $this->options,
-            'views_plugin' => $this,
-          ];
-          $this->moduleHandler->alter('islandora_iiif_manifest_canvas', $tmp_canvas, $row, $alter_options);
 
           $canvases[] = $tmp_canvas;
         }
@@ -324,6 +302,50 @@ class IIIFManifest extends StylePluginBase {
     }
 
     return $canvases;
+  }
+
+  /**
+   * Try to fetch the IIIF metadata for the image.
+   * 
+   * @param string $iiif_url
+   *   Base URL of the canvas
+   * @param FieldItemInterface $image
+   *   The image field.
+   * @param string $mime_type
+   *   The mime type of the image.
+   * @return [string]
+   *   The width and height of the image.
+   */
+  protected function getCanvasDimensions(string $iiif_url, FieldItemInterface $image, string $mime_type) {
+    try {
+      $info_json = $this->httpClient->get($iiif_url)->getBody();
+      $resource = json_decode($info_json, TRUE);
+      $width = $resource['width'];
+      $height = $resource['height'];
+    }
+    catch (ClientException | ServerException | ConnectException $e) {
+      // If we couldn't get the info.json from IIIF
+      // try seeing if we can get it from Drupal.
+      if (empty($width) || empty($height)) {
+        // Get the image properties so we know the image width/height.
+        $properties = $image->getProperties();
+        $width = isset($properties['width']) ? $properties['width'] : 0;
+        $height = isset($properties['height']) ? $properties['height'] : 0;
+
+        // If this is a TIFF AND we don't know the width/height
+        // see if we can get the image size via PHP's core function.
+        if ($mime_type === 'image/tiff' && !$width || !$height) {
+          $uri = $image->entity->getFileUri();
+          $path = $this->fileSystem->realpath($uri);
+          $image_size = getimagesize($path);
+          if ($image_size) {
+            $width = $image_size[0];
+            $height = $image_size[1];
+          }
+        }
+      }
+    }
+    return [$width, $height];
   }
 
   /**
@@ -426,6 +448,15 @@ class IIIFManifest extends StylePluginBase {
       '#options' => $field_options,
       '#required' => FALSE,
     ];
+    $form['structured_text_term'] = [
+      '#type' => 'entity_autocomplete',
+      '#target_type' => 'taxonomy_term',
+      '#title' => $this->t('Structured text term'),
+      '#default_value' => $this->utils->getTermForUri($this->options['structured_text_term_uri']),
+      '#required' => FALSE,
+      '#description' => $this->t('Term indicating the media that holds structured text, such as hOCR, for the given object.'),
+    ];
+
   }
 
   /**
@@ -436,6 +467,15 @@ class IIIFManifest extends StylePluginBase {
    */
   public function getFormats() {
     return ['json' => 'json'];
+  }  
+
+  public function submitOptionsForm(&$form, FormStateInterface $form_state) {
+    $style_options = $form_state->getValue('style_options');
+    $tid = $style_options['structured_text_term'];
+    $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($tid);
+    $style_options['structured_text_term_uri'] = $this->utils->getUriForTerm($term);
+    $form_state->setValue('style_options', $style_options);
+    parent::submitOptionsForm($form, $form_state);
   }
 
 }
