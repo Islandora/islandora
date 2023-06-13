@@ -35,7 +35,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class IIIFManifest extends StylePluginBase {
 
-/**
+  /**
    * Islandora utility functions.
    *
    * @var \Drupal\islandora\IslandoraUtils
@@ -233,7 +233,7 @@ class IIIFManifest extends StylePluginBase {
           $annotation_id = $iiif_base_id . '/annotation/' . $entity->id();
 
           [$width, $height] = $this->getCanvasDimensions($iiif_url, $image, $mime_type);
-          
+
           $tmp_canvas = [
             // @see https://iiif.io/api/presentation/2.1/#canvas
             '@id' => $canvas_id,
@@ -283,13 +283,14 @@ class IIIFManifest extends StylePluginBase {
 
   /**
    * Try to fetch the IIIF metadata for the image.
-   * 
+   *
    * @param string $iiif_url
-   *   Base URL of the canvas
-   * @param FieldItemInterface $image
+   *   Base URL of the canvas.
+   * @param \Drupal\Core\Field\FieldItemInterface $image
    *   The image field.
    * @param string $mime_type
    *   The mime type of the image.
+   *
    * @return [string]
    *   The width and height of the image.
    */
@@ -326,16 +327,16 @@ class IIIFManifest extends StylePluginBase {
   }
 
   /**
-   * Retrieves a URL text with positional data such as hOCR
-   * 
-   * @param EntityInterface $entity
+   * Retrieves a URL text with positional data such as hOCR.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity at the current row.
    * @param \Drupal\taxonomy\TermInterface|null $structured_text_term
    *   The term that structured text media references, if any.
-   
+  *
    * return String|FALSE
-   *   The absolute URL of the current row's structured text, 
-   * or FALSE if none.
+   *   The absolute URL of the current row's structured text,
+   *   or FALSE if none.
    */
   protected function getOcrUrl(EntityInterface $entity, $structured_text_term) {
     $ocr_url = FALSE;
@@ -350,7 +351,7 @@ class IIIFManifest extends StylePluginBase {
         $ocr_url = $ocr->entity->createFileUrl(FALSE);
       }
     }
-    else if ($structured_text_term) {
+    elseif ($structured_text_term) {
       $parent_node = $this->utils->getParentNode($entity);
       $ocr_entity_array = $this->utils->getMediaReferencingNodeAndTerm($parent_node, $structured_text_term);
       $ocr_entity_id = is_array($ocr_entity_array) ? array_shift($ocr_entity_array) : NULL;
@@ -485,8 +486,19 @@ class IIIFManifest extends StylePluginBase {
    */
   public function getFormats() {
     return ['json' => 'json'];
-  }  
+  }
 
+  /**
+   * Submit handler for options form.
+   * Used to store the structured text media term by URL instead of Ttid.
+   *
+   * @param array $form
+   * The form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   * The form state object.
+   *
+   * @return void
+   */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     $style_options = $form_state->getValue('style_options');
     $tid = $style_options['structured_text_term'];
