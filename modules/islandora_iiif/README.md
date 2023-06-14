@@ -37,9 +37,7 @@ You can set the following configuration at `admin/config/islandora/iiif`:
 This module implements a Views Style plugin. It provides the following settings:
 
 1. Tile Source: A field that was added to the views list of fields with the image to be served. This should be a File or Image type field on a Media.
-2. Structured Text field: This lets you specify a file field on the same entity as above where OCR text with positional data, e.g., hOCR can be found.
-3. Structured Text term: The Islandora term with a Media Use URI where the structured OCR text can be found. This is another option to the above for storing this data in a separate media related to the parent node, rather than on the same media.
-
+2. Structured Text field: This lets you specify a file field   where OCR text with positional data, e.g., hOCR can be found.
 ## Documentation
 
 Official documentation is available on the [Islandora 8 documentation site](https://islandora.github.io/documentation/).

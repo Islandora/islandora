@@ -154,11 +154,6 @@ class IIIFManifest extends StylePluginBase {
       $content_path = implode('/', $url_components);
       $iiif_base_id = $request_host . '/' . $content_path;
 
-      /**
-       * @var \Drupal\taxonomy\TermInterface|null
-       */
-      $structured_text_term = $this->utils->getTermForUri($this->options['structured_text_term_uri']);
-
       // @see https://iiif.io/api/presentation/2.1/#manifest
       $json += [
         '@type' => 'sc:Manifest',
@@ -178,7 +173,7 @@ class IIIFManifest extends StylePluginBase {
       // For each row in the View result.
       foreach ($this->view->result as $row) {
         // Add the IIIF URL to the image to print out as JSON.
-        $canvases = $this->getTileSourceFromRow($row, $iiif_address, $iiif_base_id, $structured_text_term);
+        $canvases = $this->getTileSourceFromRow($row, $iiif_address, $iiif_base_id);
         foreach ($canvases as $tile_source) {
           $json['sequences'][0]['canvases'][] = $tile_source;
         }
@@ -201,13 +196,11 @@ class IIIFManifest extends StylePluginBase {
    * @param string $iiif_base_id
    *   The URL for the request, minus the last part of the URL,
    *   which is likely "manifest".
-   * @param \Drupal\taxonomy\TermInterface|null $structured_text_term
-   *   The term that structured text media references, if any.
    *
    * @return array
    *   List of IIIF URLs to display in the Openseadragon viewer.
    */
-  protected function getTileSourceFromRow(ResultRow $row, $iiif_address, $iiif_base_id, $structured_text_term) {
+  protected function getTileSourceFromRow(ResultRow $row, $iiif_address, $iiif_base_id) {
     $canvases = [];
     foreach (array_filter(array_values($this->options['iiif_tile_field'])) as $iiif_tile_field) {
       $viewsField = $this->view->field[$iiif_tile_field];
@@ -264,7 +257,7 @@ class IIIFManifest extends StylePluginBase {
             ],
           ];
 
-          if ($ocr_url = $this->getOcrUrl($entity, $structured_text_term)) {
+          if ($ocr_url = $this->getOcrUrl($entity, $row, $i)) {
             $tmp_canvas['seeAlso'] = [
               '@id' => $ocr_url,
               'format' => 'text/vnd.hocr+html',
@@ -331,36 +324,24 @@ class IIIFManifest extends StylePluginBase {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity at the current row.
-   * @param \Drupal\taxonomy\TermInterface|null $structured_text_term
-   *   The term that structured text media references, if any.
   *
    * return String|FALSE
    *   The absolute URL of the current row's structured text,
    *   or FALSE if none.
    */
-  protected function getOcrUrl(EntityInterface $entity, $structured_text_term) {
+  protected function getOcrUrl(EntityInterface $entity, $row, $delta) {
     $ocr_url = FALSE;
     $iiif_ocr_file_field = !empty($this->options['iiif_ocr_file_field']) ? array_filter(array_values($this->options['iiif_ocr_file_field'])) : [];
     $ocrField = count($iiif_ocr_file_field) > 0 ? $this->view->field[$iiif_ocr_file_field[0]] : NULL;
     if ($ocrField) {
-      $ocr_entity = $entity;
+      $ocr_entity = $ocrField->getEntity($row);
       $ocr_field_name = $ocrField->definition['field_name'];
-      if (!is_null($ocrField_name)) {
+      if (!is_null($ocr_field_name)) {
         $ocrs = $ocr_entity->{$ocr_field_name};
-        $ocr = isset($ocrs[$i]) ? $ocrs[$i] : FALSE;
-        $ocr_url = $ocr->entity->createFileUrl(FALSE);
-      }
-    }
-    elseif ($structured_text_term) {
-      $parent_node = $this->utils->getParentNode($entity);
-      $ocr_entity_array = $this->utils->getMediaReferencingNodeAndTerm($parent_node, $structured_text_term);
-      $ocr_entity_id = is_array($ocr_entity_array) ? array_shift($ocr_entity_array) : NULL;
-      $ocr_entity = $ocr_entity_id ? $this->entityTypeManager->getStorage('media')->load($ocr_entity_id) : NULL;
-      if ($ocr_entity) {
-        $ocr_file_source = $ocr_entity->getSource();
-        $ocr_fid = $ocr_file_source->getSourceFieldValue($ocr_entity);
-        $ocr_file = $this->entityTypeManager->getStorage('file')->load($ocr_fid);
-        $ocr_url = $ocr_file->createFileUrl(FALSE);
+        $ocr = isset($ocrs[$delta]) ? $ocrs[$delta] : FALSE;
+        if ($ocr) {
+          $ocr_url = $ocr->entity->createFileUrl(FALSE);
+        }
       }
     }
 
@@ -467,15 +448,6 @@ class IIIFManifest extends StylePluginBase {
       '#options' => $field_options,
       '#required' => FALSE,
     ];
-    $form['structured_text_term'] = [
-      '#type' => 'entity_autocomplete',
-      '#target_type' => 'taxonomy_term',
-      '#title' => $this->t('Structured text term'),
-      '#default_value' => $this->utils->getTermForUri($this->options['structured_text_term_uri']),
-      '#required' => FALSE,
-      '#description' => $this->t('Term indicating the media that holds structured text, such as hOCR, for the given object.'),
-    ];
-
   }
 
   /**
@@ -487,25 +459,4 @@ class IIIFManifest extends StylePluginBase {
   public function getFormats() {
     return ['json' => 'json'];
   }
-
-  /**
-   * Submit handler for options form.
-   * Used to store the structured text media term by URL instead of Ttid.
-   *
-   * @param array $form
-   * The form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   * The form state object.
-   *
-   * @return void
-   */
-  public function submitOptionsForm(&$form, FormStateInterface $form_state) {
-    $style_options = $form_state->getValue('style_options');
-    $tid = $style_options['structured_text_term'];
-    $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($tid);
-    $style_options['structured_text_term_uri'] = $this->utils->getUriForTerm($term);
-    $form_state->setValue('style_options', $style_options);
-    parent::submitOptionsForm($form, $form_state);
-  }
-
 }
