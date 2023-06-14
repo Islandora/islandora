@@ -324,8 +324,10 @@ class IIIFManifest extends StylePluginBase {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity at the current row.
+  * @param int $delta
+  *.  The delta in case there are multiple canvases on one media.
   *
-   * return String|FALSE
+   * @return String|FALSE
    *   The absolute URL of the current row's structured text,
    *   or FALSE if none.
    */
@@ -459,4 +461,5 @@ class IIIFManifest extends StylePluginBase {
   public function getFormats() {
     return ['json' => 'json'];
   }
+
 }
