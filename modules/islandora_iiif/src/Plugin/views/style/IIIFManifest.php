@@ -324,14 +324,15 @@ class IIIFManifest extends StylePluginBase {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity at the current row.
-  * @param int $delta
-  *.  The delta in case there are multiple canvases on one media.
-  *
-   * @return String|FALSE
+   *  @param \Drupal\views\ResultRow $row
+   *   Result row.  * @param int $delta
+   *   The delta in case there are multiple canvases on one media.
+   *
+   * @return string|false
    *   The absolute URL of the current row's structured text,
    *   or FALSE if none.
    */
-  protected function getOcrUrl(EntityInterface $entity, $row, $delta) {
+  protected function getOcrUrl(EntityInterface $entity, ResultRow $row, $delta) {
     $ocr_url = FALSE;
     $iiif_ocr_file_field = !empty($this->options['iiif_ocr_file_field']) ? array_filter(array_values($this->options['iiif_ocr_file_field'])) : [];
     $ocrField = count($iiif_ocr_file_field) > 0 ? $this->view->field[$iiif_ocr_file_field[0]] : NULL;
