@@ -99,6 +99,7 @@ function islandora_tokens($type, $tokens, array $data, array $options, Bubbleabl
             }
           }
           break;
+
         case 'media-thumbnail-image:url':
         case 'media_thumbnail_image:url':
           $term = $islandoraUtils->getTermForUri('http://pcdm.org/use#ThumbnailImage');
