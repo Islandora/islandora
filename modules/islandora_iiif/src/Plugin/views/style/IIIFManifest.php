@@ -10,7 +10,6 @@ use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
-use Drupal\islandora\IslandoraUtils;
 use Drupal\views\Plugin\views\style\StylePluginBase;
 use Drupal\views\ResultRow;
 use GuzzleHttp\Client;
@@ -34,13 +33,6 @@ use Symfony\Component\HttpFoundation\Request;
  * )
  */
 class IIIFManifest extends StylePluginBase {
-
-  /**
-   * Islandora utility functions.
-   *
-   * @var \Drupal\islandora\IslandoraUtils
-   */
-  protected $utils;
 
   /**
    * {@inheritdoc}
@@ -104,7 +96,7 @@ class IIIFManifest extends StylePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, SerializerInterface $serializer, Request $request, ImmutableConfig $iiif_config, EntityTypeManagerInterface $entity_type_manager, FileSystemInterface $file_system, Client $http_client, MessengerInterface $messenger, IslandoraUtils $utils) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, SerializerInterface $serializer, Request $request, ImmutableConfig $iiif_config, EntityTypeManagerInterface $entity_type_manager, FileSystemInterface $file_system, Client $http_client, MessengerInterface $messenger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->serializer = $serializer;
@@ -114,8 +106,6 @@ class IIIFManifest extends StylePluginBase {
     $this->fileSystem = $file_system;
     $this->httpClient = $http_client;
     $this->messenger = $messenger;
-    $this->utils = $utils;
-
   }
 
   /**
@@ -132,8 +122,7 @@ class IIIFManifest extends StylePluginBase {
       $container->get('entity_type.manager'),
       $container->get('file_system'),
       $container->get('http_client'),
-      $container->get('messenger'),
-      $container->get('islandora.utils')
+      $container->get('messenger')
     );
   }
 
