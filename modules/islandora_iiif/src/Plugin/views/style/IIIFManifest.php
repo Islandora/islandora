@@ -362,8 +362,8 @@ class IIIFManifest extends StylePluginBase {
    *   The entity at the current row.
    * @param \Drupal\taxonomy\TermInterface|null $structured_text_term
    *   The term that structured text media references, if any.
-  *
-   * return String|FALSE
+   *
+   * @return String|FALSE
    *   The absolute URL of the current row's structured text,
    *   or FALSE if none.
    */
@@ -519,16 +519,17 @@ class IIIFManifest extends StylePluginBase {
 
   /**
    * Submit handler for options form.
+   *
    * Used to store the structured text media term by URL instead of Ttid.
    *
    * @param array $form
-   * The form.
+  *.   The form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
-   * The form state object.
-   *
-   * @return void
+   *.  The form state object.
    */
+  // @codingStandardsIgnoreStart
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
+    // @codingStandardsIgnoreEnd
     $style_options = $form_state->getValue('style_options');
     $tid = $style_options['structured_text_term'];
     $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($tid);
