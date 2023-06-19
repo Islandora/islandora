@@ -363,7 +363,7 @@ class IIIFManifest extends StylePluginBase {
    * @param \Drupal\taxonomy\TermInterface|null $structured_text_term
    *   The term that structured text media references, if any.
    *
-   * @return String|FALSE
+   * @return string|false
    *   The absolute URL of the current row's structured text,
    *   or FALSE if none.
    */
@@ -523,9 +523,9 @@ class IIIFManifest extends StylePluginBase {
    * Used to store the structured text media term by URL instead of Ttid.
    *
    * @param array $form
-  *.   The form.
+   *   The form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *.  The form state object.
+   *   The form state object.
    */
   // @codingStandardsIgnoreStart
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
