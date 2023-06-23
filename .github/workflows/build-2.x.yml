@@ -23,8 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # PHP 8.1 fails - see https://github.com/Islandora/islandora/issues/887
-        php-versions: ["7.4", "8.0"]
+        php-versions: ["7.4", "8.0", "8.1"]
         # test-suite functional-javascript will appear to pass but will skip tests; missing chromedriver.
         test-suite: ["kernel", "functional", "functional-javascript"]
         # Not yet Drupal 10 ready - see https://github.com/Islandora/islandora/issues/888
