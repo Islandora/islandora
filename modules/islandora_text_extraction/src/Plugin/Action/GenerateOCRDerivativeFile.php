@@ -99,7 +99,7 @@ class GenerateOCRDerivativeFile extends AbstractGenerateDerivativeMediaFile {
         break;
 
       case 'plain_text':
-        $his->configuration['args'] = '';
+        $this->configuration['args'] = '';
         break;
     }
   }
