@@ -214,7 +214,7 @@ class IIIFManifest extends StylePluginBase {
           $canvas_id = $iiif_base_id . '/canvas/' . $entity->id();
           $annotation_id = $iiif_base_id . '/annotation/' . $entity->id();
 
-          [$width, $height] = $this->getCanvasDimensions($iiif_url, $image, $mime_type);
+          [$width, $height] = $this->getCanvasDimensions($iiif_url, $image, $mime_type, $entity);
 
           $tmp_canvas = [
             // @see https://iiif.io/api/presentation/2.1/#canvas
@@ -272,39 +272,54 @@ class IIIFManifest extends StylePluginBase {
    *   The image field.
    * @param string $mime_type
    *   The mime type of the image.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The image entity.
    *
    * @return [string]
    *   The width and height of the image.
    */
-  protected function getCanvasDimensions(string $iiif_url, FieldItemInterface $image, string $mime_type) {
-    try {
-      $info_json = $this->httpClient->get($iiif_url)->getBody();
-      $resource = json_decode($info_json, TRUE);
-      $width = $resource['width'];
-      $height = $resource['height'];
+  protected function getCanvasDimensions(string $iiif_url, FieldItemInterface $image, string $mime_type, $entity) {
+    if ($entity->hasField('field_height') && !$entity->get('field_height')->isEmpty() && $entity->hasField('field_width') && !$entity->get('field_width')->isEmpty()) {
+      $width = $entity->get('field_width')->value;
+      $height = $entity->get('field_height')->value;
     }
-    catch (ClientException | ServerException | ConnectException $e) {
-      // If we couldn't get the info.json from IIIF
-      // try seeing if we can get it from Drupal.
-      if (empty($width) || empty($height)) {
-        // Get the image properties so we know the image width/height.
-        $properties = $image->getProperties();
-        $width = isset($properties['width']) ? $properties['width'] : 0;
-        $height = isset($properties['height']) ? $properties['height'] : 0;
+    else {
+      // Try to fetch the IIIF metadata for the image.
+      try {
+        $info_json = $this->httpClient->get($iiif_url)->getBody();
+        $resource = json_decode($info_json, TRUE);
+        $width = $resource['width'];
+        $height = $resource['height'];
+      }
+      catch (ClientException | ServerException | ConnectException $e) {
+        // If we couldn't get the info.json from IIIF
+        // try seeing if we can get it from Drupal.
+        if (empty($width) || empty($height)) {
+          // Get the image properties so we know the image width/height.
+          $properties = $image->getProperties();
+          $width = isset($properties['width']) ? $properties['width'] : 0;
+          $height = isset($properties['height']) ? $properties['height'] : 0;
 
-        // If this is a TIFF AND we don't know the width/height
-        // see if we can get the image size via PHP's core function.
-        if ($mime_type === 'image/tiff' && !$width || !$height) {
-          $uri = $image->entity->getFileUri();
-          $path = $this->fileSystem->realpath($uri);
-          $image_size = getimagesize($path);
-          if ($image_size) {
-            $width = $image_size[0];
-            $height = $image_size[1];
+          // If this is a TIFF AND we don't know the width/height
+          // see if we can get the image size via PHP's core function.
+          if ($mime_type === 'image/tiff' && !$width || !$height) {
+            $uri = $image->entity->getFileUri();
+            $path = $this->fileSystem->realpath($uri);
+            $image_size = getimagesize($path);
+            if ($image_size) {
+              $width = $image_size[0];
+              $height = $image_size[1];
+            }
           }
         }
       }
     }
+    if ($entity->hasField('field_height') && $entity->get('field_height')->isEmpty() && $entity->hasField('field_width') && $entity->get('field_width')->isEmpty()) {
+      $entity->set('field_width', $width);
+      $entity->set('field_height', $height);
+      $entity->save();
+    }
+
     return [$width, $height];
   }
 
