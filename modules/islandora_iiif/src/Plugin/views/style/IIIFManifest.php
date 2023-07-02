@@ -109,6 +109,13 @@ class IIIFManifest extends StylePluginBase {
    */
   protected $moduleHandler;
 
+  /*
+   * The media use term for structured OCR text.
+   *
+   * @var \Drupal\taxonomy\TermInterface|null
+   */
+  protected $structured_text_term;
+
   /**
    * {@inheritdoc}
    */
@@ -124,6 +131,7 @@ class IIIFManifest extends StylePluginBase {
     $this->messenger = $messenger;
     $this->moduleHandler = $moduleHandler;
     $this->utils = $utils;
+    $this->structured_text_term = $this->utils->getTermForUri($this->options['structured_text_term_uri']);
   }
 
   /**
@@ -173,11 +181,6 @@ class IIIFManifest extends StylePluginBase {
       $content_path = implode('/', $url_components);
       $iiif_base_id = $request_host . '/' . $content_path;
 
-      /**
-       * @var \Drupal\taxonomy\TermInterface|null
-       */
-      $structured_text_term = $this->utils->getTermForUri($this->options['structured_text_term_uri']);
-
       // @see https://iiif.io/api/presentation/2.1/#manifest
       $json += [
         '@type' => 'sc:Manifest',
@@ -197,7 +200,7 @@ class IIIFManifest extends StylePluginBase {
       // For each row in the View result.
       foreach ($this->view->result as $row) {
         // Add the IIIF URL to the image to print out as JSON.
-        $canvases = $this->getTileSourceFromRow($row, $iiif_address, $iiif_base_id, $structured_text_term);
+        $canvases = $this->getTileSourceFromRow($row, $iiif_address, $iiif_base_id);
         foreach ($canvases as $tile_source) {
           $json['sequences'][0]['canvases'][] = $tile_source;
         }
@@ -223,13 +226,11 @@ class IIIFManifest extends StylePluginBase {
    * @param string $iiif_base_id
    *   The URL for the request, minus the last part of the URL,
    *   which is likely "manifest".
-   * @param \Drupal\taxonomy\TermInterface|null $structured_text_term
-   *   The term that structured text media references, if any.
    *
    * @return array
    *   List of IIIF URLs to display in the Openseadragon viewer.
    */
-  protected function getTileSourceFromRow(ResultRow $row, $iiif_address, $iiif_base_id, $structured_text_term) {
+  protected function getTileSourceFromRow(ResultRow $row, $iiif_address, $iiif_base_id) {
     $canvases = [];
     foreach (array_filter(array_values($this->options['iiif_tile_field'])) as $iiif_tile_field) {
       $viewsField = $this->view->field[$iiif_tile_field];
@@ -286,7 +287,7 @@ class IIIFManifest extends StylePluginBase {
             ],
           ];
 
-          if ($ocr_url = $this->getOcrUrl($entity, $structured_text_term)) {
+          if ($ocr_url = $this->getOcrUrl($entity, $this->structured_text_term)) {
             $tmp_canvas['seeAlso'] = [
               '@id' => $ocr_url,
               'format' => 'text/vnd.hocr+html',
@@ -360,14 +361,12 @@ class IIIFManifest extends StylePluginBase {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity at the current row.
-   * @param \Drupal\taxonomy\TermInterface|null $structured_text_term
-   *   The term that structured text media references, if any.
    *
    * @return string|false
    *   The absolute URL of the current row's structured text,
    *   or FALSE if none.
    */
-  protected function getOcrUrl(EntityInterface $entity, $structured_text_term) {
+  protected function getOcrUrl(EntityInterface $entity) {
     $ocr_url = FALSE;
     $iiif_ocr_file_field = !empty($this->options['iiif_ocr_file_field']) ? array_filter(array_values($this->options['iiif_ocr_file_field'])) : [];
     $ocrField = count($iiif_ocr_file_field) > 0 ? $this->view->field[$iiif_ocr_file_field[0]] : NULL;
@@ -380,9 +379,9 @@ class IIIFManifest extends StylePluginBase {
         $ocr_url = $ocr->entity->createFileUrl(FALSE);
       }
     }
-    elseif ($structured_text_term) {
+    elseif ($this->structured_text_term) {
       $parent_node = $this->utils->getParentNode($entity);
-      $ocr_entity_array = $this->utils->getMediaReferencingNodeAndTerm($parent_node, $structured_text_term);
+      $ocr_entity_array = $this->utils->getMediaReferencingNodeAndTerm($parent_node, $this->structured_text_term);
       $ocr_entity_id = is_array($ocr_entity_array) ? array_shift($ocr_entity_array) : NULL;
       $ocr_entity = $ocr_entity_id ? $this->entityTypeManager->getStorage('media')->load($ocr_entity_id) : NULL;
       if ($ocr_entity) {
