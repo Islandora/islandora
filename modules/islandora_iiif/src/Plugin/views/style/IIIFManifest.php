@@ -168,6 +168,7 @@ class IIIFManifest extends StylePluginBase {
    * {@inheritdoc}
    */
   public function render() {
+    $this->structured_text_term = $this->utils->getTermForUri($this->options['structured_text_term_uri']);
     $json = [];
     $iiif_address = $this->iiifConfig->get('iiif_server');
     if (!is_null($iiif_address) && !empty($iiif_address)) {
