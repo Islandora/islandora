@@ -114,7 +114,7 @@ class IIIFManifest extends StylePluginBase {
    *
    * @var \Drupal\taxonomy\TermInterface|null
    */
-  protected $structured_text_term;
+  protected $structuredTextTerm;
 
   /**
    * {@inheritdoc}
@@ -168,7 +168,7 @@ class IIIFManifest extends StylePluginBase {
    * {@inheritdoc}
    */
   public function render() {
-    $this->structured_text_term = $this->utils->getTermForUri($this->options['structured_text_term_uri']);
+    $this->structuredTextTerm = $this->utils->getTermForUri($this->options['structured_text_term_uri']);
     $json = [];
     $iiif_address = $this->iiifConfig->get('iiif_server');
     if (!is_null($iiif_address) && !empty($iiif_address)) {
@@ -288,7 +288,7 @@ class IIIFManifest extends StylePluginBase {
             ],
           ];
 
-          if ($ocr_url = $this->getOcrUrl($entity, $this->structured_text_term)) {
+          if ($ocr_url = $this->getOcrUrl($entity, $this->structuredTextTerm)) {
             $tmp_canvas['seeAlso'] = [
               '@id' => $ocr_url,
               'format' => 'text/vnd.hocr+html',
@@ -380,9 +380,9 @@ class IIIFManifest extends StylePluginBase {
         $ocr_url = $ocr->entity->createFileUrl(FALSE);
       }
     }
-    elseif ($this->structured_text_term) {
+    elseif ($this->structuredTextTerm) {
       $parent_node = $this->utils->getParentNode($entity);
-      $ocr_entity_array = $this->utils->getMediaReferencingNodeAndTerm($parent_node, $this->structured_text_term);
+      $ocr_entity_array = $this->utils->getMediaReferencingNodeAndTerm($parent_node, $this->structuredTextTerm);
       $ocr_entity_id = is_array($ocr_entity_array) ? array_shift($ocr_entity_array) : NULL;
       $ocr_entity = $ocr_entity_id ? $this->entityTypeManager->getStorage('media')->load($ocr_entity_id) : NULL;
       if ($ocr_entity) {
