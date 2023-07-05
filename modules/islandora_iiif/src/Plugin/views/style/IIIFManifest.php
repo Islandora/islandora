@@ -144,8 +144,6 @@ class IIIFManifest extends StylePluginBase {
     return $this->request;
   }
 
-
-
   /**
    * {@inheritdoc}
    */
@@ -278,8 +276,11 @@ class IIIFManifest extends StylePluginBase {
             ];
           }
 
-          // Give other modules a chance to alter the canvas
-          $alter_options = ['options' => $this->options, 'views_plugin' => $this];
+          // Give other modules a chance to alter the canvas.
+          $alter_options = [
+            'options' => $this->options,
+            'views_plugin' => $this
+          ];
           $this->moduleHandler->alter('islandora_iiif_manifest_canvas', $tmp_canvas, $row, $alter_options);
 
           $canvases[] = $tmp_canvas;
