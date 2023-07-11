@@ -95,7 +95,7 @@ class IIIFManifest extends StylePluginBase {
   protected $messenger;
 
   /**
-   * For altering the manifest.
+   * Module Handler for running hooks.
    *
    * @var \Drupal\Core\Extention\ModuleHandlerInterface
    */

@@ -13,50 +13,12 @@
  */
 
 use Drupal\block\Entity\Block;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\islandora_advanced_search\AdvancedSearchQuery;
-use Drupal\islandora_advanced_search\Form\SettingsForm;
 use Drupal\islandora_advanced_search\Utilities;
 use Drupal\search_api\Query\QueryInterface as DrupalQueryInterface;
 use Drupal\views\ViewExecutable;
 use Solarium\Core\Query\QueryInterface as SolariumQueryInterface;
-
-/**
- * Implements hook_theme().
- */
-function islandora_advanced_search_theme() {
-  return [
-    'facets_item_list__include_exclude_links' => [
-      'template' => 'facets/facets-item-list--include-exclude-links',
-      'base hook' => 'facets_item_list',
-    ],
-    'facets_result_item__include_exclude_links' => [
-      'template' => 'facets/facets-result-item--include-exclude-links',
-      'base hook' => 'facets_result_item',
-    ],
-    'facets_result_item__summary' => [
-      'template' => 'facets/facets-result-item--summary',
-      'base hook' => 'facets_result_item',
-    ],
-  ];
-}
-
-/**
- * Implements hook_library_info_alter().
- */
-function islandora_advanced_search_library_info_alter(&$libraries, $extension) {
-  if ($extension == 'facets') {
-    // Override facets module javascript with customizations.
-    $path = '/' . \Drupal::service('extension.list.module')->getPath('islandora_advanced_search') . '/js/facets';
-    $libraries['soft-limit']['js'] = [
-      "$path/soft-limit.js" => [],
-    ];
-    $libraries['drupal.facets.views-ajax']['js'] = [
-      "$path/facets-views-ajax.js" => [],
-    ];
-  }
-}
 
 /**
  * Implements hook_search_api_solr_converted_query_alter().
@@ -100,20 +62,6 @@ function islandora_advanced_search_form_block_form_alter(&$form, FormStateInterf
 }
 
 /**
- * Implements hook_preprocess_block__facets_summary().
- */
-function islandora_advanced_search_preprocess_block__facets_summary(&$variables) {
-  // Copy data-attributes to the content as the javascript expects
-  // there to be no elements between the data declaration and the
-  // content of the block.
-  foreach ($variables['attributes'] as $key => $value) {
-    if (substr($key, 0, 4) === "data") {
-      $variables['content_attributes'][$key] = $value;
-    }
-  }
-}
-
-/**
  * Implements hook_preprocess_preprocess_views_view().
  */
 function islandora_advanced_search_preprocess_views_view(&$variables) {
@@ -138,54 +86,4 @@ function islandora_advanced_search_views_pre_view(ViewExecutable $view, $display
   // Allow for recursive searches by disabling contextual filter.
   $advanced_search_query = new AdvancedSearchQuery();
   $advanced_search_query->alterView(\Drupal::request(), $view, $display_id);
-}
-
-/**
- * Implements hook_preprocess_facets_summary_item_list().
- */
-function islandora_advanced_search_preprocess_facets_summary_item_list(&$variables) {
-  foreach ($variables['items'] as &$item) {
-    $item['attributes']['class'][] = 'facet-summary-item';
-  }
-}
-
-/**
- * Implements hook_preprocess_facets_item_list().
- */
-function islandora_advanced_search_preprocess_facets_item_list(&$variables) {
-  $widget = $variables['facet']->getWidget();
-  $soft_limit = $widget['config']['soft_limit'];
-  // Break into two groups less / more which can display be toggled as a single
-  // element change rather than showing / hiding all <li> elements individually.
-  // As its slow and causes the page to snap when loading.
-  $variables['less'] = array_slice($variables['items'], 0, $soft_limit);
-  $variables['more'] = array_slice($variables['items'], $soft_limit);
-  $variables['show_more_label'] = $widget['config']['soft_limit_settings']['show_more_label'];
-}
-
-/**
- * Implements hook_preprocess_facets_result_item().
- */
-function islandora_advanced_search_preprocess_facets_result_item(&$variables) {
-  $settings = \Drupal::config(SettingsForm::CONFIG_NAME);
-  $length = $settings->get(SettingsForm::FACET_TRUNCATE);
-  if (is_numeric($length)) {
-    // Limit the length of facets display to at most 32 characters.
-    if (is_string($variables['value'])) {
-      $variables['value'] = Unicode::truncate(
-        $variables['value'],
-        $length,
-        TRUE,
-        TRUE
-      );
-    }
-    elseif (is_string($variables['value']['text']['#title'])) {
-      $variables['value']['text']['#title'] = Unicode::truncate(
-        $variables['value']['text']['#title'],
-        $length,
-        TRUE,
-        TRUE
-          );
-    }
-  }
 }
