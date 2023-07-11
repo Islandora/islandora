@@ -5,6 +5,9 @@ islandora_iiif.settings:
     iiif_server:
       type: string
       label: 'IIIF Server Url'
+    use_relative_paths:
+    type: boolean
+    label: 'Use relative paths in manifest.'
 
 views.style.iiif_manifest:
   type: views_style

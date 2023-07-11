@@ -228,7 +228,13 @@ class IIIFManifest extends StylePluginBase {
 
           // Create the IIIF URL for this file
           // Visiting $iiif_url will resolve to the info.json for the image.
-          $file_url = $image->entity->createFileUrl(FALSE);
+          if ($this->iiifConfig->get('use_relative_paths')) {
+          $file_url = ltrim($image->entity->createFileUrl(TRUE), '/');
+          }
+          else {
+            $file_url = $image->entity->createFileUrl(FALSE);
+          }
+
           $mime_type = $image->entity->getMimeType();
           $iiif_url = rtrim($iiif_address, '/') . '/' . urlencode($file_url);
 
