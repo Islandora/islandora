@@ -229,7 +229,7 @@ class IIIFManifest extends StylePluginBase {
           // Create the IIIF URL for this file
           // Visiting $iiif_url will resolve to the info.json for the image.
           if ($this->iiifConfig->get('use_relative_paths')) {
-          $file_url = ltrim($image->entity->createFileUrl(TRUE), '/');
+            $file_url = ltrim($image->entity->createFileUrl(TRUE), '/');
           }
           else {
             $file_url = $image->entity->createFileUrl(FALSE);
