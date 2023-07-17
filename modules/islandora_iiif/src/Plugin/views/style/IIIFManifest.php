@@ -288,7 +288,7 @@ class IIIFManifest extends StylePluginBase {
             ],
           ];
 
-          if ($ocr_url = $this->getOcrUrl($entity, $this->structuredTextTerm)) {
+          if ($ocr_url = $this->`getOcrUrl`($entity)) {
             $tmp_canvas['seeAlso'] = [
               '@id' => $ocr_url,
               'format' => 'text/vnd.hocr+html',
