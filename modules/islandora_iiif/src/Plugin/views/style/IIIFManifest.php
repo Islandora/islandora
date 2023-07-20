@@ -131,7 +131,9 @@ class IIIFManifest extends StylePluginBase {
     $this->messenger = $messenger;
     $this->moduleHandler = $moduleHandler;
     $this->utils = $utils;
-    $this->structured_text_term = $this->utils->getTermForUri($this->options['structured_text_term_uri']);
+    $this->structured_text_term = isset($this->options['structured_text_term_uri'])
+    ? $this->utils->getTermForUri($this->options['structured_text_term_uri'])
+    : FALSE;
   }
 
   /**
