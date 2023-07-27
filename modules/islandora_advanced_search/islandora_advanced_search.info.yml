@@ -9,3 +9,5 @@ dependencies:
   - drupal:facets
   - drupal:facets_summary
   - drupal:search_api_solr
+lifecycle: deprecated
+lifecycle_link: https://groups.google.com/g/islandora/c/SEOAWJrfE_M
