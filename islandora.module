@@ -686,13 +686,17 @@ function islandora_entity_view(array &$build, EntityInterface $entity, EntityVie
           'id' => 'field-gemini-uri',
         ],
         'internal_label' => [
-          '#type' => 'item',
-          '#title' => t('Fedora URI'),
-          'internal_uri' => [
-            '#type' => 'link',
-            '#title' => t("@url", ['@url' => $fedora_uri]),
-            '#url' => Url::fromUri($fedora_uri),
+          '#type' => 'html_tag',
+          '#tag' => 'div',
+          '#attributes' => [
+            'class' => ['field__label'],
           ],
+          '#value' => t('Fedora URI:'),
+        ],
+        'internal_uri' => [
+          '#type' => 'link',
+          '#title' => t("@url", ['@url' => $fedora_uri]),
+          '#url' => Url::fromUri($fedora_uri),
         ],
       ];
     }
@@ -742,3 +746,4 @@ function islandora_preprocess_views_view_table(&$variables) {
     }
   }
 }
+
