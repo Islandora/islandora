@@ -109,7 +109,6 @@ jobs:
         run: |
           cd $DRUPAL_DIR/web
           drush --uri=127.0.0.1:8282 en -y islandora_audio islandora_breadcrumbs islandora_iiif islandora_image islandora_video islandora_text_extraction_defaults
-          drush --uri=127.0.0.1:8282 fim -y islandora_core_feature,islandora_text_extraction_defaults
 
       - name: Copy PHPunit file
         run: cp $PHPUNIT_FILE $DRUPAL_DIR/web/core/phpunit.xml
