@@ -746,4 +746,3 @@ function islandora_preprocess_views_view_table(&$variables) {
     }
   }
 }
-
