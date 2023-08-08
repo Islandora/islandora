@@ -22,7 +22,6 @@ dependencies:
   - drupal:text
   - drupal:views_ui
   - eva:eva
-  - features:features_ui
   - file_replace:file_replace
   - filehash:filehash
   - flysystem:flysystem
