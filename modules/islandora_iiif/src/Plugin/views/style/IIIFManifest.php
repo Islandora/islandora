@@ -314,9 +314,9 @@ class IIIFManifest extends StylePluginBase {
    */
   protected function getCanvasDimensions(string $iiif_url, FieldItemInterface $image, string $mime_type) {
 
-    if (isset($image->width)
-    && isset($image->height)) {
-      return [$image->width, $image->height];
+    if (isset($image->width) && is_numeric($image->width)
+    && isset($image->height) && is_numeric($image->height)) {
+      return [intval($image->width), intval($image->height)];
     }
 
     try {
