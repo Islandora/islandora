@@ -53,12 +53,12 @@ jobs:
       
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: build_dir
 
       - name: Checkout islandora_ci
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: islandora/islandora_ci
           ref: github-actions
@@ -84,7 +84,7 @@ jobs:
           echo "PHPUNIT_FILE=$GITHUB_WORKSPACE/build_dir/phpunit.xml" >> $GITHUB_ENV
 
       - name: Cache Composer dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: /tmp/composer-cache
           key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
