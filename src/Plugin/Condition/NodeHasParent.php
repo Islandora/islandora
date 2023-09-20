@@ -137,9 +137,9 @@ class NodeHasParent extends ConditionPluginBase implements ContainerFactoryPlugi
    *   TRUE if entity references the specified parent.
    */
   protected function evaluateEntity(EntityInterface $entity) {
+    $parent_reference_field = $this->configuration['parent_reference_field'];
     foreach ($entity->referencedEntities() as $referenced_entity) {
-      if ($entity->getEntityTypeID() == 'node' && $referenced_entity->getEntityTypeId() == 'node') {
-        $parent_reference_field = $this->configuration['parent_reference_field'];
+      if ($entity->getEntityTypeID() == 'node' && $referenced_entity->getEntityTypeId() == 'node' && $entity->hasField($parent_reference_field)) {
         $field = $entity->get($parent_reference_field);
         if (!$field->isEmpty()) {
           $nids = $field->getValue();
