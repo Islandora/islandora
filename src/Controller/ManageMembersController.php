@@ -29,7 +29,7 @@ class ManageMembersController extends EntityController {
    *
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
-  protected $entityFieldManger;
+  protected $entityFieldManager;
 
   /**
    * The renderer.
