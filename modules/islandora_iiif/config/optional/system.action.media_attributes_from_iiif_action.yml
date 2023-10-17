@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - islandora_iiif
+id: media_attributes_from_iiif_action
+label: 'Media attributes from IIIF'
+type: media
+plugin: islandora_iiif:media_attributes_from_iiif_action:media
+configuration: {  }

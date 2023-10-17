@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Install/update hook implementations.
+ */
+
+ /**
+ * Add Media Attributes from IIIF action.
+ */
+function islandora_iiif_update_92001(&$sandbox) {
+  $config_id = 'system.action.media_attributes_from_iiif_action';
+  $config_path = \Drupal::service('extension.list.module')->getPath('islandora_iiif') . '/config/optional/' . $config_id .'.yml';
+  $data = \Symfony\Component\Yaml\Yaml::parseFile($config_path);
+  \Drupal::configFactory()->getEditable($config_id)->setData($data)->save(TRUE);
+}
