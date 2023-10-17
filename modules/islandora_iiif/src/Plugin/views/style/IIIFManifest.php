@@ -146,6 +146,7 @@ class IIIFManifest extends StylePluginBase {
     $this->messenger = $messenger;
     $this->utils = $utils;
     $this->moduleHandler = $moduleHandler;
+    $this->utils = $utils;
   }
 
   /**
@@ -213,6 +214,11 @@ class IIIFManifest extends StylePluginBase {
           $label = $this->t("IIIF Manifest");
       }
 
+      /**
+       * @var \Drupal\taxonomy\TermInterface|null
+      */
+      $structured_text_term = $this->utils->getTermForUri($this->options['structured_text_term_uri']);
+
       // @see https://iiif.io/api/presentation/2.1/#manifest
       $json += [
         '@type' => 'sc:Manifest',
@@ -232,7 +238,7 @@ class IIIFManifest extends StylePluginBase {
       // For each row in the View result.
       foreach ($this->view->result as $row) {
         // Add the IIIF URL to the image to print out as JSON.
-        $canvases = $this->getTileSourceFromRow($row, $iiif_address, $iiif_base_id);
+        $canvases = $this->getTileSourceFromRow($row, $iiif_address, $iiif_base_id, $structured_text_term);
         foreach ($canvases as $tile_source) {
           $json['sequences'][0]['canvases'][] = $tile_source;
         }
@@ -261,11 +267,13 @@ class IIIFManifest extends StylePluginBase {
    * @param string $iiif_base_id
    *   The URL for the request, minus the last part of the URL,
    *   which is likely "manifest".
+   * @param \Drupal\taxonomy\TermInterface|null $structured_text_term
+   *   The term that structured text media references, if any.
    *
    * @return array
    *   List of IIIF URLs to display in the Openseadragon viewer.
    */
-  protected function getTileSourceFromRow(ResultRow $row, $iiif_address, $iiif_base_id) {
+  protected function getTileSourceFromRow(ResultRow $row, $iiif_address, $iiif_base_id, $structured_text_term) {
     $canvases = [];
     foreach (array_filter(array_values($this->options['iiif_tile_field'])) as $iiif_tile_field) {
       $viewsField = $this->view->field[$iiif_tile_field];
