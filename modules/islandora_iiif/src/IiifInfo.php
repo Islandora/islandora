@@ -5,6 +5,8 @@ namespace Drupal\islandora_iiif;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\file\FileInterface;
+use Drupal\jwt\Authentication\Provider\JwtAuth;
+
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
@@ -36,6 +38,13 @@ class IiifInfo {
    */
   protected $iiifConfig;
 
+/**
+ * JWT Auth provider service.
+ *
+ * @var \Drupal\jwt\Authentication\Provider\JwtAuth
+ */
+  protected $jwtAuth;
+
   /**
    * The logger.
    *
@@ -53,13 +62,16 @@ class IiifInfo {
    * The HTTP Client.
    * @param \Drupal\Core\Logger\LoggerChannelInterface $channel
    *   Logger channel.
+   * @param \Drupal\jwt\Authentication\Provider\JwtAuth $jwt_auth
+   * The JWT auth provider.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, Client $http_client, LoggerChannelInterface $channel) {
+  public function __construct(ConfigFactoryInterface $config_factory, Client $http_client, LoggerChannelInterface $channel, JwtAuth $jwt_auth) {
     $this->configFactory = $config_factory;
 
     $this->iiifConfig= $this->configFactory->get('islandora_iiif.settings');
     $this->httpClient = $http_client;
     $this->logger = $channel;
+    $this->jwtAuth = $jwt_auth;
   }
 
   /**
@@ -95,7 +107,11 @@ class IiifInfo {
   public function getImageDimensions(FileInterface $file) {
     $iiif_url = $this->baseUrl($file);
     try {
-      $info_json = $this->httpClient->get($iiif_url)->getBody();
+      $info_json = $this->httpClient->request('get', $iiif_url, [
+        'headers' => [
+            'Authorization' => 'bearer ' . $this->jwtAuth->generateToken()
+            ]
+        ])->getBody();
       $resource = json_decode($info_json, TRUE);
       $width = $resource['width'];
       $height = $resource['height'];
