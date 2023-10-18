@@ -5,6 +5,6 @@ dependencies:
     - islandora_iiif
 id: media_attributes_from_iiif_action
 label: 'Media attributes from IIIF'
-type: media
+type: node
 plugin: islandora_iiif:media_attributes_from_iiif_action:media
 configuration: {  }
