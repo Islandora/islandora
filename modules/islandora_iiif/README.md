@@ -38,6 +38,21 @@ This module implements a Views Style plugin. It provides the following settings:
 
 1. Tile Source: A field that was added to the views list of fields with the image to be served. This should be a File or Image type field on a Media.
 2. Structured Text field: This lets you specify a file field   where OCR text with positional data, e.g., hOCR can be found.
+
+### Media Attributes from IIIF Action
+
+The module also provides an action that lets a site owner populate a TIFF or JP2 image's width and
+height attributes into fields so the IIIF server is not bogged down trying to generate a manifest if
+it doesn't have them.
+
+To use it, either:
+
+- Add it as a derivative reaction to a node with an Original FIle as its child, or
+- Use it as a batch action, such as on a Paged Content object's list of child pages.
+
+The action assumes the media type has fields with machine names of field_height and
+field_width. Making this configurable would mean they would not appear
+on entity list pages.
 ## Documentation
 
 Official documentation is available on the [Islandora 8 documentation site](https://islandora.github.io/documentation/).
