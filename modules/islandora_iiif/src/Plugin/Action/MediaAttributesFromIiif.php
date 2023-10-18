@@ -4,20 +4,15 @@ namespace Drupal\islandora_iiif\Plugin\Action;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Action\Plugin\Action\SaveAction;
-use Drupal\Core\Config\ImmutableConfig;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\file\FileInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\islandora\IslandoraUtils;
 use Drupal\islandora\MediaSource\MediaSourceService;
 use Drupal\islandora_iiif\IiifInfo;
-use Drupal\media\MediaInterface;
-use Drupal\node\NodeInterface;
 use GuzzleHttp\Client;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Provides an action that can save any entity.
  *
@@ -30,18 +25,18 @@ use Symfony\Component\HttpFoundation\Request;
 class MediaAttributesFromIiif extends SaveAction {
 
   /**
-   * The HTTP client
+   * The HTTP client.
    *
-   * @var \GuzzleHttp\Client;
+   * @var \GuzzleHttp\Client
    */
   protected $httpClient;
 
-/**
- * The IIIF Info service.
- *
- * @var IiifInfo
- */
-protected $iiifInfo;
+  /**
+   * The IIIF Info service.
+   *
+   * @var \Drupal\islandora_iiif\IiifInfo
+   */
+  protected $iiifInfo;
 
   /**
    * The logger.
@@ -50,7 +45,7 @@ protected $iiifInfo;
    */
   protected $logger;
 
-    /**
+  /**
    * Islandora utility functions.
    *
    * @var \Drupal\islandora\IslandoraUtils
@@ -76,14 +71,15 @@ protected $iiifInfo;
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Component\Datetime\TimeInterface $time
-   * @param
    *   The time service.
    * @param \Guzzle\Http\Client $http_client
-   * The HTTP Client.
-   * @param IiifInfo $iiif_info
-   * The IIIF INfo service.
+   *   The HTTP Client.
+   * @param \Drupal\islandora_iiif\IiifInfo $iiif_info
+   *   The IIIF INfo service.
+   * @param \Drupal\islandora\IslandoraUtils $islandora_utils
+   *   Islandora utility functions.
    * @param \Drupal\islandora\MediaSource\MediaSourceService $media_source
-   *   Media source service.
+   *   Islandora media service.
    * @param \Drupal\Core\Logger\LoggerChannelInterface $channel
    *   Logger channel.
    */
@@ -91,10 +87,10 @@ protected $iiifInfo;
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $time);
 
     $this->httpClient = $http_client;
-$this->iiifInfo = $iiif_info;
-$this->utils = $islandora_utils;
-$this->mediaSource = $media_source;
-$this->logger = $channel;
+    $this->iiifInfo = $iiif_info;
+    $this->utils = $islandora_utils;
+    $this->mediaSource = $media_source;
+    $this->logger = $channel;
   }
 
   /**
@@ -118,7 +114,7 @@ $this->logger = $channel;
   /**
    * {@inheritdoc}
    */
-  public function execute($entity = NULL ) {
+  public function execute($entity = NULL) {
     $width = $height = FALSE;
 
     // Get the original File media use term.
@@ -130,22 +126,22 @@ $this->logger = $channel;
     $original_file_mids = $this->utils->getMediaReferencingNodeAndTerm($entity, $original_file_term);
     if (!empty($original_file_mids)) {
 
-      // Ordinarily there shouldn't be more than one Original File media but it's not guaranteed.
-      foreach($original_file_mids as $original_file_mid) {
+      // Ordinarily there shouldn't be more than one Original File media but
+      // it's not guaranteed.
+      foreach ($original_file_mids as $original_file_mid) {
 
-        /*
-        * @var \Drupal\Media\MediaInterface  $original_file_media
-        */
+        /**
+         * @var \Drupal\Media\MediaInterface  $original_file_media
+         */
         $original_file_media = $this->entityTypeManager->getStorage('media')->load($original_file_mid);
 
-        // Get the media MIME Type
+        // Get the media MIME Type.
         $original_file = $this->mediaSource->getSourceFile($original_file_media);
         $mime_type = $original_file->getMimeType();
 
         if (in_array($mime_type, ['image/tiff', 'image/jp2'])) {
           [$width, $height] = $this->iiifInfo->getImageDimensions($original_file);
         }
-
 
         // @todo Make field configurable. Low priority since this whole thing is a workaround for an Islandora limitation.
         if ($original_file_media->hasField('field_width') && $original_file_media->hasField('field_height')) {
@@ -166,4 +162,4 @@ $this->logger = $channel;
     return $object->access('update', $account, $return_as_object);
   }
 
-  }
+}
