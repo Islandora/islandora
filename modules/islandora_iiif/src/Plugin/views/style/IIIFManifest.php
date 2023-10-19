@@ -6,24 +6,19 @@ use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Field\FieldItemInterface;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
-use Drupal\iiif_presentation_api\Encoder\V3\IiifP;
 use Drupal\islandora\IslandoraUtils;
-use Drupal\islandora_iiif\IiiffInfo;
 use Drupal\islandora_iiif\IiifInfo;
 use Drupal\views\Plugin\views\style\StylePluginBase;
 use Drupal\views\ResultRow;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ConnectException;
-use GuzzleHttp\Exception\ServerException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Provide serializer format for IIIF Manifest.
@@ -74,7 +69,7 @@ class IIIFManifest extends StylePluginBase {
   /**
    * The IIIF Info service.
    *
-   * @var IiifInfo
+   * @var \Drupal\islandora_iiif\IiifInfo
    */
   protected $iiifInfo;
 
@@ -347,14 +342,16 @@ class IIIFManifest extends StylePluginBase {
     if (isset($image->width) && is_numeric($image->width)
     && isset($image->height) && is_numeric($image->height)) {
       return [intval($image->width),
-        intval($image->height)];
+        intval($image->height),
+      ];
     }
 
     if ($properties = $image->getProperties()
       && isset($properties['width']) && is_numeric($properties['width'])
       && isset($properties['height']) && is_numeric($properties['width'])) {
       return [intval($properties['width']),
-        intval($properties['height'])];
+        intval($properties['height']),
+      ];
     }
 
     $entity = $image->entity;
@@ -363,8 +360,9 @@ class IIIFManifest extends StylePluginBase {
       && $entity->hasField('field_width')
       && !$entity->get('field_width')->isEmpty()
       && $entity->get('field_width')->value > 0) {
-        return [ $entity->get('field_width')->value,
-       $entity->get('field_height')->value];
+      return [$entity->get('field_width')->value,
+        $entity->get('field_height')->value,
+      ];
     }
 
     if ($mime_type === 'image/tiff') {
@@ -376,7 +374,8 @@ class IIIFManifest extends StylePluginBase {
         $image_size = getimagesize($path);
         if ($image_size) {
           return [intval($image_size[0]),
-            intval($image_size[1])];
+            intval($image_size[1]),
+          ];
         }
       }
     }
@@ -398,8 +397,8 @@ class IIIFManifest extends StylePluginBase {
    *   The entity at the current row.
    * @param \Drupal\taxonomy\TermInterface|null $structured_text_term
    *   The term that structured text media references, if any.
-  *
-   * return String|FALSE
+   *
+   *   return String|FALSE
    *   The absolute URL of the current row's structured text,
    *   or FALSE if none.
    */
@@ -412,7 +411,7 @@ class IIIFManifest extends StylePluginBase {
       $ocr_field_name = $ocrField->definition['field_name'];
       if (!is_null($ocr_field_name)) {
         $ocrs = $ocr_entity->{$ocr_field_name};
-        $ocr = isset($ocrs[0]) ? $ocrs[0] : FALSE;
+        $ocr = $ocrs[0] ?? FALSE;
         $ocr_url = $ocr->entity->createFileUrl(FALSE);
       }
     }
@@ -554,14 +553,13 @@ class IIIFManifest extends StylePluginBase {
 
   /**
    * Submit handler for options form.
+   *
    * Used to store the structured text media term by URL instead of Ttid.
    *
    * @param array $form
-   * The form.
+   *   The form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
-   * The form state object.
-   *
-   * @return void
+   *   The form state object.
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     $style_options = $form_state->getValue('style_options');
