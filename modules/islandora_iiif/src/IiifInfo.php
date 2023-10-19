@@ -25,24 +25,24 @@ class IiifInfo {
 
 
   /**
-   * The HTTP client
+   * The HTTP client.
    *
-   * @var \GuzzleHttp\Client;
+   * @var \GuzzleHttp\Client
    */
   protected $httpClient;
 
-/**
+  /**
    * This module's config.
    *
    * @var \Drupal\Core\Config\ImmutableConfig
    */
   protected $iiifConfig;
 
-/**
- * JWT Auth provider service.
- *
- * @var \Drupal\jwt\Authentication\Provider\JwtAuth
- */
+  /**
+   * JWT Auth provider service.
+   *
+   * @var \Drupal\jwt\Authentication\Provider\JwtAuth
+   */
   protected $jwtAuth;
 
   /**
@@ -52,23 +52,22 @@ class IiifInfo {
    */
   protected $logger;
 
-
   /**
    * Constructs an IiifInfo object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Guzzle\Http\Client $http_client
-   * The HTTP Client.
+   *   The HTTP Client.
    * @param \Drupal\Core\Logger\LoggerChannelInterface $channel
    *   Logger channel.
    * @param \Drupal\jwt\Authentication\Provider\JwtAuth $jwt_auth
-   * The JWT auth provider.
+   *   The JWT auth provider.
    */
   public function __construct(ConfigFactoryInterface $config_factory, Client $http_client, LoggerChannelInterface $channel, JwtAuth $jwt_auth) {
     $this->configFactory = $config_factory;
 
-    $this->iiifConfig= $this->configFactory->get('islandora_iiif.settings');
+    $this->iiifConfig = $this->configFactory->get('islandora_iiif.settings');
     $this->httpClient = $http_client;
     $this->logger = $channel;
     $this->jwtAuth = $jwt_auth;
@@ -76,10 +75,11 @@ class IiifInfo {
 
   /**
    * The IIIF base URL for an image.
+   *
    * Visiting this URL will resolve to the info.json for the image.
    *
    * @return string
-   * The absolute URL on the IIIF server.
+   *   The absolute URL on the IIIF server.
    */
   public function baseUrl($image) {
 
@@ -101,7 +101,8 @@ class IiifInfo {
    *
    * @param \Drupal\File\FileInterface $file
    *   The image file.
-   * @return array|FALSE
+   *
+   * @return array|false
    *   The image dimensions in an array as [$width, $height]
    */
   public function getImageDimensions(FileInterface $file) {
@@ -109,9 +110,9 @@ class IiifInfo {
     try {
       $info_json = $this->httpClient->request('get', $iiif_url, [
         'headers' => [
-            'Authorization' => 'bearer ' . $this->jwtAuth->generateToken()
-            ]
-        ])->getBody();
+          'Authorization' => 'bearer ' . $this->jwtAuth->generateToken(),
+        ],
+      ])->getBody();
       $resource = json_decode($info_json, TRUE);
       $width = $resource['width'];
       $height = $resource['height'];
@@ -124,6 +125,5 @@ class IiifInfo {
     }
     return FALSE;
   }
-
 
 }
