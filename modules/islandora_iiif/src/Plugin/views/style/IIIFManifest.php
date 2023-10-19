@@ -561,7 +561,9 @@ class IIIFManifest extends StylePluginBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state object.
    */
+  // @codingStandardsIgnoreStart
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
+    // @codingStandardsIgnoreEnd
     $style_options = $form_state->getValue('style_options');
     $tid = $style_options['structured_text_term'];
     $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($tid);
