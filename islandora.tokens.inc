@@ -188,4 +188,5 @@ function islandora_url_to_service_file_media_by_mimetype($node, $mime_type) {
       }
     }
   }
+  return '';
 }
