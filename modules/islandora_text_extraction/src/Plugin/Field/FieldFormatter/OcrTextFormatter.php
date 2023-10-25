@@ -132,8 +132,9 @@ class OcrTextFormatter extends FormatterBase implements ContainerFactoryPluginIn
     $fileItem = $item->getValue();
     $file = $this->entityTypeManager->getStorage('file')->load($fileItem['target_id']);
     $contents = file_get_contents($file->getFileUri());
-    if (mb_detect_encoding($contents) != 'UTF-8') {
-      $contents = utf8_encode($contents);
+    $detected_encoding = mb_detect_encoding($contents);
+    if ($detected_encoding != 'UTF-8') {
+      $contents = mb_convert_encoding($contents, 'UTF-8', $detected_encoding);
     }
     $contents = nl2br($contents);
     return $contents;
