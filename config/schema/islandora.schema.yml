@@ -26,9 +26,6 @@ islandora.settings:
     upload_form_allowed_mimetypes:
       type: string
       label: 'Upload Form Allowed Extensions'
-    gemini_url:
-      type: uri
-      label: 'Url to Gemini microservice'
     gemini_pseudo_bundles:
       type: sequence
       label: 'List of node, media and taxonomy terms that should include the linked Fedora URI'
