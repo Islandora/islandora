@@ -49,7 +49,7 @@ class EventGeneratorTest extends IslandoraKernelTestBase {
 
     $test_type = NodeType::create([
       'type' => 'test_type',
-      'label' => 'Test Type',
+      'name' => 'Test Type',
     ]);
     $test_type->save();
 
