@@ -32,6 +32,7 @@ class JsonldTypeAlterReactionTest extends JsonldSelfReferenceReactionTest {
         'label' => 'Typed Predicate',
         'field_name' => 'type_predicate',
       ], 'Save and continue');
+      $this->submitForm([], $this->t('Save field settings'));
     }
     else {
       $this->submitForm([
@@ -40,7 +41,6 @@ class JsonldTypeAlterReactionTest extends JsonldSelfReferenceReactionTest {
         'field_name' => 'type_predicate',
       ], 'Continue');
     }
-    $this->submitForm([], $this->t('Save field settings'));
     $this->submitForm([], $this->t('Save settings'));
     $this->assertSession()->responseContains('field_type_predicate');
 
