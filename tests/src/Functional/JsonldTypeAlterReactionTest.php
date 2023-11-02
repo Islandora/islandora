@@ -39,6 +39,7 @@ class JsonldTypeAlterReactionTest extends JsonldSelfReferenceReactionTest {
         'new_storage_type' => 'plain_text',
         'label' => 'Typed Predicate',
         'field_name' => 'type_predicate',
+        'group_field_options_wrapper' => 'string',
       ], 'Continue');
     }
     $this->submitForm([], $this->t('Save settings'));
