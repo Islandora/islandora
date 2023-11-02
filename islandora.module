@@ -545,14 +545,14 @@ function islandora_object_delete_form_submit($form, FormStateInterface $form_sta
 }
 
 /**
- * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ * Implements hook_field_widget_single_element_WIDGET_TYPE_form_alter().
  */
-function islandora_field_widget_image_image_form_alter(&$element, $form_state, $context) {
+function islandora_field_widget_single_element_image_image_form_alter(&$element, $form_state, $context) {
   $element['#process'][] = 'islandora_add_default_image_alt_text';
 }
 
 /**
- * Callback for hook_field_widget_WIDGET_TYPE_form_alter().
+ * Callback for hook_field_widget_single_element_WIDGET_TYPE_form_alter().
  */
 function islandora_add_default_image_alt_text($element, $form_state, $form) {
   if ($element['alt']['#access']) {
