@@ -35,6 +35,7 @@ class JsonldTypeAlterReactionTest extends JsonldSelfReferenceReactionTest {
       $this->submitForm([], $this->t('Save field settings'));
     }
     else {
+      $this->click('#edit-new-storage-type--2');
       $this->submitForm([
         'new_storage_type' => 'plain_text',
         'label' => 'Typed Predicate',
