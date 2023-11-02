@@ -26,11 +26,20 @@ class JsonldTypeAlterReactionTest extends JsonldSelfReferenceReactionTest {
 
     // Add the typed predicate we will select in the reaction config.
     // Taken from FieldUiTestTrait->fieldUIAddNewField.
-    $this->submitForm([
-      'new_storage_type' => 'string',
-      'label' => 'Typed Predicate',
-      'field_name' => 'type_predicate',
-    ], 'Save and continue');
+    if (version_compare(\Drupal::VERSION, '10.2.0-dev', 'lt')) {
+      $this->submitForm([
+        'new_storage_type' => 'string',
+        'label' => 'Typed Predicate',
+        'field_name' => 'type_predicate',
+      ], 'Save and continue');
+    }
+    else {
+      $this->submitForm([
+        'new_storage_type' => 'string',
+        'label' => 'Typed Predicate',
+        'field_name' => 'type_predicate',
+      ], 'Continue');
+    }
     $this->submitForm([], $this->t('Save field settings'));
     $this->submitForm([], $this->t('Save settings'));
     $this->assertSession()->responseContains('field_type_predicate');
