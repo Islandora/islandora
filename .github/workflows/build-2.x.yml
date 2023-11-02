@@ -26,7 +26,7 @@ jobs:
         php-versions: ["8.1", "8.2"]
         # test-suite functional-javascript will appear to pass but will skip tests; missing chromedriver.
         test-suite: ["kernel", "functional", "functional-javascript"]
-        drupal-version: ["10.0.x", "10.1.x"] # Fails on 10.2 until https://github.com/Islandora/islandora/issues/989 is resolved.
+        drupal-version: ["10.0.x", "10.1.x", "10.2.x-dev"]
         mysql: ["8.0"]
         allowed_failure: [false]
 
