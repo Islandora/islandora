@@ -41,7 +41,7 @@ class JsonldTypeAlterReactionTest extends JsonldSelfReferenceReactionTest {
       // after we selected the radio button above
       // we can instead get the second element by submitting the form
       // and having it throw an error since the required field is missing.
-      // @todo: refactor this as a functional javascript test.
+      // @todo refactor this as a functional javascript test.
       $this->submitForm([
         'new_storage_type' => 'plain_text',
         'label' => 'Typed Predicate',
