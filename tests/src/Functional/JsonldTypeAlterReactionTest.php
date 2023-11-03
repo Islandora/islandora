@@ -35,13 +35,28 @@ class JsonldTypeAlterReactionTest extends JsonldSelfReferenceReactionTest {
       $this->submitForm([], $this->t('Save field settings'));
     }
     else {
-      $this->click('#edit-new-storage-type--2');
+      $this->getSession()->getPage()->selectFieldOption('new_storage_type', 'plain_text');
+      // first need to submit the form with the elements displayed on initial page load
+      // the form is using AJAX to send a second element after we selected the radio button above
+      // we can instead get the second element by submitting the form and having it throw an error
+      // since the required field is missing
+      // @TODO: refactor this as a functional javascript test maybe?
+      // though we currently don't have selenium running for our tests so not possible ATM
+      $this->submitForm([
+        'new_storage_type' => 'plain_text',
+        'label' => 'Typed Predicate',
+        'field_name' => 'type_predicate',
+      ], $this->t('Continue'));
+
+      // now we can proceed, selecting the plain text (i.e. string) for the second element
+      // now that the element is displayed after the initial form submission
+      $this->getSession()->getPage()->selectFieldOption('group_field_options_wrapper', 'string');
       $this->submitForm([
         'new_storage_type' => 'plain_text',
         'label' => 'Typed Predicate',
         'field_name' => 'type_predicate',
         'group_field_options_wrapper' => 'string',
-      ], 'Continue');
+      ], $this->t('Continue'));
     }
     $this->submitForm([], $this->t('Save settings'));
     $this->assertSession()->responseContains('field_type_predicate');
