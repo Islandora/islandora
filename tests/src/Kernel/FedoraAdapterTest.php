@@ -354,7 +354,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
 
     $metadata = $adapter->read('');
     $this->assertFileMetadata($metadata);
-    $this->assertTrue($metadata['contents'] == "DERP", "Expecting 'content' of 'DERP', received '${metadata['contents']}'");
+    $this->assertTrue($metadata['contents'] == "DERP", "Expecting 'content' of 'DERP', received '{$metadata['contents']}'");
   }
 
   /**
