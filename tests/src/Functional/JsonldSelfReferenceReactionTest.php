@@ -12,6 +12,13 @@ use function GuzzleHttp\json_decode;
  */
 class JsonldSelfReferenceReactionTest extends IslandoraFunctionalTestBase {
 
+	/**
+	 * An RDF Mapping object.
+	 *
+	 * @var \Drupal\rdf\Entity\RdfMapping
+	 */
+	protected $rdfMapping;
+
   /**
    * {@inheritdoc}
    */

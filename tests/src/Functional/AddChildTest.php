@@ -10,12 +10,18 @@ namespace Drupal\Tests\islandora\Functional;
 class AddChildTest extends IslandoraFunctionalTestBase {
 
   /**
+   * The taxonomy term representing "Collection" items.
+   *
+   * @var \Drupal\taxonomy\TermInterface
+   */
+  protected $collectionTerm;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp(): void {
     parent::setUp();
 
-    $this->parent =
     $this->collectionTerm = $this->container->get('entity_type.manager')->getStorage('taxonomy_term')->create([
       'name' => 'Collection',
       'vid' => $this->testVocabulary->id(),
