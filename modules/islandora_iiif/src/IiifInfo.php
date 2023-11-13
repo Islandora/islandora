@@ -110,7 +110,7 @@ class IiifInfo {
     try {
       $info_json = $this->httpClient->request('get', $iiif_url, [
         'headers' => [
-          'Authorization' => 'bearer ' . $this->jwtAuth->generateToken(),
+          'Authorization' => 'Bearer ' . $this->jwtAuth->generateToken(),
         ],
       ])->getBody();
       $resource = json_decode($info_json, TRUE);
