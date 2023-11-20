@@ -20,12 +20,22 @@ views.style.iiif_manifest:
       label: "Tile source field(s)"
       sequence:
         type: string
+<<<<<<< HEAD
     iiif_ocr_file_field:
       type: sequence
       label: "Structured OCR data file field"
       sequence:
         type: string
     structured_text_term_uri:
+=======
+      label: "Tile source field(s)"
+    iiif_ocr_file_field:
+      type: sequence
+      sequence:
+        type: string:
+      label: "IIIF hOCR file field"
+    structured_text_term:
+>>>>>>> ec29a45b (959-iiif-width-height-caching Islandora IIIF: Add search endpoint config to manifest.)
       type: string
       label: "Structured text term"
     search_endpoint:
