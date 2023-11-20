@@ -16,3 +16,15 @@ views.style.iiif_manifest:
       type: sequence
       sequence:
         type: string
+      label: "Tile source field(s)"
+    iiif_ocr_file_field:
+      type: sequence
+      sequence:
+        type: string:
+      label: "IIIF hOCR file field"
+    structured_text_term:
+      type: string
+      label: "Structured text term"
+    search_endpoint:
+      type: string
+      label: "Search endpoint path"
