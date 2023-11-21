@@ -57,7 +57,7 @@ class IslandoraImageFormatter extends ImageFormatter {
    *   The image style storage.
    * @param \Drupal\islandora\IslandoraUtils $utils
    *   Islandora utils.
-   * @param \Drupal\Core\File\FileUrlGenerator $file_url_generator
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    *   The File URL Generator.
    */
   public function __construct(
