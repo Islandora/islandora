@@ -189,7 +189,7 @@ class IIIFManifest extends StylePluginBase {
       /**
        * @var \Drupal\taxonomy\TermInterface|null
       */
-      $structured_text_term = $this->utils->getTermForUri($this->options['structured_text_term_uri']);
+      $structured_text_term = !empty($this->options['structured_text_term_uri']) ?$this->utils->getTermForUri($this->options['structured_text_term_uri']) : NULL;
 
       // @see https://iiif.io/api/presentation/2.1/#manifest
       $json += [
@@ -413,7 +413,9 @@ class IIIFManifest extends StylePluginBase {
       if (!is_null($ocr_field_name)) {
         $ocrs = $ocr_entity->{$ocr_field_name};
         $ocr = isset($ocrs[0]) ? $ocrs[0] : FALSE;
-        $ocr_url = $ocr->entity->createFileUrl(FALSE);
+        if ($ocr) {
+          $ocr_url = $ocr->entity->createFileUrl(FALSE);
+        }
       }
     }
     elseif ($structured_text_term) {
