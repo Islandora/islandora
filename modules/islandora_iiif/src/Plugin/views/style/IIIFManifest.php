@@ -343,7 +343,6 @@ class IIIFManifest extends StylePluginBase {
 
         // If this is a TIFF AND we don't know the width/height
         // see if we can get the image size via PHP's core function.
-
         if ($mime_type === 'image/tiff' && (!$width || !$height)) {
           $uri = $image->entity->getFileUri();
           $path = $this->fileSystem->realpath($uri);
