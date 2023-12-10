@@ -167,8 +167,8 @@ class IIIFManifest extends StylePluginBase {
       // @todo assumming the view is a path like /node/1/manifest.json
       $url_components = explode('/', trim($request_url, '/'));
       array_pop($url_components);
-      $content_path = implode('/', $url_components);
-      $iiif_base_id = $request_host . '/' . $content_path;
+      $content_path = '/' . implode('/', $url_components);
+      $iiif_base_id = "{$request_host}{$content_path}";
 
       // @see https://iiif.io/api/presentation/2.1/#manifest
       $json += [
