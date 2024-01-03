@@ -47,6 +47,11 @@ jobs:
           - 8161:8161
           - 61616:61616
           - 61613:61613
+      chrome:
+        image: drupalci/webdriver-chromedriver:production
+        ports:
+          - 9515:9515
+        options: --entrypoint 'chromedriver --log-path=/tmp/chromedriver.log --verbose --allowed-ips= --allowed-origins=*'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -117,6 +122,9 @@ jobs:
         run: $SCRIPT_DIR/travis_scripts.sh
 
       - name: PHPUNIT tests
+        env:
+          MINK_DRIVER_ARGS: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-gpu","--headless", "--no-sandbox", "--disable-dev-shm-usage"]}}, "http://chrome:9515"]'
+          MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-gpu","--headless", "--no-sandbox", "--disable-dev-shm-usage"]}}, "http://chrome:9515"]'
         run: |
           cd $DRUPAL_DIR/web/core
           $DRUPAL_DIR/vendor/bin/phpunit --verbose --testsuite "${{ matrix.test-suite }}"
