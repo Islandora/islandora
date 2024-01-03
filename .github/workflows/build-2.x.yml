@@ -51,7 +51,8 @@ jobs:
         image: drupalci/webdriver-chromedriver:production
         ports:
           - 9515:9515
-        options: --entrypoint 'chromedriver --log-path=/tmp/chromedriver.log --verbose --allowed-ips= --allowed-origins=*'
+        # XXX: Doesn't presently work; however, seems to represent the current default.
+        #options: --entrypoint 'chromedriver --log-path=/tmp/chromedriver.log --verbose --allowed-ips= --allowed-origins=*'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
