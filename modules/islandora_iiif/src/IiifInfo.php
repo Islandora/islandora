@@ -10,6 +10,7 @@ use Drupal\jwt\Authentication\Provider\JwtAuth;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\ServerException;
 
 /**
  * Get IIIF related info for a given File or Image entity.
@@ -120,7 +121,7 @@ class IiifInfo {
         return [intval($width), intval($height)];
       }
     }
-    catch (ClientException | ConnectException $e) {
+    catch (ClientException | ConnectException | ServerException $e) {
       $this->logger->info("Error getting image file dimensions from IIIF server: " . $e->getMessage());
     }
     return FALSE;
