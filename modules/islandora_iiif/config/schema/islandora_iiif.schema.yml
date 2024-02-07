@@ -38,6 +38,9 @@ views.style.iiif_manifest:
 >>>>>>> ec29a45b (959-iiif-width-height-caching Islandora IIIF: Add search endpoint config to manifest.)
       type: string
       label: "Structured text term"
+    getdimensions_from_sewrver:
+      type: boolean
+      label: "Retrieve image dimensions from IIIF server"
     search_endpoint:
       type: string
       label: "Search endpoint path"
