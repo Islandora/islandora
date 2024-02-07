@@ -272,6 +272,9 @@ $this->addSearchEndpoint($json, $url_components);
           $annotation_id = $iiif_base_id . '/annotation/' . $entity->id();
 
           [$width, $height] = $this->getCanvasDimensions($iiif_url, $image, $mime_type);
+          if ($width == 0) {
+            continue;
+          }
 
           $tmp_canvas = [
             // @see https://iiif.io/api/presentation/2.1/#canvas
@@ -385,9 +388,11 @@ $this->addSearchEndpoint($json, $url_components);
 
     // As a last resort, get it from the IIIF server.
     // This can be very slow and will fail if there are too many pages.
-    $dimensions = $this->iiifInfo->getImageDimensions($image->entity);
-    if ($dimensions !== FALSE) {
-      return $dimensions;
+    if ($this->options['get_dimensions_from_server']) {
+      $dimensions = $this->iiifInfo->getImageDimensions($image->entity);
+      if ($dimensions !== FALSE) {
+        return $dimensions;
+      }
     }
 
     return [0, 0];
@@ -558,6 +563,13 @@ $this->addSearchEndpoint($json, $url_components);
       '#default_value' => $this->utils->getTermForUri($this->options['structured_text_term_uri']),
       '#required' => FALSE,
       '#description' => $this->t('Term indicating the media that holds structured text, such as hOCR, for the given object. Use this if the text is on a separate media from the tile source.'),
+    ];
+
+    $form['get_dimensions_from_server'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t("Retrieve image dimensions from IIIF server"),
+      '#description' => $this->t("For TIFFs and JP2s, if the media doesn't have width and height values populated, as a last resort, retrieve the info from the IIIF server. This can be very slow and is not recommended."),
+      '#default_value' => $this->options['get_dimensions_from_server'],
     ];
 
     $form['search_endpoint'] = [
