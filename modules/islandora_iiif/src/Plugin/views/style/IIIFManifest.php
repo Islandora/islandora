@@ -11,6 +11,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
+use Drupal\media\Entity\Media;
 use Drupal\islandora\IslandoraUtils;
 use Drupal\islandora_iiif\IiifInfo;
 use Drupal\views\Plugin\views\style\StylePluginBase;
@@ -271,7 +272,7 @@ $this->addSearchEndpoint($json, $url_components);
           $canvas_id = $iiif_base_id . '/canvas/' . $entity->id();
           $annotation_id = $iiif_base_id . '/annotation/' . $entity->id();
 
-          [$width, $height] = $this->getCanvasDimensions($iiif_url, $image, $mime_type);
+          [$width, $height] = $this->getCanvasDimensions($iiif_url, $entity, $image, $mime_type);
           if ($width == 0) {
             continue;
           }
@@ -343,8 +344,21 @@ $this->addSearchEndpoint($json, $url_components);
    * @return [string]
    *   The width and height of the image.
    */
-  protected function getCanvasDimensions(string $iiif_url, FieldItemInterface $image, string $mime_type) {
+  protected function getCanvasDimensions(string $iiif_url, Media $media, FieldItemInterface $image, string $mime_type) {
 
+    // If the media has field_height and field_width, return those values.
+    if ($media->hasField('field_height')
+      && !$media->get('field_height')->isEmpty()
+      && $media->get('field_height')->value > 0
+      && $media->hasField('field_width')
+      && !$media->get('field_width')->isEmpty()
+      && $media->get('field_width')->value > 0) {
+      return [intval($media->get('field_width')->value),
+        intval($media->get('field_height')->value),
+      ];
+    }
+
+    // Otherwise start looking at the field/file level for the numbers.
     if (isset($image->width) && is_numeric($image->width)
     && isset($image->height) && is_numeric($image->height)) {
       return [intval($image->width),
@@ -388,11 +402,9 @@ $this->addSearchEndpoint($json, $url_components);
 
     // As a last resort, get it from the IIIF server.
     // This can be very slow and will fail if there are too many pages.
-    if ($this->options['get_dimensions_from_server']) {
-      $dimensions = $this->iiifInfo->getImageDimensions($image->entity);
-      if ($dimensions !== FALSE) {
-        return $dimensions;
-      }
+    $dimensions = $this->iiifInfo->getImageDimensions($image->entity);
+    if ($dimensions !== FALSE) {
+      return $dimensions;
     }
 
     return [0, 0];
@@ -563,13 +575,6 @@ $this->addSearchEndpoint($json, $url_components);
       '#default_value' => $this->utils->getTermForUri($this->options['structured_text_term_uri']),
       '#required' => FALSE,
       '#description' => $this->t('Term indicating the media that holds structured text, such as hOCR, for the given object. Use this if the text is on a separate media from the tile source.'),
-    ];
-
-    $form['get_dimensions_from_server'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t("Retrieve image dimensions from IIIF server"),
-      '#description' => $this->t("For TIFFs and JP2s, if the media doesn't have width and height values populated, as a last resort, retrieve the info from the IIIF server. This can be very slow and is not recommended."),
-      '#default_value' => $this->options['get_dimensions_from_server'],
     ];
 
     $form['search_endpoint'] = [
