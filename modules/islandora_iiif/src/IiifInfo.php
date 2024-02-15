@@ -98,7 +98,7 @@ class IiifInfo {
   }
 
   /**
-   * Retrieve an image's dimensions via the IIIF server.
+   * Retrieve an image's original dimensions via the IIIF server.
    *
    * @param \Drupal\File\FileInterface $file
    *   The image file.
@@ -125,6 +125,29 @@ class IiifInfo {
       $this->logger->info("Error getting image file dimensions from IIIF server: " . $e->getMessage());
     }
     return FALSE;
+  }
+
+/**
+   * The IIIF base URL for an image.
+   *
+   * Visiting this URL will resolve to the full image resized to the maximum dimensions given.
+   *
+   * @see https://iiif.io/api/image/2.1/
+   *
+   * @param Drupal\file\FileInterface $image
+   *   The image entity.
+   * @param int width
+   *   The maximum width of the image to be returned. 0 for no constraint.
+   * @param int $height
+   *   The maxim um height of the image to be returned. 0 for no contraint.
+   *
+   * @return string
+   *   The IIIF URl to retrieve the full image with the given max dimensions.
+   */
+  public function getImageWithMaxDimensions($image, $width = 0, $height = 0) {
+    $base_url = $this->baseUrl($image);
+    return $base_url . "/full/!$width,$height/0/default.jpg";
+
   }
 
 }
