@@ -423,7 +423,9 @@ class IIIFManifest extends StylePluginBase {
       if (!is_null($ocr_field_name)) {
         $ocrs = $ocr_entity->{$ocr_field_name};
         $ocr = $ocrs[0] ?? FALSE;
-        $ocr_url = $ocr->entity->createFileUrl(FALSE);
+        if ($ocr) {
+          $ocr_url = $ocr->entity->createFileUrl(FALSE);
+        }
       }
     }
     elseif ($structured_text_term = $this->getStructuredTextTerm()) {
