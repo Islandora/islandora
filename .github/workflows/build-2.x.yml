@@ -85,6 +85,7 @@ jobs:
           echo "SCRIPT_DIR=$GITHUB_WORKSPACE/islandora_ci" >> $GITHUB_ENV
           echo "DRUPAL_DIR=/opt/drupal" >> $GITHUB_ENV
           echo "PHPUNIT_FILE=$GITHUB_WORKSPACE/build_dir/phpunit.xml" >> $GITHUB_ENV
+          echo "MINK_DRIVER_ARGS_WEBDRIVER='["firefox", null, "${{ secrets.SELENIUM_URL }}"]'" >> $GITHUB_ENV
 
       - name: Cache Composer dependencies
         uses: actions/cache@v3
