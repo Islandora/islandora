@@ -17,6 +17,13 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
+    env:
+      DRUPAL_VERSION: ${{ matrix.drupal-version }}
+      SCRIPT_DIR: ${{ github.workspace }}/islandora_ci
+      DRUPAL_DIR: /opt/drupal
+      PHPUNIT_FILE: ${{ github.workspace }}/build_dir/phpunit.xml
+      MINK_DRIVER_ARGS_WEBDRIVER: '["firefox", null, "${{ secrets.SELENIUM_URL }}"]'
+
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.allowed_failure }}
@@ -32,7 +39,6 @@ jobs:
         exclude:
           - php-versions: "8.3"
             drupal-version: "10.1.x"
-
 
     name: PHP ${{ matrix.php-versions }} | drupal ${{ matrix.drupal-version }} | mysql ${{ matrix.mysql }} | test-suite ${{ matrix.test-suite }}
 
@@ -78,14 +84,6 @@ jobs:
           sudo apt-get update
           sudo apt-get remove -y mysql-client mysql-common
           sudo apt-get install -y mysql-client
-
-      - name: Set environment variables
-        run: |
-          echo "DRUPAL_VERSION=${{ matrix.drupal-version }}" >> $GITHUB_ENV
-          echo "SCRIPT_DIR=$GITHUB_WORKSPACE/islandora_ci" >> $GITHUB_ENV
-          echo "DRUPAL_DIR=/opt/drupal" >> $GITHUB_ENV
-          echo "PHPUNIT_FILE=$GITHUB_WORKSPACE/build_dir/phpunit.xml" >> $GITHUB_ENV
-          echo "MINK_DRIVER_ARGS_WEBDRIVER='[\"firefox\", null, \"${{ secrets.SELENIUM_URL }}\"]'" >> $GITHUB_ENV
 
       - name: Cache Composer dependencies
         uses: actions/cache@v3
