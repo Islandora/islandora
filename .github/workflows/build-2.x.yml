@@ -120,5 +120,6 @@ jobs:
 
       - name: PHPUNIT tests
         run: |
+          set -eou pipefail
           cd $DRUPAL_DIR/web/core
           $DRUPAL_DIR/vendor/bin/phpunit --verbose --testsuite "${{ matrix.test-suite }}"
