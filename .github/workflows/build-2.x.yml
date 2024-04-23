@@ -22,8 +22,9 @@ jobs:
       SCRIPT_DIR: ${{ github.workspace }}/islandora_ci
       DRUPAL_DIR: /opt/drupal
       PHPUNIT_FILE: ${{ github.workspace }}/build_dir/phpunit.xml
-      MINK_DRIVER_ARGS_WEBDRIVER: '["firefox", null, "http://localhost:4444/wd/hub"]'
+      MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-gpu","--headless", "--no-sandbox"]}}, "http://localhost:9515"]'
       SIMPLETEST_BASE_URL: http://host.docker.internal:8282
+
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.allowed_failure }}
@@ -56,11 +57,11 @@ jobs:
           - 8161:8161
           - 61616:61616
           - 61613:61613
-      selenium:
-        image: selenium/standalone-firefox:3.141
+      chromedriver:
+        image: drupalci/webdriver-chromedriver:production
         ports:
-          - 4444:4444
-        # selenium needs to access drupal running on the host
+          - 9515:9515
+        # chromedriver needs to access drupal running on the host
         options: --add-host=host.docker.internal:host-gateway
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -129,7 +130,7 @@ jobs:
           echo "127.0.0.1 host.docker.internal" | sudo tee -a /etc/hosts
       - name: PHPUNIT tests
         run: |
-          set -eou pipefail
           cd $DRUPAL_DIR/web/core
           $DRUPAL_DIR/vendor/bin/phpunit --verbose --testsuite "${{ matrix.test-suite }}"
-          docker logs $(docker container ls --format "{{.Names}}" | grep selenium)
+          docker logs $(docker container ls --format "{{.Names}}" | grep chromedriver)
+          drush watchdog:show
