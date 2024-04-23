@@ -14,7 +14,6 @@ jobs:
       SCRIPT_DIR: ${{ github.workspace }}/islandora_ci
       DRUPAL_DIR: /opt/drupal
       PHPUNIT_FILE: ${{ github.workspace }}/build_dir/phpunit.xml
-      MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-gpu","--headless", "--no-sandbox", "--disable-dev-shm-usage"]}}, "http://localhost:9515"]'
 
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.allowed_failure }}
@@ -110,7 +109,6 @@ jobs:
       - name: Start chromedriver
         if: matrix.test-suite == 'functional-javascript'
         run: |-
-          ls -l /usr/local/share/chromedriver-linux64
           /usr/local/share/chromedriver-linux64/chromedriver \
             --log-path=/tmp/chromedriver.log \
             --verbose \
