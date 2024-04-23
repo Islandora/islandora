@@ -146,8 +146,8 @@ class IntegerWeightTest extends WebDriverTestBase {
     $this->assertSession()->pageTextNotContains('You have unsaved changes.');
 
     // Drag and drop 'Item 1' over 'Item 2'.
-    $dragged = $this->xpath("//tr[@class='draggable'][1]//a[@class='tabledrag-handle']")[0];
-    $target = $this->xpath("//tr[@class='draggable'][2]//a[@class='tabledrag-handle']")[0];
+    $dragged = $this->xpath("//tr[contains(@class, 'draggable')][1]//a[contains(@class, 'tabledrag-handle')]")[0];
+    $target = $this->xpath("//tr[contains(@class, 'draggable')][2]//a[contains(@class, 'tabledrag-handle')]")[0];
     $dragged->dragTo($target);
 
     // Pause for javascript to do it's thing.
