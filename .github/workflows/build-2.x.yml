@@ -22,7 +22,7 @@ jobs:
       SCRIPT_DIR: ${{ github.workspace }}/islandora_ci
       DRUPAL_DIR: /opt/drupal
       PHPUNIT_FILE: ${{ github.workspace }}/build_dir/phpunit.xml
-      MINK_DRIVER_ARGS_WEBDRIVER: '["firefox", null, "${{ secrets.SELENIUM_URL }}"]'
+      MINK_DRIVER_ARGS_WEBDRIVER: '["firefox", null, "http://localhost:4444/wd/hub"]'
 
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -31,7 +31,6 @@ jobs:
       fail-fast: false
       matrix:
         php-versions: ["8.1", "8.2", "8.3"]
-        # test-suite functional-javascript will appear to pass but will skip tests; missing chromedriver.
         test-suite: ["kernel", "functional", "functional-javascript"]
         drupal-version: ["10.1.x", "10.2.x", "10.3.x-dev"]
         mysql: ["8.0"]
@@ -56,18 +55,24 @@ jobs:
           - 8161:8161
           - 61616:61616
           - 61613:61613
+      selenium:
+        image: selenium/standalone-firefox:3.141
+        ports:
+          - 4444:4444
+        # selenium needs to access drupal running on the host
+        options: --add-host localhost=host-gateway
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: build_dir
 
       - name: Checkout islandora_ci
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: islandora/islandora_ci
           ref: github-actions
