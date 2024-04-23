@@ -32,13 +32,13 @@ class JsonldTypeAlterReactionTest extends JsonldSelfReferenceReactionTest {
         'label' => 'Typed Predicate',
         'field_name' => 'type_predicate',
       ], 'Save and continue');
-      $this->submitForm([], $this->t('Save field settings'));
+      $this->submitForm([], 'Save field settings');
     }
-    else {
+    elseif (version_compare(\Drupal::VERSION, '10.3.x-dev', 'lt')) {
       $this->getSession()->getPage()->selectFieldOption('new_storage_type', 'plain_text');
-      // First need to submit the form with the elements displayed
-      // on initial page load. The form is using AJAX to send a second element
-      // after we selected the radio button above
+      // For Drupal 10.2, we first need to submit the form with the elements
+      // displayed on initial page load. The form is using AJAX to send a
+      // second element after we selected the radio button above
       // we can instead get the second element by submitting the form
       // and having it throw an error since the required field is missing.
       // @todo refactor this as a functional javascript test.
@@ -46,7 +46,7 @@ class JsonldTypeAlterReactionTest extends JsonldSelfReferenceReactionTest {
         'new_storage_type' => 'plain_text',
         'label' => 'Typed Predicate',
         'field_name' => 'type_predicate',
-      ], $this->t('Continue'));
+      ], 'Continue');
 
       // Now we can proceed, selecting the plain text (i.e. string)
       // for the second element now that the element is displayed after
@@ -57,16 +57,34 @@ class JsonldTypeAlterReactionTest extends JsonldSelfReferenceReactionTest {
         'label' => 'Typed Predicate',
         'field_name' => 'type_predicate',
         'group_field_options_wrapper' => 'string',
-      ], $this->t('Continue'));
+      ], 'Continue');
     }
-    $this->submitForm([], $this->t('Save settings'));
+    else {
+      $this->getSession()->getPage()->selectFieldOption('new_storage_type', 'plain_text');
+      // For Drupal 10.3 the label is not visible at first.
+      // @todo refactor this as a functional javascript test.
+      $this->submitForm([
+        'new_storage_type' => 'plain_text',
+      ], 'Continue');
+
+      // Now we can proceed, entering a label and selecting Text (plain)
+      // for the second element now that the elements are displayed after
+      // the initial form submission.
+      $this->getSession()->getPage()->selectFieldOption('group_field_options_wrapper', 'string');
+      $this->submitForm([
+        'label' => 'Typed Predicate',
+        'field_name' => 'type_predicate',
+        'group_field_options_wrapper' => 'string',
+      ], 'Continue');
+    }
+    $this->submitForm([], 'Save settings');
     $this->assertSession()->responseContains('field_type_predicate');
 
     // Add the test node.
     $this->postNodeAddForm('test_type', [
       'title[0][value]' => 'Test Node',
       'field_type_predicate[0][value]' => 'schema:Organization',
-    ], $this->t('Save'));
+    ], 'Save');
     $this->assertSession()->pageTextContains("Test Node");
     $url = $this->getUrl();
 
@@ -103,7 +121,7 @@ class JsonldTypeAlterReactionTest extends JsonldSelfReferenceReactionTest {
     $this->addCondition('test', 'islandora_entity_bundle');
     $this->getSession()->getPage()->checkField("edit-conditions-islandora-entity-bundle-bundles-test-type");
     $this->getSession()->getPage()->findById("edit-conditions-islandora-entity-bundle-context-mapping-node")->selectOption("@node.node_route_context:node");
-    $this->getSession()->getPage()->pressButton($this->t('Save and continue'));
+    $this->getSession()->getPage()->pressButton('Save and continue');
 
     // The first time a Context is saved, you need to clear the cache.
     // Subsequent changes to the context don't need a cache rebuild, though.

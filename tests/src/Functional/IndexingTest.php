@@ -66,7 +66,7 @@ class IndexingTest extends IslandoraFunctionalTestBase {
     $this->drupalGet("$url/delete");
 
     // Delete the node.
-    $this->submitForm([], $this->t('Delete'));
+    $this->submitForm([], 'Delete');
     $this->assertSession()->statusCodeEquals(200);
 
     // Confirm Goodbye, Cruel World! is printed to the screen.

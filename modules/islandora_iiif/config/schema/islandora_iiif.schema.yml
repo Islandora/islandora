@@ -17,5 +17,17 @@ views.style.iiif_manifest:
   mapping:
     iiif_tile_field:
       type: sequence
+      label: "Tile source field(s)"
       sequence:
         type: string
+    iiif_ocr_file_field:
+      type: sequence
+      label: "Structured OCR data file field"
+      sequence:
+        type: string
+    structured_text_term_uri:
+      type: string
+      label: "Structured text term"
+    search_endpoint:
+      type: string
+      label: "Search endpoint path"

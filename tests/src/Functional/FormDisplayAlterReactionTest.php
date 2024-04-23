@@ -49,7 +49,7 @@ class FormDisplayAlterReactionTest extends IslandoraFunctionalTestBase {
 
     $this->drupalGet("admin/structure/context/test/reaction/add/form_display_alter");
     $this->getSession()->getPage()->findById("edit-reactions-form-display-alter-mode")->selectOption('node.secondary');
-    $this->getSession()->getPage()->pressButton($this->t('Save and continue'));
+    $this->getSession()->getPage()->pressButton('Save and continue');
     $this->assertSession()->statusCodeEquals(200);
 
     drupal_flush_all_caches();

@@ -142,7 +142,7 @@ class LinkHeaderTest extends IslandoraFunctionalTestBase {
     $media_url = $this->media->toUrl('canonical', ['absolute' => TRUE])->toString();
 
     // Perform a GET request as anonymous.
-    $this->drupalGet($media_url, [], ['Cache-Control: no-cache']);
+    $this->drupalGet($media_url, [], ['Cache-Control' => 'no-cache']);
     // Check link headers.
     $this->assertTrue(
       $this->validateLinkHeaderWithUrl('describes', $file_url, '', 'text/plain') == 1,
@@ -174,7 +174,7 @@ class LinkHeaderTest extends IslandoraFunctionalTestBase {
     $this->drupalLogin($account);
 
     // Perform a GET request with update media permissions.
-    $this->drupalGet($media_url, [], ['Cache-Control: no-cache']);
+    $this->drupalGet($media_url, [], ['Cache-Control' => 'no-cache']);
 
     // Check link headers again, the edit-media link header should be present.
     $this->assertTrue(
