@@ -61,7 +61,7 @@ jobs:
         ports:
           - 4444:4444
         # selenium needs to access drupal running on the host
-        options: --add-host=localhost:host-gateway
+        options: --add-host=host.docker.internal:host-gateway
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -124,6 +124,9 @@ jobs:
       - name: Test scripts
         run: $SCRIPT_DIR/travis_scripts.sh
 
+      - name: Add hosts to /etc/hosts
+        run: |
+          echo "127.0.0.1 host.docker.internal" | sudo tee -a /etc/hosts
       - name: PHPUNIT tests
         run: |
           set -eou pipefail
