@@ -18,8 +18,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     env:
-      SIMPLETEST_BASE_URL: http://127.0.0.1:8283
-      SIMPLETEST_DB: "sqlite://drupal:drupal@127.0.0.1/drupal"
+      SIMPLETEST_BASE_URL: http://host.docker.internal:8282
       DRUPAL_VERSION: ${{ matrix.drupal-version }}
       SCRIPT_DIR: ${{ github.workspace }}/islandora_ci
       DRUPAL_DIR: /opt/drupal
@@ -62,6 +61,7 @@ jobs:
         image: selenium/standalone-firefox:3.141
         ports:
           - 4444:4444
+        options: --add-host=host.docker.internal:host-gateway
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -126,11 +126,6 @@ jobs:
 
       - name: PHPUNIT tests
         run: |
-          cd $DRUPAL_DIR
-          cp web/sites/default/default.settings.php web/sites/default/settings.php
-          ./vendor/bin/drush si --db-url=sqlite://drupal:drupal@127.0.0.1:3306/drupal --yes
-          ./vendor/bin/drush runserver 127.0.0.1:8283 &
-          until curl -s 127.0.0.1:8283; do true; done > /dev/null
           cd $DRUPAL_DIR/web/core
           $DRUPAL_DIR/vendor/bin/phpunit --verbose --testsuite "${{ matrix.test-suite }}"
           if [ "${{ matrix.test-suite }}" = "functional-javascript" ]; then
