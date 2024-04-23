@@ -23,7 +23,7 @@ jobs:
       DRUPAL_DIR: /opt/drupal
       PHPUNIT_FILE: ${{ github.workspace }}/build_dir/phpunit.xml
       MINK_DRIVER_ARGS_WEBDRIVER: '["firefox", null, "http://localhost:4444/wd/hub"]'
-
+      SIMPLETEST_BASE_URL: http://host.docker.internal:8282
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.allowed_failure }}
