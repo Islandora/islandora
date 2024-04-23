@@ -18,6 +18,8 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     env:
+      SIMPLETEST_BASE_URL: http://127.0.0.1:8283
+      SIMPLETEST_DB: "sqlite://drupal:drupal@127.0.0.1/drupal"
       DRUPAL_VERSION: ${{ matrix.drupal-version }}
       SCRIPT_DIR: ${{ github.workspace }}/islandora_ci
       DRUPAL_DIR: /opt/drupal
@@ -124,6 +126,10 @@ jobs:
 
       - name: PHPUNIT tests
         run: |
+          cd $DRUPAL_DIR
+          ./vendor/bin/drush si --db-url=sqlite://drupal:drupal@127.0.0.1:3306/drupal --yes
+          ./vendor/bin/drush runserver 127.0.0.1:8283 &
+          until curl -s 127.0.0.1:8283; do true; done > /dev/null
           cd $DRUPAL_DIR/web/core
           $DRUPAL_DIR/vendor/bin/phpunit --verbose --testsuite "${{ matrix.test-suite }}"
           if [ "${{ matrix.test-suite }}" = "functional-javascript" ]; then
