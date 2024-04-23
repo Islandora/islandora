@@ -31,6 +31,7 @@ class IntegerWeightTest extends WebDriverTestBase {
     'views',
     'field_ui',
     'integer_weight_test_views',
+    'islandora',
   ];
 
   /**
@@ -83,24 +84,13 @@ class IntegerWeightTest extends WebDriverTestBase {
    */
   public function setUp(): void {
     parent::setUp();
+    $this->drupalCreateContentType([
+      'type' => 'repo_item',
+      'name' => 'Repository Item',
+    ]);
 
-    $this->adminUser = $this->drupalCreateUser(
-          [
-            'administer content types',
-            'administer node fields',
-            'administer node display',
-          ]
-    );
+    $this->drupalLogin($this->createUser(['edit any repo_item content'], 'test', TRUE));
 
-    // Create dummy repo_item type to sort (since we don't have
-    // repository_object without islandora_defaults).
-    $type = $this->container->get('entity_type.manager')->getStorage('node_type')
-      ->create([
-        'type' => 'repo_item',
-        'name' => 'Repository Item',
-      ]);
-    $type->save();
-    $this->container->get('router.builder')->rebuild();
 
     $fieldStorage = FieldStorageConfig::create([
       'field_name' => static::$fieldName,
@@ -132,9 +122,11 @@ class IntegerWeightTest extends WebDriverTestBase {
    * Test integer weight selector.
    */
   public function testIntegerWeightSelector() {
-    $this->drupalGet('test-integer-weight');
-    $page = $this->getSession()->getPage();
+    $web_assert = $this->assertSession();
+    $this->drupalGet('/test-integer-weight');
+    $web_assert->pageTextContains('Item 1');
 
+    $page = $this->getSession()->getPage();
     $weight_select1 = $page->findField("field_integer_weight[0][weight]");
     $weight_select2 = $page->findField("field_integer_weight[1][weight]");
     $weight_select3 = $page->findField("field_integer_weight[2][weight]");
