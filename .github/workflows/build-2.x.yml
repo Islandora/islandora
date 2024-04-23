@@ -127,6 +127,7 @@ jobs:
       - name: PHPUNIT tests
         run: |
           cd $DRUPAL_DIR
+          cp web/sites/default/default.settings.php web/sites/default/settings.php
           ./vendor/bin/drush si --db-url=sqlite://drupal:drupal@127.0.0.1:3306/drupal --yes
           ./vendor/bin/drush runserver 127.0.0.1:8283 &
           until curl -s 127.0.0.1:8283; do true; done > /dev/null
