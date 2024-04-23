@@ -60,7 +60,7 @@ jobs:
         ports:
           - 4444:4444
         # selenium needs to access drupal running on the host
-        options: --add-host localhost=host-gateway
+        options: --add-host=localhost:host-gateway
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
