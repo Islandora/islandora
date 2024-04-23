@@ -113,6 +113,7 @@ jobs:
           CHROMEDRIVER_URL=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json"| jq -r '.channels.Stable.downloads.chromedriver[]| select(.platform == "linux64") | .url')
           curl -s -o ./chromedriver_linux64.zip $CHROMEDRIVER_URL
           unzip chromedriver_linux64.zip
+          cd chromedriver-linux64
           ./chromedriver \
             --log-path=/tmp/chromedriver.log \
             --verbose \
