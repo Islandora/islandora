@@ -22,7 +22,7 @@ jobs:
       SCRIPT_DIR: ${{ github.workspace }}/islandora_ci
       DRUPAL_DIR: /opt/drupal
       PHPUNIT_FILE: ${{ github.workspace }}/build_dir/phpunit.xml
-      MINK_DRIVER_ARGS_WEBDRIVER: '["firefox", null, "http://localhost:4444/wd/hub"]'
+      MINK_DRIVER_ARGS_WEBDRIVER: '["firefox", null, "http://127.0.0.1:4444/wd/hub"]'
 
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
