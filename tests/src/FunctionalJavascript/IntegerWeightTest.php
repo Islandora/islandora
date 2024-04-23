@@ -89,8 +89,8 @@ class IntegerWeightTest extends WebDriverTestBase {
       'name' => 'Repository Item',
     ]);
 
-    $this->drupalLogin($this->createUser(['edit any repo_item content'], 'test', TRUE));
-
+    $account = $this->createUser(['edit any repo_item content'], 'test', TRUE);
+    $this->drupalLogin($account);
 
     $fieldStorage = FieldStorageConfig::create([
       'field_name' => static::$fieldName,
