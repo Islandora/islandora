@@ -8,6 +8,7 @@ use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\Node;
+use Drupal\views\Tests\ViewTestData;
 
 /**
  * Test integer weight selector.
@@ -102,7 +103,7 @@ class IntegerWeightTest extends WebDriverTestBase {
     $this->container->get('router.builder')->rebuild();
 
     $fieldStorage = FieldStorageConfig::create([
-      'fieldName' => static::$fieldName,
+      'field_name' => static::$fieldName,
       'entity_type' => 'node',
       'type' => static::$fieldType,
     ]);
@@ -124,7 +125,7 @@ class IntegerWeightTest extends WebDriverTestBase {
       $this->nodes[] = $node;
     }
 
-    ViewsTestData::createTestViews(get_class($this), ['integer_weight_test_views']);
+    ViewTestData::createTestViews(get_class($this), ['integer_weight_test_views']);
   }
 
   /**
