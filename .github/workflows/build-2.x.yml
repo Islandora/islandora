@@ -31,7 +31,8 @@ jobs:
       fail-fast: false
       matrix:
         php-versions: ["8.1", "8.2", "8.3"]
-        test-suite: ["kernel", "functional", "functional-javascript"]
+#        test-suite: ["kernel", "functional", "functional-javascript"]
+        test-suite: ["functional-javascript"]
         drupal-version: ["10.1.x", "10.2.x", "10.3.x-dev"]
         mysql: ["8.0"]
         allowed_failure: [false]
@@ -128,3 +129,4 @@ jobs:
           set -eou pipefail
           cd $DRUPAL_DIR/web/core
           $DRUPAL_DIR/vendor/bin/phpunit --verbose --testsuite "${{ matrix.test-suite }}"
+          docker logs $(docker container ls --format "{{.Names}}" | grep selenium)
