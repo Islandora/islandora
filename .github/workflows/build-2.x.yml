@@ -110,7 +110,8 @@ jobs:
       - name: Start chromedriver
         if: matrix.test-suite == 'functional-javascript'
         run: |-
-          /usr/local/share/chromedriver-linux64 \
+          ls -l /usr/local/share/chromedriver-linux64
+          /usr/local/share/chromedriver-linux64/chromedriver \
             --log-path=/tmp/chromedriver.log \
             --verbose \
             --allowed-ips= \
