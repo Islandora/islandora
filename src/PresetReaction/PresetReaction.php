@@ -56,6 +56,9 @@ class PresetReaction extends ContextReactionPluginBase implements ContainerFacto
     $action_ids = $config['actions'];
     foreach ($action_ids as $action_id) {
       $action = $this->actionStorage->load($action_id);
+      if (empty($action)) {
+        continue;
+      }
       $action->execute([$entity]);
     }
   }
