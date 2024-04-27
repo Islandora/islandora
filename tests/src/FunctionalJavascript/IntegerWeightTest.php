@@ -8,6 +8,7 @@ use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\Node;
+use Drupal\views\Tests\ViewTestData;
 
 /**
  * Test integer weight selector.
@@ -30,6 +31,7 @@ class IntegerWeightTest extends WebDriverTestBase {
     'views',
     'field_ui',
     'integer_weight_test_views',
+    'islandora',
   ];
 
   /**
@@ -82,27 +84,16 @@ class IntegerWeightTest extends WebDriverTestBase {
    */
   public function setUp(): void {
     parent::setUp();
+    $this->drupalCreateContentType([
+      'type' => 'repo_item',
+      'name' => 'Repository Item',
+    ]);
 
-    $this->adminUser = $this->drupalCreateUser(
-          [
-            'administer content types',
-            'administer node fields',
-            'administer node display',
-          ]
-    );
-
-    // Create dummy repo_item type to sort (since we don't have
-    // repository_object without islandora_defaults).
-    $type = $this->container->get('entity_type.manager')->getStorage('node_type')
-      ->create([
-        'type' => 'repo_item',
-        'name' => 'Repository Item',
-      ]);
-    $type->save();
-    $this->container->get('router.builder')->rebuild();
+    $account = $this->createUser(['edit any repo_item content'], 'test', TRUE);
+    $this->drupalLogin($account);
 
     $fieldStorage = FieldStorageConfig::create([
-      'fieldName' => static::$fieldName,
+      'field_name' => static::$fieldName,
       'entity_type' => 'node',
       'type' => static::$fieldType,
     ]);
@@ -124,16 +115,18 @@ class IntegerWeightTest extends WebDriverTestBase {
       $this->nodes[] = $node;
     }
 
-    ViewsTestData::createTestViews(get_class($this), ['integer_weight_test_views']);
+    ViewTestData::createTestViews(get_class($this), ['integer_weight_test_views']);
   }
 
   /**
    * Test integer weight selector.
    */
   public function testIntegerWeightSelector() {
-    $this->drupalGet('test-integer-weight');
-    $page = $this->getSession()->getPage();
+    $web_assert = $this->assertSession();
+    $this->drupalGet('/test-integer-weight');
+    $web_assert->pageTextContains('Item 1');
 
+    $page = $this->getSession()->getPage();
     $weight_select1 = $page->findField("field_integer_weight[0][weight]");
     $weight_select2 = $page->findField("field_integer_weight[1][weight]");
     $weight_select3 = $page->findField("field_integer_weight[2][weight]");
@@ -153,8 +146,8 @@ class IntegerWeightTest extends WebDriverTestBase {
     $this->assertSession()->pageTextNotContains('You have unsaved changes.');
 
     // Drag and drop 'Item 1' over 'Item 2'.
-    $dragged = $this->xpath("//tr[@class='draggable'][1]//a[@class='tabledrag-handle']")[0];
-    $target = $this->xpath("//tr[@class='draggable'][2]//a[@class='tabledrag-handle']")[0];
+    $dragged = $this->xpath("//tr[contains(@class, 'draggable')][1]//a[contains(@class, 'tabledrag-handle')]")[0];
+    $target = $this->xpath("//tr[contains(@class, 'draggable')][2]//a[contains(@class, 'tabledrag-handle')]")[0];
     $dragged->dragTo($target);
 
     // Pause for javascript to do it's thing.

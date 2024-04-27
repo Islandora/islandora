@@ -27,7 +27,7 @@ class EntityBundleTest extends IslandoraFunctionalTestBase {
     $this->addCondition('test', 'islandora_entity_bundle');
     $this->getSession()->getPage()->checkField("edit-conditions-islandora-entity-bundle-bundles-test-type");
     $this->getSession()->getPage()->findById("edit-conditions-islandora-entity-bundle-context-mapping-node")->selectOption("@node.node_route_context:node");
-    $this->getSession()->getPage()->pressButton($this->t('Save and continue'));
+    $this->getSession()->getPage()->pressButton('Save and continue');
     $this->addPresetReaction('test', 'index', 'hello_world');
 
     // Create a new test_type confirm Hello World! is printed to the screen.

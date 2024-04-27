@@ -306,7 +306,7 @@ EOD;
       ->getPage()
       ->findById("edit-reactions-$reaction_type-actions")
       ->selectOption($action_id);
-    $this->getSession()->getPage()->pressButton($this->t('Save and continue'));
+    $this->getSession()->getPage()->pressButton('Save and continue');
     $this->assertSession()->statusCodeEquals(200);
   }
 
@@ -315,7 +315,7 @@ EOD;
    */
   protected function postNodeAddForm($bundle_id, $values, $button_text) {
     $this->drupalGet("node/add/$bundle_id");
-    $this->submitForm($values, $this->t('@text', ['@text' => $button_text]));
+    $this->submitForm($values, $button_text);
     $this->assertSession()->statusCodeEquals(200);
   }
 
@@ -324,7 +324,7 @@ EOD;
    */
   protected function postTermAddForm($taxomony_id, $values, $button_text) {
     $this->drupalGet("admin/structure/taxonomy/manage/$taxomony_id/add");
-    $this->submitForm($values, $this->t('@text', ['@text' => $button_text]));
+    $this->submitForm($values, $button_text);
     $this->assertSession()->statusCodeEquals(200);
   }
 
@@ -333,7 +333,7 @@ EOD;
    */
   protected function postEntityEditForm($entity_url, $values, $button_text) {
     $this->drupalGet("$entity_url/edit");
-    $this->submitForm($values, $this->t('@text', ['@text' => $button_text]));
+    $this->submitForm($values, $button_text);
     $this->assertSession()->statusCodeEquals(200);
   }
 

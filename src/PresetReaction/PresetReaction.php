@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -22,11 +23,19 @@ class PresetReaction extends ContextReactionPluginBase implements ContainerFacto
   protected $actionStorage;
 
   /**
+   * The logger.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $action_storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $action_storage, LoggerInterface $logger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->actionStorage = $action_storage;
+    $this->logger = $logger;
   }
 
   /**
@@ -37,7 +46,8 @@ class PresetReaction extends ContextReactionPluginBase implements ContainerFacto
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_type.manager')->getStorage('action')
+      $container->get('entity_type.manager')->getStorage('action'),
+      $container->get('logger.factory')->get('islandora')
     );
   }
 
@@ -56,7 +66,20 @@ class PresetReaction extends ContextReactionPluginBase implements ContainerFacto
     $action_ids = $config['actions'];
     foreach ($action_ids as $action_id) {
       $action = $this->actionStorage->load($action_id);
-      $action->execute([$entity]);
+      if (empty($action)) {
+        $this->logger->warning('Action "@action" not found.', ['@action' => $action_id]);
+        continue;
+      }
+      try {
+        $action->execute([$entity]);
+      }
+      catch (\Exception $e) {
+        $this->logger->error('Error executing action "@action" on entity "@entity": @message', [
+          '@action' => $action->label(),
+          '@entity' => $entity->label(),
+          '@message' => $e->getMessage(),
+        ]);
+      }
     }
   }
 

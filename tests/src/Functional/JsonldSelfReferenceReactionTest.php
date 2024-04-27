@@ -60,7 +60,7 @@ class JsonldSelfReferenceReactionTest extends IslandoraFunctionalTestBase {
 
     $this->postNodeAddForm('test_type',
       ['title[0][value]' => 'Test Node'],
-      $this->t('Save'));
+      'Save');
     $this->assertSession()->pageTextContains("Test Node");
     $url = $this->getUrl();
 
