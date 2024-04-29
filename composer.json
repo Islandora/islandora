@@ -18,7 +18,7 @@
     "drupal/ctools": "^3.8 || ^4",
     "drupal/eva" : "^3.0",
     "drupal/file_replace": "^1.1",
-    "drupal/filehash": "^2",
+    "drupal/filehash": "^2 || ^3",
     "drupal/flysystem" : "^2.0@alpha",
     "drupal/jwt": "^1.1 || ^2",
     "drupal/migrate_plus" : "^5.1 || ^6",
