@@ -16,19 +16,18 @@
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
-use Drupal\islandora\Form\IslandoraSettingsForm;
-use Drupal\node\NodeInterface;
-use Drupal\media\MediaInterface;
 use Drupal\file\FileInterface;
-use Drupal\taxonomy\TermInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\islandora\Form\IslandoraSettingsForm;
+use Drupal\media\MediaInterface;
+use Drupal\node\NodeInterface;
 use Drupal\serialization\Normalizer\CacheableNormalizerInterface;
-use Drupal\Core\Entity\EntityForm;
-use Drupal\file\Entity\File;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * Implements hook_help().
