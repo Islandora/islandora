@@ -2,7 +2,6 @@
 
 namespace Drupal\islandora\Form;
 
-use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Form\DeleteMultipleForm;
 use Drupal\Core\Form\FormStateInterface;
@@ -10,8 +9,7 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\Url;
-use Drupal\file\Entity\File;
-use Drupal\islandora\MediaSource\MediaSourceService;
+use Drupal\islandora\IslandoraUtils;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -21,11 +19,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ConfirmDeleteMediaAndFile extends DeleteMultipleForm {
 
   /**
-   * Media source service.
+   * The current user.
    *
-   * @var \Drupal\islandora\MediaSource\MediaSourceService
+   * @var \Drupal\Core\Session\AccountInterface
    */
-  protected $mediaSourceService;
+  protected $currentUser;
 
   /**
    * Logger.
@@ -42,23 +40,22 @@ class ConfirmDeleteMediaAndFile extends DeleteMultipleForm {
   protected $selection = [];
 
   /**
-   * Entity field manager.
+   * The Islandora Utils service.
    *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   * @var \Drupal\islandora\IslandoraUtils
    */
-  protected $entityFieldManager;
+  protected IslandoraUtils $utils;
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(AccountInterface $current_user, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, PrivateTempStoreFactory $temp_store_factory, MessengerInterface $messenger, MediaSourceService $media_source_service, LoggerInterface $logger) {
+  public function __construct(AccountInterface $current_user, EntityTypeManagerInterface $entity_type_manager, PrivateTempStoreFactory $temp_store_factory, MessengerInterface $messenger, LoggerInterface $logger, IslandoraUtils $utils) {
     $this->currentUser = $current_user;
     $this->entityTypeManager = $entity_type_manager;
-    $this->entityFieldManager = $entity_field_manager;
     $this->tempStore = $temp_store_factory->get('media_and_file_delete_confirm');
     $this->messenger = $messenger;
-    $this->mediaSourceService = $media_source_service;
     $this->logger = $logger;
+    $this->utils = $utils;
   }
 
   /**
@@ -68,11 +65,11 @@ class ConfirmDeleteMediaAndFile extends DeleteMultipleForm {
     return new static(
       $container->get('current_user'),
       $container->get('entity_type.manager'),
-      $container->get('entity_field.manager'),
       $container->get('tempstore.private'),
       $container->get('messenger'),
-      $container->get('islandora.media_source_service'),
-      $container->get('logger.channel.islandora'));
+      $container->get('logger.channel.islandora'),
+      $container->get('islandora.utils')
+    );
   }
 
   /**
@@ -111,94 +108,13 @@ class ConfirmDeleteMediaAndFile extends DeleteMultipleForm {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Similar to parent::submitForm(), but let's blend in the related files and
     // optimize based on the fact that we know we're working with media.
-    $total_count = 0;
-    $delete_media = [];
-    $delete_media_translations = [];
-    $delete_files = [];
-    $inaccessible_entities = [];
     $media_storage = $this->entityTypeManager->getStorage('media');
-    $file_storage = $this->entityTypeManager->getStorage('file');
     $media = $media_storage->loadMultiple(array_keys($this->selection));
-    foreach ($this->selection as $id => $selected_langcodes) {
-      $entity = $media[$id];
-      if (!$entity->access('delete', $this->currentUser)) {
-        $inaccessible_entities[] = $entity;
-        continue;
-      }
-      // Check for files.
-      $fields = $this->entityFieldManager->getFieldDefinitions('media', $entity->bundle());
-      foreach ($fields as $field) {
-        if ($field->getName() == 'thumbnail') {
-          continue;
-        }
-        $type = $field->getType();
-        if ($type == 'file' || $type == 'image') {
-          $target_id = $entity->get($field->getName())->target_id;
-          $file = File::load($target_id);
-          if ($file) {
-            if (!$file->access('delete', $this->currentUser)) {
-              $inaccessible_entities[] = $file;
-              continue;
-            }
-            if (!array_key_exists($file->id(), $delete_files)) {
-              $delete_files[$file->id()] = $file;
-              $total_count++;
-            }
-
-          }
-        }
-      }
-
-      foreach ($selected_langcodes as $langcode) {
-        // We're only working with media, which are translatable.
-        $entity = $entity->getTranslation($langcode);
-        if ($entity->isDefaultTranslation()) {
-          $delete_media[$id] = $entity;
-          unset($delete_media_translations[$id]);
-          $total_count += count($entity->getTranslationLanguages());
-        }
-        elseif (!isset($delete_media[$id])) {
-          $delete_media_translations[$id][] = $entity;
-        }
-      }
-    }
-    if ($delete_media) {
-      $media_storage->delete($delete_media);
-      foreach ($delete_media as $entity) {
-        $this->logger->notice('The media %label has been deleted.', [
-          '%label' => $entity->label(),
-        ]);
-      }
-    }
-    if ($delete_files) {
-      $file_storage->delete($delete_files);
-      foreach ($delete_files as $entity) {
-        $this->logger->notice('The file %label has been deleted.', [
-          '%label' => $entity->label(),
-        ]);
-      }
-    }
-    if ($delete_media_translations) {
-      foreach ($delete_media_translations as $id => $translations) {
-        $entity = $media[$id];
-        foreach ($translations as $translation) {
-          $entity->removeTranslation($translation->language()->getId());
-        }
-        $entity->save();
-        foreach ($translations as $translation) {
-          $this->logger->notice('The media %label @language translation has been deleted', [
-            '%label' => $entity->label(),
-            '@language' => $translation->language()->getName(),
-          ]);
-        }
-        $total_count += count($translations);
-      }
-    }
-    if ($total_count) {
-      $this->messenger->addStatus($this->getDeletedMessage($total_count));
-    }
-    if ($inaccessible_entities) {
-      $this->messenger->addWarning($this->getInaccessibleMessage(count($inaccessible_entities)));
+    $results = $this->utils->deleteMediaAndFiles($media);
+    $this->logger->notice($results['deleted']);
+    $this->messenger->addStatus($results['deleted']);
+    if (isset($results['inaccessible'])) {
+      $this->messenger->addWarning($results['inaccessible']);
     }
     $this->tempStore->delete($this->currentUser->id());
     $form_state->setRedirectUrl($this->getCancelUrl());

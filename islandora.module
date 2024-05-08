@@ -408,132 +408,25 @@ function islandora_media_custom_form_submit(&$form, FormStateInterface $form_sta
  * Implements a submit handler for the delete form.
  */
 function islandora_object_delete_form_submit($form, FormStateInterface $form_state) {
-
   $result = $form_state->getValues('delete_associated_content');
-  $utils = \Drupal::service('islandora.utils');
-
   if ($result['delete_associated_content'] == 1) {
-
+    $utils = \Drupal::service('islandora.utils');
     $node = $form_state->getFormObject()->getEntity();
     $medias = $utils->getMedia($node);
-    $media_list = [];
-
-    $entity_field_manager = \Drupal::service('entity_field.manager');
-    $current_user = \Drupal::currentUser();
+    $results = $utils->deleteMediaAndFiles($medias);
     $logger = \Drupal::logger('logger.channel.islandora');
     $messenger = \Drupal::messenger();
-
-    $delete_media = [];
-    $media_translations = [];
-    $media_files = [];
-    $entity_protected_medias = [];
-    $inaccessible_entities = [];
-
-    foreach ($medias as $id => $media) {
-      $lang = $media->language()->getId();
-      $selected_langcodes[$lang] = $lang;
-
-      if (!$media->access('delete', $current_user)) {
-        $inaccessible_entities[] = $media;
-        continue;
-      }
-      // Check for files.
-      $fields = $entity_field_manager->getFieldDefinitions('media', $media->bundle());
-      foreach ($fields as $field) {
-        $type = $field->getType();
-        if ($type == 'file' || $type == 'image') {
-          $target_id = $media->get($field->getName())->target_id;
-          $file = File::load($target_id);
-          if ($file) {
-            if (!$file->access('delete', $current_user)) {
-              $inaccessible_entities[] = $file;
-              continue;
-            }
-            $media_files[$id][$file->id()] = $file;
-          }
-        }
-      }
-
-      foreach ($selected_langcodes as $langcode) {
-        // We're only working with media, which are translatable.
-        $entity = $media->getTranslation($langcode);
-        if ($entity->isDefaultTranslation()) {
-          $delete_media[$id] = $entity;
-          unset($media_translations[$id]);
-        }
-        elseif (!isset($delete_media[$id])) {
-          $media_translations[$id][] = $entity;
-        }
-      }
+    if (isset($results['inaccessible'])) {
+      $messenger->addWarning($results['inaccessible']);
     }
-
-    if ($delete_media) {
-      foreach ($delete_media as $id => $media) {
-        try {
-          $media->delete();
-          $media_list[] = $id;
-          $logger->notice('The media %label has been deleted.', [
-            '%label' => $media->label(),
-          ]);
-        }
-        catch (Exception $e) {
-          $entity_protected_medias[] = $id;
-        }
-      }
-    }
-
-    $delete_files = array_filter($media_files, function ($media) use ($entity_protected_medias) {
-      return !in_array($media, $entity_protected_medias);
-    }, ARRAY_FILTER_USE_KEY);
-
-    if ($delete_files) {
-      foreach ($delete_files as $files_array) {
-        foreach ($files_array as $file) {
-          $file->delete();
-          $logger->notice('The file %label has been deleted.', [
-            '%label' => $file->label(),
-          ]);
-        }
-      }
-    }
-
-    $delete_media_translations = array_filter($media_translations, function ($media) use ($entity_protected_medias) {
-      return !in_array($media, $entity_protected_medias);
-    }, ARRAY_FILTER_USE_KEY);
-
-    if ($delete_media_translations) {
-      foreach ($delete_media_translations as $id => $translations) {
-        $media = $medias[$id];
-        foreach ($translations as $translation) {
-          $media->removeTranslation($translation->language()->getId());
-        }
-        $media->save();
-        foreach ($translations as $translation) {
-          $logger->notice('The media %label @language translation has been deleted', [
-            '%label' => $media->label(),
-            '@language' => $translation->language()->getName(),
-          ]);
-        }
-      }
-    }
-
-    if ($inaccessible_entities) {
-      $messenger->addWarning("@count items have not been deleted because you do not have the necessary permissions.", [
-        '@count' => count($inaccessible_entities),
-      ]);
-    }
-
+    $logger->notice($results['deleted']);
     $build = [
       'heading' => [
         '#type' => 'html_tag',
         '#tag' => 'div',
         '#value' => t("The repository item @node and @media", [
           '@node' => $node->getTitle(),
-          '@media' => \Drupal::translation()->formatPlural(
-            count($media_list), 'the media with the id @media has been deleted.',
-            'the medias with the ids @media have been deleted.',
-            ['@media' => implode(", ", $media_list)],
-          ),
+          '@media' => $results['deleted'],
         ]),
       ],
     ];

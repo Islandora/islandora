@@ -10,7 +10,9 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryException;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\file\FileInterface;
 use Drupal\flysystem\FlysystemFactory;
@@ -26,13 +28,15 @@ use Drupal\taxonomy\TermInterface;
  * Utility functions for figuring out when to fire derivative reactions.
  */
 class IslandoraUtils {
-
+  use StringTranslationTrait;
   const EXTERNAL_URI_FIELD = 'field_external_uri';
 
   const MEDIA_OF_FIELD = 'field_media_of';
 
   const MEDIA_USAGE_FIELD = 'field_media_use';
+
   const MEMBER_OF_FIELD = 'field_member_of';
+
   const MODEL_FIELD = 'field_model';
 
   /**
@@ -68,7 +72,14 @@ class IslandoraUtils {
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
    */
-  protected $languageManager;
+  protected LanguageManagerInterface $languageManager;
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected AccountInterface $currentUser;
 
   /**
    * Constructor.
@@ -83,19 +94,23 @@ class IslandoraUtils {
    *   Flysystem factory.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   Language manager.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     EntityFieldManagerInterface $entity_field_manager,
     ContextManager $context_manager,
     FlysystemFactory $flysystem_factory,
-    LanguageManagerInterface $language_manager
+    LanguageManagerInterface $language_manager,
+    AccountInterface $current_user
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
     $this->contextManager = $context_manager;
     $this->flysystemFactory = $flysystem_factory;
     $this->languageManager = $language_manager;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -423,7 +438,6 @@ class IslandoraUtils {
    *   TRUE if the fields have changed.
    */
   public function haveFieldsChanged(ContentEntityInterface $entity, ContentEntityInterface $original) {
-
     $field_definitions = $this->entityFieldManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle());
 
     $ignore_list = ['vid' => 1, 'changed' => 1, 'path' => 1];
@@ -528,7 +542,8 @@ class IslandoraUtils {
    *   Array of fields.
    */
   public function getReferencingFields($entity_type, $target_type) {
-    $fields = $this->entityTypeManager->getStorage('field_storage_config')->getQuery()
+    $fields = $this->entityTypeManager->getStorage('field_storage_config')
+      ->getQuery()
       ->condition('entity_type', $entity_type)
       ->condition('settings.target_type', $target_type)
       ->execute();
@@ -657,8 +672,6 @@ class IslandoraUtils {
   public function canCreateIslandoraEntity($entity_type, $bundle_type) {
     $bundles = $this->entityTypeManager->getStorage($bundle_type)->loadMultiple();
     $access_control_handler = $this->entityTypeManager->getAccessControlHandler($entity_type);
-
-    $allowed = [];
     foreach (array_keys($bundles) as $bundle) {
       // Skip bundles that aren't 'Islandora' types.
       if (!$this->isIslandoraType($entity_type, $bundle)) {
@@ -753,6 +766,74 @@ class IslandoraUtils {
       }
     }
     return $parents;
+  }
+
+  /**
+   * Deletes Media and all associated files.
+   *
+   * @param object $media_ids
+   *   Ids of media to be deleted.
+   *
+   * @return array
+   *   Associative array keyed 'deleted' and 'inaccessible'.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function deleteMediaAndFiles($media) {
+    $results = [];
+    $total_count = 0;
+    $delete_media = [];
+    $delete_files = [];
+    $inaccessible_entities = [];
+    $media_storage = $this->entityTypeManager->getStorage('media');
+    $file_storage = $this->entityTypeManager->getStorage('file');
+    foreach ($media as $entity) {
+      if (!$entity->access('delete', $this->currentUser)) {
+        $inaccessible_entities[] = $entity;
+        continue;
+      }
+      else {
+        $delete_media[$entity->id()] = $entity;
+      }
+      // Check for source and additional files.
+      $fields = $this->entityFieldManager->getFieldDefinitions('media', $entity->bundle());
+      foreach ($fields as $field) {
+        if ($field->getName() == 'thumbnail') {
+          continue;
+        }
+        $type = $field->getType();
+        if ($type == 'file' || $type == 'image') {
+          $target_id = $entity->get($field->getName())->target_id;
+          $file = $file_storage->load($target_id);
+          if ($file) {
+            if (!$file->access('delete', $this->currentUser)) {
+              $inaccessible_entities[] = $file;
+              continue;
+            }
+            if (!array_key_exists($file->id(), $delete_files)) {
+              $delete_files[$file->id()] = $file;
+            }
+          }
+        }
+      }
+    }
+    if ($delete_media) {
+      $media_storage->delete($delete_media);
+    }
+    if ($delete_files) {
+      $file_storage->delete($delete_files);
+    }
+    $results['deleted'] = $this->formatPlural(
+      count($delete_media), 'the media with the id @media has been deleted.',
+      'the medias with the ids @media have been deleted.',
+      ['@media' => implode(", ", array_keys($delete_media))],
+    );
+    if ($inaccessible_entities) {
+      $results['inaccessible'] = $this->formatPlural($inaccessible_entities, "@count item has not been deleted because you do not have the necessary permissions.", "@count items have not been deleted because you do not have the necessary permissions.");
+    }
+    return $results;
   }
 
 }

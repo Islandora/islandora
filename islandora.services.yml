@@ -54,7 +54,7 @@ services:
     arguments: ['@entity_type.manager', '@current_user', '@language_manager', '@file_system', '@islandora.utils']
   islandora.utils:
     class: Drupal\islandora\IslandoraUtils
-    arguments: ['@entity_type.manager', '@entity_field.manager', '@context.manager', '@flysystem_factory', '@language_manager']
+    arguments: ['@entity_type.manager', '@entity_field.manager', '@context.manager', '@flysystem_factory', '@language_manager', '@current_user']
   islandora.entity_mapper:
     class: Islandora\EntityMapper\EntityMapper
   islandora.stomp.auth_header_listener:
