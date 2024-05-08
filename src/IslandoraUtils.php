@@ -771,7 +771,7 @@ class IslandoraUtils {
   /**
    * Deletes Media and all associated files.
    *
-   * @param object $media_ids
+   * @param object $media
    *   Ids of media to be deleted.
    *
    * @return array
@@ -783,7 +783,6 @@ class IslandoraUtils {
    */
   public function deleteMediaAndFiles($media) {
     $results = [];
-    $total_count = 0;
     $delete_media = [];
     $delete_files = [];
     $inaccessible_entities = [];
