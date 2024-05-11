@@ -825,8 +825,8 @@ class IslandoraUtils {
       $file_storage->delete($delete_files);
     }
     $results['deleted'] = $this->formatPlural(
-      count($delete_media), 'the media with the id @media has been deleted.',
-      'the medias with the ids @media have been deleted.',
+      count($delete_media), 'The media with the id @media has been deleted.',
+      'The medias with the ids @media have been deleted.',
       ['@media' => implode(", ", array_keys($delete_media))],
     );
     if ($inaccessible_entities) {
