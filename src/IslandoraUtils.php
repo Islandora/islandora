@@ -771,8 +771,8 @@ class IslandoraUtils {
   /**
    * Deletes Media and all associated files.
    *
-   * @param object $media
-   *   Ids of media to be deleted.
+   * @param \Drupal\media\MediaInterface[] $media
+   *   Array of media to be deleted.
    *
    * @return array
    *   Associative array keyed 'deleted' and 'inaccessible'.
