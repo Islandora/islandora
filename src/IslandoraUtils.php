@@ -781,7 +781,7 @@ class IslandoraUtils {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function deleteMediaAndFiles($media) {
+  public function deleteMediaAndFiles(array $media) {
     $results = [];
     $delete_media = [];
     $delete_files = [];
