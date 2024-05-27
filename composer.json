@@ -8,7 +8,7 @@
     "issues": "https://github.com/Islandora/documentation/issues"
   },
   "replace": {
-    "islandora/islandora": "*"
+    "islandora/islandora": "self.version"
   },
   "repositories": [
     {
