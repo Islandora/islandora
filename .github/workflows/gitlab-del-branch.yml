@@ -1,0 +1,18 @@
+name: Delete branch from GitLab
+on:
+  delete:
+    branches: '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Delete branch
+      env:
+        GITLAB_USERNAME: "project_34868_bot"
+        GITLAB_PASSWORD: ${{ secrets.GITLAB_PASSWORD }}
+        GITLAB_HOSTNAME: "git.drupal.org"
+        GITLAB_PATH: "project/islandora"
+      run: |
+        git remote add gitlab "https://$GITLAB_USERNAME:$GITLAB_PASSWORD@$GITLAB_HOSTNAME/$GITLAB_PATH"
+        git push gitlab :${GITHUB_REF#refs/heads/}

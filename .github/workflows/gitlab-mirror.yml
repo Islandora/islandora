@@ -4,8 +4,6 @@ on:
   push:
     branches: '*'
     tags: '*'
-  delete:
-    branches: '*'
 
 jobs:
   build:
