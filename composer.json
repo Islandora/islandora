@@ -7,6 +7,9 @@
   "support": {
     "issues": "https://github.com/Islandora/documentation/issues"
   },
+  "replace": {
+    "islandora/islandora": "self.version"
+  },
   "repositories": [
     {
       "type": "composer",
