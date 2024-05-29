@@ -20,6 +20,7 @@
     "drupal/file_replace": "^1.1",
     "drupal/filehash": "^2 || ^3",
     "drupal/flysystem" : "^2.0@alpha",
+    "drupal/jsonld": "^2 || ^3",
     "drupal/jwt": "^1.1 || ^2",
     "drupal/migrate_plus" : "^5.1 || ^6",
     "drupal/migrate_source_csv" : "^3.4",
@@ -28,7 +29,6 @@
     "drupal/token" : "^1.3",
     "islandora/chullo": "^2.0",
     "islandora/fedora-entity-mapper": "^1.0",
-    "islandora/jsonld": "^2 || ^3",
     "stomp-php/stomp-php": "4.* || ^5"
   },
   "require-dev": {
