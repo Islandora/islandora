@@ -6,9 +6,11 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatter;
 use Drupal\islandora\IslandoraUtils;
+use Drupal\islandora\MediaSource\MediaSourceService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -35,6 +37,13 @@ class IslandoraImageFormatter extends ImageFormatter {
   protected $utils;
 
   /**
+   * Islandora media source service.
+   *
+   * @var \Drupal\islandora\MediaSource\MediaSourceService
+   */
+  protected $mediaSourceService;
+
+  /**
    * Constructs an IslandoraImageFormatter object.
    *
    * @param string $plugin_id
@@ -59,6 +68,8 @@ class IslandoraImageFormatter extends ImageFormatter {
    *   Islandora utils.
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    *   The File URL Generator.
+   * @param \Drupal\islandora\MediaSource\MediaSourceService $media_source_service
+   *   Utils to get the source file from media.
    */
   public function __construct(
     $plugin_id,
@@ -71,7 +82,8 @@ class IslandoraImageFormatter extends ImageFormatter {
     AccountInterface $current_user,
     EntityStorageInterface $image_style_storage,
     IslandoraUtils $utils,
-    FileUrlGeneratorInterface $file_url_generator
+    FileUrlGeneratorInterface $file_url_generator,
+    MediaSourceService $media_source_service
   ) {
     parent::__construct(
       $plugin_id,
@@ -86,6 +98,7 @@ class IslandoraImageFormatter extends ImageFormatter {
       $file_url_generator
     );
     $this->utils = $utils;
+    $this->mediaSourceService = $media_source_service;
   }
 
   /**
@@ -103,8 +116,42 @@ class IslandoraImageFormatter extends ImageFormatter {
       $container->get('current_user'),
       $container->get('entity_type.manager')->getStorage('image_style'),
       $container->get('islandora.utils'),
-      $container->get('file_url_generator')
+      $container->get('file_url_generator'),
+      $container->get('islandora.media_source_service')
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return [
+      'image_alt_text' => 'local',
+    ] + parent::defaultSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsForm(array $form, FormStateInterface $form_state) {
+    $element = parent::settingsForm($form, $form_state);
+    $alt_text_options = [
+      'local' => $this->t('Local'),
+      'original_file_fallback' => $this->t('Local, with fallback to Original File'),
+      'original_file' => $this->t('Original File'),
+    ];
+    $element['image_alt_text'] = [
+      '#title' => $this->t('Alt text source'),
+      '#type' => 'select',
+      '#default_value' => $this->getSetting('image_alt_text'),
+      '#empty_option' => $this->t('None'),
+      '#options' => $alt_text_options,
+    ];
+    return $element;
   }
 
   /**
@@ -114,28 +161,74 @@ class IslandoraImageFormatter extends ImageFormatter {
     $elements = parent::viewElements($items, $langcode);
 
     $image_link_setting = $this->getSetting('image_link');
-    // Check if the formatter involves a link.
-    if ($image_link_setting != 'content') {
+    $alt_text_setting = $this->getsetting('image_alt_text');
+    // Check if we can leave the image as-is:
+    if ($image_link_setting != 'content' && $alt_text_setting == 'local') {
       return $elements;
     }
-
     $entity = $items->getEntity();
     if ($entity->isNew() || $entity->getEntityTypeId() != 'media') {
       return $elements;
     }
 
-    $node = $this->utils->getParentNode($entity);
-
-    if ($node === NULL) {
-      return $elements;
+    if ($alt_text_setting == 'none') {
+      foreach ($elements as $element) {
+        $element['#item']->set('alt', '');
+      }
     }
 
-    $url = $node->toUrl();
+    if ($image_link_setting == 'content' || $alt_text_setting == 'original_file' || $alt_text_setting == 'original_file_fallback') {
+      $node = $this->utils->getParentNode($entity);
+      if ($node === NULL) {
+        return $elements;
+      }
 
-    foreach ($elements as &$element) {
-      $element['#url'] = $url;
+      if ($image_link_setting == 'content') {
+        // Set image link.
+        $url = $node->toUrl();
+        foreach ($elements as &$element) {
+          $element['#url'] = $url;
+        }
+      }
+
+      if ($alt_text_setting == 'original_file' || $alt_text_setting == 'original_file_fallback') {
+        do {
+          $original_file_term = $this->utils->getTermForUri("http://pcdm.org/use#OriginalFile");
+
+          if ($original_file_term === NULL) {
+            break;
+          }
+
+          $original_file_media = $this->utils->getMediaWithTerm($node, $original_file_term);
+
+          if ($original_file_media === NULL) {
+            break;
+          }
+          $source_field_name = $this->mediaSourceService->getSourceFieldName($original_file_media->bundle());
+          if (!$original_file_media->hasField($source_field_name)) {
+            break;
+          }
+          $original_file_files = $original_file_media->get($source_field_name);
+          $alt_text = '';
+          // Get Nth alt text from the Nth file field.
+          $i = 0;
+          foreach ($original_file_files as $file) {
+            if (!$file->hasProperty('alt')) {
+              break;
+            }
+            $alt_text = $file->get('alt')->getValue();
+            if (!isset($elements[$i])) {
+              break;
+            }
+            $element = $elements[$i];
+            if ($alt_text_setting == 'original_file' || $element['#item']->get('alt')->getValue() == '') {
+              $elements[$i]['#item']->set('alt', $alt_text);
+            }
+            $i++;
+          }
+        } while (FALSE);
+      }
     }
-
     return $elements;
   }
 
