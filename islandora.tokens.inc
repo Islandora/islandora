@@ -80,6 +80,9 @@ function islandora_tokens($type, $tokens, array $data, array $options, Bubbleabl
       return;
     }
     $islandoraUtils = \Drupal::service('islandora.utils');
+    if (!$islandoraUtils->isIslandoraType('node', $data['node']->bundle())) {
+      return;
+    }
     foreach ($tokens as $name => $original) {
       switch ($name) {
         case 'media-original-file:basename':
