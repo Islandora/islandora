@@ -48,7 +48,7 @@ jobs:
           - 61613:61613
 
     steps:
-      
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
@@ -74,7 +74,7 @@ jobs:
           sudo apt-get install -y mysql-client
 
       - name: Cache Composer dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: /tmp/composer-cache
           key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
@@ -105,7 +105,7 @@ jobs:
 
       - name: Test scripts
         run: $SCRIPT_DIR/travis_scripts.sh
-      
+
       - name: Start chromedriver
         if: matrix.test-suite == 'functional-javascript'
         run: |-
