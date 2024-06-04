@@ -30,7 +30,6 @@ class IslandoraFunctionalTestBase extends BrowserTestBase {
     'field_ui',
     'islandora',
     'menu_link_content',
-
   ];
 
   /**
