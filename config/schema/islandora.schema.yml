@@ -173,6 +173,10 @@ condition.plugin.node_had_namespace:
 field.formatter.settings.islandora_image:
   type: field.formatter.settings.image
   label: 'Islandora image field display format settings'
+  mapping:
+    image_alt_text:
+      type: string
+      label: "Alt text source"
 
 condition.plugin.islandora_entity_bundle:
   type: condition.plugin
