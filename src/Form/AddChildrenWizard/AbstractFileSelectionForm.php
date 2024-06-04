@@ -142,16 +142,46 @@ abstract class AbstractFileSelectionForm extends FormBase {
     $builder = (new BatchBuilder())
       ->setTitle($this->t('Bulk creating...'))
       ->setInitMessage($this->t('Initializing...'))
-      ->setFinishCallback([$this->batchProcessor, 'batchProcessFinished']);
+      ->setFinishCallback([$this, 'batchProcessFinished']);
     $values = $form_state->getValue($this->getField($cached_values)->getName());
     $massaged_values = $widget->massageFormValues($values, $form, $form_state);
     foreach ($massaged_values as $delta => $info) {
       $builder->addOperation(
-        [$this->batchProcessor, 'batchOperation'],
+        [$this, 'batchOperation'],
         [$delta, $info, $cached_values]
       );
     }
     batch_set($builder->toArray());
+  }
+
+  /**
+   * Wrap batch processor operation call to side-step serialization issues.
+   *
+   * Previously, we referred to the method on the processors directly; however,
+   * this can lead to issues regarding the (un)serialization of the services as
+   * which the processors are implemented. For example, if decorating one of the
+   * processors to extend it, it loses the reference back to be able to load the
+   * "inner"/decorated processor.
+   *
+   * @see \Drupal\islandora\Form\AddChildrenWizard\AbstractBatchProcessor::batchOperation()
+   */
+  public function batchOperation($delta, $info, $cached_values, &$context) : void {
+    $this->batchProcessor->batchOperation($delta, $info, $cached_values, $context);
+  }
+
+  /**
+   * Wrap batch processor finished call to side-step serialization issues.
+   *
+   * Previously, we referred to the method on the processors directly; however,
+   * this can lead to issues regarding the (un)serialization of the services as
+   * which the processors are implemented. For example, if decorating one of the
+   * processors to extend it, it loses the reference back to be able to load the
+   * "inner"/decorated processor.
+   *
+   * @see \Drupal\islandora\Form\AddChildrenWizard\AbstractBatchProcessor::batchProcessFinished()
+   */
+  public function batchProcessFinished($success, $results, $operations) : void {
+    $this->batchProcessor->batchProcessFinished($success, $results, $operations);
   }
 
 }
