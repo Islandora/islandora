@@ -665,4 +665,3 @@ function islandora_field_info_alter(array &$info): void {
     $info['reference']['category'] = new TranslatableMarkup("Reference");
   }
 }
-
