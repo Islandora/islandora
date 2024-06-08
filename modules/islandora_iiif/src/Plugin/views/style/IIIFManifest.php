@@ -518,23 +518,6 @@ class IIIFManifest extends StylePluginBase {
     return $entity_title;
   }
 
-  protected function addSearchEndpoint(array &$json, array $url_components) {
-    $url_base = $this->getRequest()->getSchemeAndHttpHost();
-    $hocr_search_path = $this->options['search_endpoint'];
-    $hocr_search_url = $url_base . '/' . ltrim($hocr_search_path, '/');
-
-    $hocr_search_url = str_replace('%node', $url_components[1], $hocr_search_url);
-
-    $json['service'][] = [
-          "@context" => "http://iiif.io/api/search/0/context.json",
-          "@id" => $hocr_search_url,
-          "profile" => "http://iiif.io/api/search/0/search",
-          "label" => t("Search inside this work"),
-    ];
-
-
-  }
-
   /**
    * {@inheritdoc}
    */
