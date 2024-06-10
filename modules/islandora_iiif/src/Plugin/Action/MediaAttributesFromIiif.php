@@ -3,9 +3,14 @@
 namespace Drupal\islandora_iiif\Plugin\Action;
 
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\Action\Plugin\Action\SaveAction;
+use Drupal\Core\Action\ConfigurableActionBase;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\FieldConfigInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\islandora\IslandoraUtils;
 use Drupal\islandora\MediaSource\MediaSourceService;
@@ -17,12 +22,26 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides an action that can save any entity.
  *
  * @Action(
- *   id = "islandora_iiif:media_attributes_from_iiif_action",
- *   action_label = @Translation("Add image dimensions retrieved from the IIIF server"),
- *   deriver = "Drupal\Core\Action\Plugin\Action\Derivative\EntityChangedActionDeriver",
+ *   id = "media_attributes_from_iiif_action",
+ *   label = @Translation("Add image dimensions retrieved from the IIIF server"),
+ *   type = "node"
  * )
  */
-class MediaAttributesFromIiif extends SaveAction {
+class MediaAttributesFromIiif extends ConfigurableActionBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * Entity Field Manager
+   *
+   * @var Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+protected $entityFieldManager;
+
+/**
+ * Entity type Manager.
+ *
+ * @var Drupal\Core\Entity\EntityTypeManagerInterface
+ */
+protected $entityTypeManager;
 
   /**
    * The HTTP client.
@@ -83,14 +102,16 @@ class MediaAttributesFromIiif extends SaveAction {
    * @param \Drupal\Core\Logger\LoggerChannelInterface $channel
    *   Logger channel.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, TimeInterface $time, Client $http_client, IiifInfo $iiif_info, IslandoraUtils $islandora_utils, MediaSourceService $media_source, LoggerChannelInterface $channel) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, TimeInterface $time, Client $http_client, IiifInfo $iiif_info, IslandoraUtils $islandora_utils, MediaSourceService $media_source, LoggerChannelInterface $channel, EntityFieldManagerInterface $entity_field_manager ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $time);
 
+    $this->entityTypeManager = $entity_type_manager;
     $this->httpClient = $http_client;
     $this->iiifInfo = $iiif_info;
     $this->utils = $islandora_utils;
     $this->mediaSource = $media_source;
     $this->logger = $channel;
+    $this->entityFieldManager =$entity_field_manager;
   }
 
   /**
@@ -107,7 +128,8 @@ class MediaAttributesFromIiif extends SaveAction {
       $container->get('islandora_iiif'),
       $container->get('islandora.utils'),
       $container->get('islandora.media_source_service'),
-      $container->get('logger.channel.islandora')
+      $container->get('logger.channel.islandora'),
+      $container->get('entity_field.manager')
     );
   }
 
@@ -162,4 +184,58 @@ class MediaAttributesFromIiif extends SaveAction {
     return $object->access('update', $account, $return_as_object);
   }
 
+  /**
+   * (@InheritDoc)
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+$integer_fields = $this->getIntegerFields();
+
+    $form['width_field'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Width Field'),
+      '#description' => $this->t("Field to populate with an image's width."),
+      '#options' => $integer_fields,
+    ];
+    return $form;
+
+    $form['height_field'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Height Field'),
+      '#description' => $this->t("Field to populate with an image's height."),
+      '#options' => $integer_fields,
+    ];
+
+
+  }
+
+  /**
+   * (@InheritDoc)
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+
+  }
+
+  protected function getIntegerFields() {
+    // get media types
+    $media_types = $this->entityTypeManager->getStorage('media_type')->loadMultiple();
+    $all_integer_fields = [];
+    foreach(array_keys($media_types) as $key => $value) {
+      $fields = $this->entityFieldManager->getFieldDefinitions("media", $value);
+
+      $integer_fields = array_filter(
+        $fields,
+        function ($field_value, $field_key) {
+          // only keep fields of type 'integer'
+          return (strpos($field_value->getType(), 'integer') > -1)
+          && is_a($field_value, '\Drupal\Core\Field\FieldConfigInterface')           ;
+        }, ARRAY_FILTER_USE_BOTH
+      );
+      foreach($integer_fields as $integer_field) {
+        $all_integer_fields[$integer_field->id()] = $integer_field->getTargetEntityTypeId()
+          . ' -- ' . $integer_field->getTargetBundle() . ' -- ' . $integer_field->getLabel();
+      }
+
+    }
+    return $all_integer_fields;
+  }
 }
