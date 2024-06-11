@@ -124,10 +124,6 @@ class IslandoraImageFormatter extends ImageFormatter {
   /**
    * {@inheritdoc}
    */
-
-  /**
-   * {@inheritdoc}
-   */
   public static function defaultSettings() {
     return [
       'image_alt_text' => 'local',
@@ -162,71 +158,65 @@ class IslandoraImageFormatter extends ImageFormatter {
 
     $image_link_setting = $this->getSetting('image_link');
     $alt_text_setting = $this->getsetting('image_alt_text');
+
     // Check if we can leave the image as-is:
-    if ($image_link_setting != 'content' && $alt_text_setting == 'local') {
+    if ($image_link_setting !== 'content' && $alt_text_setting === 'local') {
       return $elements;
     }
     $entity = $items->getEntity();
-    if ($entity->isNew() || $entity->getEntityTypeId() != 'media') {
+    if ($entity->isNew() || $entity->getEntityTypeId() !== 'media') {
       return $elements;
     }
 
-    if ($alt_text_setting == 'none') {
+    if ($alt_text_setting === 'none') {
       foreach ($elements as $element) {
         $element['#item']->set('alt', '');
       }
     }
 
-    if ($image_link_setting == 'content' || $alt_text_setting == 'original_file' || $alt_text_setting == 'original_file_fallback') {
+    if ($image_link_setting === 'content' || $alt_text_setting === 'original_file' || $alt_text_setting === 'original_file_fallback') {
       $node = $this->utils->getParentNode($entity);
       if ($node === NULL) {
         return $elements;
       }
 
-      if ($image_link_setting == 'content') {
+      if ($image_link_setting === 'content') {
         // Set image link.
         $url = $node->toUrl();
         foreach ($elements as &$element) {
           $element['#url'] = $url;
         }
+        unset($element);
       }
 
-      if ($alt_text_setting == 'original_file' || $alt_text_setting == 'original_file_fallback') {
-        do {
-          $original_file_term = $this->utils->getTermForUri("http://pcdm.org/use#OriginalFile");
+      if ($alt_text_setting === 'original_file' || $alt_text_setting === 'original_file_fallback') {
+        $original_file_term = $this->utils->getTermForUri("http://pcdm.org/use#OriginalFile");
 
-          if ($original_file_term === NULL) {
-            break;
-          }
-
+        if ($original_file_term !== NULL) {
           $original_file_media = $this->utils->getMediaWithTerm($node, $original_file_term);
 
-          if ($original_file_media === NULL) {
-            break;
-          }
-          $source_field_name = $this->mediaSourceService->getSourceFieldName($original_file_media->bundle());
-          if (!$original_file_media->hasField($source_field_name)) {
-            break;
-          }
-          $original_file_files = $original_file_media->get($source_field_name);
-          $alt_text = '';
-          // Get Nth alt text from the Nth file field.
-          $i = 0;
-          foreach ($original_file_files as $file) {
-            if (!$file->hasProperty('alt')) {
-              break;
+          if ($original_file_media !== NULL) {
+            $source_field_name = $this->mediaSourceService->getSourceFieldName($original_file_media->bundle());
+            if ($original_file_media->hasField($source_field_name)) {
+              $original_file_files = $original_file_media->get($source_field_name);
+              // XXX: Support the multifile media use case where there could
+              // be multiple files in the source field.
+              $i = 0;
+              foreach ($original_file_files as $file) {
+                if (isset($file->alt)) {
+                  $alt_text = $file->get('alt')->getValue();
+                  if (isset($elements[$i])) {
+                    $element = $elements[$i];
+                    if ($alt_text_setting === 'original_file' || $element['#item']->get('alt')->getValue() === '') {
+                      $elements[$i]['#item']->set('alt', $alt_text);
+                    }
+                    $i++;
+                  }
+                }
+              }
             }
-            $alt_text = $file->get('alt')->getValue();
-            if (!isset($elements[$i])) {
-              break;
-            }
-            $element = $elements[$i];
-            if ($alt_text_setting == 'original_file' || $element['#item']->get('alt')->getValue() == '') {
-              $elements[$i]['#item']->set('alt', $alt_text);
-            }
-            $i++;
           }
-        } while (FALSE);
+        }
       }
     }
     return $elements;
