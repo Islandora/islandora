@@ -4,6 +4,7 @@ namespace Drupal\islandora_iiif\Plugin\Action;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Action\ConfigurableActionBase;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -28,6 +29,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class MediaAttributesFromIiif extends ConfigurableActionBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * Config factory.
+   *
+   * @var  \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
 
   /**
    * Entity Field Manager
@@ -101,10 +109,13 @@ protected $entityTypeManager;
    *   Islandora media service.
    * @param \Drupal\Core\Logger\LoggerChannelInterface $channel
    *   Logger channel.
+   * @param Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   Config factory.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, TimeInterface $time, Client $http_client, IiifInfo $iiif_info, IslandoraUtils $islandora_utils, MediaSourceService $media_source, LoggerChannelInterface $channel, EntityFieldManagerInterface $entity_field_manager ) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, TimeInterface $time, Client $http_client, IiifInfo $iiif_info, IslandoraUtils $islandora_utils, MediaSourceService $media_source, LoggerChannelInterface $channel, EntityFieldManagerInterface $entity_field_manager, ConfigFactoryInterface $config_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $time);
 
+    $this->configFactory = $config_factory;
     $this->entityTypeManager = $entity_type_manager;
     $this->httpClient = $http_client;
     $this->iiifInfo = $iiif_info;
@@ -129,7 +140,8 @@ protected $entityTypeManager;
       $container->get('islandora.utils'),
       $container->get('islandora.media_source_service'),
       $container->get('logger.channel.islandora'),
-      $container->get('entity_field.manager')
+      $container->get('entity_field.manager'),
+      $container->get('config.factory')
     );
   }
 
@@ -140,29 +152,26 @@ protected $entityTypeManager;
     $width = $height = FALSE;
 
     // Get the original File media use term.
-    $original_file_term = $this->utils->getTermForUri('http://pcdm.org/use#OriginalFile');
 
-    /**
-     * @var \Drupal\media\MediaInterface $original_file_media
-     */
-    $original_file_mids = $this->utils->getMediaReferencingNodeAndTerm($entity, $original_file_term);
-    if (!empty($original_file_mids)) {
+    $source_term = $this->utils->getTermForUri($this->configuration['source_term_uri']);
 
-      // Ordinarily there shouldn't be more than one Original File media but
-      // it's not guaranteed.
-      foreach ($original_file_mids as $original_file_mid) {
+    $source_mids = $this->utils->getMediaReferencingNodeAndTerm($entity, $source_term);
+    if (!empty($source_mids)) {
+
+
+      foreach ($source_mids as $source_mid) {
 
         /**
-         * @var \Drupal\Media\MediaInterface  $original_file_media
+         * @var \Drupal\Media\MediaInterface
          */
-        $original_file_media = $this->entityTypeManager->getStorage('media')->load($original_file_mid);
+        $source_media = $this->entityTypeManager->getStorage('media')->load($source_mid);
 
         // Get the media MIME Type.
-        $original_file = $this->mediaSource->getSourceFile($original_file_media);
-        $mime_type = $original_file->getMimeType();
+        $source_file = $this->mediaSource->getSourceFile($source_media);
+        $mime_type = $source_file->getMimeType();
 
         if (in_array($mime_type, ['image/tiff', 'image/jp2'])) {
-          [$width, $height] = $this->iiifInfo->getImageDimensions($original_file);
+          [$width, $height] = $this->iiifInfo->getImageDimensions($source_file);
         }
 
         // @todo Make field configurable. Low priority since this whole thing is a workaround for an Islandora limitation.
@@ -174,6 +183,7 @@ protected $entityTypeManager;
       }
     }
   }
+
 
   /**
    * {@inheritdoc}
@@ -188,30 +198,60 @@ protected $entityTypeManager;
    * (@InheritDoc)
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-$integer_fields = $this->getIntegerFields();
+
+    $integer_fields = $this->getIntegerFields();
+
+    $form['source_term'] = [
+      '#type' => 'entity_autocomplete',
+      '#target_type' => 'taxonomy_term',
+      '#title' => $this->t('Source media use term'),
+      '#default_value' => $this->utils->getTermForUri($this->configuration['source_term_uri']),
+      '#required' => TRUE,
+      '#description' => $this->t('Term indicating the source media'),
+    ];
 
     $form['width_field'] = [
       '#type' => 'select',
       '#title' => $this->t('Width Field'),
       '#description' => $this->t("Field to populate with an image's width."),
+      '#default_value' => $this->configuration['width_field'],
       '#options' => $integer_fields,
     ];
-    return $form;
 
     $form['height_field'] = [
       '#type' => 'select',
       '#title' => $this->t('Height Field'),
       '#description' => $this->t("Field to populate with an image's height."),
+      '#default_value' => $this->configuration['height_field'],
       '#options' => $integer_fields,
     ];
 
+    return $form;
+  }
 
+/**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    $config = parent::defaultConfiguration();
+
+    $config['media_use_term'] = '';
+    $config['width_field'] = '';
+    $config['height_field'] = '';
+
+    return $config;
   }
 
   /**
-   * (@InheritDoc)
+   * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    $tid = $form_state->getValue('source_term');
+    $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($tid);
+    $this->configuration['source_term_uri'] = $this->utils->getUriForTerm($term);
+
+    $this->configuration['width_field'] = $form_state->getValue('width_field');
+    $this->configuration['height_field'] = $form_state->getValue('height_field');
 
   }
 
