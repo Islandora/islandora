@@ -174,11 +174,12 @@ protected $entityTypeManager;
           [$width, $height] = $this->iiifInfo->getImageDimensions($source_file);
         }
 
-        // @todo Make field configurable. Low priority since this whole thing is a workaround for an Islandora limitation.
-        if ($original_file_media->hasField('field_width') && $original_file_media->hasField('field_height')) {
-          $original_file_media->set('field_height', $height);
-          $original_file_media->set('field_width', $width);
-          $original_file_media->save();
+        $width_field = $this->getShortFieldName($this->configuration['width_field']);
+        $height_field = $this->getShortFieldName($this->configuration['height_field']);
+        if ($source_media->hasField($width_field) && $source_media->hasField($height_field)) {
+          $source_media->set('field_height', $height);
+          $source_media->set($width_field, $width);
+          $source_media->save();
         }
       }
     }
@@ -278,4 +279,17 @@ protected $entityTypeManager;
     }
     return $all_integer_fields;
   }
+
+  /**
+   * Retrusn teh last part of a qualified field anme.
+   *
+   * @param string $field_id
+   *   The full field id, e.g., 'media.file.field_height'.
+   * @return string
+   *   The short field name, e.g., 'field_height'.
+   */
+  protected function getShortFieldName(string $field_id): string {
+     [$entity_type, $bundle, $field_name] = explode('.', $field_id);
+     return $field_name;
+
 }
