@@ -177,8 +177,8 @@ protected $entityTypeManager;
         $width_field = $this->getShortFieldName($this->configuration['width_field']);
         $height_field = $this->getShortFieldName($this->configuration['height_field']);
         if ($source_media->hasField($width_field) && $source_media->hasField($height_field)) {
-          $source_media->set('field_height', $height);
           $source_media->set($width_field, $width);
+          $source_media->set($height_field, $height);
           $source_media->save();
         }
       }
@@ -291,5 +291,6 @@ protected $entityTypeManager;
   protected function getShortFieldName(string $field_id): string {
      [$entity_type, $bundle, $field_name] = explode('.', $field_id);
      return $field_name;
+  }
 
 }
