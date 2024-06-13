@@ -6,11 +6,12 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\file\FileInterface;
 use Drupal\jwt\Authentication\Provider\JwtAuth;
-
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ServerException;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
  * Get IIIF related info for a given File or Image entity.
@@ -121,7 +122,7 @@ class IiifInfo {
         return [intval($width), intval($height)];
       }
     }
-    catch (ClientException | ConnectException | ServerException $e) {
+    catch (ClientException | ConnectException | RequestException | ServerException $e) {
       $this->logger->info("Error getting image file dimensions from IIIF server: " . $e->getMessage());
     }
     return FALSE;

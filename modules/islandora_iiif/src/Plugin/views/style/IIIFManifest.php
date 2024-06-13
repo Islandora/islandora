@@ -226,7 +226,7 @@ class IIIFManifest extends StylePluginBase {
       /**
        * @var \Drupal\taxonomy\TermInterface|null
       */
-      $structured_text_term = $this->utils->getTermForUri($this->options['structured_text_term_uri']);
+      $structured_text_term = !empty($this->options['structured_text_term_uri']) ? $this->utils->getTermForUri($this->options['structured_text_term_uri']) : FALSE;
 
       // @see https://iiif.io/api/presentation/2.1/#manifest
       $json += [
@@ -387,19 +387,7 @@ class IIIFManifest extends StylePluginBase {
    */
   protected function getCanvasDimensions(string $iiif_url, Media $media, FieldItemInterface $image, string $mime_type) {
 
-    // If the media has field_height and field_width, return those values.
-    if ($media->hasField('field_height')
-      && !$media->get('field_height')->isEmpty()
-      && $media->get('field_height')->value > 0
-      && $media->hasField('field_width')
-      && !$media->get('field_width')->isEmpty()
-      && $media->get('field_width')->value > 0) {
-      return [intval($media->get('field_width')->value),
-        intval($media->get('field_height')->value),
-      ];
-    }
 
-    // Otherwise start looking at the field/file level for the numbers.
     if (isset($image->width) && is_numeric($image->width)
     && isset($image->height) && is_numeric($image->height)) {
       return [intval($image->width),
@@ -425,6 +413,21 @@ class IIIFManifest extends StylePluginBase {
         $entity->get('field_height')->value,
       ];
     }
+
+    // If the media has width and height fields, return those values.
+    $width_field = !empty($this->options['advanced']['custom_width_height']['width_field']) ? $this->options['advanced']['custom_width_height']['height_field'] : 'field_width';
+    $height_field = !empty($this->options['advanced']['custom_width_height']['height_field']) ? $this->options['advanced']['custom_width_height']['height_field'] : 'field_height';
+    if ($media->hasField($height_field)
+      && !$media->get($height_field)->isEmpty()
+      && $media->get($height_field)->value > 0
+      && $media->hasField($width_field)
+      && !$media->get($width_field)->isEmpty()
+      && $media->get($width_field)->value > 0) {
+      return [intval($media->get($width_field)->value),
+        intval($media->get($height_field)->value),
+      ];
+    }
+
 
     if ($mime_type === 'image/tiff') {
       // If this is a TIFF AND we don't know the width/height
@@ -461,7 +464,7 @@ class IIIFManifest extends StylePluginBase {
    */
   protected function getOcrUrl(EntityInterface $entity) {
     $ocr_url = FALSE;
-    $iiif_ocr_file_field = !empty($this->options['iiif_ocr_file_field']) ? array_filter(array_values($this->options['iiif_ocr_file_field'])) : [];
+    $iiif_ocr_file_field = !empty($this->options['advanced']['iiif_ocr_file_field']) ? array_filter(array_values($this->options['advanced']['iiif_ocr_file_field'])) : [];
     $ocrField = count($iiif_ocr_file_field) > 0 ? $this->view->field[$iiif_ocr_file_field[0]] : NULL;
     if ($ocrField) {
       $ocr_entity = $entity;
@@ -593,6 +596,8 @@ class IIIFManifest extends StylePluginBase {
         You will need to add a field to this View'), 'error');
     }
 
+    $dimensions_field_options = array_merge(['' => $this->t('  - None --  ')],array_combine(array_keys($fields), array_keys($fields)));
+
     $form['iiif_tile_field'] = [
       '#title' => $this->t('Tile source field(s)'),
       '#type' => 'checkboxes',
@@ -605,10 +610,37 @@ class IIIFManifest extends StylePluginBase {
       '#required' => count($field_options) > 0,
     ];
 
-    $form['iiif_ocr_file_field'] = [
+    $form['advanced'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Advanced'),
+      '#open' => FALSE,
+    ];
+
+    $form['advanced']['custom_width_height'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Custom width and height fields.'),
+      '#description' => $this->t('Use these if the media type of the image does not have built in Width and height fields, e.g., File. As a fallback, if the media has fields with the name "field_width" and "field_height" this formatter will try and get the width from that.'),
+    ];
+
+    $form['advanced']['custom_width_height']['height_field'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Custom Height field'),
+      '#default_value' => $this->options['advanced']['custom_width_height']['height_field'],
+      '#options' => $dimensions_field_options,
+    ];
+
+$form['advanced']['custom_width_height']['width_field'] = [
+  '#type' => 'select',
+  '#title' => $this->t('Custom width field'),
+  '#default_value' => $this->options['advanced']['custom_width_height']['width_field'],
+  '#options' => $dimensions_field_options,
+];
+
+
+    $form['advanced']['iiif_ocr_file_field'] = [
       '#title' => $this->t('Structured OCR data file field'),
       '#type' => 'checkboxes',
-      '#default_value' => $this->options['iiif_ocr_file_field'],
+      '#default_value' => $this->options['advanced']['iiif_ocr_file_field'],
       '#description' => $this->t("If the hOCR is a field on the same entity as the image source  field above, select it here. If it's found in a related entity via the term below, leave this blank."),
       '#options' => $field_options,
       '#required' => FALSE,
@@ -627,7 +659,7 @@ class IIIFManifest extends StylePluginBase {
       '#type' => 'textfield',
       '#title' => $this->t("Search endpoint path."),
       '#description' => $this->t("If there is a search endpoint to search within the book that returns IIIF annotations, put it here. Use %node substitution where needed.<br>E.g., paged-content-search/%node"),
-      '#default_value' => $this->options['search_endpoint'],
+      '#default_value' => !empty($this->options['search_endpoint']) ?$this->options['search_endpoint'] : '',
       '#required' => FALSE,
     ];
   }
@@ -659,7 +691,9 @@ class IIIFManifest extends StylePluginBase {
     $tid = $style_options['structured_text_term'];
     unset($style_options['structured_text_term']);
     $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($tid);
-    $style_options['structured_text_term_uri'] = $this->utils->getUriForTerm($term);
+    if ($term) {
+      $style_options['structured_text_term_uri'] = $this->utils->getUriForTerm($term);
+    }
     $form_state->setValue('style_options', $style_options);
     parent::submitOptionsForm($form, $form_state);
   }
