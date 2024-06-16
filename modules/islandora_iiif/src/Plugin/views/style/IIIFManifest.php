@@ -314,6 +314,7 @@ class IIIFManifest extends StylePluginBase {
           $annotation_id = $iiif_base_id . '/annotation/' . $entity->id();
 
           [$width, $height] = $this->getCanvasDimensions($iiif_url, $entity, $image, $mime_type);
+
           if ($width == 0) {
             continue;
           }
@@ -387,7 +388,6 @@ class IIIFManifest extends StylePluginBase {
    */
   protected function getCanvasDimensions(string $iiif_url, Media $media, FieldItemInterface $image, string $mime_type) {
 
-
     if (isset($image->width) && is_numeric($image->width)
     && isset($image->height) && is_numeric($image->height)) {
       return [intval($image->width),
@@ -404,6 +404,7 @@ class IIIFManifest extends StylePluginBase {
     }
 
     $entity = $image->entity;
+
     if ($entity->hasField('field_height') && !$entity->get('field_height')->isEmpty()
       && $entity->get('field_height')->value > 0
       && $entity->hasField('field_width')
@@ -448,6 +449,7 @@ class IIIFManifest extends StylePluginBase {
     // This can be very slow and will fail if there are too many pages.
     $dimensions = $this->iiifInfo->getImageDimensions($image->entity);
     if ($dimensions !== FALSE) {
+      $this->storeImageDimensions($media, $dimensions[0], $dimensions[1]);
       return $dimensions;
     }
 
@@ -588,6 +590,10 @@ class IIIFManifest extends StylePluginBase {
         (!empty($field->options['type']) && in_array($field->options['type'], $file_views_field_formatters))) {
         $field_options[$field_name] = $field->adminLabel();
       }
+      else {
+        // Put it in the list of fields that could contain the custom width or height value.
+        $dimensions_field_options[$field_name] = $field->adminLabel();
+      }
     }
 
     // If no fields to choose from, add an error message indicating such.
@@ -596,7 +602,7 @@ class IIIFManifest extends StylePluginBase {
         You will need to add a field to this View'), 'error');
     }
 
-    $dimensions_field_options = array_merge(['' => $this->t('  - None --  ')],array_combine(array_keys($fields), array_keys($fields)));
+    $dimensions_field_options = array_merge(['' => $this->t('  - None --  ')],$dimensions_field_options);
 
     $form['iiif_tile_field'] = [
       '#title' => $this->t('Tile source field(s)'),
@@ -713,4 +719,23 @@ $form['advanced']['custom_width_height']['width_field'] = [
     return $this->structuredTextTerm;
   }
 
+  protected function storeImageDimensions(EntityInterface $entity, $width, $height) {
+    $height_field = !empty($this->options['advanced']['custom_width_height']['height_field']) ? $this->view->field[$this->options['advanced']['custom_width_height']['height_field']]->definition['field_name'] : 'field_height';
+    $width_field = !empty($this->options['advanced']['custom_width_height']['width_field']) ? $this->view->field[$this->options['advanced']['custom_width_height']['width_field']]->definition['field_name'] : 'field_width';
+
+    $needs_save = FALSE;
+    if ($entity->hasField($height_field) && $entity->get($height_field)->getString() !== $height) {
+      $entity->set($height_field, $height);
+      $needs_save = TRUE;
+    }
+
+    if ($entity->hasField($width_field) && $entity->get($width_field)->getString() !== $width) {
+      $entity->set($width_field, $width);
+      $needs_save = TRUE;
+    }
+
+    if ($needs_save) {
+      $entity->save();
+    }
+  }
 }
