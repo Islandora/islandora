@@ -8,11 +8,37 @@
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Add Media Attributes from IIIF action.
+ * Update config schema.
  */
-function islandora_iiif_update_92001(&$sandbox) {
-  $config_id = 'system.action.media_attributes_from_iiif_action';
-  $config_path = \Drupal::service('extension.list.module')->getPath('islandora_iiif') . '/config/optional/' . $config_id . '.yml';
-  $data = Yaml::parseFile($config_path);
-  \Drupal::configFactory()->getEditable($config_id)->setData($data)->save(TRUE);
-}
+function islandora_iiif_update_92002(&$sandbox) {
+
+  /**
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+   $config_factory = \Drupal::service('config.factory');
+    $all_configs = $config_factory->listAll();
+    $views_configs = array_values(array_filter($all_configs, function($config) {
+      return str_starts_with($config, 'views.view.');
+    }));
+
+    foreach ($views_configs as $views_config_name) {
+      $needs_save = FALSE;
+      $view_config = $config_factory->getEditable($views_config_name);
+      $displays = $view_config->get('display');
+      foreach ($displays as $display_name => $display) {
+        if ($display['display_plugin'] == 'rest_export'
+          && $display['display_options']['style']['type'] == 'iiif_manifest') {
+
+          if (!empty($display['display_options']['style']['options']['iiif_ocr_file_field'])) {
+            $display['display_options']['style']['options']['advanced']['iiif_ocr_file_field'] = $display['display_options']['style']['options']['iiif_ocr_file_field'];
+            unset($display['display_options']['style']['options']['iiif_ocr_file_field']);
+            $displays->set($display_name . '.display_options.style.options', $display['display_options']['style']['options']);
+            $needs_save = TRUE;
+          }
+        }
+      }
+      if  ($needs_save) {
+        $view_config->save();
+      }
+    }
+  }
