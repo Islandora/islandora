@@ -654,14 +654,3 @@ function islandora_preprocess_views_view_table(&$variables) {
   }
 }
 
-/**
- * Implements hook_field_info_alter().
- *
- * @todo Remove once minimum version supported is at least 10.2.0.
- */
-function islandora_field_info_alter(array &$info): void {
-  // Allow module to work with versions of older versions of Drupal.
-  if (\version_compare(\Drupal::VERSION, '10.1.9999', '<')) {
-    $info['reference']['category'] = new TranslatableMarkup("Reference");
-  }
-}
