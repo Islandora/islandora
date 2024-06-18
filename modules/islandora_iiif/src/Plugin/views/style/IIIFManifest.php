@@ -577,6 +577,8 @@ class IIIFManifest extends StylePluginBase {
       // File formatters.
       'file_default', 'file_url_plain',
     ];
+    $dimensions_field_options = [];
+
     /** @var \Drupal\views\Plugin\views\field\FieldPluginBase[] $fields */
     foreach ($fields as $field_name => $field) {
       // If this is a known Islandora file/image field

@@ -27,14 +27,13 @@ function islandora_iiif_update_92002(&$sandbox) {
       $displays = $view_config->get('display');
       foreach ($displays as $display_name => $display) {
         if ($display['display_plugin'] == 'rest_export'
-          && $display['display_options']['style']['type'] == 'iiif_manifest') {
+          && $display['display_options']['style']['type'] == 'iiif_manifest'
+          &&!empty($display['display_options']['style']['options']['iiif_ocr_file_field'])) {
 
-          if (!empty($display['display_options']['style']['options']['iiif_ocr_file_field'])) {
-            $display['display_options']['style']['options']['advanced']['iiif_ocr_file_field'] = $display['display_options']['style']['options']['iiif_ocr_file_field'];
-            unset($display['display_options']['style']['options']['iiif_ocr_file_field']);
-            $displays->set($display_name . '.display_options.style.options', $display['display_options']['style']['options']);
-            $needs_save = TRUE;
-          }
+          $display['display_options']['style']['options']['advanced']['iiif_ocr_file_field'] = $display['display_options']['style']['options']['iiif_ocr_file_field'];
+          unset($display['display_options']['style']['options']['iiif_ocr_file_field']);
+          $view_config->set('display.' . $display_name . '.display_options.style.options', $display['display_options']['style']['options']);
+          $needs_save = TRUE;
         }
       }
       if  ($needs_save) {
