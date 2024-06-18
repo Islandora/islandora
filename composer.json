@@ -15,6 +15,7 @@
   ],
   "require": {
     "drupal/context": "^4 || ^5@RC",
+    "drupal/core": "^10.2",
     "drupal/ctools": "^3.8 || ^4",
     "drupal/eva" : "^3.0",
     "drupal/file_replace": "^1.1",
