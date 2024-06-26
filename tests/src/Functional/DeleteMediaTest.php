@@ -50,7 +50,7 @@ class DeleteMediaTest extends IslandoraFunctionalTestBase {
   public function setUp(): void {
     parent::setUp();
 
-    $permissions = ['create media', 'delete any media'];
+    $permissions = ['create media', 'delete any media', 'delete any file'];
 
     // Create a test user.
     $this->account = $this->createUser($permissions);
