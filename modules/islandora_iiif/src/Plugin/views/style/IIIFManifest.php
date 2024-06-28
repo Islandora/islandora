@@ -11,11 +11,10 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
-use Drupal\media\Entity\Media;
 use Drupal\islandora\IslandoraUtils;
-use Drupal\taxonomy\TermInterface;
-use Drupal\islandora_iiif\IiiffInfo;
 use Drupal\islandora_iiif\IiifInfo;
+use Drupal\media\MediaInterface;
+use Drupal\taxonomy\TermInterface;
 use Drupal\views\Plugin\views\style\StylePluginBase;
 use Drupal\views\ResultRow;
 use GuzzleHttp\Client;
@@ -378,6 +377,8 @@ class IIIFManifest extends StylePluginBase {
    *
    * @param string $iiif_url
    *   Base URL of the canvas.
+   * @param \Drupal\media\MediaInterface $media
+   *   The Media entity.
    * @param \Drupal\Core\Field\FieldItemInterface $image
    *   The image field.
    * @param string $mime_type
@@ -386,7 +387,7 @@ class IIIFManifest extends StylePluginBase {
    * @return [string]
    *   The width and height of the image.
    */
-  protected function getCanvasDimensions(string $iiif_url, Media $media, FieldItemInterface $image, string $mime_type) {
+  protected function getCanvasDimensions(string $iiif_url, MediaInterface $media, FieldItemInterface $image, string $mime_type) {
 
     if (isset($image->width) && is_numeric($image->width)
     && isset($image->height) && is_numeric($image->height)) {
@@ -429,7 +430,6 @@ class IIIFManifest extends StylePluginBase {
       ];
     }
 
-
     if ($mime_type === 'image/tiff') {
       // If this is a TIFF AND we don't know the width/height
       // see if we can get the image size via PHP's core function.
@@ -463,6 +463,7 @@ class IIIFManifest extends StylePluginBase {
    *   The entity at the current row.
    *
    * @return string|false
+   *   The URL where the OCR text is found.
    */
   protected function getOcrUrl(EntityInterface $entity) {
     $ocr_url = FALSE;
@@ -604,7 +605,7 @@ class IIIFManifest extends StylePluginBase {
         You will need to add a field to this View'), 'error');
     }
 
-    $dimensions_field_options = array_merge(['' => $this->t('  - None --  ')],$dimensions_field_options);
+    $dimensions_field_options = array_merge(['' => '  - ' . $this->t('None') . ' --  '], $dimensions_field_options);
 
     $form['iiif_tile_field'] = [
       '#title' => $this->t('Tile source field(s)'),
@@ -637,13 +638,12 @@ class IIIFManifest extends StylePluginBase {
       '#options' => $dimensions_field_options,
     ];
 
-$form['advanced']['custom_width_height']['width_field'] = [
-  '#type' => 'select',
-  '#title' => $this->t('Custom width field'),
-  '#default_value' => $this->options['advanced']['custom_width_height']['width_field'],
-  '#options' => $dimensions_field_options,
-];
-
+    $form['advanced']['custom_width_height']['width_field'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Custom width field'),
+      '#default_value' => $this->options['advanced']['custom_width_height']['width_field'],
+      '#options' => $dimensions_field_options,
+    ];
 
     $form['advanced']['iiif_ocr_file_field'] = [
       '#title' => $this->t('Structured OCR data file field'),
@@ -667,7 +667,7 @@ $form['advanced']['custom_width_height']['width_field'] = [
       '#type' => 'textfield',
       '#title' => $this->t("Search endpoint path."),
       '#description' => $this->t("If there is a search endpoint to search within the book that returns IIIF annotations, put it here. Use %node substitution where needed.<br>E.g., paged-content-search/%node"),
-      '#default_value' => !empty($this->options['search_endpoint']) ?$this->options['search_endpoint'] : '',
+      '#default_value' => !empty($this->options['search_endpoint']) ? $this->options['search_endpoint'] : '',
       '#required' => FALSE,
     ];
   }
@@ -721,6 +721,16 @@ $form['advanced']['custom_width_height']['width_field'] = [
     return $this->structuredTextTerm;
   }
 
+  /**
+   * Store the image dimensions back onto the entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to store the dimensions on to.
+   * @param int $width
+   *   The image's width.
+   * @param int $height
+   *   The image's height.
+   */
   protected function storeImageDimensions(EntityInterface $entity, $width, $height) {
     $height_field = !empty($this->options['advanced']['custom_width_height']['height_field']) ? $this->view->field[$this->options['advanced']['custom_width_height']['height_field']]->definition['field_name'] : 'field_height';
     $width_field = !empty($this->options['advanced']['custom_width_height']['width_field']) ? $this->view->field[$this->options['advanced']['custom_width_height']['width_field']]->definition['field_name'] : 'field_width';
@@ -740,4 +750,5 @@ $form['advanced']['custom_width_height']['width_field'] = [
       $entity->save();
     }
   }
+
 }
