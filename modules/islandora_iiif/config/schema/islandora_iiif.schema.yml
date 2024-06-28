@@ -28,9 +28,6 @@ views.style.iiif_manifest:
     structured_text_term_uri:
       type: string
       label: "Structured text term"
-    getdimensions_from_server:
-      type: boolean
-      label: "Retrieve image dimensions from IIIF server"
     search_endpoint:
       type: string
       label: "Search endpoint path"
