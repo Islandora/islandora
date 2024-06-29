@@ -594,7 +594,7 @@ class IIIFManifest extends StylePluginBase {
         $field_options[$field_name] = $field->adminLabel();
       }
       else {
-        // Put it in the list of fields that could contain the custom width or height value.
+        // Put it in the list of fields that may contain the custom value.
         $dimensions_field_options[$field_name] = $field->adminLabel();
       }
     }
@@ -605,7 +605,7 @@ class IIIFManifest extends StylePluginBase {
         You will need to add a field to this View'), 'error');
     }
 
-    $dimensions_field_options = array_merge(['' => '  - ' . $this->t('None') . ' --  '], $dimensions_field_options);
+    $dimensions_field_options = array_merge(['' => '  - None --  '], $dimensions_field_options);
 
     $form['iiif_tile_field'] = [
       '#title' => $this->t('Tile source field(s)'),

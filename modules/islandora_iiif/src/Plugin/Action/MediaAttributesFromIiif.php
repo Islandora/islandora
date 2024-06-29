@@ -18,7 +18,7 @@ use GuzzleHttp\Client;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides an action that can retrieve a large image file's dimensions from an IIIF server and save them to a media's fields.
+ * Retrieve a large image file's dimensions and save them to a media's fields.
  *
  * @Action(
  *   id = "media_attributes_from_iiif_action",

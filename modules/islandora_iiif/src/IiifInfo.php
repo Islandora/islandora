@@ -130,7 +130,7 @@ class IiifInfo {
   /**
    * The IIIF base URL for an image.
    *
-   * Visiting this URL will resolve to the full image resized to the maximum dimensions given.
+   * Visiting this URL resolves to the image resized to the maximum dimensions.
    *
    * @param \Drupal\file\FileInterface $image
    *   The image entity.
