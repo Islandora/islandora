@@ -11,7 +11,6 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ServerException;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
  * Get IIIF related info for a given File or Image entity.
@@ -128,16 +127,14 @@ class IiifInfo {
     return FALSE;
   }
 
-/**
+  /**
    * The IIIF base URL for an image.
    *
    * Visiting this URL will resolve to the full image resized to the maximum dimensions given.
    *
-   * @see https://iiif.io/api/image/2.1/
-   *
-   * @param Drupal\file\FileInterface $image
+   * @param \Drupal\file\FileInterface $image
    *   The image entity.
-   * @param int width
+   * @param int $width
    *   The maximum width of the image to be returned. 0 for no constraint.
    * @param int $height
    *   The maxim um height of the image to be returned. 0 for no contraint.
@@ -145,7 +142,7 @@ class IiifInfo {
    * @return string
    *   The IIIF URl to retrieve the full image with the given max dimensions.
    */
-  public function getImageWithMaxDimensions($image, $width = 0, $height = 0) {
+  public function getImageWithMaxDimensions(FileInterface $image, $width = 0, $height = 0) {
     $base_url = $this->baseUrl($image);
     return $base_url . "/full/!$width,$height/0/default.jpg";
 
