@@ -6,9 +6,7 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Field\FieldConfigInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -20,8 +18,7 @@ use GuzzleHttp\Client;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides an action that can retrieve a large image file's
- * dimensions from an IIIF server and save them to a media's fields.
+ * Provides an action that can retrieve a large image file's dimensions from an IIIF server and save them to a media's fields.
  *
  * @Action(
  *   id = "media_attributes_from_iiif_action",
@@ -34,23 +31,23 @@ class MediaAttributesFromIiif extends ConfigurableActionBase implements Containe
   /**
    * Config factory.
    *
-   * @var  \Drupal\Core\Config\ConfigFactoryInterface
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
   /**
-   * Entity Field Manager
+   * Entity Field Manager.
    *
    * @var Drupal\Core\Entity\EntityFieldManagerInterface
    */
-protected $entityFieldManager;
+  protected $entityFieldManager;
 
-/**
- * Entity type Manager.
- *
- * @var Drupal\Core\Entity\EntityTypeManagerInterface
- */
-protected $entityTypeManager;
+  /**
+   * Entity type Manager.
+   *
+   * @var Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * The HTTP client.
@@ -110,6 +107,8 @@ protected $entityTypeManager;
    *   Islandora media service.
    * @param \Drupal\Core\Logger\LoggerChannelInterface $channel
    *   Logger channel.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager service.
    * @param Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   Config factory.
    */
@@ -123,7 +122,7 @@ protected $entityTypeManager;
     $this->utils = $islandora_utils;
     $this->mediaSource = $media_source;
     $this->logger = $channel;
-    $this->entityFieldManager =$entity_field_manager;
+    $this->entityFieldManager = $entity_field_manager;
   }
 
   /**
@@ -131,19 +130,19 @@ protected $entityTypeManager;
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('datetime.time'),
-      $container->get('http_client'),
-      $container->get('islandora_iiif'),
-      $container->get('islandora.utils'),
-      $container->get('islandora.media_source_service'),
-      $container->get('logger.channel.islandora'),
-      $container->get('entity_field.manager'),
-      $container->get('config.factory')
-    );
+          $configuration,
+          $plugin_id,
+          $plugin_definition,
+          $container->get('entity_type.manager'),
+          $container->get('datetime.time'),
+          $container->get('http_client'),
+          $container->get('islandora_iiif'),
+          $container->get('islandora.utils'),
+          $container->get('islandora.media_source_service'),
+          $container->get('logger.channel.islandora'),
+          $container->get('entity_field.manager'),
+          $container->get('config.factory')
+      );
   }
 
   /**
@@ -153,12 +152,10 @@ protected $entityTypeManager;
     $width = $height = FALSE;
 
     // Get the original File media use term.
-
     $source_term = $this->utils->getTermForUri($this->configuration['source_term_uri']);
 
     $source_mids = $this->utils->getMediaReferencingNodeAndTerm($entity, $source_term);
     if (!empty($source_mids)) {
-
 
       foreach ($source_mids as $source_mid) {
 
@@ -186,18 +183,19 @@ protected $entityTypeManager;
     }
   }
 
-
   /**
    * {@inheritdoc}
    */
   public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
 
-    /** @var \Drupal\Core\Entity\EntityInterface $object */
+    /**
+* @var \Drupal\Core\Entity\EntityInterface $object
+*/
     return $object->access('update', $account, $return_as_object);
   }
 
   /**
-   * (@InheritDoc)
+   * {@inheritDoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
 
@@ -231,7 +229,7 @@ protected $entityTypeManager;
     return $form;
   }
 
-/**
+  /**
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
@@ -257,24 +255,30 @@ protected $entityTypeManager;
 
   }
 
+  /**
+   * Get all fields of an entity that are integer types.
+   *
+   * @return array
+   *   The integer type fields.
+   */
   protected function getIntegerFields() {
-    // get media types
+    // Get media types.
     $media_types = $this->entityTypeManager->getStorage('media_type')->loadMultiple();
     $all_integer_fields = [];
-    foreach(array_keys($media_types) as $key => $value) {
+    foreach (array_keys($media_types) as $key => $value) {
       $fields = $this->entityFieldManager->getFieldDefinitions("media", $value);
 
       $integer_fields = array_filter(
-        $fields,
-        function ($field_value, $field_key) {
-          // only keep fields of type 'integer'
-          return (strpos($field_value->getType(), 'integer') > -1)
-          && is_a($field_value, '\Drupal\Core\Field\FieldConfigInterface')           ;
-        }, ARRAY_FILTER_USE_BOTH
-      );
-      foreach($integer_fields as $integer_field) {
+            $fields,
+            function ($field_value, $field_key) {
+                // Only keep fields of type 'integer'.
+                return (strpos($field_value->getType(), 'integer') > -1)
+                && is_a($field_value, '\Drupal\Core\Field\FieldConfigInterface');
+            }, ARRAY_FILTER_USE_BOTH
+        );
+      foreach ($integer_fields as $integer_field) {
         $all_integer_fields[$integer_field->id()] = $integer_field->getTargetEntityTypeId()
-          . ' -- ' . $integer_field->getTargetBundle() . ' -- ' . $integer_field->getLabel();
+                    . ' -- ' . $integer_field->getTargetBundle() . ' -- ' . $integer_field->getLabel();
       }
 
     }
@@ -282,16 +286,17 @@ protected $entityTypeManager;
   }
 
   /**
-   * Retrusn teh last part of a qualified field anme.
+   * Returns the last part of a qualified field name.
    *
    * @param string $field_id
    *   The full field id, e.g., 'media.file.field_height'.
+   *
    * @return string
    *   The short field name, e.g., 'field_height'.
    */
   protected function getShortFieldName(string $field_id): string {
-     [$entity_type, $bundle, $field_name] = explode('.', $field_id);
-     return $field_name;
+    [$entity_type, $bundle, $field_name] = explode('.', $field_id);
+    return $field_name;
   }
 
 }
