@@ -26,15 +26,7 @@ class JsonldTypeAlterReactionTest extends JsonldSelfReferenceReactionTest {
 
     // Add the typed predicate we will select in the reaction config.
     // Taken from FieldUiTestTrait->fieldUIAddNewField.
-    if (version_compare(\Drupal::VERSION, '10.2.x-dev', 'lt')) {
-      $this->submitForm([
-        'new_storage_type' => 'string',
-        'label' => 'Typed Predicate',
-        'field_name' => 'type_predicate',
-      ], 'Save and continue');
-      $this->submitForm([], 'Save field settings');
-    }
-    elseif (version_compare(\Drupal::VERSION, '10.3.x-dev', 'lt')) {
+    if (version_compare(\Drupal::VERSION, '10.3.x-dev', 'lt')) {
       $this->getSession()->getPage()->selectFieldOption('new_storage_type', 'plain_text');
       // For Drupal 10.2, we first need to submit the form with the elements
       // displayed on initial page load. The form is using AJAX to send a

@@ -4,7 +4,7 @@ name: 'islandora'
 description: "Islandora Core"
 type: module
 package: Islandora
-core_version_requirement: ^9 || ^10
+core_version_requirement: ^10.2
 dependencies:
   - context:context_ui
   - ctools:ctools
