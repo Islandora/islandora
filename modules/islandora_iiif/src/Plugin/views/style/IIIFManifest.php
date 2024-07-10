@@ -494,7 +494,7 @@ class IIIFManifest extends StylePluginBase {
    */
   protected function addSearchEndpoint(array &$json, array $url_components) {
     $url_base = $this->getRequest()->getSchemeAndHttpHost();
-    $hocr_search_path = $this->options['search_endpoint'] ?? null;
+    $hocr_search_path = $this->options['search_endpoint'] ?? NULL;
 
     if ($hocr_search_path) {
       $hocr_search_url = $url_base . '/' . ltrim($hocr_search_path, '/');
