@@ -242,7 +242,7 @@ class IIIFManifest extends StylePluginBase {
       // For each row in the View result.
       foreach ($this->view->result as $row) {
         // Add the IIIF URL to the image to print out as JSON.
-        $canvases = $this->getTileSourceFromRow($row, $iiif_address, $iiif_base_id, $structured_text_term);
+        $canvases = $this->getTileSourceFromRow($row, $iiif_address, $iiif_base_id);
         foreach ($canvases as $tile_source) {
           $json['sequences'][0]['canvases'][] = $tile_source;
         }
