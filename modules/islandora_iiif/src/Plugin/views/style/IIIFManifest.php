@@ -222,10 +222,6 @@ class IIIFManifest extends StylePluginBase {
           $label = $this->t("IIIF Manifest");
       }
 
-      /**
-       * @var \Drupal\taxonomy\TermInterface|null
-      */
-      $structured_text_term = !empty($this->options['structured_text_term_uri']) ? $this->utils->getTermForUri($this->options['structured_text_term_uri']) : FALSE;
 
       // @see https://iiif.io/api/presentation/2.1/#manifest
       $json += [
