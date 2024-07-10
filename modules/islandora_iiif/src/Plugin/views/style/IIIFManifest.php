@@ -281,7 +281,7 @@ class IIIFManifest extends StylePluginBase {
    * @return array
    *   List of IIIF URLs to display in the Openseadragon viewer.
    */
-  protected function getTileSourceFromRow(ResultRow $row, $iiif_address, $iiif_base_id, $structured_text_term) {
+  protected function getTileSourceFromRow(ResultRow $row, $iiif_address, $iiif_base_id) {
     $canvases = [];
     foreach (array_filter(array_values($this->options['iiif_tile_field'])) as $iiif_tile_field) {
       $viewsField = $this->view->field[$iiif_tile_field];
