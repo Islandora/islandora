@@ -222,7 +222,6 @@ class IIIFManifest extends StylePluginBase {
           $label = $this->t("IIIF Manifest");
       }
 
-
       // @see https://iiif.io/api/presentation/2.1/#manifest
       $json += [
         '@type' => 'sc:Manifest',
@@ -271,8 +270,6 @@ class IIIFManifest extends StylePluginBase {
    * @param string $iiif_base_id
    *   The URL for the request, minus the last part of the URL,
    *   which is likely "manifest".
-   * @param \Drupal\taxonomy\TermInterface|null $structured_text_term
-   *   The term that structured text media references, if any.
    *
    * @return array
    *   List of IIIF URLs to display in the Openseadragon viewer.
