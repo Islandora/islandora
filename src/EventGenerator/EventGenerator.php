@@ -211,4 +211,3 @@ class EventGenerator implements EventGeneratorInterface {
   }
 
 }
-
