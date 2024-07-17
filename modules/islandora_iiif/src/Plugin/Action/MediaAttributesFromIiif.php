@@ -151,7 +151,7 @@ class MediaAttributesFromIiif extends ConfigurableActionBase implements Containe
   public function execute($entity = NULL) {
     $width = $height = FALSE;
 
-    // Get the original File media use term.
+    // Get the selected media use term.
     $source_term = $this->utils->getTermForUri($this->configuration['source_term_uri']);
 
     $source_mids = $this->utils->getMediaReferencingNodeAndTerm($entity, $source_term);
@@ -204,10 +204,10 @@ class MediaAttributesFromIiif extends ConfigurableActionBase implements Containe
     $form['source_term'] = [
       '#type' => 'entity_autocomplete',
       '#target_type' => 'taxonomy_term',
-      '#title' => $this->t('Source media use term'),
+      '#title' => $this->t('Media use term of media to process.'),
       '#default_value' => $this->utils->getTermForUri($this->configuration['source_term_uri']),
       '#required' => TRUE,
-      '#description' => $this->t('Term indicating the source media'),
+      '#description' => $this->t('Term that indicates the child media on which to perform this action.'),
     ];
 
     $form['width_field'] = [
@@ -235,7 +235,7 @@ class MediaAttributesFromIiif extends ConfigurableActionBase implements Containe
   public function defaultConfiguration() {
     $config = parent::defaultConfiguration();
 
-    $config['media_use_term'] = '';
+    $config['source_term_uri'] = '';
     $config['width_field'] = '';
     $config['height_field'] = '';
 

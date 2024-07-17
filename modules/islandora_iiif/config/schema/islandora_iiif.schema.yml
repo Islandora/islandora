@@ -31,3 +31,13 @@ views.style.iiif_manifest:
     search_endpoint:
       type: string
       label: "Search endpoint path"
+
+action.configuration.media_attributes_from_iiif_action:
+  type: mapping
+  mapping:
+    source_term_uri:
+      type: string
+    width_field:
+      type: string
+    height_field:
+      type: string
