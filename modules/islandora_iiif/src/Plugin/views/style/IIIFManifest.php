@@ -711,7 +711,8 @@ class IIIFManifest extends StylePluginBase {
   protected function getStructuredTextTerm() : ?TermInterface {
     if (!$this->structuredTextTermMemoized) {
       $this->structuredTextTermMemoized = TRUE;
-      $this->structuredTextTerm = $this->utils->getTermForUri($this->options['structured_text_term_uri']);
+      $uri = $this->options['structured_text_term_uri'] ?? NULL;
+      $this->structuredTextTerm = $uri ? $this->utils->getTermForUri($uri) : NULL;
     }
 
     return $this->structuredTextTerm;
