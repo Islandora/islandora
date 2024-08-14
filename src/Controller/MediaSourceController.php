@@ -164,7 +164,7 @@ class MediaSourceController extends ControllerBase {
     $transaction = $this->database->startTransaction();
 
     try {
-    $media = $this->service->putToNode(
+      $media = $this->service->putToNode(
         $node,
         $media_type,
         $taxonomy_term,
