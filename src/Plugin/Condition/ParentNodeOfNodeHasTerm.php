@@ -29,6 +29,16 @@ class ParentNodeOfNodeHasTerm extends NodeHasTerm {
   /**
    * {@inheritdoc}
    */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $form = parent::buildConfigurationForm($form, $form_state);
+    // Make term not required.
+    $form['term']['#required'] = FALSE;
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function evaluate() {
     if (empty($this->configuration['uri']) && !$this->isNegated()) {
       return TRUE;
