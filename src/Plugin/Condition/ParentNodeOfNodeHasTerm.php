@@ -2,12 +2,7 @@
 
 namespace Drupal\islandora\Plugin\Condition;
 
-use Drupal\Core\Condition\ConditionPluginBase;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a 'term' condition for a node's parent.
@@ -59,10 +54,10 @@ class ParentNodeOfNodeHasTerm extends NodeHasTerm {
       $parent = $this->entityTypeManager->getStorage('node')->load($parentId);
       if ($parent) {
         $parentResult = $this->evaluateEntity($parent);
-        $result = $result + (int)$parentResult;
+        $result = $result + (int) $parentResult;
       }
     }
-    return (boolean)$result;
+    return (boolean) $result;
   }
 
   /**
