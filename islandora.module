@@ -505,6 +505,7 @@ function islandora_form_block_form_alter(&$form, FormStateInterface $form_state,
   unset($form['visibility']['media_has_mimetype']);
   unset($form['visibility']['media_has_term']);
   unset($form['visibility']['media_is_islandora_media']);
+  unset($form['visibility']['media_is_published']);
   unset($form['visibility']['media_uses_filesystem']);
   unset($form['visibility']['node_had_namespace']);
   unset($form['visibility']['node_has_ancestor']);
@@ -513,6 +514,7 @@ function islandora_form_block_form_alter(&$form, FormStateInterface $form_state,
   unset($form['visibility']['node_is_islandora_object']);
   unset($form['visibility']['node_referenced_by_node']);
   unset($form['visibility']['parent_node_has_term']);
+  unset($form['visibility']['term_is_published']);
 }
 
 /**
