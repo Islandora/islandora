@@ -36,7 +36,7 @@ class StompHeaderEventSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return [
       StompHeaderEventInterface::EVENT_NAME => ['baseHeaders', -100],
     ];

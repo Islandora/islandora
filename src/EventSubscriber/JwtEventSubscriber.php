@@ -72,7 +72,7 @@ class JwtEventSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[JwtAuthEvents::VALIDATE][] = ['validate'];
     $events[JwtAuthEvents::VALID][] = ['loadUser'];
     $events[JwtAuthEvents::GENERATE][] = ['setIslandoraClaims'];

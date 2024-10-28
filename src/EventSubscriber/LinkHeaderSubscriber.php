@@ -113,7 +113,7 @@ abstract class LinkHeaderSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // Run this early so the headers get cached.
     $events[KernelEvents::RESPONSE][] = ['onResponse', 129];
 
