@@ -119,7 +119,7 @@ jobs:
       - name: PHPUNIT tests
         run: |
           cd $DRUPAL_DIR/web/core
-          $DRUPAL_DIR/vendor/bin/phpunit --verbose --testsuite "${{ matrix.test-suite }}"
+          $DRUPAL_DIR/vendor/bin/phpunit --testsuite "${{ matrix.test-suite }}"
 
       - name: Print chromedriver logs
         if: matrix.test-suite == 'functional-javascript'
