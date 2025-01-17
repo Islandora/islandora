@@ -261,24 +261,19 @@ class IslandoraUtils {
     // Add field_external_uri.
     $fields[] = self::EXTERNAL_URI_FIELD;
 
-    $query = $this->entityTypeManager->getStorage('taxonomy_term')->getQuery();
-
-    $orGroup = $query->orConditionGroup();
+    $storage = $this->entityTypeManager->getStorage('taxonomy_term');
     foreach ($fields as $field) {
-      $orGroup->condition("$field.uri", $uri);
+      $query = $storage->getQuery();
+      $results = $query
+        ->accessCheck(TRUE)
+        ->condition("$field.uri", $uri)
+        ->execute();
+      if (!empty($results)) {
+        return $storage->load(reset($results));
+      }
     }
 
-    $results = $query
-      ->accessCheck(TRUE)
-      ->condition($orGroup)
-      ->execute();
-
-    if (empty($results)) {
-      return NULL;
-    }
-
-    return $this->entityTypeManager->getStorage('taxonomy_term')
-      ->load(reset($results));
+    return NULL;
   }
 
   /**
