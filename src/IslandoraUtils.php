@@ -3,6 +3,9 @@
 namespace Drupal\islandora;
 
 use Drupal\context\ContextManager;
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -28,6 +31,7 @@ use Drupal\taxonomy\TermInterface;
  * Utility functions for figuring out when to fire derivative reactions.
  */
 class IslandoraUtils {
+  use DependencySerializationTrait;
   use StringTranslationTrait;
   const EXTERNAL_URI_FIELD = 'field_external_uri';
 
@@ -96,6 +100,8 @@ class IslandoraUtils {
    *   Language manager.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
+   * @param \Drupal\Core\Database\Connection $database
+   *   Drupal's database service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -103,7 +109,8 @@ class IslandoraUtils {
     ContextManager $context_manager,
     FlysystemFactory $flysystem_factory,
     LanguageManagerInterface $language_manager,
-    AccountInterface $current_user
+    AccountInterface $current_user,
+    protected Connection $database,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
@@ -261,24 +268,40 @@ class IslandoraUtils {
     // Add field_external_uri.
     $fields[] = self::EXTERNAL_URI_FIELD;
 
-    $query = $this->entityTypeManager->getStorage('taxonomy_term')->getQuery();
-
-    $orGroup = $query->orConditionGroup();
-    foreach ($fields as $field) {
-      $orGroup->condition("$field.uri", $uri);
+    $queries = [];
+    foreach ($fields as $field_name) {
+      $queries[] = $this->database->select("taxonomy_term__{$field_name}", 'f')
+        ->fields('f', ['entity_id'])
+        ->condition("f.{$field_name}_uri", $uri);
     }
 
-    $results = $query
-      ->accessCheck(TRUE)
-      ->condition($orGroup)
-      ->execute();
+    /** @var \Drupal\Core\Database\Query\SelectInterface $query */
+    $query = array_reduce(
+      $queries,
+      static function (?SelectInterface $carry, SelectInterface $item) {
+        if ($carry === NULL) {
+          return $item;
+        }
 
-    if (empty($results)) {
-      return NULL;
+        return $carry->union($item);
+      },
+    );
+
+    $results = $query->execute()->fetchCol();
+
+    $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
+    foreach ($results as $term_id) {
+      /** @var ?\Drupal\taxonomy\TermInterface $term */
+      if (!($term = $term_storage->load($term_id))) {
+        // Term failed to load/is null; skip it.
+        continue;
+      }
+      if ($term->access('view')) {
+        return $term;
+      }
     }
 
-    return $this->entityTypeManager->getStorage('taxonomy_term')
-      ->load(reset($results));
+    return NULL;
   }
 
   /**
