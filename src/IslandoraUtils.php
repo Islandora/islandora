@@ -199,7 +199,9 @@ class IslandoraUtils {
    *   Calling getStorage() throws if the storage handler couldn't be loaded.
    */
   public function getMediaWithTerm(NodeInterface $node, TermInterface $term) {
-    $mids = $this->getMediaReferencingNodeAndTerm($node, $term);
+    $mids = $this->getMediaReferencingNodeAndTermQuery($node, $term)
+      ->range(0, 1)
+      ->execute();
     if (empty($mids)) {
       return NULL;
     }
@@ -289,6 +291,7 @@ class IslandoraUtils {
     $results = $term_storage->getQuery()
       ->accessCheck(TRUE)
       ->condition('tid', $query, 'IN')
+      ->range(0, 1)
       ->execute();
 
     return $results ?
@@ -511,18 +514,7 @@ class IslandoraUtils {
     return array_merge($schemes, $this->flysystemFactory->getSchemes());
   }
 
-  /**
-   * Get array of media ids that have fields that reference $node and $term.
-   *
-   * @param \Drupal\node\NodeInterface $node
-   *   The node to reference.
-   * @param \Drupal\taxonomy\TermInterface $term
-   *   The term to reference.
-   *
-   * @return array
-   *   Array of media IDs.
-   */
-  public function getMediaReferencingNodeAndTerm(NodeInterface $node, TermInterface $term) {
+  private function getMediaReferencingNodeAndTermQuery(NodeInterface $node, TermInterface $term) : QueryInterface {
     $term_fields = $this->getReferencingFields('media', 'taxonomy_term');
     if (empty($term_fields)) {
       $this->logger->debug("No media fields found referencing a taxonomy term.");
@@ -560,8 +552,42 @@ class IslandoraUtils {
     return $this->entityTypeManager->getStorage('media')->getQuery()
       ->accessCheck(TRUE)
       ->condition('mid', $term_query, 'IN')
-      ->condition('mid', $node_query, 'IN')
+      ->condition('mid', $node_query, 'IN');
+  }
+
+  /**
+   * Get array of media ids that have fields that reference $node and $term.
+   *
+   * @param \Drupal\node\NodeInterface $node
+   *   The node to reference.
+   * @param \Drupal\taxonomy\TermInterface $term
+   *   The term to reference.
+   *
+   * @return array
+   *   Array of media IDs.
+   */
+  public function getMediaReferencingNodeAndTerm(NodeInterface $node, TermInterface $term) {
+    return $this->getMediaReferencingNodeAndTermQuery($node, $term)
       ->execute();
+  }
+
+  /**
+   * Determine if there is a media referencing the given node and term.
+   *
+   * @param \Drupal\node\NodeInterface $node
+   *   The node in question.
+   * @param \Drupal\taxonomy\TermInterface $term
+   *   The term in question.
+   *
+   * @return bool
+   *   TRUE if there exists at least one media related to the node and term;
+   *   otherwise, FALSE.
+   */
+  public function hasMediaReferencingNodeAndTerm(NodeInterface $node, TermInterface $term) : bool {
+    $results = $this->getMediaReferencingNodeAndTermQuery($node, $term)
+      ->range(0, 1)
+      ->execute();
+    return !empty($results);
   }
 
   /**
