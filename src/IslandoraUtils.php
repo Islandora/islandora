@@ -572,25 +572,6 @@ class IslandoraUtils {
   }
 
   /**
-   * Determine if there is a media referencing the given node and term.
-   *
-   * @param \Drupal\node\NodeInterface $node
-   *   The node in question.
-   * @param \Drupal\taxonomy\TermInterface $term
-   *   The term in question.
-   *
-   * @return bool
-   *   TRUE if there exists at least one media related to the node and term;
-   *   otherwise, FALSE.
-   */
-  public function hasMediaReferencingNodeAndTerm(NodeInterface $node, TermInterface $term) : bool {
-    $results = $this->getMediaReferencingNodeAndTermQuery($node, $term)
-      ->range(0, 1)
-      ->execute();
-    return !empty($results);
-  }
-
-  /**
    * Get the fields on an entity of $entity_type that reference a $target_type.
    *
    * @param string $entity_type
