@@ -10,7 +10,6 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Entity\Query\QueryException;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -26,6 +25,7 @@ use Drupal\islandora\ContextProvider\TermContextProvider;
 use Drupal\media\MediaInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Utility functions for figuring out when to fire derivative reactions.
@@ -102,6 +102,8 @@ class IslandoraUtils {
    *   The current user.
    * @param \Drupal\Core\Database\Connection $database
    *   Drupal's database service.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   Islandora's logger service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -111,6 +113,7 @@ class IslandoraUtils {
     LanguageManagerInterface $language_manager,
     AccountInterface $current_user,
     protected Connection $database,
+    protected LoggerInterface $logger,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
@@ -221,25 +224,28 @@ class IslandoraUtils {
     // Get media fields that reference files.
     $fields = $this->getReferencingFields('media', 'file');
 
-    // Process field names, stripping off 'media.' and appending 'target_id'.
-    $conditions = array_map(
-      function ($field) {
-        return ltrim($field, 'media.') . '.target_id';
-      },
-      $fields
-    );
+    if (empty($fields)) {
+      return [];
+    }
+
+    $queries = [];
+    foreach ($fields as $full_field) {
+      // Process field names, stripping off 'media.' and appending 'target_id'.
+      assert(str_starts_with($full_field, 'media.'), 'Has expected prefix.');
+      $trimmed_field = substr($full_field, strlen('media.'));
+      $queries[] = $this->database->select("media__{$trimmed_field}", 'f')
+        ->fields('f', ['entity_id'])
+        ->condition("f.{$trimmed_field}_target_id", $fid);
+    }
+
+    $media_storage = $this->entityTypeManager->getStorage('media');
 
     // Query for media that reference this file.
-    $query = $this->entityTypeManager->getStorage('media')->getQuery();
-    $query->accessCheck(TRUE);
-    $group = $query->orConditionGroup();
-    foreach ($conditions as $condition) {
-      $group->condition($condition, $fid);
-    }
-    $query->condition($group);
+    $query = $media_storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('mid', array_reduce($queries, static::unionReduction(...)), 'IN');
 
-    return $this->entityTypeManager->getStorage('media')
-      ->loadMultiple($query->execute());
+    return $media_storage->loadMultiple($query->execute());
   }
 
   /**
@@ -276,16 +282,7 @@ class IslandoraUtils {
     }
 
     /** @var \Drupal\Core\Database\Query\SelectInterface $query */
-    $query = array_reduce(
-      $queries,
-      static function (?SelectInterface $carry, SelectInterface $item) {
-        if ($carry === NULL) {
-          return $item;
-        }
-
-        return $carry->union($item);
-      },
-    );
+    $query = array_reduce($queries, static::unionReduction(...));
 
     $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
     $results = $term_storage->getQuery()
@@ -296,6 +293,17 @@ class IslandoraUtils {
     return $results ?
       $term_storage->load(reset($results)) :
       NULL;
+  }
+
+  /**
+   * Callback for array_reduce(); "join" queries with "UNION".
+   */
+  private static function unionReduction(?SelectInterface $carry, SelectInterface $item) : SelectInterface {
+    if ($carry === NULL) {
+      return $item;
+    }
+
+    return $carry->union($item);
   }
 
   /**
@@ -510,41 +518,49 @@ class IslandoraUtils {
    * @param \Drupal\taxonomy\TermInterface $term
    *   The term to reference.
    *
-   * @return array|int|null
+   * @return int[]
    *   Array of media IDs or NULL.
    */
   public function getMediaReferencingNodeAndTerm(NodeInterface $node, TermInterface $term) {
     $term_fields = $this->getReferencingFields('media', 'taxonomy_term');
-    if (count($term_fields) <= 0) {
-      \Drupal::logger("No media fields reference a taxonomy term");
-      return NULL;
+    if (empty($term_fields)) {
+      $this->logger->debug("No media fields found referencing a taxonomy term.");
+      return [];
     }
     $node_fields = $this->getReferencingFields('media', 'node');
-    if (count($node_fields) <= 0) {
-      \Drupal::logger("No media fields reference a node.");
-      return NULL;
+    if (empty($node_fields)) {
+      $this->logger->debug("No media fields found referencing a node.");
+      return [];
     }
 
-    $remove_entity = function (&$o) {
+    $remove_entity = static function (&$o) {
       $o = substr($o, strpos($o, '.') + 1);
     };
     array_walk($term_fields, $remove_entity);
     array_walk($node_fields, $remove_entity);
 
-    $query = $this->entityTypeManager->getStorage('media')->getQuery();
-    $query->accessCheck(TRUE);
-    $taxon_condition = $this->getEntityQueryOrCondition($query, $term_fields, $term->id());
-    $query->condition($taxon_condition);
-    $node_condition = $this->getEntityQueryOrCondition($query, $node_fields, $node->id());
-    $query->condition($node_condition);
-    // Does the tags field exist?
-    try {
-      $mids = $query->execute();
-    }
-    catch (QueryException $e) {
-      $mids = [];
-    }
-    return $mids;
+    $map_reference_field = function (int $value) : callable {
+      return function (string $field) use ($value) : SelectInterface {
+        return $this->database->select("media__{$field}", 'f')
+          ->fields('f', ['entity_id'])
+          ->condition("f.{$field}_target_id", $value);
+      };
+    };
+
+    $term_query = array_reduce(
+      array_map($map_reference_field($term->id()), $term_fields),
+      static::unionReduction(...),
+    );
+    $node_query = array_reduce(
+      array_map($map_reference_field($node->id()), $node_fields),
+      static::unionReduction(...),
+    );
+
+    return $this->entityTypeManager->getStorage('media')->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('mid', $term_query, 'IN')
+      ->condition('mid', $node_query, 'IN')
+      ->execute();
   }
 
   /**
@@ -568,27 +584,6 @@ class IslandoraUtils {
       $fields = [$fields];
     }
     return $fields;
-  }
-
-  /**
-   * Make an OR condition for an array of fields and a value.
-   *
-   * @param \Drupal\Core\Entity\Query\QueryInterface $query
-   *   The QueryInterface for the query.
-   * @param array $fields
-   *   The array of field names.
-   * @param string $value
-   *   The value to search the fields for.
-   *
-   * @return \Drupal\Core\Entity\Query\ConditionInterface
-   *   The OR condition to add to your query.
-   */
-  private function getEntityQueryOrCondition(QueryInterface $query, array $fields, $value) {
-    $condition = $query->orConditionGroup();
-    foreach ($fields as $field) {
-      $condition->condition($field, $value);
-    }
-    return $condition;
   }
 
   /**
@@ -778,11 +773,12 @@ class IslandoraUtils {
       if ($entity->hasField($field)) {
         $reference_field = $entity->get($field);
         if (!$reference_field->isEmpty()) {
-          $parents = array_merge($parents, $reference_field->referencedEntities());
+          $parents[] = $reference_field->referencedEntities();
         }
       }
     }
-    return $parents;
+
+    return array_merge(...$parents);
   }
 
   /**
