@@ -199,9 +199,8 @@ class IslandoraUtils {
    *   Calling getStorage() throws if the storage handler couldn't be loaded.
    */
   public function getMediaWithTerm(NodeInterface $node, TermInterface $term) {
-    $mids = $this->getMediaReferencingNodeAndTermQuery($node, $term)
-      ->range(0, 1)
-      ->execute();
+    $query = $this->getMediaReferencingNodeAndTermQuery($node, $term);
+    $mids = $query?->range(0, 1)->execute() ?? [];
     if (empty($mids)) {
       return NULL;
     }
@@ -514,16 +513,32 @@ class IslandoraUtils {
     return array_merge($schemes, $this->flysystemFactory->getSchemes());
   }
 
-  private function getMediaReferencingNodeAndTermQuery(NodeInterface $node, TermInterface $term) : QueryInterface {
+  /**
+   * Build out query for selecting media related to a given node and term.
+   *
+   * @param \Drupal\node\NodeInterface $node
+   *   The node in question.
+   * @param \Drupal\taxonomy\TermInterface $term
+   *   The term in question.
+   *
+   * @return \Drupal\Core\Entity\Query\QueryInterface|null
+   *   An entity query over media, constrained to those relating to the given
+   *   node and term. NULL if a field does not exist to relate media to either
+   *   nodes or terms.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  private function getMediaReferencingNodeAndTermQuery(NodeInterface $node, TermInterface $term) : ?QueryInterface {
     $term_fields = $this->getReferencingFields('media', 'taxonomy_term');
     if (empty($term_fields)) {
       $this->logger->debug("No media fields found referencing a taxonomy term.");
-      return [];
+      return NULL;
     }
     $node_fields = $this->getReferencingFields('media', 'node');
     if (empty($node_fields)) {
       $this->logger->debug("No media fields found referencing a node.");
-      return [];
+      return NULL;
     }
 
     $remove_entity = static function (&$o) {
@@ -567,8 +582,7 @@ class IslandoraUtils {
    *   Array of media IDs.
    */
   public function getMediaReferencingNodeAndTerm(NodeInterface $node, TermInterface $term) {
-    return $this->getMediaReferencingNodeAndTermQuery($node, $term)
-      ->execute();
+    return $this->getMediaReferencingNodeAndTermQuery($node, $term)?->execute() ?? [];
   }
 
   /**
