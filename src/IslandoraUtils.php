@@ -287,21 +287,15 @@ class IslandoraUtils {
       },
     );
 
-    $results = $query->execute()->fetchCol();
-
     $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
-    foreach ($results as $term_id) {
-      /** @var ?\Drupal\taxonomy\TermInterface $term */
-      if (!($term = $term_storage->load($term_id))) {
-        // Term failed to load/is null; skip it.
-        continue;
-      }
-      if ($term->access('view')) {
-        return $term;
-      }
-    }
+    $results = $term_storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('tid', $query, 'IN')
+      ->execute();
 
-    return NULL;
+    return $results ?
+      $term_storage->load(reset($results)) :
+      NULL;
   }
 
   /**
