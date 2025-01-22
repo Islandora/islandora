@@ -225,6 +225,7 @@ class IslandoraUtils {
     $fields = $this->getReferencingFields('media', 'file');
 
     if (empty($fields)) {
+      $this->logger->debug('No media fields found referencing a file.');
       return [];
     }
 
