@@ -519,8 +519,8 @@ class IslandoraUtils {
    * @param \Drupal\taxonomy\TermInterface $term
    *   The term to reference.
    *
-   * @return int[]
-   *   Array of media IDs or NULL.
+   * @return array
+   *   Array of media IDs.
    */
   public function getMediaReferencingNodeAndTerm(NodeInterface $node, TermInterface $term) {
     $term_fields = $this->getReferencingFields('media', 'taxonomy_term');
