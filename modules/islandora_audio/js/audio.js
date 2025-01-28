@@ -47,7 +47,7 @@
           return cues;
         }
 
-        const vtt_source = element.querySelector("track[kind='captions']")?.getAttribute('src');
+        const vtt_source = element.querySelector("track[kind='captions'], track[kind='subtitles']")?.getAttribute('src');
         if (!vtt_source) { return; }
         fetch(vtt_source).then(response => {
           if (!response.ok) {
