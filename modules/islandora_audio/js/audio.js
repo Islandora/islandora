@@ -5,10 +5,10 @@
  * Displays Audio viewer.
  */
 (function (Drupal, once) {
-  Drupal.behaviors.customBehavior = {
+  Drupal.behaviors.islandora_audio_captions = {
     attach: function (context, settings) {
 
-      once('customBehavior', 'audio', context).forEach(function (element) {
+      once('islandora_audio_captions', 'audio', context).forEach(function (element) {
         function parseTimestamp(timestamp) {
           const [hours, minutes, seconds] = timestamp.split(':').map(Number);
           return hours * 3600 + minutes * 60 + seconds;
