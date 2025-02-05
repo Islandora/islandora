@@ -44,6 +44,9 @@
               currentCue.text += (currentCue.text ? '\n' : '') + trimmedLine;
             }
           }
+          if (typeof currentCue !== 'undefined') {
+            cues.push(currentCue);
+          }
           return cues;
         }
 
