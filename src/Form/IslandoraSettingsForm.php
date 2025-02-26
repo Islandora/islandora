@@ -44,6 +44,7 @@ class IslandoraSettingsForm extends ConfigFormBase {
   const GEMINI_PSEUDO_FIELD = 'field_gemini_uri';
   const NODE_DELETE_MEDIA_AND_FILES = 'delete_media_and_files';
   const REDIRECT_AFTER_MEDIA_SAVE = 'redirect_after_media_save';
+  const FAST_TERM_QUERIES = 'fast_term_queries';
 
   /**
    * To list the available bundle types.
@@ -79,7 +80,7 @@ class IslandoraSettingsForm extends ConfigFormBase {
   public function __construct(
     ConfigFactoryInterface $config_factory,
     EntityTypeBundleInfoInterface $entity_type_bundle_info,
-    EntityTypeManagerInterface $entity_type_manager
+    EntityTypeManagerInterface $entity_type_manager,
   ) {
     $this->setConfigFactory($config_factory);
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
@@ -226,6 +227,13 @@ class IslandoraSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Redirect after media save.'),
       '#description' => $this->t('Redirect to node-specific media list after creation of media.'),
       '#default_value' => (bool) $config->get(self::REDIRECT_AFTER_MEDIA_SAVE),
+    ];
+
+    $form[self::FAST_TERM_QUERIES] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Use multiple queries for term URI lookups.'),
+      '#description' => $this->t('Using multiple queries to look up taxonomy terms by URI is faster in most setups. You may want to disable this if you have a term access protection module enabled.'),
+      '#default_value' => (bool) $config->get(self::FAST_TERM_QUERIES),
     ];
 
     $form[self::FEDORA_URL] = [
@@ -383,6 +391,7 @@ class IslandoraSettingsForm extends ConfigFormBase {
       ->set(self::UPLOAD_FORM_ALLOWED_MIMETYPES, $form_state->getValue(self::UPLOAD_FORM_ALLOWED_MIMETYPES))
       ->set(self::GEMINI_PSEUDO, $new_pseudo_types)
       ->set(self::NODE_DELETE_MEDIA_AND_FILES, $form_state->getValue(self::NODE_DELETE_MEDIA_AND_FILES))
+      ->set(self::FAST_TERM_QUERIES, $form_state->getValue(self::FAST_TERM_QUERIES))
       ->set(self::REDIRECT_AFTER_MEDIA_SAVE, $form_state->getValue(self::REDIRECT_AFTER_MEDIA_SAVE))
       ->save();
 
