@@ -35,7 +35,7 @@ class ManageMediaController extends ManageMembersController {
       ['query' => ["edit[$field][widget][0][target_id]" => $node->id()]]
     );
 
-    $manage_link = Url::fromRoute('entity.media_type.collection')->toRenderArray();
+    $manage_link['#url'] = Url::fromRoute('entity.media_type.collection');
     $manage_link['#title'] = $this->t('Manage media types');
     $manage_link['#type'] = 'link';
     $manage_link['#prefix'] = ' ';
