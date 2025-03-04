@@ -143,7 +143,7 @@ class IIIFManifest extends StylePluginBase {
    *
    * @var string
    */
-  protected $langCode = 'none';
+  protected $langCode;
 
   /**
    * {@inheritdoc}
