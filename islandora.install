@@ -170,7 +170,7 @@ function update_jsonld_included_namespaces() {
   ];
 
   $config = \Drupal::configFactory()->getEditable('jsonld.settings');
-  if ($config && !is_array($config->get('rdf_namespaces'))) {
+  if ($config && empty($config->get('rdf_namespaces'))) {
     $config->set('rdf_namespaces', $namespaces);
     $config->save(TRUE);
   }

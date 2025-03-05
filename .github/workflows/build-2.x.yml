@@ -22,7 +22,7 @@ jobs:
       matrix:
         php-versions: ["8.1", "8.2", "8.3"]
         test-suite: ["kernel", "functional", "functional-javascript"]
-        drupal-version: ["10.2.x", "10.3.x", "10.4.x-dev"]
+        drupal-version: ["10.2.x", "10.3.x", "10.4.x"]
         mysql: ["8.0"]
         allowed_failure: [false]
 
