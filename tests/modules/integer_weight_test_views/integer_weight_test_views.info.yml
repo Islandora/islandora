@@ -2,7 +2,7 @@ name: 'Integer weight test views'
 type: module
 description: 'Provides default views for integer weight views tests.'
 package: Testing
-core_version_requirement: ^8 || ^9 || ^10
+core_version_requirement: ^10 || ^11
 dependencies:
   - drupal:node
   - drupal:views
