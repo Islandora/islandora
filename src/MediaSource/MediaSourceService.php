@@ -61,7 +61,7 @@ class MediaSourceService {
   /**
    * File validator service.
    *
-   * @var \Drupal\file\Validation\FileValidatorInterfac
+   * @var \Drupal\file\Validation\FileValidatorInterface
    */
   protected $fileValidator;
 
@@ -78,6 +78,8 @@ class MediaSourceService {
    *   File system service.
    * @param \Drupal\islandora\IslandoraUtils $islandora_utils
    *   Utility service.
+   * @param \Drupal\file\Validation\FileValidatorInterface $file_validator
+   *   File validator service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
