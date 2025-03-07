@@ -170,9 +170,11 @@ function update_jsonld_included_namespaces() {
   ];
 
   $config = \Drupal::configFactory()->getEditable('jsonld.settings');
-  if ($config && !is_array($config->get('rdf_namespaces'))) {
-    $config->set('rdf_namespaces', $namespaces);
-    $config->save(TRUE);
+  if ($config) {
+    if (empty($config->get('rdf_namespaces'))) {
+      $config->set('rdf_namespaces', $namespaces);
+      $config->save(TRUE);
+    }
   }
   else {
     \Drupal::logger('islandora')
@@ -236,4 +238,11 @@ function islandora_update_9001(&$sandbox) {
   $config_path = \Drupal::service('extension.list.module')->getPath('islandora') . '/config/install/' . $config_id . '.yml';
   $data = Yaml::parseFile($config_path);
   \Drupal::configFactory()->getEditable($config_id)->setData($data)->save(TRUE);
+}
+
+/**
+ * Add namespaces for sites installed in early 2025.
+ */
+function islandora_update_9002() {
+  update_jsonld_included_namespaces();
 }
