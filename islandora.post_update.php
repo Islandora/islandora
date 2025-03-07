@@ -14,3 +14,13 @@ function islandora_post_update_delete_media_and_files() {
   $config->set('delete_media_and_files', TRUE);
   $config->save(TRUE);
 }
+
+/**
+ * Ensure `fast_term_queries` exists.
+ */
+function islandora_post_update_fast_term_queries() : void {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('islandora.settings');
+  $config->set('fast_term_queries', TRUE);
+  $config->save(TRUE);
+}

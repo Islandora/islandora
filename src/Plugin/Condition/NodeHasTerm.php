@@ -111,7 +111,6 @@ class NodeHasTerm extends ConditionPluginBase implements ContainerFactoryPluginI
       '#tags' => TRUE,
       '#default_value' => $default,
       '#target_type' => 'taxonomy_term',
-      '#required' => TRUE,
       '#selection_handler' => 'islandora:external_uri',
     ];
 

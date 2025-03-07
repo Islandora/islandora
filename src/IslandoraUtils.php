@@ -23,6 +23,8 @@ use Drupal\islandora\ContextProvider\TermContextProvider;
 use Drupal\media\MediaInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
+use Drupal\islandora\Form\IslandoraSettingsForm;
+use Drupal\Core\Config\ConfigFactoryInterface;
 
 /**
  * Utility functions for figuring out when to fire derivative reactions.
@@ -82,6 +84,13 @@ class IslandoraUtils {
   protected AccountInterface $currentUser;
 
   /**
+   * Islandora config settings.
+   *
+   * @var \Drupal\Core\Config\ImmutableConfig
+   */
+  protected $islandoraSettings;
+
+  /**
    * Constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -96,6 +105,8 @@ class IslandoraUtils {
    *   Language manager.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config
+   *   Config factory.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -103,7 +114,8 @@ class IslandoraUtils {
     ContextManager $context_manager,
     FlysystemFactory $flysystem_factory,
     LanguageManagerInterface $language_manager,
-    AccountInterface $current_user
+    AccountInterface $current_user,
+    ConfigFactoryInterface $config,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
@@ -111,6 +123,7 @@ class IslandoraUtils {
     $this->flysystemFactory = $flysystem_factory;
     $this->languageManager = $language_manager;
     $this->currentUser = $current_user;
+    $this->islandoraSettings = $config->get(IslandoraSettingsForm::CONFIG_NAME);
   }
 
   /**
@@ -260,6 +273,22 @@ class IslandoraUtils {
     }
     // Add field_external_uri.
     $fields[] = self::EXTERNAL_URI_FIELD;
+
+    if ($this->islandoraSettings->get(IslandoraSettingsForm::FAST_TERM_QUERIES)) {
+      $storage = $this->entityTypeManager->getStorage('taxonomy_term');
+      foreach ($fields as $field) {
+        $query = $storage->getQuery();
+        $results = $query
+          ->accessCheck(TRUE)
+          ->condition("$field.uri", $uri)
+          ->execute();
+        if (!empty($results)) {
+          return $storage->load(reset($results));
+        }
+      }
+
+      return NULL;
+    }
 
     $query = $this->entityTypeManager->getStorage('taxonomy_term')->getQuery();
 

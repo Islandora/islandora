@@ -88,10 +88,11 @@ class JsonldSelfReferenceReaction extends NormalizerAlterReaction {
       if (isset($normalized['@graph']) && is_array($normalized['@graph'])) {
         foreach ($normalized['@graph'] as &$graph) {
           if (isset($graph['@id']) && $graph['@id'] == $url) {
-            // Swap media and file urls.
+            // If a file URL is available, swap it in as the ID.
             if ($entity instanceof MediaInterface) {
-              $file = $this->mediaSource->getSourceFile($entity);
-              $graph['@id'] = $this->utils->getDownloadUrl($file);
+              if ($file = $this->mediaSource->getSourceFile($entity)) {
+                $graph['@id'] = $this->utils->getDownloadUrl($file);
+              }
             }
             if (isset($graph[$self_ref_predicate])) {
               if (!is_array($graph[$self_ref_predicate])) {

@@ -9,6 +9,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
 use Drupal\islandora\IslandoraUtils;
@@ -138,9 +139,16 @@ class IIIFManifest extends StylePluginBase {
   protected bool $structuredTextTermMemoized = FALSE;
 
   /**
+   * Cached language code so we don't have to keep calling the lang service.
+   *
+   * @var string
+   */
+  protected $langCode;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, SerializerInterface $serializer, Request $request, ImmutableConfig $iiif_config, EntityTypeManagerInterface $entity_type_manager, FileSystemInterface $file_system, Client $http_client, MessengerInterface $messenger, ModuleHandlerInterface $moduleHandler, IslandoraUtils $utils, IiifInfo $iiif_info) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, SerializerInterface $serializer, Request $request, ImmutableConfig $iiif_config, EntityTypeManagerInterface $entity_type_manager, FileSystemInterface $file_system, Client $http_client, MessengerInterface $messenger, ModuleHandlerInterface $moduleHandler, IslandoraUtils $utils, IiifInfo $iiif_info, LanguageManagerInterface $languageManager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->serializer = $serializer;
@@ -154,6 +162,7 @@ class IIIFManifest extends StylePluginBase {
     $this->moduleHandler = $moduleHandler;
     $this->utils = $utils;
     $this->iiifInfo = $iiif_info;
+    $this->langCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
   }
 
   /**
@@ -173,7 +182,8 @@ class IIIFManifest extends StylePluginBase {
       $container->get('messenger'),
       $container->get('module_handler'),
       $container->get('islandora.utils'),
-      $container->get('islandora_iiif')
+      $container->get('islandora_iiif'),
+      $container->get('language_manager'),
     );
   }
 
@@ -261,6 +271,28 @@ class IIIFManifest extends StylePluginBase {
   }
 
   /**
+   * Helper function to get labels without relationship information.
+   *
+   * Ideally, we would use the display handler's `getFieldLabels`, but that
+   * adds relationship information to the label we don't want.
+   *
+   * @return array
+   *   List of field labels keyed on field name.
+   */
+  protected function getFieldLabels() {
+    $options = [];
+    foreach ($this->displayHandler->getHandlers('field') as $id => $handler) {
+      if ($label = $handler->label()) {
+        $options[$id] = $label;
+      }
+      else {
+        $options[$id] = $handler->adminLabel();
+      }
+    }
+    return $options;
+  }
+
+  /**
    * Render array from views result row.
    *
    * @param \Drupal\views\ResultRow $row
@@ -283,7 +315,7 @@ class IIIFManifest extends StylePluginBase {
       if (isset($entity->{$viewsField->definition['field_name']})) {
         /** @var \Drupal\Core\Field\FieldItemListInterface $images */
         $images = $entity->{$viewsField->definition['field_name']};
-        foreach ($images as $i => $image) {
+        foreach ($images as $image) {
           if (!$image->entity->access('view')) {
             // If the user does not have permission to view the file, skip it.
             continue;
@@ -340,6 +372,25 @@ class IIIFManifest extends StylePluginBase {
               ],
             ],
           ];
+
+          // Canvas label field to override the default media label.
+          if (array_key_exists($this->options['canvas_label'], $this->view->field) && $label = $this->getFieldValue($row->index, $this->options['canvas_label'])) {
+            $tmp_canvas['label'] = $label;
+          }
+
+          // Add metadata to canvas.
+          $metadata = [];
+          $labels = $this->getFieldLabels();
+          foreach ($this->options['metadata_fields'] as $field_name) {
+            if (array_key_exists($field_name, $labels) && array_key_exists($field_name, $this->view->field) && $value = $this->getField($row->index, $field_name)) {
+              $metadata[] = [
+                'label' => [$this->langCode => [$labels[$field_name]]],
+                'value' => [$this->langCode => [$value]],
+              ];
+            }
+          }
+
+          $tmp_canvas['metadata'] = $metadata;
 
           if ($ocr_url = $this->getOcrUrl($entity)) {
             $tmp_canvas['seeAlso'] = [
@@ -525,6 +576,8 @@ class IIIFManifest extends StylePluginBase {
 
     $options['iiif_tile_field'] = ['default' => ''];
     $options['iiif_ocr_file_field'] = ['default' => ''];
+    $options['metadata_fields'] = ['default' => []];
+    $options['canvas_label'] = ['default' => ''];
 
     return $options;
   }
@@ -550,7 +603,7 @@ class IIIFManifest extends StylePluginBase {
         "@context" => "http://iiif.io/api/search/0/context.json",
         "@id" => $hocr_search_url,
         "profile" => "http://iiif.io/api/search/0/search",
-        "label" => t("Search inside this work"),
+        "label" => $this->t("Search inside this work"),
       ];
     }
   }
@@ -613,6 +666,21 @@ class IIIFManifest extends StylePluginBase {
       // we have more than one option to choose from
       // otherwise could lock up the form when setting up a View.
       '#required' => count($field_options) > 0,
+    ];
+
+    $form['canvas_label'] = [
+      '#title' => $this->t('Canvas label source field'),
+      '#type' => 'select',
+      '#default_value' => $this->options['canvas_label'],
+      '#options' => array_merge(['' => 'None'], $this->displayHandler->getFieldLabels()),
+    ];
+
+    $form['metadata_fields'] = [
+      '#title' => $this->t('Fields to include in canvas metadata'),
+      '#type' => 'select',
+      '#multiple' => TRUE,
+      '#options' => $this->displayHandler->getFieldLabels(),
+      '#default_value' => $this->options['metadata_fields'],
     ];
 
     $form['advanced'] = [
@@ -692,13 +760,14 @@ class IIIFManifest extends StylePluginBase {
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     // @codingStandardsIgnoreEnd
     $style_options = $form_state->getValue('style_options');
-    $tid = $style_options['structured_text_term'];
-    unset($style_options['structured_text_term']);
-    $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($tid);
-    if ($term) {
-      $style_options['structured_text_term_uri'] = $this->utils->getUriForTerm($term);
+    if ($tid = $style_options['structured_text_term']) {
+      unset($style_options['structured_text_term']);
+      $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($tid);
+      if ($term) {
+        $style_options['structured_text_term_uri'] = $this->utils->getUriForTerm($term);
+      }
+      $form_state->setValue('style_options', $style_options);
     }
-    $form_state->setValue('style_options', $style_options);
     parent::submitOptionsForm($form, $form_state);
   }
 
