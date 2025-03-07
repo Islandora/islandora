@@ -7,8 +7,3 @@ dependencies:
   - drupal:node
   - drupal:views
   - drupal:language
-
-# Information added by Drupal.org packaging script on 2024-10-28
-version: '2.13.1'
-project: 'islandora'
-datestamp: 1730125691
