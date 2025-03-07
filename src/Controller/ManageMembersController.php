@@ -99,12 +99,7 @@ class ManageMembersController extends EntityController {
       ['query' => ["edit[$field][widget][0][target_id]" => $node->id()]]
     );
 
-    $manage_link = Url::fromRoute('entity.node_type.collection')->toRenderArray();
-    $manage_link['#title'] = $this->t('Manage content types');
-    $manage_link['#type'] = 'link';
-    $manage_link['#prefix'] = ' ';
-    $manage_link['#suffix'] = '.';
-
+    $manage_link = Link::fromTextAndUrl($this->t('Manage content types'), Url::fromRoute('entity.node_type.collection'))->toRenderable();
     return [
       '#type' => 'markup',
       '#markup' => $this->t("The following content types can be added because they have the <code>@field</code> field.", [

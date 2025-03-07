@@ -6,6 +6,7 @@ use Drupal\islandora\IslandoraUtils;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\node\Entity\Node;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 
@@ -35,12 +36,7 @@ class ManageMediaController extends ManageMembersController {
       ['query' => ["edit[$field][widget][0][target_id]" => $node->id()]]
     );
 
-    $manage_link = Url::fromRoute('entity.media_type.collection')->toRenderArray();
-    $manage_link['#title'] = $this->t('Manage media types');
-    $manage_link['#type'] = 'link';
-    $manage_link['#prefix'] = ' ';
-    $manage_link['#suffix'] = '.';
-
+    $manage_link = Link::fromTextAndUrl($this->t('Manage media types'), Url::fromRoute('entity.media_type.collection'))->toRenderable();
     return [
       '#type' => 'markup',
       '#markup' => $this->t("The following media types can be added because they have the <code>@field</code> field.", [
