@@ -1,0 +1,12 @@
+status: true
+dependencies:
+  enforced:
+    module:
+      - islandora
+  module:
+    - islandora
+id: delete_node_and_media
+label: 'Delete node(s) and associated media'
+type: node
+plugin: delete_node_and_media
+configuration: {  }

@@ -31,3 +31,19 @@ views.style.iiif_manifest:
     search_endpoint:
       type: string
       label: "Search endpoint path"
+    metadata_fields:
+      type: sequence
+      label: "Metadata field(s)"
+    canvas_label:
+      type: string
+      label: "Canvas label field"
+
+action.configuration.media_attributes_from_iiif_action:
+  type: mapping
+  mapping:
+    source_term_uri:
+      type: string
+    width_field:
+      type: string
+    height_field:
+      type: string

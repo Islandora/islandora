@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * @file
+ * Install/update hook implementations.
+ */
+
+/**
+ * Update config schema.
+ */
+function islandora_iiif_update_92002(&$sandbox) {
+
+  /**
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  $config_factory = \Drupal::service('config.factory');
+  $all_configs = $config_factory->listAll();
+  $views_configs = array_values(array_filter($all_configs, function ($config) {
+    return str_starts_with($config, 'views.view.');
+  }));
+
+  foreach ($views_configs as $views_config_name) {
+    $needs_save = FALSE;
+    $view_config = $config_factory->getEditable($views_config_name);
+    $displays = $view_config->get('display');
+    foreach ($displays as $display_name => $display) {
+      if ($display['display_plugin'] == 'rest_export'
+        && $display['display_options']['style']['type'] == 'iiif_manifest'
+        &&!empty($display['display_options']['style']['options']['iiif_ocr_file_field'])) {
+
+        $display['display_options']['style']['options']['advanced']['iiif_ocr_file_field'] = $display['display_options']['style']['options']['iiif_ocr_file_field'];
+        unset($display['display_options']['style']['options']['iiif_ocr_file_field']);
+        $view_config->set('display.' . $display_name . '.display_options.style.options', $display['display_options']['style']['options']);
+        $needs_save = TRUE;
+      }
+    }
+    if ($needs_save) {
+      $view_config->save();
+    }
+  }
+}

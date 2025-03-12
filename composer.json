@@ -1,11 +1,14 @@
 {
-  "name": "islandora/islandora",
+  "name": "drupal/islandora",
   "description": "Core Islandora module",
   "type": "drupal-module",
   "keywords": ["Drupal", "Islandora"],
   "homepage": "https://github.com/Islandora/islandora",
   "support": {
     "issues": "https://github.com/Islandora/documentation/issues"
+  },
+  "replace": {
+    "islandora/islandora": "self.version"
   },
   "repositories": [
     {

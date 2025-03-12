@@ -109,3 +109,10 @@ islandora.confirm_delete_media_and_file:
     _form: 'Drupal\islandora\Form\ConfirmDeleteMediaAndFile'
   requirements:
     _permission: 'administer media+delete any media'
+
+islandora.confirm_delete_node_and_media:
+  path: '/node/delete_with_media'
+  defaults:
+    _form: 'Drupal\islandora\Form\ConfirmDeleteNodeAndMedia'
+  requirements:
+    _permission: 'administer media+delete any media'

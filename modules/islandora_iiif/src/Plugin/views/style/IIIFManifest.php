@@ -6,22 +6,22 @@ use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Field\FieldItemInterface;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
 use Drupal\islandora\IslandoraUtils;
+use Drupal\islandora_iiif\IiifInfo;
+use Drupal\media\MediaInterface;
 use Drupal\taxonomy\TermInterface;
 use Drupal\views\Plugin\views\style\StylePluginBase;
 use Drupal\views\ResultRow;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ConnectException;
-use GuzzleHttp\Exception\ServerException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Provide serializer format for IIIF Manifest.
@@ -67,6 +67,13 @@ class IIIFManifest extends StylePluginBase {
    * @var \Symfony\Component\Serializer\Serializer
    */
   protected $serializer;
+
+  /**
+   * The IIIF Info service.
+   *
+   * @var \Drupal\islandora_iiif\IiifInfo
+   */
+  protected $iiifInfo;
 
   /**
    * The request service.
@@ -132,9 +139,16 @@ class IIIFManifest extends StylePluginBase {
   protected bool $structuredTextTermMemoized = FALSE;
 
   /**
+   * Cached language code so we don't have to keep calling the lang service.
+   *
+   * @var string
+   */
+  protected $langCode;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, SerializerInterface $serializer, Request $request, ImmutableConfig $iiif_config, EntityTypeManagerInterface $entity_type_manager, FileSystemInterface $file_system, Client $http_client, MessengerInterface $messenger, ModuleHandlerInterface $moduleHandler, IslandoraUtils $utils) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, SerializerInterface $serializer, Request $request, ImmutableConfig $iiif_config, EntityTypeManagerInterface $entity_type_manager, FileSystemInterface $file_system, Client $http_client, MessengerInterface $messenger, ModuleHandlerInterface $moduleHandler, IslandoraUtils $utils, IiifInfo $iiif_info, LanguageManagerInterface $languageManager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->serializer = $serializer;
@@ -146,6 +160,9 @@ class IIIFManifest extends StylePluginBase {
     $this->messenger = $messenger;
     $this->utils = $utils;
     $this->moduleHandler = $moduleHandler;
+    $this->utils = $utils;
+    $this->iiifInfo = $iiif_info;
+    $this->langCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
   }
 
   /**
@@ -164,7 +181,9 @@ class IIIFManifest extends StylePluginBase {
       $container->get('http_client'),
       $container->get('messenger'),
       $container->get('module_handler'),
-      $container->get('islandora.utils')
+      $container->get('islandora.utils'),
+      $container->get('islandora_iiif'),
+      $container->get('language_manager'),
     );
   }
 
@@ -252,6 +271,28 @@ class IIIFManifest extends StylePluginBase {
   }
 
   /**
+   * Helper function to get labels without relationship information.
+   *
+   * Ideally, we would use the display handler's `getFieldLabels`, but that
+   * adds relationship information to the label we don't want.
+   *
+   * @return array
+   *   List of field labels keyed on field name.
+   */
+  protected function getFieldLabels() {
+    $options = [];
+    foreach ($this->displayHandler->getHandlers('field') as $id => $handler) {
+      if ($label = $handler->label()) {
+        $options[$id] = $label;
+      }
+      else {
+        $options[$id] = $handler->adminLabel();
+      }
+    }
+    return $options;
+  }
+
+  /**
    * Render array from views result row.
    *
    * @param \Drupal\views\ResultRow $row
@@ -274,7 +315,7 @@ class IIIFManifest extends StylePluginBase {
       if (isset($entity->{$viewsField->definition['field_name']})) {
         /** @var \Drupal\Core\Field\FieldItemListInterface $images */
         $images = $entity->{$viewsField->definition['field_name']};
-        foreach ($images as $i => $image) {
+        foreach ($images as $image) {
           if (!$image->entity->access('view')) {
             // If the user does not have permission to view the file, skip it.
             continue;
@@ -296,7 +337,11 @@ class IIIFManifest extends StylePluginBase {
           $canvas_id = $iiif_base_id . '/canvas/' . $entity->id();
           $annotation_id = $iiif_base_id . '/annotation/' . $entity->id();
 
-          [$width, $height] = $this->getCanvasDimensions($iiif_url, $image, $mime_type);
+          [$width, $height] = $this->getCanvasDimensions($iiif_url, $entity, $image, $mime_type);
+
+          if ($width == 0) {
+            continue;
+          }
 
           $tmp_canvas = [
             // @see https://iiif.io/api/presentation/2.1/#canvas
@@ -328,6 +373,25 @@ class IIIFManifest extends StylePluginBase {
             ],
           ];
 
+          // Canvas label field to override the default media label.
+          if (array_key_exists($this->options['canvas_label'], $this->view->field) && $label = $this->getFieldValue($row->index, $this->options['canvas_label'])) {
+            $tmp_canvas['label'] = $label;
+          }
+
+          // Add metadata to canvas.
+          $metadata = [];
+          $labels = $this->getFieldLabels();
+          foreach ($this->options['metadata_fields'] as $field_name) {
+            if (array_key_exists($field_name, $labels) && array_key_exists($field_name, $this->view->field) && $value = $this->getField($row->index, $field_name)) {
+              $metadata[] = [
+                'label' => [$this->langCode => [$labels[$field_name]]],
+                'value' => [$this->langCode => [$value]],
+              ];
+            }
+          }
+
+          $tmp_canvas['metadata'] = $metadata;
+
           if ($ocr_url = $this->getOcrUrl($entity)) {
             $tmp_canvas['seeAlso'] = [
               '@id' => $ocr_url,
@@ -357,6 +421,8 @@ class IIIFManifest extends StylePluginBase {
    *
    * @param string $iiif_url
    *   Base URL of the canvas.
+   * @param \Drupal\media\MediaInterface $media
+   *   The Media entity.
    * @param \Drupal\Core\Field\FieldItemInterface $image
    *   The image field.
    * @param string $mime_type
@@ -365,42 +431,73 @@ class IIIFManifest extends StylePluginBase {
    * @return [string]
    *   The width and height of the image.
    */
-  protected function getCanvasDimensions(string $iiif_url, FieldItemInterface $image, string $mime_type) {
+  protected function getCanvasDimensions(string $iiif_url, MediaInterface $media, FieldItemInterface $image, string $mime_type) {
 
     if (isset($image->width) && is_numeric($image->width)
     && isset($image->height) && is_numeric($image->height)) {
-      return [intval($image->width), intval($image->height)];
+      return [intval($image->width),
+        intval($image->height),
+      ];
     }
 
-    try {
-      $info_json = $this->httpClient->get($iiif_url)->getBody();
-      $resource = json_decode($info_json, TRUE);
-      $width = $resource['width'];
-      $height = $resource['height'];
+    if ($properties = $image->getProperties()
+      && isset($properties['width']) && is_numeric($properties['width'])
+      && isset($properties['height']) && is_numeric($properties['width'])) {
+      return [intval($properties['width']),
+        intval($properties['height']),
+      ];
     }
-    catch (ClientException | ServerException | ConnectException $e) {
-      // If we couldn't get the info.json from IIIF
-      // try seeing if we can get it from Drupal.
-      if (empty($width) || empty($height)) {
-        // Get the image properties so we know the image width/height.
-        $properties = $image->getProperties();
-        $width = isset($properties['width']) ? $properties['width'] : 0;
-        $height = isset($properties['height']) ? $properties['height'] : 0;
 
-        // If this is a TIFF AND we don't know the width/height
-        // see if we can get the image size via PHP's core function.
-        if ($mime_type === 'image/tiff' && (!$width || !$height)) {
-          $uri = $image->entity->getFileUri();
-          $path = $this->fileSystem->realpath($uri);
-          $image_size = getimagesize($path);
-          if ($image_size) {
-            $width = $image_size[0];
-            $height = $image_size[1];
-          }
+    $entity = $image->entity;
+
+    if ($entity->hasField('field_height') && !$entity->get('field_height')->isEmpty()
+      && $entity->get('field_height')->value > 0
+      && $entity->hasField('field_width')
+      && !$entity->get('field_width')->isEmpty()
+      && $entity->get('field_width')->value > 0) {
+      return [$entity->get('field_width')->value,
+        $entity->get('field_height')->value,
+      ];
+    }
+
+    // If the media has width and height fields, return those values.
+    $width_field = !empty($this->options['advanced']['custom_width_height']['width_field']) ? $this->options['advanced']['custom_width_height']['height_field'] : 'field_width';
+    $height_field = !empty($this->options['advanced']['custom_width_height']['height_field']) ? $this->options['advanced']['custom_width_height']['height_field'] : 'field_height';
+    if ($media->hasField($height_field)
+      && !$media->get($height_field)->isEmpty()
+      && $media->get($height_field)->value > 0
+      && $media->hasField($width_field)
+      && !$media->get($width_field)->isEmpty()
+      && $media->get($width_field)->value > 0) {
+      return [intval($media->get($width_field)->value),
+        intval($media->get($height_field)->value),
+      ];
+    }
+
+    if ($mime_type === 'image/tiff') {
+      // If this is a TIFF AND we don't know the width/height
+      // see if we can get the image size via PHP's core function.
+      $uri = $image->entity->getFileUri();
+      $path = $this->fileSystem->realpath($uri);
+      if (!empty($path)) {
+        $image_size = getimagesize($path);
+        if ($image_size) {
+          return [intval($image_size[0]),
+            intval($image_size[1]),
+          ];
         }
       }
     }
-    return [$width, $height];
+
+    // As a last resort, get it from the IIIF server.
+    // This can be very slow and will fail if there are too many pages.
+    $dimensions = $this->iiifInfo->getImageDimensions($image->entity);
+    if ($dimensions !== FALSE) {
+      $this->storeImageDimensions($media, $dimensions[0], $dimensions[1]);
+      return $dimensions;
+    }
+
+    return [0, 0];
   }
 
   /**
@@ -410,12 +507,11 @@ class IIIFManifest extends StylePluginBase {
    *   The entity at the current row.
    *
    * @return string|false
-   *   The absolute URL of the current row's structured text,
-   *   or FALSE if none.
+   *   The URL where the OCR text is found.
    */
   protected function getOcrUrl(EntityInterface $entity) {
     $ocr_url = FALSE;
-    $iiif_ocr_file_field = !empty($this->options['iiif_ocr_file_field']) ? array_filter(array_values($this->options['iiif_ocr_file_field'])) : [];
+    $iiif_ocr_file_field = !empty($this->options['advanced']['iiif_ocr_file_field']) ? array_filter(array_values($this->options['advanced']['iiif_ocr_file_field'])) : [];
     $ocrField = count($iiif_ocr_file_field) > 0 ? $this->view->field[$iiif_ocr_file_field[0]] : NULL;
     if ($ocrField) {
       $ocr_entity = $entity;
@@ -480,6 +576,8 @@ class IIIFManifest extends StylePluginBase {
 
     $options['iiif_tile_field'] = ['default' => ''];
     $options['iiif_ocr_file_field'] = ['default' => ''];
+    $options['metadata_fields'] = ['default' => []];
+    $options['canvas_label'] = ['default' => ''];
 
     return $options;
   }
@@ -505,7 +603,7 @@ class IIIFManifest extends StylePluginBase {
         "@context" => "http://iiif.io/api/search/0/context.json",
         "@id" => $hocr_search_url,
         "profile" => "http://iiif.io/api/search/0/search",
-        "label" => t("Search inside this work"),
+        "label" => $this->t("Search inside this work"),
       ];
     }
   }
@@ -529,6 +627,8 @@ class IIIFManifest extends StylePluginBase {
       // File formatters.
       'file_default', 'file_url_plain',
     ];
+    $dimensions_field_options = [];
+
     /** @var \Drupal\views\Plugin\views\field\FieldPluginBase[] $fields */
     foreach ($fields as $field_name => $field) {
       // If this is a known Islandora file/image field
@@ -542,6 +642,10 @@ class IIIFManifest extends StylePluginBase {
         (!empty($field->options['type']) && in_array($field->options['type'], $file_views_field_formatters))) {
         $field_options[$field_name] = $field->adminLabel();
       }
+      else {
+        // Put it in the list of fields that may contain the custom value.
+        $dimensions_field_options[$field_name] = $field->adminLabel();
+      }
     }
 
     // If no fields to choose from, add an error message indicating such.
@@ -549,6 +653,8 @@ class IIIFManifest extends StylePluginBase {
       $this->messenger->addMessage($this->t('No image or file fields were found in the View.
         You will need to add a field to this View'), 'error');
     }
+
+    $dimensions_field_options = array_merge(['' => '  - None --  '], $dimensions_field_options);
 
     $form['iiif_tile_field'] = [
       '#title' => $this->t('Tile source field(s)'),
@@ -562,10 +668,51 @@ class IIIFManifest extends StylePluginBase {
       '#required' => count($field_options) > 0,
     ];
 
-    $form['iiif_ocr_file_field'] = [
+    $form['canvas_label'] = [
+      '#title' => $this->t('Canvas label source field'),
+      '#type' => 'select',
+      '#default_value' => $this->options['canvas_label'],
+      '#options' => array_merge(['' => 'None'], $this->displayHandler->getFieldLabels()),
+    ];
+
+    $form['metadata_fields'] = [
+      '#title' => $this->t('Fields to include in canvas metadata'),
+      '#type' => 'select',
+      '#multiple' => TRUE,
+      '#options' => $this->displayHandler->getFieldLabels(),
+      '#default_value' => $this->options['metadata_fields'],
+    ];
+
+    $form['advanced'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Advanced'),
+      '#open' => FALSE,
+    ];
+
+    $form['advanced']['custom_width_height'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Custom width and height fields.'),
+      '#description' => $this->t('Use these if the media type of the image does not have built in Width and height fields, e.g., File. As a fallback, if the media has fields with the name "field_width" and "field_height" this formatter will try and get the width from that.'),
+    ];
+
+    $form['advanced']['custom_width_height']['height_field'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Custom Height field'),
+      '#default_value' => $this->options['advanced']['custom_width_height']['height_field'],
+      '#options' => $dimensions_field_options,
+    ];
+
+    $form['advanced']['custom_width_height']['width_field'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Custom width field'),
+      '#default_value' => $this->options['advanced']['custom_width_height']['width_field'],
+      '#options' => $dimensions_field_options,
+    ];
+
+    $form['advanced']['iiif_ocr_file_field'] = [
       '#title' => $this->t('Structured OCR data file field'),
       '#type' => 'checkboxes',
-      '#default_value' => $this->options['iiif_ocr_file_field'],
+      '#default_value' => $this->options['advanced']['iiif_ocr_file_field'],
       '#description' => $this->t("If the hOCR is a field on the same entity as the image source  field above, select it here. If it's found in a related entity via the term below, leave this blank."),
       '#options' => $field_options,
       '#required' => FALSE,
@@ -584,7 +731,7 @@ class IIIFManifest extends StylePluginBase {
       '#type' => 'textfield',
       '#title' => $this->t("Search endpoint path."),
       '#description' => $this->t("If there is a search endpoint to search within the book that returns IIIF annotations, put it here. Use %node substitution where needed.<br>E.g., paged-content-search/%node"),
-      '#default_value' => $this->options['search_endpoint'],
+      '#default_value' => !empty($this->options['search_endpoint']) ? $this->options['search_endpoint'] : '',
       '#required' => FALSE,
     ];
   }
@@ -613,11 +760,14 @@ class IIIFManifest extends StylePluginBase {
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     // @codingStandardsIgnoreEnd
     $style_options = $form_state->getValue('style_options');
-    $tid = $style_options['structured_text_term'];
-    unset($style_options['structured_text_term']);
-    $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($tid);
-    $style_options['structured_text_term_uri'] = $this->utils->getUriForTerm($term);
-    $form_state->setValue('style_options', $style_options);
+    if ($tid = $style_options['structured_text_term']) {
+      unset($style_options['structured_text_term']);
+      $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($tid);
+      if ($term) {
+        $style_options['structured_text_term_uri'] = $this->utils->getUriForTerm($term);
+      }
+      $form_state->setValue('style_options', $style_options);
+    }
     parent::submitOptionsForm($form, $form_state);
   }
 
@@ -630,10 +780,41 @@ class IIIFManifest extends StylePluginBase {
   protected function getStructuredTextTerm() : ?TermInterface {
     if (!$this->structuredTextTermMemoized) {
       $this->structuredTextTermMemoized = TRUE;
-      $this->structuredTextTerm = $this->utils->getTermForUri($this->options['structured_text_term_uri']);
+      $uri = $this->options['structured_text_term_uri'] ?? NULL;
+      $this->structuredTextTerm = $uri ? $this->utils->getTermForUri($uri) : NULL;
     }
 
     return $this->structuredTextTerm;
+  }
+
+  /**
+   * Store the image dimensions back onto the entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to store the dimensions on to.
+   * @param int $width
+   *   The image's width.
+   * @param int $height
+   *   The image's height.
+   */
+  protected function storeImageDimensions(EntityInterface $entity, $width, $height) {
+    $height_field = !empty($this->options['advanced']['custom_width_height']['height_field']) ? $this->view->field[$this->options['advanced']['custom_width_height']['height_field']]->definition['field_name'] : 'field_height';
+    $width_field = !empty($this->options['advanced']['custom_width_height']['width_field']) ? $this->view->field[$this->options['advanced']['custom_width_height']['width_field']]->definition['field_name'] : 'field_width';
+
+    $needs_save = FALSE;
+    if ($entity->hasField($height_field) && $entity->get($height_field)->getString() !== $height) {
+      $entity->set($height_field, $height);
+      $needs_save = TRUE;
+    }
+
+    if ($entity->hasField($width_field) && $entity->get($width_field)->getString() !== $width) {
+      $entity->set($width_field, $width);
+      $needs_save = TRUE;
+    }
+
+    if ($needs_save) {
+      $entity->save();
+    }
   }
 
 }

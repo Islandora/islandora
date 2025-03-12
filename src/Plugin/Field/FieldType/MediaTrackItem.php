@@ -16,7 +16,7 @@ use Drupal\file\Plugin\Field\FieldType\FileItem;
  *   id = "media_track",
  *   label = @Translation("Media track"),
  *   description = @Translation("This field stores the ID of a media track file as an integer value."),
- *   category = @Translation("Reference"),
+ *   category = "reference",
  *   default_widget = "media_track",
  *   default_formatter = "file_default",
  *   column_groups = {

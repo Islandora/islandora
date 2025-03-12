@@ -136,7 +136,7 @@ class MediaSourceController extends ControllerBase {
    * @param \Drupal\media\MediaTypeInterface $media_type
    *   Media type for new media.
    * @param \Drupal\taxonomy\TermInterface $taxonomy_term
-   *   Term from the 'Behavior' vocabulary to give to new media.
+   *   Term from the 'Media Use' vocabulary to give to new media.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
    *

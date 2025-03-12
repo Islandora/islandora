@@ -84,7 +84,6 @@ class NodeHasParent extends ConditionPluginBase implements ContainerFactoryPlugi
       '#type' => 'entity_autocomplete',
       '#title' => $this->t('Parent node'),
       '#default_value' => $this->entityTypeManager->getStorage('node')->load($this->configuration['parent_nid']),
-      '#required' => TRUE,
       '#description' => $this->t("Can be a collection node or a compound object."),
       '#target_type' => 'node',
     ];

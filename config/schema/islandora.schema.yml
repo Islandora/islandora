@@ -20,6 +20,9 @@ islandora.settings:
     delete_media_and_files:
       type: boolean
       label: 'Node Delete with Media and Files'
+    fast_term_queries:
+      type: boolean
+      label: 'Use multiple queries for term URI lookups'
     redirect_after_media_save:
       type: boolean
       label: 'Redirect to node after media save.'
@@ -83,6 +86,10 @@ action.configuration.emit_term_event:
 action.configuration.delete_media_and_file:
   type: action_configuration_default
   label: 'Delete media and file'
+
+action.configuration.delete_node_and_media:
+  type: action_configuration_default
+  label: 'Delete node and media'
 
 condition.plugin.node_has_term:
   type: condition.plugin

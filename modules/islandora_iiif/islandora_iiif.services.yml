@@ -1,0 +1,4 @@
+services:
+  islandora_iiif:
+    class: Drupal\islandora_iiif\IiifInfo
+    arguments: ['@config.factory', '@http_client', '@logger.channel.islandora', '@jwt.authentication.jwt']
