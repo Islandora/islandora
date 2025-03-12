@@ -24,3 +24,13 @@ function islandora_post_update_fast_term_queries() : void {
   $config->set('fast_term_queries', TRUE);
   $config->save(TRUE);
 }
+
+/**
+ * Ensure `allow_header_links` exists.
+ */
+function islandora_post_update_allow_header_links() : void {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('islandora.settings');
+  $config->set('allow_header_links', TRUE);
+  $config->save(TRUE);
+}
