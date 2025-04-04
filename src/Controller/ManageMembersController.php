@@ -99,7 +99,7 @@ class ManageMembersController extends EntityController {
       ['query' => ["edit[$field][widget][0][target_id]" => $node->id()]]
     );
 
-    $manage_link = Url::fromRoute('entity.node_type.collection')->toRenderArray();
+    $manage_link['#url'] = Url::fromRoute('entity.node_type.collection');
     $manage_link['#title'] = $this->t('Manage content types');
     $manage_link['#type'] = 'link';
     $manage_link['#prefix'] = ' ';
