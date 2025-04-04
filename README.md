@@ -35,6 +35,12 @@ Installing via composer will download all required libraries and modules.  Howev
 - [search_api](http://drupal.org/project/search_api)
 - [jsonld](http://drupal.org/project/jsonld)
 - [jwt](http://drupal.org/project/jwt)
+  - In preparation for Drupal 11 compatibility, the version constraint of
+    `drupal/jwt` in this module's composer requirements has been expanded to
+    include `^3` which could install `drupal/jwt:dev-3.x` as a dependency until
+    a proper release is minted. There is a drupal.org issue to check for updates and
+    context on this:
+    [Drupal 11 - 3.x releaseplan](https://www.drupal.org/project/jwt/issues/3504600)
 - [filehash](http://drupal.org/project/filehash)
 - [prepopulate](http://drupal.org/project/prepopulate)
 - [eva](http://drupal.org/project/eva)

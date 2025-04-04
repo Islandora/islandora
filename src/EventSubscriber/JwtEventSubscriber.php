@@ -154,7 +154,7 @@ class JwtEventSubscriber implements EventSubscriberInterface {
     $token = $event->getToken();
     $uid = $token->getClaim('webid');
     $user = $this->userStorage->load($uid);
-    $event->setUser($user);
+    $event->setAccount($user);
   }
 
 }

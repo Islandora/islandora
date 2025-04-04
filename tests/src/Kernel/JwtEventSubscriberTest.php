@@ -137,7 +137,7 @@ class JwtEventSubscriberTest extends IslandoraKernelTestBase {
     $validEvent = new JwtAuthValidEvent($jwt);
     $subscriber->loadUser($validEvent);
 
-    $this->assertEquals($this->user->id(), $validEvent->getUser()->id(), "Correct user must be loaded to valid event.");
+    $this->assertEquals($this->user->id(), $validEvent->getAccount()->id(), "Correct user must be loaded to valid event.");
   }
 
 }
