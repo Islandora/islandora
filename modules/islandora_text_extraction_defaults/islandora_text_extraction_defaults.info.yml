@@ -1,7 +1,7 @@
 name: 'Islandora Text Extraction Defaults'
 type: module
 description: 'Default config for the Islandora Text Extraction module.'
-core_version_requirement: ^9 || ^10
+core_version_requirement: ^9 || ^10  || ^11
 package: Islandora
 dependencies:
   - drupal:field

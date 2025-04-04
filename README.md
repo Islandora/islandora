@@ -78,7 +78,7 @@ You can set the following configuration at `admin/config/islandora/core`:
 
 ## Documentation
 
-Further documentation for this module is available on the [Islandora 8 documentation site](https://islandora.github.io/documentation/).
+Further documentation for this module is available on the [Islandora documentation site](https://islandora.github.io/documentation/).
 
 ## Troubleshooting/Issues
 

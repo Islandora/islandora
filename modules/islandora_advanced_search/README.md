@@ -218,7 +218,7 @@ checkbox.
 ## Documentation
 
 Further documentation for this module is available on the
-[Islandora 8 documentation site](https://islandora.github.io/documentation/).
+[Islandora documentation site](https://islandora.github.io/documentation/).
 
 ## Troubleshooting/Issues
 

@@ -1,7 +1,7 @@
 name: 'Islandora Core Feature'
 description: 'Minimum configuration required for Islandora.'
 type: module
-core_version_requirement: ^9 || ^10
+core_version_requirement: ^9 || ^10 || ^11
 dependencies:
   - drupal:basic_auth
   - drupal:content_translation

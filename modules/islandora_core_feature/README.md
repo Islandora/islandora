@@ -26,7 +26,7 @@ $ drush mim islandora_tags
 
 ## Documentation
 
-Official documentation is available on the [Islandora 8 documentation site](https://islandora.github.io/documentation/).
+Official documentation is available on the [Islandora documentation site](https://islandora.github.io/documentation/).
 
 ## Development
 

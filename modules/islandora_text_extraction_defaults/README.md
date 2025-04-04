@@ -27,7 +27,7 @@ $ drush en islandora_text_extraction
 
 ## Documentation
 
-Official documentation is available on the [Islandora 8 documentation site](https://islandora.github.io/documentation/).
+Official documentation is available on the [Islandora documentation site](https://islandora.github.io/documentation/).
 
 ## Development
 
