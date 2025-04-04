@@ -282,9 +282,11 @@ class MediaSourceService {
       // Validate file extension.
       $source_field_config = $this->entityTypeManager->getStorage('field_config')->load("media.$bundle.$source_field");
       $valid_extensions = $source_field_config->getSetting('file_extensions');
-      $errors = file_validate_extensions($file, $valid_extensions);
+      $validators = ['FileExtension' => ['extensions' => $valid_extensions]];
+      $file_validator = \Drupal::service('file.validator');
+      $errors = $file_validator->validate($file, $validators);
 
-      if (!empty($errors)) {
+      if ($errors->count() > 0) {
         throw new BadRequestHttpException("Invalid file extension.  Valid types are $valid_extensions");
       }
 
@@ -364,9 +366,11 @@ class MediaSourceService {
       $bundle = $media->bundle();
       $destination_field_config = $this->entityTypeManager->getStorage('field_config')->load("media.$bundle.$destination_field");
       $valid_extensions = $destination_field_config->getSetting('file_extensions');
-      $errors = file_validate_extensions($file, $valid_extensions);
+      $validators = ['FileExtension' => ['extensions' => $valid_extensions]];
+      $file_validator = \Drupal::service('file.validator');
+      $errors = $file_validator->validate($file, $validators);
 
-      if (!empty($errors)) {
+      if ($errors->count() > 0) {
         throw new BadRequestHttpException("Invalid file extension.  Valid types are $valid_extensions");
       }
 
