@@ -8,6 +8,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\file\FileInterface;
+use Drupal\file\Validation\FileValidatorInterface;
 use Drupal\islandora\IslandoraUtils;
 use Drupal\media\MediaInterface;
 use Drupal\media\MediaTypeInterface;
@@ -58,6 +59,13 @@ class MediaSourceService {
   protected $islandoraUtils;
 
   /**
+   * File Validator service.
+   *
+   * @var \Drupal\file\Validation\FileValidatorInterface
+   */
+  protected $fileValidator;
+
+  /**
    * Constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -70,19 +78,23 @@ class MediaSourceService {
    *   File system service.
    * @param \Drupal\islandora\IslandoraUtils $islandora_utils
    *   Utility service.
+   * @param \Drupal\file\Validation\FileValidatorInterface
+   *   File Validator service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     AccountInterface $account,
     LanguageManagerInterface $language_manager,
     FileSystemInterface $file_system,
-    IslandoraUtils $islandora_utils
+    IslandoraUtils $islandora_utils,
+    FileValidatorInterface $file_validator
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->account = $account;
     $this->languageManager = $language_manager;
     $this->fileSystem = $file_system;
     $this->islandoraUtils = $islandora_utils;
+    $this->fileValidator = $file_validator;
   }
 
   /**
@@ -283,8 +295,7 @@ class MediaSourceService {
       $source_field_config = $this->entityTypeManager->getStorage('field_config')->load("media.$bundle.$source_field");
       $valid_extensions = $source_field_config->getSetting('file_extensions');
       $validators = ['FileExtension' => ['extensions' => $valid_extensions]];
-      $file_validator = \Drupal::service('file.validator');
-      $errors = $file_validator->validate($file, $validators);
+      $errors = $this->fileValidator->validate($file, $validators);
 
       if ($errors->count() > 0) {
         throw new BadRequestHttpException("Invalid file extension.  Valid types are $valid_extensions");
@@ -367,8 +378,7 @@ class MediaSourceService {
       $destination_field_config = $this->entityTypeManager->getStorage('field_config')->load("media.$bundle.$destination_field");
       $valid_extensions = $destination_field_config->getSetting('file_extensions');
       $validators = ['FileExtension' => ['extensions' => $valid_extensions]];
-      $file_validator = \Drupal::service('file.validator');
-      $errors = $file_validator->validate($file, $validators);
+      $errors = $this->fileValidator->validate($file, $validators);
 
       if ($errors->count() > 0) {
         throw new BadRequestHttpException("Invalid file extension.  Valid types are $valid_extensions");
