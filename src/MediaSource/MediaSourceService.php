@@ -78,7 +78,7 @@ class MediaSourceService {
    *   File system service.
    * @param \Drupal\islandora\IslandoraUtils $islandora_utils
    *   Utility service.
-   * @param \Drupal\file\Validation\FileValidatorInterface
+   * @param \Drupal\file\Validation\FileValidatorInterface $file_validator
    *   File Validator service.
    */
   public function __construct(
