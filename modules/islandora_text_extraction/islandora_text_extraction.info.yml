@@ -1,7 +1,7 @@
 name: 'Islandora Text Extraction'
 type: module
 description: 'Islandora 8 module to connect to Hypercube microservice, and to get text from PDF ingest'
-core_version_requirement: ^9 || ^10 || ^11
+core_version_requirement: ^10.3 || ^11
 package: 'Islandora'
 dependencies:
   - drupal:islandora

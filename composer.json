@@ -17,7 +17,7 @@
     }
   ],
   "require": {
-    "drupal/action": "^0.1 || ^0.2",
+    "drupal/action": "^0.2",
     "drupal/context": "^4 || ^5@RC",
     "drupal/ctools": "^3.8 || ^4",
     "drupal/eva" : "^3.0",

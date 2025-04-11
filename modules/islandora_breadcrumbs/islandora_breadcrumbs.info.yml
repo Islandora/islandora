@@ -1,7 +1,7 @@
 name: 'Islandora Breadcrumbs'
 type: module
 description: 'Builds breadcrumbs based on field_member_of relationships.'
-core_version_requirement: ^9 || ^10 || ^11
+core_version_requirement: ^10.3 || ^11
 package: Islandora
 dependencies:
   - islandora:islandora

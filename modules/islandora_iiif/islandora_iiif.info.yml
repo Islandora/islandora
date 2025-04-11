@@ -1,7 +1,7 @@
 name: 'Islandora IIIF'
 type: module
 description: 'IIIF support for Islandora'
-core_version_requirement: ^9 || ^10 || ^11
+core_version_requirement: ^10.3 || ^11
 package: Islandora
 dependencies:
   - drupal:islandora
