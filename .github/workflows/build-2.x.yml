@@ -22,13 +22,17 @@ jobs:
       matrix:
         php-versions: ["8.1", "8.2", "8.3"]
         test-suite: ["kernel", "functional", "functional-javascript"]
-        drupal-version: ["10.3.x", "10.4.x", "11.0.x"]
+        drupal-version: ["10.3.x", "10.4.x", "11.0.x", "11.1.x"]
         mysql: ["8.0"]
         allowed_failure: [false]
         exclude:
           - drupal-version: "11.0.x"
             php-versions: "8.1"
           - drupal-version: "11.0.x"
+            php-versions: "8.2"
+          - drupal-version: "11.1.x"
+            php-versions: "8.1"
+          - drupal-version: "11.1.x"
             php-versions: "8.2"
 
     name: PHP ${{ matrix.php-versions }} | drupal ${{ matrix.drupal-version }} | mysql ${{ matrix.mysql }} | test-suite ${{ matrix.test-suite }}
