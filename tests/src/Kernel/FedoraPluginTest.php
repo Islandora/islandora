@@ -41,7 +41,7 @@ class FedoraPluginTest extends IslandoraKernelTestBase {
 
     $request = Request::create('/_flysystem/fedora/path/to/file.ext');
     /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
-    $request_stack = \Drupal::service('request_stack');
+    $request_stack = $this->container->get('request_stack');
     $request_stack->push($request);
 
     return new Fedora($api, $mime_guesser, $language_manager, $logger, $request_stack);
