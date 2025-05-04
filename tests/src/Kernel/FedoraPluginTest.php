@@ -10,6 +10,8 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Tests the Fedora plugin for Flysystem.
@@ -40,6 +42,10 @@ class FedoraPluginTest extends IslandoraKernelTestBase {
     $logger = $this->prophesize(LoggerChannelInterface::class)->reveal();
 
     $request = Request::create('/_flysystem/fedora/path/to/file.ext');
+    $session = new Session(new MockArraySessionStorage());
+    $session->start();
+    $request->setSession($session);
+
     /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
     $request_stack = $this->container->get('request_stack');
     $request_stack->push($request);
