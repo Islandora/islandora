@@ -115,7 +115,7 @@ class FedoraAdapter implements AdapterInterface {
         // Since \Symfony\Component\HttpFoundation\BinaryFileResponse seeks
         // to the start of the range based on the request's Range header
         // we need to always set start to 0 so fedora returns
-        // all the bytes between zero and theb start of the range.
+        // all the bytes between zero and the start of the range.
         [$start, $end] = explode('-', substr($range, 6), 2) + [1 => ""];
         $headers['Range'] = "bytes=0-$end";
       }
