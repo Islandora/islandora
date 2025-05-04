@@ -9,6 +9,7 @@ use League\Flysystem\AdapterInterface;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the Fedora plugin for Flysystem.
@@ -38,7 +39,12 @@ class FedoraPluginTest extends IslandoraKernelTestBase {
     $language_manager = $this->container->get('language_manager');
     $logger = $this->prophesize(LoggerChannelInterface::class)->reveal();
 
-    return new Fedora($api, $mime_guesser, $language_manager, $logger);
+    $request = Request::create('/_flysystem/fedora/path/to/file.ext');
+    /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
+    $request_stack = \Drupal::service('request_stack');
+    $request_stack->push($request);
+
+    return new Fedora($api, $mime_guesser, $language_manager, $logger, $request_stack);
   }
 
   /**
