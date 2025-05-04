@@ -18,6 +18,7 @@ use Islandora\Chullo\IFedoraApi;
 use Psr\Http\Message\RequestInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Drupal plugin for the Fedora Flysystem adapter.
@@ -57,6 +58,13 @@ class Fedora implements FlysystemPluginInterface, ContainerFactoryPluginInterfac
   protected $logger;
 
   /**
+   * The current request.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $request;
+
+  /**
    * Constructs a Fedora plugin for Flysystem.
    *
    * @param \Islandora\Chullo\IFedoraApi $fedora
@@ -67,17 +75,21 @@ class Fedora implements FlysystemPluginInterface, ContainerFactoryPluginInterfac
    *   Language manager.
    * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
    *   The fedora adapter logger channel.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    */
   public function __construct(
     IFedoraApi $fedora,
     MimeTypeGuesserInterface $mime_type_guesser,
     LanguageManagerInterface $language_manager,
-    LoggerChannelInterface $logger
+    LoggerChannelInterface $logger,
+    RequestStack $request_stack,
   ) {
     $this->fedora = $fedora;
     $this->mimeTypeGuesser = $mime_type_guesser;
     $this->languageManager = $language_manager;
     $this->logger = $logger;
+    $this->request = $request_stack->getCurrentRequest();
   }
 
   /**
@@ -95,7 +107,8 @@ class Fedora implements FlysystemPluginInterface, ContainerFactoryPluginInterfac
       $fedora,
       $container->get('file.mime_type.guesser'),
       $container->get('language_manager'),
-      $container->get('logger.channel.fedora_flysystem')
+      $container->get('logger.channel.fedora_flysystem'),
+      $container->get('request_stack')
     );
   }
 
@@ -109,7 +122,7 @@ class Fedora implements FlysystemPluginInterface, ContainerFactoryPluginInterfac
     return function (callable $handler) use ($jwt) {
       return function (
         RequestInterface $request,
-        array $options
+        array $options,
       ) use (
         $handler,
         $jwt
@@ -124,7 +137,7 @@ class Fedora implements FlysystemPluginInterface, ContainerFactoryPluginInterfac
    * {@inheritdoc}
    */
   public function getAdapter() {
-    return new FedoraAdapter($this->fedora, $this->mimeTypeGuesser, $this->logger);
+    return new FedoraAdapter($this->fedora, $this->mimeTypeGuesser, $this->logger, $this->request);
   }
 
   /**

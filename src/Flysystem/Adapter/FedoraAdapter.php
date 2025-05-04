@@ -12,6 +12,7 @@ use League\Flysystem\Config;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\StreamWrapper;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Fedora adapter for Flysystem.
@@ -43,6 +44,13 @@ class FedoraAdapter implements AdapterInterface {
   protected $logger;
 
   /**
+   * The current request.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $request;
+
+  /**
    * Constructs a Fedora adapter for Flysystem.
    *
    * @param \Islandora\Chullo\IFedoraApi $fedora
@@ -51,15 +59,19 @@ class FedoraAdapter implements AdapterInterface {
    *   Mimetype guesser.
    * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
    *   The fedora adapter logger channel.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request.
    */
   public function __construct(
     IFedoraApi $fedora,
     MimeTypeGuesserInterface $mime_type_guesser,
-    LoggerChannelInterface $logger
+    LoggerChannelInterface $logger,
+    Request $request,
   ) {
     $this->fedora = $fedora;
     $this->mimeTypeGuesser = $mime_type_guesser;
     $this->logger = $logger;
+    $this->request = $request;
   }
 
   /**
@@ -93,9 +105,23 @@ class FedoraAdapter implements AdapterInterface {
    * {@inheritdoc}
    */
   public function readStream($path) {
-    $response = $this->fedora->getResource($path, ['Connection' => 'close']);
+    $headers = ['Connection' => 'close'];
 
-    if ($response->getStatusCode() != 200) {
+    // If the request is for a range
+    // pass that header to fedora.
+    if ($this->request && $this->request->headers->has('Range')) {
+      $range = $this->request->headers->get('Range');
+      if (str_starts_with($range, 'bytes=')) {
+        // Since \Symfony\Component\HttpFoundation\BinaryFileResponse seeks
+        // to the $start of the range based on the request's Range header
+        // we need to always set start to 0 so fedora returns the
+        [$start, $end] = explode('-', substr($range, 6), 2) + [1 => ""];
+        $headers['Range'] = "bytes=0-$end";
+      }
+    }
+
+    $response = $this->fedora->getResource($path, $headers);
+    if (!in_array($response->getStatusCode(), [200, 206], TRUE)) {
       return FALSE;
     }
 
