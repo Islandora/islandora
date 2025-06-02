@@ -202,7 +202,6 @@ class MediaTrackItem extends FileItem {
     // $sample_file_text += randomText()
     // }
     // $file = file_write($sample_file_text, 'random_filename.vtt');
-
     $sample_file_text = <<<EOT
 WEBVTT
 
