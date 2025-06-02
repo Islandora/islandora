@@ -202,6 +202,19 @@ class MediaTrackItem extends FileItem {
     // $sample_file_text += randomText()
     // }
     // $file = file_write($sample_file_text, 'random_filename.vtt');
+
+    $sample_file_text = <<<EOT
+WEBVTT
+
+00:00:00.500 --> 00:00:02.000
+This is a test subtitle.
+
+00:00:04.500 --> 00:00:06.300
+This is another test subtitle.
+EOT;
+
+    $file = file_write($sample_file_text, 'sample_file.vtt');
+
     $values = [
       'target_id' => $file->id(),
       // Randomize the rest of these...
@@ -209,7 +222,7 @@ class MediaTrackItem extends FileItem {
       'kind' => '',
       'srclang' => '',
       // Careful with this one, complex validation.
-      'default' => '',
+      'default' => 0,
     ];
     return $values;
   }
