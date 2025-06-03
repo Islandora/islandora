@@ -212,7 +212,9 @@ This is a test subtitle.
 This is another test subtitle.
 EOT;
 
-    $file = file_write($sample_file_text, 'sample_file.vtt');
+    /** @var \Drupal\file\FileRepositoryInterface $file_repo */
+    $file_repo = \Drupal::service('file.repository');
+    $file = $file_repo->writeData($sample_file_text, "public://sample_file.vtt");
 
     $values = [
       'target_id' => $file->id(),
