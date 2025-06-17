@@ -6,8 +6,7 @@ type: module
 package: Islandora
 core_version_requirement: ^10.3 || ^11
 dependencies:
-  - action:action
-  - context:context_ui
+  - context:context
   - ctools:ctools
   - drupal:basic_auth
   - drupal:block
@@ -20,7 +19,7 @@ dependencies:
   - drupal:rest
   - drupal:taxonomy
   - drupal:text
-  - drupal:views_ui
+  - drupal:views
   - eva:eva
   - file_replace:file_replace
   - filehash:filehash
