@@ -124,7 +124,7 @@ function islandora_media_update(MediaInterface $media) {
   }
 
   // Reindex the node and original node in search_api, if necessary.
-  foreach([$media, $media->original] as $media_revision) {
+  foreach ([$media, $media->original] as $media_revision) {
     $node = $utils->getParentNode($media_revision);
     if ($node) {
       _islandora_reindex_nodes([$node->id()]);
@@ -200,13 +200,13 @@ function _islandora_reindex_nodes(array $node_ids) {
     try {
       $node->save();
       \Drupal::logger('islandora')->debug('Resaved node @nid to trigger reindex', [
-        '@nid' => $node->id()
+        '@nid' => $node->id(),
       ]);
     }
     catch (\Exception $e) {
       \Drupal::logger('islandora')->error('Error resaving node @nid: @error', [
         '@nid' => $node->id(),
-        '@error' => $e->getMessage()
+        '@error' => $e->getMessage(),
       ]);
     }
   }
