@@ -96,8 +96,6 @@ function islandora_media_insert(MediaInterface $media) {
       $node,
       $media
     );
-    // Reindex the node if necessary.
-    _islandora_reindex_nodes([$node->id()]);
   }
   // Wait until the media insert is complete, then fire file derivatives.
   drupal_register_shutdown_function('_islandora_fire_media_file_derivative_reaction', $media);
@@ -121,14 +119,6 @@ function islandora_media_update(MediaInterface $media) {
   $source_field = $media_source_service->getSourceFieldName($media->bundle());
   if (empty($source_field)) {
     return;
-  }
-
-  // Reindex the node and original node in search_api, if necessary.
-  foreach ([$media, $media->original] as $media_revision) {
-    $node = $utils->getParentNode($media_revision);
-    if ($node) {
-      _islandora_reindex_nodes([$node->id()]);
-    }
   }
 
   // Exit early if the source file did not change.
@@ -156,13 +146,6 @@ function islandora_media_delete(MediaInterface $media) {
 
   // Execute delete reactions.
   $utils->executeMediaReactions('\Drupal\islandora\Plugin\ContextReaction\DeleteReaction', $media);
-
-  // If it has a parent node...
-  $node = $utils->getParentNode($media);
-  if ($node) {
-    // Reindex the node if necessary.
-    _islandora_reindex_nodes([$node->id()]);
-  }
 }
 
 /**
@@ -182,34 +165,6 @@ function _islandora_fire_media_file_derivative_reaction(MediaInterface $media) {
   $utils = \Drupal::service('islandora.utils');
   // Execute derivative file reactions.
   $utils->executeMediaReactions('\Drupal\islandora\Plugin\ContextReaction\DerivativeFileReaction', $media);
-}
-
-/**
- * Helper function to reindex nodes after the referencing media changes.
- */
-function _islandora_reindex_nodes(array $node_ids) {
-  if (!\Drupal::moduleHandler()->moduleExists('search_api')) {
-    return;
-  }
-  $nodes = \Drupal::entityTypeManager()
-    ->getStorage('node')
-    ->loadMultiple($node_ids);
-
-  // Re-save the node to trigger re-index.
-  foreach ($nodes as $node) {
-    try {
-      $node->save();
-      \Drupal::logger('islandora')->debug('Resaved node @nid to trigger reindex', [
-        '@nid' => $node->id(),
-      ]);
-    }
-    catch (\Exception $e) {
-      \Drupal::logger('islandora')->error('Error resaving node @nid: @error', [
-        '@nid' => $node->id(),
-        '@error' => $e->getMessage(),
-      ]);
-    }
-  }
 }
 
 /**
