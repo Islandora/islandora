@@ -2,6 +2,7 @@
 
 namespace Drupal\islandora\Plugin\Action;
 
+use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\islandora\IslandoraUtils;
@@ -18,6 +19,19 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class IndexMediasParentNodeInSearchApi extends IndexNodeInSearchApi implements ContainerFactoryPluginInterface {
   use StringTranslationTrait;
+  /**
+   * Module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandler
+   */
+  protected ModuleHandler $moduleHandler;
+
+  /**
+   * Islandora utils.
+   *
+   * @var \Drupal\islandora\IslandoraUtils
+   */
+  protected IslandoraUtils $utils;
 
   /**
    * Constructor.
@@ -31,11 +45,13 @@ class IndexMediasParentNodeInSearchApi extends IndexNodeInSearchApi implements C
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
+   * @param \Drupal\Core\Extension\ModuleHandler $moduleHandler
+   *   The Module Handler.
    * @param \Drupal\islandora\IslandoraUtils $utils
    *   The Islandora Utils.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, IslandoraUtils $utils) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ModuleHandler $moduleHandler, IslandoraUtils $utils) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $moduleHandler);
     $this->utils = $utils;
   }
 
@@ -47,6 +63,7 @@ class IndexMediasParentNodeInSearchApi extends IndexNodeInSearchApi implements C
       $configuration,
       $plugin_id,
       $plugin_definition,
+      $container->get('module_handler'),
       $container->get('islandora.utils')
     );
   }

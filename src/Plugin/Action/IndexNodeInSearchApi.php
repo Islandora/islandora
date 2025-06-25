@@ -4,6 +4,7 @@ namespace Drupal\islandora\Plugin\Action;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\ConfigurableActionBase;
+use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -23,13 +24,41 @@ class IndexNodeInSearchApi extends ConfigurableActionBase implements ContainerFa
   use StringTranslationTrait;
 
   /**
+   * Module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandler
+   */
+  protected ModuleHandler $moduleHandler;
+
+  /**
+   * Constructor.
+   *
+   * @param array $configuration
+   *   The plugin configuration, i.e. an array with configuration values keyed
+   *   by configuration option name. The special key 'context' may be used to
+   *   initialize the defined contexts by setting it to an array of context
+   *   values keyed by context names.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Extension\ModuleHandler $moduleHandler
+   *   The Module Handler.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ModuleHandler $moduleHandler) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->moduleHandler = $moduleHandler;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
       $plugin_id,
-      $plugin_definition
+      $plugin_definition,
+      $container->get('module_handler')
     );
   }
 
@@ -65,8 +94,29 @@ class IndexNodeInSearchApi extends ConfigurableActionBase implements ContainerFa
    * {@inheritdoc}
    */
   public function execute($node = NULL) {
-    // FIXME change to actual indexing calls.
-    $node->save();
+    if (!$node) {
+      return;
+    }
+    if (!$this->moduleHandler->moduleExists('search_api')) {
+      return;
+    }
+
+    // Get the Search API index to update.
+    // phpcs:disable
+    $index = \Drupal\search_api\Entity\Index::load($this->configuration['index']);
+    // phpcs:enable
+    if ($index) {
+      // Create an item to track the node in this index.
+      $item_id = $node->id() . ':' . $node->language()->getId();
+
+      // Track the item (queues it for indexing).
+      $index->trackItemsUpdated('entity:node', [$item_id]);
+
+      // If immediate indexing is enabled, process the tracked items.
+      if ($index->getOption('index_directly')) {
+        $index->indexItems(10, 'entity:node');
+      }
+    }
   }
 
 }
