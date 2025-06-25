@@ -58,7 +58,7 @@ class IndexNodeInSearchApi extends ConfigurableActionBase implements ContainerFa
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('module_handler')
+      $container->get('module_handler'),
     );
   }
 
@@ -66,12 +66,6 @@ class IndexNodeInSearchApi extends ConfigurableActionBase implements ContainerFa
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form['index'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Index'),
-      '#default_value' => $this->configuration['index'],
-      '#required' => TRUE,
-    ];
     return $form;
   }
 
@@ -79,7 +73,6 @@ class IndexNodeInSearchApi extends ConfigurableActionBase implements ContainerFa
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['index'] = $form_state->getValue('index');
   }
 
   /**
@@ -97,26 +90,11 @@ class IndexNodeInSearchApi extends ConfigurableActionBase implements ContainerFa
     if (!$node) {
       return;
     }
-    if (!$this->moduleHandler->moduleExists('search_api') || !class_exists('\Drupal\search_api\Entity\Index')) {
+    if (!$this->moduleHandler->moduleExists('search_api')) {
       return;
     }
-
-    // Get the Search API index to update.
-    // phpcs:disable
-    $index = \Drupal\search_api\Entity\Index::load($this->configuration['index']);
-    // phpcs:enable
-    if ($index) {
-      // Create an item to track the node in this index.
-      $item_id = $node->id() . ':' . $node->language()->getId();
-
-      // Track the item (queues it for indexing).
-      $index->trackItemsUpdated('entity:node', [$item_id]);
-
-      // If immediate indexing is enabled, process the tracked items.
-      if ($index->getOption('index_directly')) {
-        $index->indexItems(10, 'entity:node');
-      }
-    }
+    \Drupal::getContainer()->get('search_api.entity_datasource.tracking_manager')
+      ->entityUpdate($node);
   }
 
 }
