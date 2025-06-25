@@ -97,7 +97,7 @@ class IndexNodeInSearchApi extends ConfigurableActionBase implements ContainerFa
     if (!$node) {
       return;
     }
-    if (!$this->moduleHandler->moduleExists('search_api')) {
+    if (!$this->moduleHandler->moduleExists('search_api') || !class_exists('\Drupal\search_api\Entity\Index')) {
       return;
     }
 
