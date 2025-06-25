@@ -5,11 +5,10 @@ namespace Drupal\islandora\Plugin\Action;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\islandora\IslandoraUtils;
-use Drupal\islandora\Plugin\Action\IndexNodeInSearchApi;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Indexes a media's parent node in Search API
+ * Indexes a media's parent node in Search API.
  *
  * @Action(
  *   id = "index_medias_parent_node_in_search_api",
@@ -19,8 +18,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class IndexMediasParentNodeInSearchApi extends IndexNodeInSearchApi implements ContainerFactoryPluginInterface {
   use StringTranslationTrait;
-  
+
   /**
+   * Constructor.
+   *
    * @param array $configuration
    *   The plugin configuration, i.e. an array with configuration values keyed
    *    by configuration option name. The special key 'context' may be used to
@@ -33,12 +34,14 @@ class IndexMediasParentNodeInSearchApi extends IndexNodeInSearchApi implements C
    * @param \Drupal\islandora\IslandoraUtils $utils
    *   The Islandora Utils.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, IslandoraUtils $utils )
-  {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, IslandoraUtils $utils) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->utils = $utils;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
@@ -48,6 +51,9 @@ class IndexMediasParentNodeInSearchApi extends IndexNodeInSearchApi implements C
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function execute($media = NULL) {
     $media_revisions = [$media];
     // Get the original too, if it's an update.

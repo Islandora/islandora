@@ -8,11 +8,10 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\islandora\IslandoraUtils;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Indexes a node in Search API
+ * Indexes a node in Search API.
  *
  * @Action(
  *   id = "index_node_in_search_api",
@@ -24,31 +23,19 @@ class IndexNodeInSearchApi extends ConfigurableActionBase implements ContainerFa
   use StringTranslationTrait;
 
   /**
-   * @param array $configuration
-   *   The plugin configuration, i.e. an array with configuration values keyed
-   *    by configuration option name. The special key 'context' may be used to
-   *    initialize the defined contexts by setting it to an array of context
-   *    values keyed by context names.
-   * @param mixed $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\islandora\IslandoraUtils $utils
-   *   The Islandora Utils.
+   * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition)
-  {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-  }
-
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
       $plugin_id,
       $plugin_definition
-  );
+    );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['index'] = [
       '#type' => 'textfield',
@@ -66,13 +53,20 @@ class IndexNodeInSearchApi extends ConfigurableActionBase implements ContainerFa
     $this->configuration['index'] = $form_state->getValue('index');
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
     $result = AccessResult::allowed();
     return $return_as_object ? $result : $result->isAllowed();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function execute($node = NULL) {
-    $node->save(); # FIXME change to actual indexing calls.
+    // FIXME change to actual indexing calls.
+    $node->save();
   }
 
 }
