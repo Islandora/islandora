@@ -189,7 +189,7 @@ class FedoraAdapter implements AdapterInterface {
     $links = Header::parse($response->getHeader('Link'));
 
     foreach ($links as $link) {
-      if ($link['rel'] == 'type' && $link[0] == '<http://www.w3.org/ns/ldp#NonRDFSource>') {
+      if (isset($link['rel']) && $link['rel'] == 'type' && $link[0] == '<http://www.w3.org/ns/ldp#NonRDFSource>') {
         $type = 'file';
         break;
       }
