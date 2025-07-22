@@ -235,7 +235,7 @@ class IIIFManifest extends StylePluginBase {
       // @see https://iiif.io/api/presentation/2.1/#manifest
       $json += [
         '@type' => 'sc:Manifest',
-        '@id' => $request_url,
+        '@id' => $request_host . $request_url,
         // If the View has a title, set the View title as the manifest label.
         'label' => $label,
         '@context' => 'http://iiif.io/api/presentation/2/context.json',
