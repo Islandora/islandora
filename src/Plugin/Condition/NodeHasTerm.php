@@ -3,8 +3,11 @@
 namespace Drupal\islandora\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Entity\Plugin\DataType\EntityReference;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\islandora\IslandoraUtils;
@@ -38,6 +41,36 @@ class NodeHasTerm extends ConditionPluginBase implements ContainerFactoryPluginI
   protected $entityTypeManager;
 
   /**
+   * URIs for which to test.
+   *
+   * @var string[]
+   */
+  protected array $uris;
+
+  /**
+   * Operand with which to combine matches.
+   *
+   * The string "and" or "or":
+   * - if "and"; all $uris must be matched
+   * - if "or"; only one of $uris much be matched.
+   *
+   * @var string
+   */
+  protected string $operand;
+
+  /**
+   * Flag, for how to enumerate candidate entities which might bear URIs.
+   *
+   * TRUE to use ::referencedEntities(); however, can be very inefficient with
+   * many other referenced entities (such as paragraphs). FALSE to constrain
+   * the fields considered to entity references fields bearing taxonomy terms
+   * earlier.
+   *
+   * @var bool
+   */
+  protected bool $naiveReferences;
+
+  /**
    * Constructor.
    *
    * @param array $configuration
@@ -67,6 +100,24 @@ class NodeHasTerm extends ConditionPluginBase implements ContainerFactoryPluginI
   }
 
   /**
+   * Helper; unpack configuration to our member variables.
+   */
+  private function unpackConfig() : static {
+    $this->uris = explode(',', $this->configuration['uri']);
+    $this->operand = $this->configuration['logic'];
+    $this->naiveReferences = $this->configuration['naive_references'];
+    return $this;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function setConfiguration(array $configuration) {
+    return parent::setConfiguration($configuration)
+      ->unpackConfig();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -86,7 +137,8 @@ class NodeHasTerm extends ConditionPluginBase implements ContainerFactoryPluginI
     return array_merge(
       [
         'logic' => 'and',
-        'uri' => NULL,
+        'uri' => '',
+        'naive_references' => FALSE,
       ],
       parent::defaultConfiguration()
     );
@@ -97,11 +149,8 @@ class NodeHasTerm extends ConditionPluginBase implements ContainerFactoryPluginI
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $default = [];
-    if (isset($this->configuration['uri']) && !empty($this->configuration['uri'])) {
-      $uris = explode(',', $this->configuration['uri']);
-      foreach ($uris as $uri) {
-        $default[] = $this->utils->getTermForUri($uri);
-      }
+    foreach ($this->uris as $uri) {
+      $default[] = $this->utils->getTermForUri($uri);
     }
 
     $form['term'] = [
@@ -122,8 +171,15 @@ class NodeHasTerm extends ConditionPluginBase implements ContainerFactoryPluginI
         'and' => 'And',
         'or' => 'Or',
       ],
-      '#default_value' => $this->configuration['logic'],
+      '#default_value' => $this->operand,
     ];
+
+    $form['naive_references'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Naive References'),
+      '#default_value' => $this->naiveReferences,
+    ];
+
     return parent::buildConfigurationForm($form, $form_state);
   }
 
@@ -131,8 +187,9 @@ class NodeHasTerm extends ConditionPluginBase implements ContainerFactoryPluginI
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    parent::submitConfigurationForm($form, $form_state);
+
     // Set URI for term if possible.
-    $this->configuration['uri'] = NULL;
     $value = $form_state->getValue('term');
     $uris = [];
     if (!empty($value)) {
@@ -144,14 +201,13 @@ class NodeHasTerm extends ConditionPluginBase implements ContainerFactoryPluginI
           $uris[] = $uri;
         }
       }
-      if (!empty($uris)) {
-        $this->configuration['uri'] = implode(',', $uris);
-      }
     }
 
-    $this->configuration['logic'] = $form_state->getValue('logic');
-
-    parent::submitConfigurationForm($form, $form_state);
+    $this->setConfiguration([
+      'uri' => implode(',', $uris),
+      'logic' => $form_state->getValue('logic'),
+      'naive_references' => $form_state->getValue('naive_references'),
+    ]);
   }
 
   /**
@@ -178,64 +234,93 @@ class NodeHasTerm extends ConditionPluginBase implements ContainerFactoryPluginI
    * @return bool
    *   TRUE if entity has all the specified term(s), otherwise FALSE.
    */
-  protected function evaluateEntity(EntityInterface $entity) {
+  protected function evaluateEntity(EntityInterface $entity) : bool {
     // Find the terms on the node.
     $field_names = $this->utils->getUriFieldNamesForTerms();
-    $terms = array_filter($entity->referencedEntities(), function ($entity) use ($field_names) {
-      if ($entity->getEntityTypeId() != 'taxonomy_term') {
+    $unfiltered_terms = ($this->naiveReferences) ?
+      $entity->referencedEntities() :
+      $this->doSpecificReferenceLookup($entity);
+    /** @var \Drupal\taxonomy\TermInterface[] $terms */
+    $terms = array_filter($unfiltered_terms, static function ($entity) use ($field_names) {
+      if ($entity->getEntityTypeId() !== 'taxonomy_term') {
+        return FALSE;
+      }
+      if (!($entity instanceof FieldableEntityInterface)) {
         return FALSE;
       }
 
       foreach ($field_names as $field_name) {
         if ($entity->hasField($field_name) && !$entity->get($field_name)->isEmpty()) {
-           return TRUE;
+          return TRUE;
         }
       }
       return FALSE;
     });
 
     // Get their URIs.
-    $haystack = array_map(function ($term) {
-        return $this->utils->getUriForTerm($term);
-    },
-      $terms
-    );
+    $haystack = array_filter(array_map($this->utils->getUriForTerm(...), $terms));
 
     // FALSE if there's no URIs on the node.
     if (empty($haystack)) {
       return FALSE;
     }
 
-    // Get the URIs to look for.  It's a required field, so there
-    // will always be one.
-    $needles = explode(',', $this->configuration['uri']);
+    return match ($this->operand) {
+      'and' => count(array_intersect($this->uris, $haystack)) === count($this->uris),
+      default => count(array_intersect($this->uris, $haystack)) > 0,
+    };
+  }
 
-    // TRUE if every needle is in the haystack.
-    if ($this->configuration['logic'] == 'and') {
-      if (count(array_intersect($needles, $haystack)) == count($needles)) {
-        return TRUE;
+  /**
+   * More targetedly discover references to the taxonomy fields we care about.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity from which to examine
+   *
+   * @return \Drupal\taxonomy\TermInterface[]
+   *   Taxonomy terms to check examine.
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   */
+  private function doSpecificReferenceLookup(EntityInterface $entity) : array {
+    assert($entity instanceof ContentEntityInterface);
+    $field_generator = static function (FieldableEntityInterface $entity) {
+      foreach ($entity->getFieldDefinitions() as $field_name => $field_definition) {
+        if ($field_definition->getType() !== 'entity_reference' || $field_definition->getSetting('target_type') !== 'taxonomy_term') {
+          continue;
+        }
+        yield $field_name;
       }
-      return FALSE;
-    }
-    // TRUE if any needle is in the haystack.
-    else {
-      if (count(array_intersect($needles, $haystack)) > 0) {
-        return TRUE;
+    };
+
+    $terms = [];
+
+    /** @var string $field_name */
+    foreach ($field_generator($entity) as $field_name) {
+      /** @var \Drupal\Core\Field\FieldItemInterface $field_item */
+      foreach ($entity->get($field_name) as $field_item) {
+        foreach ($field_item->getProperties(TRUE) as $property) {
+          if ($property instanceof EntityReference &&
+            $property->getTargetDefinition()->getEntityTypeId() === 'taxonomy_term' &&
+            ($term = $property->getValue())) {
+            $terms[] = $term;
+          }
+        }
       }
-      return FALSE;
     }
+
+    return $terms;
   }
 
   /**
    * {@inheritdoc}
    */
   public function summary() {
-    if (!empty($this->configuration['negate'])) {
-      return $this->t('The node is not associated with taxonomy term with uri @uri.', ['@uri' => $this->configuration['uri']]);
-    }
-    else {
-      return $this->t('The node is associated with taxonomy term with uri @uri.', ['@uri' => $this->configuration['uri']]);
-    }
+    $context = [
+      '@uri' => implode(',', $this->uris),
+    ];
+    return !empty($this->configuration['negate']) ?
+      $this->t('The node is not associated with taxonomy term with uri @uri.', $context) :
+      $this->t('The node is associated with taxonomy term with uri @uri.', $context);
   }
 
 }
