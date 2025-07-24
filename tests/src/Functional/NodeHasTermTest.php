@@ -25,9 +25,23 @@ class NodeHasTermTest extends IslandoraFunctionalTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Plugin\Condition\NodeHasTerm
+   * Data providing method.
+   *
+   * @return array
+   *   Arrays of test parameters.
    */
-  public function testNodeHasTerm() {
+  public function dataProvider() {
+    return [
+      'naive references' => [TRUE],
+      'specific references' => [FALSE],
+    ];
+  }
+
+  /**
+   * @covers \Drupal\islandora\Plugin\Condition\NodeHasTerm
+   * @dataProvider dataProvider
+   */
+  public function testNodeHasTerm(bool $naive_references) {
 
     // Create a new node with the tag.
     $node = $this->container->get('entity_type.manager')
@@ -44,6 +58,7 @@ class NodeHasTermTest extends IslandoraFunctionalTestBase {
       'node_has_term',
       [
         'uri' => 'http://purl.org/coar/resource_type/c_c513',
+        'naive_references' => $naive_references,
       ]
     );
     $condition->setContextValue('node', $node);
@@ -79,6 +94,7 @@ class NodeHasTermTest extends IslandoraFunctionalTestBase {
       [
         'uri' => 'http://purl.org/coar/resource_type/c_c513,http://pcdm.org/use#PreservationMasterFile',
         'logic' => 'or',
+        'naive_references' => $naive_references,
       ]
     );
     $condition->setContextValue('node', $node);
@@ -103,6 +119,7 @@ class NodeHasTermTest extends IslandoraFunctionalTestBase {
       'node_has_term',
       [
         'uri' => 'http://purl.org/coar/resource_type/c_c513,http://pcdm.org/use#PreservationMasterFile',
+        'naive_references' => $naive_references,
       ]
     );
     $condition->setContextValue('node', $node);
