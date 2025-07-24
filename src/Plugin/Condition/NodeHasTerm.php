@@ -272,10 +272,11 @@ class NodeHasTerm extends ConditionPluginBase implements ContainerFactoryPluginI
    * More targetedly discover references to the taxonomy fields we care about.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity from which to examine
+   *   The entity from which to examine.
    *
    * @return \Drupal\taxonomy\TermInterface[]
    *   Taxonomy terms to check examine.
+   *
    * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    */
   private function doSpecificReferenceLookup(EntityInterface $entity) : array {
