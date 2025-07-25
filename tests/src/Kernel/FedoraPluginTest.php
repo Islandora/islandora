@@ -50,7 +50,9 @@ class FedoraPluginTest extends IslandoraKernelTestBase {
     $request_stack = $this->container->get('request_stack');
     $request_stack->push($request);
 
-    return new Fedora($api, $mime_guesser, $language_manager, $logger, $request_stack);
+    $configFactory = $this->container->get('config.factory');
+
+    return new Fedora($api, $mime_guesser, $language_manager, $logger, $request_stack, $configFactory);
   }
 
   /**

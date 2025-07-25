@@ -76,7 +76,7 @@ class FedoraAdapter implements AdapterInterface {
     MimeTypeGuesserInterface $mime_type_guesser,
     LoggerChannelInterface $logger,
     Request $request,
-    string $fedora_root,
+    string $fedora_root = '',
   ) {
     $this->fedora = $fedora;
     $this->mimeTypeGuesser = $mime_type_guesser;
