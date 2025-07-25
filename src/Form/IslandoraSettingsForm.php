@@ -238,7 +238,6 @@ class IslandoraSettingsForm extends ConfigFormBase {
       '#default_value' => (bool) $config->get(self::FAST_TERM_QUERIES),
     ];
 
-
     $form[self::FEDORA_ROOT] = [
       '#type' => 'textfield',
       '#title' => $this->t('Fedora Root'),

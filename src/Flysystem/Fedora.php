@@ -151,7 +151,7 @@ class Fedora implements FlysystemPluginInterface, ContainerFactoryPluginInterfac
    * {@inheritdoc}
    */
   public function getAdapter() {
-    return new FedoraAdapter($this->fedora, $this->mimeTypeGuesser, $this->logger, $this->request,  $this->fedoraRoot);
+    return new FedoraAdapter($this->fedora, $this->mimeTypeGuesser, $this->logger, $this->request, $this->fedoraRoot);
   }
 
   /**
