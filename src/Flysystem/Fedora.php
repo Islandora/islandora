@@ -2,6 +2,7 @@
 
 namespace Drupal\islandora\Flysystem;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Logger\RfcLogLevel;
@@ -65,6 +66,13 @@ class Fedora implements FlysystemPluginInterface, ContainerFactoryPluginInterfac
   protected $request;
 
   /**
+   * The path to fedora OCFL root.
+   *
+   * @var string
+   */
+  protected $fedoraRoot;
+
+  /**
    * Constructs a Fedora plugin for Flysystem.
    *
    * @param \Islandora\Chullo\IFedoraApi $fedora
@@ -77,6 +85,8 @@ class Fedora implements FlysystemPluginInterface, ContainerFactoryPluginInterfac
    *   The fedora adapter logger channel.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
    */
   public function __construct(
     IFedoraApi $fedora,
@@ -84,12 +94,16 @@ class Fedora implements FlysystemPluginInterface, ContainerFactoryPluginInterfac
     LanguageManagerInterface $language_manager,
     LoggerChannelInterface $logger,
     RequestStack $request_stack,
+    ConfigFactoryInterface $config_factory,
   ) {
     $this->fedora = $fedora;
     $this->mimeTypeGuesser = $mime_type_guesser;
     $this->languageManager = $language_manager;
     $this->logger = $logger;
     $this->request = $request_stack->getCurrentRequest();
+
+    $config = $config_factory->get('islandora.settings');
+    $this->fedoraRoot = $config->get('fedora_root') ?: '';
   }
 
   /**
@@ -102,13 +116,13 @@ class Fedora implements FlysystemPluginInterface, ContainerFactoryPluginInterfac
     $stack->push(static::addJwt($container->get('jwt.authentication.jwt')));
     $fedora = FedoraApi::createWithHandler($configuration['root'], $stack);
 
-    // Return it.
     return new static(
       $fedora,
       $container->get('file.mime_type.guesser'),
       $container->get('language_manager'),
       $container->get('logger.channel.fedora_flysystem'),
-      $container->get('request_stack')
+      $container->get('request_stack'),
+      $container->get('config.factory')
     );
   }
 
@@ -137,7 +151,7 @@ class Fedora implements FlysystemPluginInterface, ContainerFactoryPluginInterfac
    * {@inheritdoc}
    */
   public function getAdapter() {
-    return new FedoraAdapter($this->fedora, $this->mimeTypeGuesser, $this->logger, $this->request);
+    return new FedoraAdapter($this->fedora, $this->mimeTypeGuesser, $this->logger, $this->request,  $this->fedoraRoot);
   }
 
   /**

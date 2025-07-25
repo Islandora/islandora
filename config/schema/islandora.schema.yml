@@ -37,6 +37,9 @@ islandora.settings:
       label: 'List of node, media and taxonomy terms that should include the linked Fedora URI'
       sequence:
         type: string
+    fedora_root:
+      type: string
+      label: 'Fedora Root Path'
 
 
 action.configuration.emit_node_event:

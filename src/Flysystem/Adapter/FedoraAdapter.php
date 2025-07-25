@@ -51,6 +51,13 @@ class FedoraAdapter implements AdapterInterface {
   protected $request;
 
   /**
+   * The path to fedora OCFL root.
+   *
+   * @var string
+   */
+  protected $fedoraRoot;
+
+  /**
    * Constructs a Fedora adapter for Flysystem.
    *
    * @param \Islandora\Chullo\IFedoraApi $fedora
@@ -61,23 +68,109 @@ class FedoraAdapter implements AdapterInterface {
    *   The fedora adapter logger channel.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request.
+   * @param string $fedora_root
+   *   The path to fedora's OCFL root directory.
    */
   public function __construct(
     IFedoraApi $fedora,
     MimeTypeGuesserInterface $mime_type_guesser,
     LoggerChannelInterface $logger,
     Request $request,
+    string $fedora_root,
   ) {
     $this->fedora = $fedora;
     $this->mimeTypeGuesser = $mime_type_guesser;
     $this->logger = $logger;
     $this->request = $request;
+    $this->fedoraRoot = $fedora_root;
+  }
+
+  /**
+   * Check if we should read from disk.
+   *
+   * @return bool
+   *   TRUE if fedoraRoot is configured and not empty.
+   */
+  protected function useDiskReading($path) {
+    // If we're setting up a directory in fedora
+    // do not attempt to read from disk.
+    $info = pathinfo($path);
+    if (empty($info['extension'])) {
+      return FALSE;
+    }
+
+    return !empty($this->fedoraRoot);
+  }
+
+  /**
+   * Convert Fedora path to disk path.
+   *
+   * @param string $path
+   *   Fedora resource path.
+   *
+   * @return string
+   *   Full disk path to the file.
+   */
+  protected function getDiskPath(string $path) : string {
+    // Remove leading slash if present.
+    $path = ltrim($path, '/');
+    $fedora_id = 'info:fedora/' . $path;
+    $ocfl_dir = $this->getOcflDir($fedora_id);
+    $inventory = $ocfl_dir . '/extensions/0005-mutable-head/head/inventory.json';
+    if (!file_exists($inventory)) {
+      return "";
+    }
+
+    $inventory_json = file_get_contents($inventory);
+    $inventory = json_decode($inventory_json, TRUE);
+    $head = $inventory['head'];
+    $state = $inventory['versions'][$head]['state'];
+    $manifest = $inventory['manifest'];
+
+    $components = explode('/', $path);
+    $filename = array_pop($components);
+    foreach ($state as $digest => $files) {
+      if (!in_array($filename, $files)) {
+        continue;
+      }
+      if (empty($manifest[$digest][0])) {
+        continue;
+      }
+
+      return $ocfl_dir . '/' . $manifest[$digest][0];
+    }
+
+    return "";
+  }
+
+  /**
+   * Helper function to get the OCFL directory of a fcrepo object ID.
+   */
+  protected function getOcflDir(string $objectId) : string {
+    $digest = hash('sha256', $objectId);
+    $tupleSize = 3;
+    $numberOfTuples = 3;
+    $path = rtrim($this->fedoraRoot, '/') . '/';
+    for ($i = 0; $i < $numberOfTuples * $tupleSize; $i += $tupleSize) {
+      $tuple = substr($digest, $i, $tupleSize);
+      $path .= $tuple . "/";
+    }
+
+    $path .= $digest;
+
+    return $path;
   }
 
   /**
    * {@inheritdoc}
    */
   public function has($path) {
+    if ($this->useDiskReading($path)) {
+      $diskPath = $this->getDiskPath($path);
+
+      return $diskPath != "" && file_exists($diskPath);
+    }
+
     $response = $this->fedora->getResourceHeaders($path, ['Connection' => 'close']);
     return $response->getStatusCode() == 200;
   }
@@ -92,7 +185,7 @@ class FedoraAdapter implements AdapterInterface {
       return FALSE;
     }
 
-    if (isset($meta['stream'])) {
+    if (!$this->useDiskReading($path) && isset($meta['stream'])) {
       $meta['contents'] = stream_get_contents($meta['stream']);
       fclose($meta['stream']);
       unset($meta['stream']);
@@ -105,6 +198,28 @@ class FedoraAdapter implements AdapterInterface {
    * {@inheritdoc}
    */
   public function readStream($path) {
+    if ($this->useDiskReading($path)) {
+      $diskPath = $this->getDiskPath($path);
+
+      if (!file_exists($diskPath)) {
+        return FALSE;
+      }
+
+      $stream = fopen($diskPath, 'r');
+      if ($stream === FALSE) {
+        return FALSE;
+      }
+
+      $meta = $this->getMetadata($path);
+      if ($meta === FALSE) {
+        fclose($stream);
+        return FALSE;
+      }
+
+      $meta['stream'] = $stream;
+      return $meta;
+    }
+
     $headers = ['Connection' => 'close'];
 
     // If the request is for a range
@@ -139,6 +254,29 @@ class FedoraAdapter implements AdapterInterface {
    * {@inheritdoc}
    */
   public function getMetadata($path) {
+    if ($this->useDiskReading($path)) {
+      $diskPath = $this->getDiskPath($path);
+
+      if (!file_exists($diskPath)) {
+        return FALSE;
+      }
+
+      $stat = stat($diskPath);
+      if ($stat === FALSE) {
+        return FALSE;
+      }
+
+      $meta = [
+        'type' => 'file',
+        'path' => $path,
+        'timestamp' => $stat['mtime'],
+        'size' => $stat['size'],
+        'mimetype' => $this->mimeTypeGuesser->guessMimeType($diskPath),
+      ];
+
+      return $meta;
+    }
+
     $response = $this->fedora->getResourceHeaders($path, ['Connection' => 'close']);
 
     if ($response->getStatusCode() != 200) {

@@ -4,3 +4,4 @@ delete_media_and_files: TRUE
 gemini_pseudo_bundles: []
 allow_header_links: TRUE
 fast_term_queries: TRUE
+fedora_root: ''

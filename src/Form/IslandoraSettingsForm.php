@@ -29,6 +29,7 @@ class IslandoraSettingsForm extends ConfigFormBase {
   const UPLOAD_FORM_LOCATION = 'upload_form_location';
   const UPLOAD_FORM_ALLOWED_MIMETYPES = 'upload_form_allowed_mimetypes';
   const GEMINI_PSEUDO = 'gemini_pseudo_bundles';
+  const FEDORA_ROOT = 'fedora_root';
   const FEDORA_URL = 'fedora_url';
   const TIME_INTERVALS = [
     'sec',
@@ -237,6 +238,15 @@ class IslandoraSettingsForm extends ConfigFormBase {
       '#default_value' => (bool) $config->get(self::FAST_TERM_QUERIES),
     ];
 
+
+    $form[self::FEDORA_ROOT] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Fedora Root'),
+      '#description' => $this->t("The absolute path to fedora's root OCFL dir. e.g. /fcrepo/home/data/ocfl-root.
+      Setting this value will read binaries off disk from the OCFL directory when access them through flysystem, rather than going through fedora's API"),
+      '#default_value' => $config->get(self::FEDORA_ROOT),
+    ];
+
     $form[self::FEDORA_URL] = [
       '#type' => 'textfield',
       '#title' => $this->t('Fedora URL'),
@@ -395,6 +405,7 @@ class IslandoraSettingsForm extends ConfigFormBase {
     $config
       ->set(self::BROKER_URL, $form_state->getValue(self::BROKER_URL))
       ->set(self::JWT_EXPIRY, $form_state->getValue(self::JWT_EXPIRY))
+      ->set(self::FEDORA_ROOT, $form_state->getValue(self::FEDORA_ROOT))
       ->set(self::UPLOAD_FORM_LOCATION, $form_state->getValue(self::UPLOAD_FORM_LOCATION))
       ->set(self::UPLOAD_FORM_ALLOWED_MIMETYPES, $form_state->getValue(self::UPLOAD_FORM_ALLOWED_MIMETYPES))
       ->set(self::GEMINI_PSEUDO, $new_pseudo_types)
