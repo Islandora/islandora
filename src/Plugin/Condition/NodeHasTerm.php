@@ -174,6 +174,8 @@ class NodeHasTerm extends ConditionPluginBase implements ContainerFactoryPluginI
     $form['naive_references'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Naive References'),
+      '#description' => $this->t('Use naive reference enumeration. Uncheck for better performance when dealing with sufficiently complex node content definitions containing many entity reference fields (including paragraphs, dgi_image_discovery, etc.).'),
+
       '#default_value' => $this->naiveReferences,
     ];
 
