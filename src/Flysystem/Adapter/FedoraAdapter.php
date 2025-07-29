@@ -94,7 +94,7 @@ class FedoraAdapter implements AdapterInterface {
   protected function useDiskReading($path) {
     // Prevent directory traversal.
     if (strpos($path, '..') !== FALSE || strpos($path, './') !== FALSE) {
-        return FALSE;
+      return FALSE;
     }
 
     // If we're setting up a directory in fedora
@@ -125,14 +125,14 @@ class FedoraAdapter implements AdapterInterface {
 
     $inventory_json = file_get_contents($inventory);
     if ($inventory_json === FALSE) {
-        $this->logger->error('Failed to read OCFL inventory: @path', ['@path' => $inventory]);
-        return "";
+      $this->logger->error('Failed to read OCFL inventory: @path', ['@path' => $inventory]);
+      return "";
     }
 
     $inventory = json_decode($inventory_json, TRUE);
     if (json_last_error() !== JSON_ERROR_NONE) {
-        $this->logger->error('Invalid JSON in OCFL inventory: @error', ['@error' => json_last_error_msg()]);
-        return "";
+      $this->logger->error('Invalid JSON in OCFL inventory: @error', ['@error' => json_last_error_msg()]);
+      return "";
     }
     $head = $inventory['head'];
     $state = $inventory['versions'][$head]['state'];
