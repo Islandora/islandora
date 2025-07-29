@@ -134,7 +134,21 @@ class FedoraAdapter implements AdapterInterface {
       $this->logger->error('Invalid JSON in OCFL inventory: @error', ['@error' => json_last_error_msg()]);
       return "";
     }
+
+    if (!isset($inventory['head'], $inventory['versions'], $inventory['manifest'])) {
+      $this->logger->error('Malformed OCFL inventory structure missing required fields: @path', ['@path' => $inventory]);
+      return "";
+    }
+
     $head = $inventory['head'];
+    if (!isset($inventory['versions'][$head]['state'])) {
+      $this->logger->error('Missing version state in OCFL inventory for version @version: @path', [
+        '@version' => $head,
+        '@path' => $inventory,
+      ]);
+      return "";
+    }
+
     $state = $inventory['versions'][$head]['state'];
     $manifest = $inventory['manifest'];
 
@@ -152,6 +166,44 @@ class FedoraAdapter implements AdapterInterface {
     }
 
     return "";
+  }
+
+  /**
+   * Get file metadata from disk with optional disk path return.
+   *
+   * @param string $path
+   *   Fedora resource path.
+   * @param bool $return_disk_path
+   *   Whether to return the disk path in the metadata.
+   *
+   * @return array|false
+   *   Metadata array with optional disk_path, or FALSE on failure.
+   */
+  protected function getDiskMetadata($path, $return_disk_path = FALSE) {
+    $diskPath = $this->getDiskPath($path);
+
+    if (!$diskPath || !file_exists($diskPath)) {
+      return FALSE;
+    }
+
+    $stat = stat($diskPath);
+    if ($stat === FALSE) {
+      return FALSE;
+    }
+
+    $meta = [
+      'type' => 'file',
+      'path' => $path,
+      'timestamp' => $stat['mtime'],
+      'size' => $stat['size'],
+      'mimetype' => $this->mimeTypeGuesser->guessMimeType($diskPath),
+    ];
+
+    if ($return_disk_path) {
+      $meta['disk_path'] = $diskPath;
+    }
+
+    return $meta;
   }
 
   /**
@@ -210,24 +262,21 @@ class FedoraAdapter implements AdapterInterface {
    */
   public function readStream($path) {
     if ($this->useDiskReading($path)) {
-      $diskPath = $this->getDiskPath($path);
+      $meta = $this->getDiskMetadata($path, TRUE);
 
-      if (!file_exists($diskPath)) {
+      if ($meta === FALSE) {
         return FALSE;
       }
 
-      $stream = fopen($diskPath, 'r');
+      $stream = fopen($meta['disk_path'], 'r');
       if ($stream === FALSE) {
         return FALSE;
       }
 
-      $meta = $this->getMetadata($path);
-      if ($meta === FALSE) {
-        fclose($stream);
-        return FALSE;
-      }
-
+      // Remove the disk_path from metadata before returning.
+      unset($meta['disk_path']);
       $meta['stream'] = $stream;
+
       return $meta;
     }
 
@@ -266,26 +315,7 @@ class FedoraAdapter implements AdapterInterface {
    */
   public function getMetadata($path) {
     if ($this->useDiskReading($path)) {
-      $diskPath = $this->getDiskPath($path);
-
-      if (!file_exists($diskPath)) {
-        return FALSE;
-      }
-
-      $stat = stat($diskPath);
-      if ($stat === FALSE) {
-        return FALSE;
-      }
-
-      $meta = [
-        'type' => 'file',
-        'path' => $path,
-        'timestamp' => $stat['mtime'],
-        'size' => $stat['size'],
-        'mimetype' => $this->mimeTypeGuesser->guessMimeType($diskPath),
-      ];
-
-      return $meta;
+      return $this->getDiskMetadata($path);
     }
 
     $response = $this->fedora->getResourceHeaders($path, ['Connection' => 'close']);
