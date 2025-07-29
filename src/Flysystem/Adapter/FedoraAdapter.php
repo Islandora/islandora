@@ -92,14 +92,15 @@ class FedoraAdapter implements AdapterInterface {
    *   TRUE if fedoraRoot is configured and not empty.
    */
   protected function useDiskReading($path) {
+    // Prevent directory traversal.
+    if (strpos($path, '..') !== FALSE || strpos($path, './') !== FALSE) {
+        return FALSE;
+    }
+
     // If we're setting up a directory in fedora
     // do not attempt to read from disk.
     $info = pathinfo($path);
-    if (empty($info['extension'])) {
-      return FALSE;
-    }
-
-    return !empty($this->fedoraRoot);
+    return !empty($info['extension']) && !empty($this->fedoraRoot);
   }
 
   /**
@@ -118,11 +119,21 @@ class FedoraAdapter implements AdapterInterface {
     $ocfl_dir = $this->getOcflDir($fedora_id);
     $inventory = $ocfl_dir . '/extensions/0005-mutable-head/head/inventory.json';
     if (!file_exists($inventory)) {
+      $this->logger->warning('OCFL inventory not found: @path', ['@path' => $inventory]);
       return "";
     }
 
     $inventory_json = file_get_contents($inventory);
+    if ($inventory_json === FALSE) {
+        $this->logger->error('Failed to read OCFL inventory: @path', ['@path' => $inventory]);
+        return "";
+    }
+
     $inventory = json_decode($inventory_json, TRUE);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        $this->logger->error('Invalid JSON in OCFL inventory: @error', ['@error' => json_last_error_msg()]);
+        return "";
+    }
     $head = $inventory['head'];
     $state = $inventory['versions'][$head]['state'];
     $manifest = $inventory['manifest'];
