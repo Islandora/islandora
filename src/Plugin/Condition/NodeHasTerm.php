@@ -186,8 +186,6 @@ class NodeHasTerm extends ConditionPluginBase implements ContainerFactoryPluginI
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    parent::submitConfigurationForm($form, $form_state);
-
     // Set URI for term if possible.
     $value = $form_state->getValue('term');
     $uris = [];
@@ -202,11 +200,15 @@ class NodeHasTerm extends ConditionPluginBase implements ContainerFactoryPluginI
       }
     }
 
-    $this->setConfiguration([
+    $this->configuration += [
       'uri' => implode(',', $uris),
       'logic' => $form_state->getValue('logic'),
       'naive_references' => $form_state->getValue('naive_references'),
-    ]);
+    ];
+
+    // XXX: Call to the parent has to be last, due to how the context definition
+    // is added.
+    parent::submitConfigurationForm($form, $form_state);
   }
 
   /**
