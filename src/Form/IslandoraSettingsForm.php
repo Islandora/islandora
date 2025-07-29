@@ -242,7 +242,7 @@ class IslandoraSettingsForm extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Fedora Root'),
       '#description' => $this->t("The absolute path to fedora's root OCFL dir. e.g. /fcrepo/home/data/ocfl-root.
-      Setting this value will read binaries off disk from the OCFL directory when access them through flysystem, rather than going through fedora's API"),
+      Setting this value will read binaries off disk from the OCFL root directory when accessing through flysystem instead of going through fedora's API"),
       '#default_value' => $config->get(self::FEDORA_ROOT),
     ];
 
