@@ -200,11 +200,9 @@ class NodeHasTerm extends ConditionPluginBase implements ContainerFactoryPluginI
       }
     }
 
-    $this->configuration += [
-      'uri' => implode(',', $uris),
-      'logic' => $form_state->getValue('logic'),
-      'naive_references' => $form_state->getValue('naive_references'),
-    ];
+    $this->configuration['uri'] = implode(',', $uris);
+    $this->configuration['logic'] = $form_state->getValue('logic');
+    $this->configuration['naive_references'] = $form_state->getValue('naive_references');
 
     // XXX: Call to the parent has to be last, due to how the context definition
     // is added.
