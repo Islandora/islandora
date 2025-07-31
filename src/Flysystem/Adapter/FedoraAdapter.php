@@ -118,6 +118,10 @@ class FedoraAdapter implements AdapterInterface {
     $fedora_id = 'info:fedora/' . $path;
     $ocfl_dir = $this->getOcflDir($fedora_id);
     $inventory = $ocfl_dir . '/extensions/0005-mutable-head/head/inventory.json';
+    // If no mutable head inventory fall back to root inventory.
+    if (!file_exists($inventory)) {
+      $inventory = $ocfl_dir . '/inventory.json';
+    }
     if (!file_exists($inventory)) {
       $this->logger->warning('OCFL inventory not found: @path', ['@path' => $inventory]);
       return "";
