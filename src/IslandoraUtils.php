@@ -227,28 +227,65 @@ class IslandoraUtils {
     // Get media fields that reference files.
     $fields = $this->getReferencingFields('media', 'file');
 
+    if (empty($fields)) {
+      // No referencing fields, nothing able to be returned.
+      return [];
+    }
+
     // Process field names, stripping off 'media.' and appending 'target_id'.
     $conditions = array_map(
-      function ($field) {
+      static function (string $field) {
         if (str_starts_with($field, 'media.')) {
           $field = substr($field, 6);
         }
-        return $field . '.target_id';
+        return $field . '_target_id';
       },
       $fields
     );
 
-    // Query for media that reference this file.
-    $query = $this->entityTypeManager->getStorage('media')->getQuery();
-    $query->accessCheck(TRUE);
-    $group = $query->orConditionGroup();
-    foreach ($conditions as $condition) {
-      $group->condition($condition, $fid);
-    }
-    $query->condition($group);
+    assert(count($conditions) > 0);
 
-    return $this->entityTypeManager->getStorage('media')
-      ->loadMultiple($query->execute());
+    $queries = [];
+    $database = \Drupal::database();
+    foreach ($conditions as $key => $field) {
+      /* Encode the query:
+       *
+       * @code
+       * SELECT media__field_media_file.revision_id
+       * FROM media__field_media_file media__field_media_file
+       * WHERE media__field_media_file.field_media_file_target_id = $fid
+       * @endcode
+       */
+      $table = str_replace('.', '__', $key);
+      $subquery = $database->select($table, $table);
+      $subquery->addField($table, 'revision_id', 'vid');
+      $subquery->condition("{$table}.{$field}", $fid, '=');
+
+      // SELECT base_table.vid AS vid, base_table.mid AS mid
+      // FROM media base_table WHERE base_table.vid IN.
+      $queries[$key] = $database->select('media', 'm')
+        ->fields('m', ['mid'])
+        ->condition('m.vid', $subquery, 'IN');
+    }
+
+    assert(count($queries) > 0);
+
+    /** @var \Drupal\Core\Database\Query\SelectInterface $unionQuery */
+    $unionQuery = array_shift($queries);
+    foreach ($queries as $queryPart) {
+      $unionQuery->union($queryPart);
+    }
+
+    $media_storage = $this->entityTypeManager->getStorage('media');
+
+    // Query for media that reference this file.
+    $query = $media_storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('mid', $unionQuery, 'IN');
+
+    $results = $query->execute();
+
+    return $media_storage->loadMultiple($results);
   }
 
   /**
