@@ -3,6 +3,7 @@
 namespace Drupal\islandora;
 
 use Drupal\context\ContextManager;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -107,6 +108,8 @@ class IslandoraUtils {
    *   The current user.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   Config factory.
+   * @param \Drupal\Core\Database\Connection $database
+   *   Database connection service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -116,6 +119,7 @@ class IslandoraUtils {
     LanguageManagerInterface $language_manager,
     AccountInterface $current_user,
     ConfigFactoryInterface $config,
+    protected Connection $database,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
@@ -245,8 +249,8 @@ class IslandoraUtils {
 
     assert(count($conditions) > 0);
 
+    /** @var \Drupal\Core\Database\Query\SelectInterface[] $queries */
     $queries = [];
-    $database = \Drupal::database();
     foreach ($conditions as $key => $field) {
       /* Encode the query:
        *
@@ -257,20 +261,19 @@ class IslandoraUtils {
        * @endcode
        */
       $table = str_replace('.', '__', $key);
-      $subquery = $database->select($table, $table);
+      $subquery = $this->database->select($table, $table);
       $subquery->addField($table, 'revision_id', 'vid');
       $subquery->condition("{$table}.{$field}", $fid, '=');
 
       // SELECT base_table.vid AS vid, base_table.mid AS mid
       // FROM media base_table WHERE base_table.vid IN.
-      $queries[$key] = $database->select('media', 'm')
+      $queries[$key] = $this->database->select('media', 'm')
         ->fields('m', ['mid'])
         ->condition('m.vid', $subquery, 'IN');
     }
 
     assert(count($queries) > 0);
 
-    /** @var \Drupal\Core\Database\Query\SelectInterface $unionQuery */
     $unionQuery = array_shift($queries);
     foreach ($queries as $queryPart) {
       $unionQuery->union($queryPart);
