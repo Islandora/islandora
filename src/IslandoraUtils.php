@@ -279,8 +279,8 @@ class IslandoraUtils {
       $unionQuery->union($queryPart);
     }
 
-    // Mariadb optimization:
-    // do not correlate the subquery with the base table.
+    // Mariadb optimization: Explicitly avoid execution as a correlated subquery.
+    // Adapted from: https://stackoverflow.com/a/6157797
     $nonCorrelatedSubquery = $this->database->select($unionQuery, 'sq');
     $nonCorrelatedSubquery->fields('sq');
 
