@@ -279,12 +279,17 @@ class IslandoraUtils {
       $unionQuery->union($queryPart);
     }
 
+    // Mariadb optimization:
+    // do not correlate the subquery with the base table.
+    $nonCorrelatedSubquery = $this->database->select($unionQuery, 'sq');
+    $nonCorrelatedSubquery->fields('sq');
+
     $media_storage = $this->entityTypeManager->getStorage('media');
 
     // Query for media that reference this file.
     $query = $media_storage->getQuery()
       ->accessCheck(TRUE)
-      ->condition('mid', $unionQuery, 'IN');
+      ->condition('mid', $nonCorrelatedSubquery, 'IN');
 
     $results = $query->execute();
 
