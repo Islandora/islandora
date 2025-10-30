@@ -46,6 +46,7 @@ class IslandoraSettingsForm extends ConfigFormBase {
   const REDIRECT_AFTER_MEDIA_SAVE = 'redirect_after_media_save';
   const ALLOW_HEADER_LINKS = 'allow_header_links';
   const FAST_TERM_QUERIES = 'fast_term_queries';
+  const MICROSERVICE_URL_REWRITES = 'microservice_url_rewrites';
 
   /**
    * To list the available bundle types.
@@ -237,6 +238,14 @@ class IslandoraSettingsForm extends ConfigFormBase {
       '#default_value' => (bool) $config->get(self::FAST_TERM_QUERIES),
     ];
 
+    $form[self::MICROSERVICE_URL_REWRITES] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Microservice URL rewrites'),
+      '#description' => $this->t('URL rewrite rules for microservice events. Enter one rule per line in the format: find_pattern|replace_pattern. For example: "https://test-arch.lib.institution.edu|http://localhost" will rewrite all occurrences of the first URL to the second in file URIs sent to microservices.'),
+      '#default_value' => $config->get(self::MICROSERVICE_URL_REWRITES),
+      '#rows' => 5,
+    ];
+
     $form[self::FEDORA_URL] = [
       '#type' => 'textfield',
       '#title' => $this->t('Fedora URL'),
@@ -402,6 +411,7 @@ class IslandoraSettingsForm extends ConfigFormBase {
       ->set(self::FAST_TERM_QUERIES, $form_state->getValue(self::FAST_TERM_QUERIES))
       ->set(self::REDIRECT_AFTER_MEDIA_SAVE, $form_state->getValue(self::REDIRECT_AFTER_MEDIA_SAVE))
       ->set(self::ALLOW_HEADER_LINKS, $form_state->getValue(self::ALLOW_HEADER_LINKS))
+      ->set(self::MICROSERVICE_URL_REWRITES, $form_state->getValue(self::MICROSERVICE_URL_REWRITES))
       ->save();
 
     parent::submitForm($form, $form_state);

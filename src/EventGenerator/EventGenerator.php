@@ -9,6 +9,8 @@ use Drupal\Core\Site\Settings;
 use Drupal\islandora\IslandoraUtils;
 use Drupal\islandora\MediaSource\MediaSourceService;
 use Drupal\user\UserInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\islandora\Form\IslandoraSettingsForm;
 
 /**
  * The default EventGenerator implementation.
@@ -32,16 +34,26 @@ class EventGenerator implements EventGeneratorInterface {
   protected $mediaSource;
 
   /**
+   * Config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
    * Constructor.
    *
    * @param \Drupal\islandora\IslandoraUtils $utils
    *   Islandora utils.
    * @param \Drupal\islandora\MediaSource\MediaSourceService $media_source
    *   Media source service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   Config factory.
    */
-  public function __construct(IslandoraUtils $utils, MediaSourceService $media_source) {
+  public function __construct(IslandoraUtils $utils, MediaSourceService $media_source, ConfigFactoryInterface $config_factory) {
     $this->utils = $utils;
     $this->mediaSource = $media_source;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -161,6 +173,9 @@ class EventGenerator implements EventGeneratorInterface {
       unset($data[$key]);
     }
 
+    // Apply URL rewrites for microservices.
+    $this->applyUrlRewrites($data);
+
     if (!empty($data)) {
       $event["attachment"] = [
         "type" => "Object",
@@ -170,6 +185,49 @@ class EventGenerator implements EventGeneratorInterface {
     }
 
     return json_encode($event);
+  }
+
+  /**
+   * Apply URL rewrites to event data URIs.
+   *
+   * @param array &$data
+   *   Event data array to modify.
+   */
+  protected function applyUrlRewrites(array &$data) {
+    $config = $this->configFactory->get(IslandoraSettingsForm::CONFIG_NAME);
+    $rewrites = $config->get(IslandoraSettingsForm::MICROSERVICE_URL_REWRITES);
+
+    if (empty($rewrites)) {
+      return;
+    }
+
+    // Parse rewrite rules from config.
+    $find = [];
+    $replace = [];
+    $lines = explode("\n", $rewrites);
+    foreach ($lines as $line) {
+      $line = trim($line);
+      if (empty($line)) {
+        continue;
+      }
+      $parts = explode('|', $line, 2);
+      if (count($parts) === 2) {
+        $find[] = trim($parts[0]);
+        $replace[] = trim($parts[1]);
+      }
+    }
+
+    if (empty($find)) {
+      return;
+    }
+
+    // Apply rewrites to URI fields.
+    $uri_fields = ["file_upload_uri", "source_uri", "destination_uri"];
+    foreach ($uri_fields as $key) {
+      if (isset($data[$key])) {
+        $data[$key] = str_replace($find, $replace, $data[$key]);
+      }
+    }
   }
 
   /**

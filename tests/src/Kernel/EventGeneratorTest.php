@@ -66,7 +66,8 @@ class EventGeneratorTest extends IslandoraKernelTestBase {
     // Create the event generator so we can test it.
     $this->eventGenerator = new EventGenerator(
       $this->container->get('islandora.utils'),
-      $this->container->get('islandora.media_source_service')
+      $this->container->get('islandora.media_source_service'),
+      $this->container->get('config.factory')
     );
   }
 
@@ -174,6 +175,148 @@ class EventGeneratorTest extends IslandoraKernelTestBase {
         "'url' entries must be either html, json, or jsonld"
       );
     }
+  }
+
+  /**
+   * Tests URL rewriting in microservice events.
+   *
+   * @covers \Drupal\islandora\EventGenerator\EventGenerator::generateEvent
+   * @covers \Drupal\islandora\EventGenerator\EventGenerator::applyUrlRewrites
+   */
+  public function testMicroserviceUrlRewrites() {
+    // Configure URL rewrites.
+    $config = $this->container->get('config.factory')->getEditable('islandora.settings');
+    $config->set('microservice_url_rewrites', "https://example.com|http://localhost\nhttps://test.org|http://internal.local");
+    $config->save();
+
+    // Create a new event generator with the updated config.
+    $this->eventGenerator = new EventGenerator(
+      $this->container->get('islandora.utils'),
+      $this->container->get('islandora.media_source_service'),
+      $this->container->get('config.factory')
+    );
+
+    // Generate an event with URIs that should be rewritten.
+    $json = $this->eventGenerator->generateEvent(
+      $this->entity,
+      $this->user,
+      [
+        'event' => 'Generate Derivative',
+        'source_uri' => 'https://example.com/_flysystem/fedora/file.jpg',
+        'destination_uri' => 'https://example.com/media/1/source',
+        'file_upload_uri' => 'public://derivatives/test.mp4',
+      ]
+    );
+    $msg = json_decode($json, TRUE);
+
+    // Assert URIs were rewritten.
+    $this->assertTrue(
+      isset($msg['attachment']['content']['source_uri']),
+      "Event should contain source_uri in attachment content"
+    );
+    $this->assertEquals(
+      'http://localhost/_flysystem/fedora/file.jpg',
+      $msg['attachment']['content']['source_uri'],
+      "source_uri should be rewritten from https://example.com to http://localhost"
+    );
+    $this->assertEquals(
+      'http://localhost/media/1/source',
+      $msg['attachment']['content']['destination_uri'],
+      "destination_uri should be rewritten from https://example.com to http://localhost"
+    );
+    $this->assertEquals(
+      'public://derivatives/test.mp4',
+      $msg['attachment']['content']['file_upload_uri'],
+      "file_upload_uri should not be rewritten when it doesn't match any pattern"
+    );
+  }
+
+  /**
+   * Tests URL rewriting with multiple patterns.
+   *
+   * @covers \Drupal\islandora\EventGenerator\EventGenerator::generateEvent
+   * @covers \Drupal\islandora\EventGenerator\EventGenerator::applyUrlRewrites
+   */
+  public function testMicroserviceUrlRewritesMultiplePatterns() {
+    // Configure URL rewrites with multiple patterns.
+    $config = $this->container->get('config.factory')->getEditable('islandora.settings');
+    $config->set('microservice_url_rewrites', "islandora-test.lib|islandora-stage.lib\nislandora-prod.lib|preserve.lib");
+    $config->save();
+
+    // Create a new event generator with the updated config.
+    $this->eventGenerator = new EventGenerator(
+      $this->container->get('islandora.utils'),
+      $this->container->get('islandora.media_source_service'),
+      $this->container->get('config.factory')
+    );
+
+    // Generate an event with URIs that match different patterns.
+    $json = $this->eventGenerator->generateEvent(
+      $this->entity,
+      $this->user,
+      [
+        'event' => 'Generate Derivative',
+        'source_uri' => 'https://islandora-test.lib/file.jpg',
+        'destination_uri' => 'https://islandora-prod.lib/media/1/source',
+      ]
+    );
+    $msg = json_decode($json, TRUE);
+
+    // Assert both patterns were applied.
+    $this->assertEquals(
+      'https://islandora-stage.lib/file.jpg',
+      $msg['attachment']['content']['source_uri'],
+      "source_uri should be rewritten from islandora-test.lib to islandora-stage.lib"
+    );
+    $this->assertEquals(
+      'https://preserve.lib/media/1/source',
+      $msg['attachment']['content']['destination_uri'],
+      "destination_uri should be rewritten from islandora-prod.lib to preserve.lib"
+    );
+  }
+
+  /**
+   * Tests that events work correctly with no URL rewrites configured.
+   *
+   * @covers \Drupal\islandora\EventGenerator\EventGenerator::generateEvent
+   * @covers \Drupal\islandora\EventGenerator\EventGenerator::applyUrlRewrites
+   */
+  public function testNoUrlRewrites() {
+    // Ensure no rewrites are configured.
+    $config = $this->container->get('config.factory')->getEditable('islandora.settings');
+    $config->set('microservice_url_rewrites', '');
+    $config->save();
+
+    // Create a new event generator with the updated config.
+    $this->eventGenerator = new EventGenerator(
+      $this->container->get('islandora.utils'),
+      $this->container->get('islandora.media_source_service'),
+      $this->container->get('config.factory')
+    );
+
+    // Generate an event.
+    $json = $this->eventGenerator->generateEvent(
+      $this->entity,
+      $this->user,
+      [
+        'event' => 'Generate Derivative',
+        'source_uri' => 'https://example.com/_flysystem/fedora/file.jpg',
+        'destination_uri' => 'https://example.com/media/1/source',
+      ]
+    );
+    $msg = json_decode($json, TRUE);
+
+    // Assert URIs were NOT rewritten.
+    $this->assertEquals(
+      'https://example.com/_flysystem/fedora/file.jpg',
+      $msg['attachment']['content']['source_uri'],
+      "source_uri should not be rewritten when no rewrites are configured"
+    );
+    $this->assertEquals(
+      'https://example.com/media/1/source',
+      $msg['attachment']['content']['destination_uri'],
+      "destination_uri should not be rewritten when no rewrites are configured"
+    );
   }
 
 }
