@@ -253,13 +253,12 @@ class MediaSourceService {
    * Initialize an empty file entity.
    *
    * We create as a temporary file, in case the uploading thread
-   * exits without properly completing the upload, such that during its core
-   * cron process, Drupal should try to clean up any files that remain
-   * "temporary" that are older than the system.file:temporary_maximum_age
-   * config indicates (which defaults to 6 hours).
+   * exits without properly completing the upload. Drupal should try to clean up
+   * any "temporary" files older than the system.file:temporary_maximum_age
+   * config indicates (which defaults to 6 hours) during Drupal's cron runs.
    *
-   * Drupal should handle making the "temporary" file permanent, when a
-   * reference to the file entity is saved into the media containing it.
+   * Additionally, Drupal should handle making the "temporary" file permanent,
+   * when a reference to the file entity is saved into another entity.
    *
    * @param string $content_location
    *   The location in which to initialize the file.
