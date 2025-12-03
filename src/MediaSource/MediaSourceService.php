@@ -295,7 +295,10 @@ class MediaSourceService {
    */
   private function validateFileExtension(string $content_location, string $filemime, FieldConfigInterface $field_config) : void {
     // Synthesize a file entity to throw at the validator, to validate the
-    // extension while avoiding dealing with `hook_file_create()`.
+    // extension while avoiding dealing with `hook_file_create()` as those hook
+    // implementations may expect the file to exist in the indicated location;
+    // however, it is not necessary for the file to exist in the given location
+    // in order to validate its extensions.
     // XXX: Values passed to FileStorage::create() are not set directly in the
     // constructor.
     // @see https://git.drupalcode.org/project/drupal/-/blob/29c1e5b2ed2e41788869f5752c84d0237350ea12/core/lib/Drupal/Core/Entity/ContentEntityStorageBase.php#L128-129
