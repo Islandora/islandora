@@ -7,6 +7,8 @@ use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\field\FieldConfigInterface;
+use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\file\Validation\FileValidatorInterface;
 use Drupal\islandora\IslandoraUtils;
@@ -235,6 +237,91 @@ class MediaSourceService {
   }
 
   /**
+   * Ensure the directory exists into which we can create files.
+   *
+   * @param string $content_location
+   *   A file we want to save.
+   */
+  private function initializeDestination(string $content_location) : void {
+    $directory = $this->fileSystem->dirname($content_location);
+    if (!$this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
+      throw new HttpException(500, "The destination directory does not exist, could not be created, or is not writable");
+    }
+  }
+
+  /**
+   * Initialize an empty file entity.
+   *
+   * We create as a temporary file, in case the uploading thread
+   * exits without properly completing the upload, such that during its core
+   * cron process, Drupal should try to clean up any files that remain
+   * "temporary" that are older than the system.file:temporary_maximum_age
+   * config indicates (which defaults to 6 hours).
+   *
+   * Drupal should handle making the "temporary" file permanent, when a
+   * reference to the file entity is saved into the media containing it.
+   *
+   * @param string $content_location
+   *   The location in which to initialize the file.
+   *
+   * @return \Drupal\file\FileInterface
+   *   The initialized file.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  private function initializeFile(string $content_location) : FileInterface {
+    $this->initializeDestination($content_location);
+
+    touch($content_location);
+    return $this->entityTypeManager->getStorage('file')->create([
+      'uid' => $this->account->id(),
+      'uri' => $content_location,
+      'filename' => $this->fileSystem->basename($content_location),
+      'filemime' => 'application/octet-stream',
+      'status' => 0,
+    ]);
+  }
+
+  /**
+   * Validate the given file's extension matches those from its field config.
+   *
+   * @param string $content_location
+   *   The URI of the content to validate.
+   * @param string $filemime
+   *   The MIME-type of the file in question, if it is used during the extension
+   *   validation.
+   * @param \Drupal\field\FieldConfigInterface $field_config
+   *   The field bearing some configured extensions against which to match.
+   */
+  private function validateFileExtension(string $content_location, string $filemime, FieldConfigInterface $field_config) : void {
+    // Synthesize a file entity to throw at the validator, to validate the
+    // extension while avoiding dealing with `hook_file_create()`.
+    // XXX: Values passed to FileStorage::create() are not set directly in the
+    // constructor.
+    // @see https://git.drupalcode.org/project/drupal/-/blob/29c1e5b2ed2e41788869f5752c84d0237350ea12/core/lib/Drupal/Core/Entity/ContentEntityStorageBase.php#L128-129
+    $file = new File([], 'file');
+    $values = [
+      'uid' => $this->account->id(),
+      'uri' => $content_location,
+      'filename' => $this->fileSystem->basename($content_location),
+      'filemime' => $filemime,
+      'status' => 0,
+    ];
+    foreach ($values as $key => $value) {
+      $file->set($key, $value);
+    }
+
+    $valid_extensions = $field_config->getSetting('file_extensions');
+    $validators = ['FileExtension' => ['extensions' => $valid_extensions]];
+    $errors = $this->fileValidator->validate($file, $validators);
+
+    if ($errors->count() > 0) {
+      throw new BadRequestHttpException("Invalid file extension.  Valid types are $valid_extensions");
+    }
+  }
+
+  /**
    * Creates a new Media using the provided resource, adding it to a Node.
    *
    * @param \Drupal\node\NodeInterface $node
@@ -282,30 +369,12 @@ class MediaSourceService {
         throw new NotFoundHttpException("Source field not set for $bundle media");
       }
 
-      // Construct the File.
-      $file = $this->entityTypeManager->getStorage('file')->create([
-        'uid' => $this->account->id(),
-        'uri' => $content_location,
-        'filename' => $this->fileSystem->basename($content_location),
-        'filemime' => $mimetype,
-      ]);
-      $file->setPermanent();
-
       // Validate file extension.
       $source_field_config = $this->entityTypeManager->getStorage('field_config')->load("media.$bundle.$source_field");
-      $valid_extensions = $source_field_config->getSetting('file_extensions');
-      $validators = ['FileExtension' => ['extensions' => $valid_extensions]];
-      $errors = $this->fileValidator->validate($file, $validators);
+      $this->validateFileExtension($content_location, $mimetype, $source_field_config);
 
-      if ($errors->count() > 0) {
-        throw new BadRequestHttpException("Invalid file extension.  Valid types are $valid_extensions");
-      }
-
-      $directory = $this->fileSystem->dirname($content_location);
-      if (!$this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
-        throw new HttpException(500, "The destination directory does not exist, could not be created, or is not writable");
-      }
-
+      // Construct the File.
+      $file = $this->initializeFile($content_location);
       // Copy over the file content.
       $this->updateFile($file, $resource, $mimetype);
       $file->save();
@@ -364,31 +433,14 @@ class MediaSourceService {
     $content_location
   ) {
     if ($media->hasField($destination_field)) {
-      // Construct the File.
-      $file = $this->entityTypeManager->getStorage('file')->create([
-        'uid' => $this->account->id(),
-        'uri' => $content_location,
-        'filename' => $this->fileSystem->basename($content_location),
-        'filemime' => $mimetype,
-      ]);
-      $file->setPermanent();
 
       // Validate file extension.
       $bundle = $media->bundle();
       $destination_field_config = $this->entityTypeManager->getStorage('field_config')->load("media.$bundle.$destination_field");
-      $valid_extensions = $destination_field_config->getSetting('file_extensions');
-      $validators = ['FileExtension' => ['extensions' => $valid_extensions]];
-      $errors = $this->fileValidator->validate($file, $validators);
+      $this->validateFileExtension($content_location, $mimetype, $destination_field_config);
 
-      if ($errors->count() > 0) {
-        throw new BadRequestHttpException("Invalid file extension.  Valid types are $valid_extensions");
-      }
-
-      $directory = $this->fileSystem->dirname($content_location);
-      if (!$this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
-        throw new HttpException(500, "The destination directory does not exist, could not be created, or is not writable");
-      }
-
+      // Construct the File.
+      $file = $this->initializeFile($content_location);
       // Copy over the file content.
       $this->updateFile($file, $resource, $mimetype);
       $file->save();
