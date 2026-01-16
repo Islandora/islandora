@@ -2,48 +2,26 @@
 
 namespace Drupal\islandora\Controller;
 
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Entity\Controller\EntityController;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Drupal\islandora\IslandoraUtils;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Page to select new type to add as member.
  */
 class ManageMembersController extends EntityController {
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
-   * Islandora Utils.
-   *
-   * @var \Drupal\islandora\IslandoraUtils
-   */
-  protected $utils;
 
   /**
    * Constructor.
@@ -58,15 +36,18 @@ class ManageMembersController extends EntityController {
    *   Islandora utils.
    */
   public function __construct(
-    EntityTypeManagerInterface $entity_type_manager,
-    EntityFieldManagerInterface $entity_field_manager,
+    EntityTypeManagerInterface $entityTypeManager,
+    EntityTypeBundleInfoInterface $entityTypeBundleInfo,
+    EntityRepositoryInterface $entityRepository,
     RendererInterface $renderer,
-    IslandoraUtils $utils
+    TranslationInterface $stringTranslation,
+    UrlGeneratorInterface $urlGenerator,
+    RouteMatchInterface $routeMatch,
+    RequestStack $requestStack,
+    protected EntityFieldManagerInterface $entityFieldManager,
+    protected IslandoraUtils $utils
   ) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityFieldManager = $entity_field_manager;
-    $this->renderer = $renderer;
-    $this->utils = $utils;
+    parent::__construct($entityTypeManager, $entityTypeBundleInfo, $entityRepository, $renderer, $stringTranslation, $urlGenerator, $routeMatch, $requestStack);
   }
 
   /**
@@ -75,8 +56,14 @@ class ManageMembersController extends EntityController {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('entity_field.manager'),
+      $container->get('entity_type.bundle.info'),
+      $container->get('entity.repository'),
       $container->get('renderer'),
+      $container->get('string_translation'),
+      $container->get('url_generator'),
+      $container->get('current_route_match'),
+      $container->get('request_stack'),
+      $container->get('entity_field.manager'),
       $container->get('islandora.utils')
     );
   }
