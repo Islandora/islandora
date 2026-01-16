@@ -24,16 +24,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class ManageMembersController extends EntityController {
 
   /**
-   * Constructor.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
-   *   The entity field manager.
-   * @param \Drupal\Core\Render\RendererInterface $renderer
-   *   The renderer.
-   * @param \Drupal\islandora\IslandoraUtils $utils
-   *   Islandora utils.
+   * Constructs a new ManageMembersController.
    */
   public function __construct(
     EntityTypeManagerInterface $entityTypeManager,
