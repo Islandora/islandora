@@ -20,9 +20,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ["8.1", "8.2", "8.3"]
+        php-versions: ["8.3", "8.4"]
         test-suite: ["kernel", "functional", "functional-javascript"]
-        drupal-version: ["10.3.x", "10.4.x", "11.0.x", "11.1.x"]
+        drupal-version: ["10.5.x", "10.6.x", "11.2.x", "11.3.x"]
         mysql: ["8.0"]
         allowed_failure: [false]
         exclude:
