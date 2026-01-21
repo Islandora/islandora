@@ -55,12 +55,12 @@ jobs:
     steps:
 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           path: build_dir
 
       - name: Checkout islandora_ci
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: islandora/islandora_ci
           ref: joecorall-patch-1
