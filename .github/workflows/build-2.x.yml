@@ -91,7 +91,7 @@ jobs:
           composer config repositories.local path "$GITHUB_WORKSPACE/build_dir"
           composer config minimum-stability dev
           composer require \
-            drupal/actions \
+            drupal/action \
             drupal/context \
             "drupal/islandora:dev-github-testing as dev-2.x"
 
