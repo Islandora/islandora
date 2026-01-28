@@ -21,15 +21,18 @@ jobs:
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
+      - name: create docker network
+        run: docker network create ci-default
+
       - name: start activemq
-        run: docker run -d --name activemq --network default webcenter/activemq:5.14.3
+        run: docker run -d --name activemq --network ci-default webcenter/activemq:5.14.3
 
       - name: Start chromedriver
         if: matrix.test-suite == 'functional-javascript'
         run: |-
           docker run -d \
             --name chromedriver \
-            --network default \
+            --network ci-default \
             drupalci/webdriver-chromedriver:production \
             chromedriver --log-path=/dev/null --verbose --allowed-ips= --allowed-origins=*
 
@@ -44,7 +47,7 @@ jobs:
             --env TEST_SUITE \
             --env MINK_DRIVER_ARGS_WEBDRIVER \
             --env SYMFONY_DEPRECATIONS_HELPER \
-            --network default \
+            --network ci-default \
            ghcr.io/islandora/ci:${{ matrix.drupal-version }}-php${{ matrix.php-versions }}
         env:
           ENABLE_MODULES: islandora
