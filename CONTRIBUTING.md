@@ -68,6 +68,50 @@ Take a look at [Creating a pull request](https://help.github.com/articles/creati
 
 You may want to read [Syncing a fork](https://help.github.com/articles/syncing-a-fork) for instructions on how to keep your fork up to date with the latest changes of the upstream (official) repository.
 
+## Testing locally
+
+The CI tests that run on pull requests in GitHub leverage the docker images built in [islandora/islandora_ci](https://github.com/Islandora/islandora_ci). The CI tests a wide range of PHP and Drupal version combinations. You can run these same tests locally if you have docker installed.
+
+Set which Drupal and PHP version you want to test
+
+```bash
+DRUPAL_VERSION=11.3
+PHP_VERSION=8.3
+```
+
+Optionally, if you want to run a specific test suite (e.g. `kernel`), provide it via the `TEST_SUITE` environment variable (e.g. `TEST_SUITE=kernel`). Leave the value blank if you want to run all tests.
+
+Also optional, if you're running functional javascript tests, start a chromedriver docker container
+
+```bash
+docker run -d \
+    --rm \
+    --name chromedriver \
+    --network ci-default \
+    drupalci/webdriver-chromedriver:production \
+    chromedriver --log-path=/dev/null --verbose --allowed-ips= --allowed-origins=*
+```
+
+If you're running functional tests, start an activemq docker container
+
+```bash
+docker run -d --name activemq --network ci-default webcenter/activemq:5.14.3
+```
+
+Run the tests
+
+```bash
+docker run \
+    --name drupal-ci-$DRUPAL_VERSION-$PHP_VERSION \
+    --rm \
+    --volume $(pwd):/var/www/drupal/web/modules/contrib/islandora:ro \
+    --env ENABLE_MODULES=islandora \
+    --env TEST_SUITE="${TEST_SUITE:-}" \
+    --env MINK_DRIVER_ARGS_WEBDRIVER='["chrome", {"browserName":"chrome","goog:chromeOptions":{"args":["--disable-gpu","--headless", "--no-sandbox", "--disable-dev-shm-usage"]}}, "http://chromedriver:9515"]' \
+    --network ci-default \
+    ghcr.io/islandora/ci:$DRUPAL_VERSION-php$PHP_VERSION
+```
+
 ## License Agreements
 
 The Islandora Foundation requires that contributors complete a [Contributor License Agreement](http://islandora.ca/sites/default/files/islandora_cla.pdf) or be covered by a [Corporate Contributor License Agreement](http://islandora.ca/sites/default/files/islandora_ccla.pdf). The signed copy of the license agreement should be sent to <a href="mailto:community@islandora.ca?Subject=Contributor%20License%20Agreement" target="_top">community@islandora.ca</a>. This license is for your protection as a contributor as well as the protection of the Foundation and its users; it does not change your rights to use your own contributions for any other purpose. A list of current CLAs is kept [here](https://github.com/Islandora/islandora/wiki/Contributor-License-Agreements).

@@ -9,122 +9,56 @@ on:
 
 jobs:
   build:
-    env:
-      DRUPAL_VERSION: ${{ matrix.drupal-version }}
-      SCRIPT_DIR: ${{ github.workspace }}/islandora_ci
-      DRUPAL_DIR: /opt/drupal
-      PHPUNIT_FILE: ${{ github.workspace }}/build_dir/phpunit.xml
-
-    runs-on: ubuntu-latest
-    continue-on-error: ${{ matrix.allowed_failure }}
+    runs-on: ubuntu-24.04
+    continue-on-error: false
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ["8.1", "8.2", "8.3"]
+        php-versions: ["8.3", "8.4"]
         test-suite: ["kernel", "functional", "functional-javascript"]
-        drupal-version: ["10.3.x", "10.4.x", "11.0.x", "11.1.x"]
-        mysql: ["8.0"]
-        allowed_failure: [false]
-        exclude:
-          - drupal-version: "11.0.x"
-            php-versions: "8.1"
-          - drupal-version: "11.0.x"
-            php-versions: "8.2"
-          - drupal-version: "11.1.x"
-            php-versions: "8.1"
-          - drupal-version: "11.1.x"
-            php-versions: "8.2"
-
-    name: PHP ${{ matrix.php-versions }} | drupal ${{ matrix.drupal-version }} | mysql ${{ matrix.mysql }} | test-suite ${{ matrix.test-suite }}
-
-    services:
-      mysql:
-        image: mysql:${{ matrix.mysql }}
-        env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_DATABASE: drupal
-        ports:
-          - 3306:3306
-      activemq:
-        image: webcenter/activemq:5.14.3
-        ports:
-          - 8161:8161
-          - 61616:61616
-          - 61613:61613
-
+        drupal-version: ["10.5", "10.6", "11.2", "11.3"]
+    name: PHP ${{ matrix.php-versions }} | drupal ${{ matrix.drupal-version }} | test-suite ${{ matrix.test-suite }}
     steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          path: build_dir
+      - name: create docker network
+        run: docker network create ci-default
 
-      - name: Checkout islandora_ci
-        uses: actions/checkout@v4
-        with:
-          repository: islandora/islandora_ci
-          ref: github-actions
-          path: islandora_ci
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-versions }}
-          tools: composer:v2
-
-      - name: Setup Mysql client
-        run: |
-          sudo apt-get update
-          sudo apt-get remove -y mysql-client mysql-common
-          sudo apt-get install -y mysql-client
-
-      - name: Cache Composer dependencies
-        uses: actions/cache@v4
-        with:
-          path: /tmp/composer-cache
-          key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
-
-      - name: Setup Drupal
-        run: |
-          mkdir $DRUPAL_DIR
-          $SCRIPT_DIR/travis_setup_drupal.sh
-          cd $DRUPAL_DIR
-          chmod -R u+w web/sites/default
-          mkdir -p web/sites/simpletest/browser_output
-
-      - name: Setup composer paths
-        run: |
-          git -C "$GITHUB_WORKSPACE/build_dir" checkout -b github-testing
-          cd $DRUPAL_DIR
-          composer config repositories.local path "$GITHUB_WORKSPACE/build_dir"
-          composer config minimum-stability dev
-          composer require "drupal/islandora:dev-github-testing as dev-2.x"
-
-      - name: Install modules
-        run: |
-          cd $DRUPAL_DIR/web
-          drush --uri=127.0.0.1:8282 en -y islandora_audio islandora_breadcrumbs islandora_iiif islandora_image islandora_video islandora_text_extraction_defaults
-
-      - name: Copy PHPunit file
-        run: cp $PHPUNIT_FILE $DRUPAL_DIR/web/core/phpunit.xml
-
-      - name: Test scripts
-        run: $SCRIPT_DIR/travis_scripts.sh
+      - name: start activemq
+        run: docker run -d --name activemq --network ci-default webcenter/activemq:5.14.3
 
       - name: Start chromedriver
         if: matrix.test-suite == 'functional-javascript'
         run: |-
-          /usr/local/share/chromedriver-linux64/chromedriver \
-            --log-path=/tmp/chromedriver.log \
-            --verbose \
-            --allowed-ips= \
-            --allowed-origins=* &
+          docker run -d \
+            --name chromedriver \
+            --network ci-default \
+            drupalci/webdriver-chromedriver:production \
+            chromedriver --log-path=/dev/null --verbose --allowed-ips= --allowed-origins=*
 
       - name: PHPUNIT tests
         run: |
-          cd $DRUPAL_DIR/web/core
-          $DRUPAL_DIR/vendor/bin/phpunit --testsuite "${{ matrix.test-suite }}"
+          docker run \
+            --rm \
+            --volume $(pwd):/var/www/drupal/web/modules/contrib/$ENABLE_MODULES:ro \
+            --env ENABLE_MODULES \
+            --env LINT \
+            --env DRUPAL_PRACTICE \
+            --env TEST_SUITE \
+            --env MINK_DRIVER_ARGS_WEBDRIVER \
+            --env SYMFONY_DEPRECATIONS_HELPER \
+            --network ci-default \
+           ghcr.io/islandora/ci:${{ matrix.drupal-version }}-php${{ matrix.php-versions }}
+        env:
+          ENABLE_MODULES: islandora
+          TEST_SUITE: ${{ matrix.test-suite }}
+          # have drupal functional JS tests point to chromedriver docker container started in step above
+          MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","goog:chromeOptions":{"args":["--disable-gpu","--headless", "--no-sandbox", "--disable-dev-shm-usage"]}}, "http://chromedriver:9515"]'
+          SYMFONY_DEPRECATIONS_HELPER: weak
+          # once we get our codebase lint'd we should enable these
+          LINT: 0
+          DRUPAL_PRACTICE: 0
 
       - name: Print chromedriver logs
         if: matrix.test-suite == 'functional-javascript'
-        run: cat /tmp/chromedriver.log
+        run: docker logs chromedriver

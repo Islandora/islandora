@@ -1,4 +1,4 @@
-broker_url: 'tcp://localhost:61613'
+broker_url: 'tcp://activemq:61613'
 jwt_expiry: '+2 hour'
 delete_media_and_files: TRUE
 gemini_pseudo_bundles: []
