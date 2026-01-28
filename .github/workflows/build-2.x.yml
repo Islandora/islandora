@@ -34,7 +34,7 @@ jobs:
         run: |
           docker run \
             --rm \
-            --volume $(pwd):/var/www/drupal/web/modules/contrib/$ENABLE_MODULES:r \
+            --volume $(pwd):/var/www/drupal/web/modules/contrib/$ENABLE_MODULES:ro \
             --env ENABLE_MODULES \
             --env DRUPAL_PRACTICE \
             --env TEST_SUITE \
