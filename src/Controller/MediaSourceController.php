@@ -61,7 +61,7 @@ class MediaSourceController extends ControllerBase {
   public function __construct(
     MediaSourceService $service,
     Connection $database,
-    IslandoraUtils $utils
+    IslandoraUtils $utils,
   ) {
     $this->service = $service;
     $this->database = $database;
@@ -149,7 +149,7 @@ class MediaSourceController extends ControllerBase {
     NodeInterface $node,
     MediaTypeInterface $media_type,
     TermInterface $taxonomy_term,
-    Request $request
+    Request $request,
   ) {
     $content_type = $request->headers->get('Content-Type', "");
 
@@ -230,7 +230,7 @@ class MediaSourceController extends ControllerBase {
   public function attachToMedia(
     Media $media,
     string $destination_field,
-    Request $request
+    Request $request,
   ) {
     $content_location = $request->headers->get('Content-Location', "");
     if (empty($content_location)) {

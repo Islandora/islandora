@@ -101,7 +101,8 @@ class MediaSourceController extends ControllerBase {
     Media $media,
     string $destination_field,
     string $destination_text_field,
-    Request $request) {
+    Request $request,
+  ) {
     $content_location = $request->headers->get('Content-Location', "");
     $contents = $request->getContent();
 

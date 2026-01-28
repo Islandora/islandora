@@ -27,7 +27,7 @@ class Utilities {
       foreach ($block_storage->loadByProperties(['theme' => $active_theme->getName()]) as $block) {
         $plugin = $block->getPlugin();
         if ($plugin instanceof SearchResultsPagerBlock) {
-          list($view_id, $display_id) = $plugin->getViewAndDisplayIdentifiers();
+          [$view_id, $display_id] = $plugin->getViewAndDisplayIdentifiers();
           $views[$block->id()] = [$view_id, $display_id];
         }
       }
@@ -52,7 +52,7 @@ class Utilities {
       foreach ($block_storage->loadByProperties(['theme' => $active_theme->getName()]) as $block) {
         $plugin = $block->getPlugin();
         if ($plugin instanceof AdvancedSearchBlock) {
-          list($view_id, $display_id) = $plugin->getViewAndDisplayIdentifiers();
+          [$view_id, $display_id] = $plugin->getViewAndDisplayIdentifiers();
           $views[$block->id()] = [$view_id, $display_id];
         }
       }

@@ -83,7 +83,7 @@ class IslandoraImageFormatter extends ImageFormatter {
     EntityStorageInterface $image_style_storage,
     IslandoraUtils $utils,
     FileUrlGeneratorInterface $file_url_generator,
-    MediaSourceService $media_source_service
+    MediaSourceService $media_source_service,
   ) {
     parent::__construct(
       $plugin_id,

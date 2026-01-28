@@ -28,7 +28,7 @@ abstract class IslandoraFileMediaFormatterBase extends FileMediaFormatterBase {
           '#theme' => $this->getPluginId(),
           '#attributes' => $attributes,
           '#files' => $files,
-          '#tracks' => isset($track_files[$delta]) ? $track_files[$delta] : [],
+          '#tracks' => $track_files[$delta] ?? [],
           '#cache' => ['tags' => []],
         ];
 

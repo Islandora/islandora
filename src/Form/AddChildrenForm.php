@@ -50,7 +50,7 @@ class AddChildrenForm extends AddMediaForm {
     $options = [];
     foreach ($this->entityTypeBundleInfo->getBundleInfo('node') as $bundle_id => $bundle) {
       $options[$bundle_id] = $bundle['label'];
-    };
+    }
     $form['bundle'] = [
       '#type' => 'select',
       '#title' => $this->t('Content type'),
@@ -73,7 +73,7 @@ class AddChildrenForm extends AddMediaForm {
     $options = [];
     foreach ($this->entityTypeManager->getStorage('taxonomy_term')->loadTree('islandora_models', 0, NULL, TRUE) as $term) {
       $options[$term->id()] = $term->getName();
-    };
+    }
     $form['model'] = [
       '#type' => 'select',
       '#title' => $this->t('Model'),

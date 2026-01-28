@@ -46,7 +46,7 @@ class FormDisplayAlterReaction extends DisplayAlterReaction {
       '#description' => $this->t("The selected form mode will be used if conditions are met."),
       '#type' => 'select',
       '#options' => $options,
-      '#default_value' => isset($config[self::MODE]) ? $config[self::MODE] : '',
+      '#default_value' => $config[self::MODE] ?? '',
     ];
     return $form;
   }

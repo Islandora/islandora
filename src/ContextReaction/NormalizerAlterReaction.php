@@ -36,11 +36,13 @@ abstract class NormalizerAlterReaction extends ContextReactionPluginBase impleme
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration,
-                              $plugin_id,
-                              $plugin_definition,
-                              ConfigFactoryInterface $config_factory,
-                              IslandoraUtils $utils) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    ConfigFactoryInterface $config_factory,
+    IslandoraUtils $utils,
+  ) {
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->jsonldConfig = $config_factory->get(JsonLdSettingsForm::CONFIG_NAME);
@@ -70,7 +72,7 @@ abstract class NormalizerAlterReaction extends ContextReactionPluginBase impleme
    * @param array|null $context
    *   The context used in the normalizer.
    */
-  abstract public function execute(EntityInterface $entity = NULL, array &$normalized = NULL, array $context = NULL);
+  abstract public function execute(?EntityInterface $entity = NULL, ?array &$normalized = NULL, ?array $context = NULL);
 
   /**
    * Helper function to get the url for an entity that repsects jsonld config.

@@ -161,7 +161,7 @@ class JsonldSelfReferenceReactionTest extends IslandoraFunctionalTestBase {
     $context_name = 'test';
     $reaction_id = 'islandora_map_uri_predicate';
 
-    list($file, $media) = $this->makeMediaAndFile($account);
+    [$file, $media] = $this->makeMediaAndFile($account);
     $media_url = $media->toUrl('canonical', ['absolute' => TRUE])->toString();
     $file_url = $file->createFileUrl(FALSE);
 

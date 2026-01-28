@@ -116,7 +116,7 @@ class AddMediaForm extends FormBase {
     AccountInterface $account,
     RouteMatchInterface $route_match,
     Connection $database,
-    EntityTypeBundleInfoInterface $entity_type_bundle_info
+    EntityTypeBundleInfoInterface $entity_type_bundle_info,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
@@ -201,7 +201,7 @@ class AddMediaForm extends FormBase {
     $options = [];
     foreach ($this->entityTypeBundleInfo->getBundleInfo('media') as $bundle_id => $bundle) {
       $options[$bundle_id] = $bundle['label'];
-    };
+    }
     $form['media_type'] = [
       '#type' => 'select',
       '#title' => $this->t('Media type'),
@@ -225,7 +225,7 @@ class AddMediaForm extends FormBase {
     $terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree('islandora_media_use', 0, NULL, TRUE);
     foreach ($terms as $term) {
       $options[$term->id()] = $term->getName();
-    };
+    }
     $form['use'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Usage'),

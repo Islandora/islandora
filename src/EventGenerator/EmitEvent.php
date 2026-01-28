@@ -110,7 +110,7 @@ abstract class EmitEvent extends ConfigurableActionBase implements ContainerFact
     StatefulStomp $stomp,
     MessengerInterface $messenger,
     EventDispatcherInterface $event_dispatcher,
-    LoggerChannelInterface $channel
+    LoggerChannelInterface $channel,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->account = $account;
@@ -271,7 +271,7 @@ abstract class EmitEvent extends ConfigurableActionBase implements ContainerFact
   /**
    * {@inheritdoc}
    */
-  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     $result = AccessResult::allowed();
     return $return_as_object ? $result : $result->isAllowed();
   }

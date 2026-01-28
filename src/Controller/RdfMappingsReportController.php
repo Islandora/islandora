@@ -65,7 +65,7 @@ class RdfMappingsReportController extends ControllerBase {
     RendererInterface $renderer,
     EntityFieldManagerInterface $entity_field_manager,
     EntityTypeBundleInfoInterface $entity_type_bundle_info,
-    IslandoraUtils $utils
+    IslandoraUtils $utils,
   ) {
     $this->renderer = $renderer;
     $this->entityFieldManager = $entity_field_manager;

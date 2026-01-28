@@ -36,7 +36,7 @@ class DerivativeFileReaction extends PresetReaction {
       '#type' => 'select',
       '#multiple' => TRUE,
       '#options' => $options,
-      '#default_value' => isset($config['actions']) ? $config['actions'] : '',
+      '#default_value' => $config['actions'] ?? '',
       '#size' => 15,
     ];
 
@@ -46,7 +46,7 @@ class DerivativeFileReaction extends PresetReaction {
   /**
    * {@inheritdoc}
    */
-  public function execute(EntityInterface $entity = NULL) {
+  public function execute(?EntityInterface $entity = NULL) {
     $config = $this->getConfiguration();
     $action_ids = $config['actions'];
     foreach ($action_ids as $action_id) {

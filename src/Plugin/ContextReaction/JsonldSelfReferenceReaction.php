@@ -36,12 +36,14 @@ class JsonldSelfReferenceReaction extends NormalizerAlterReaction {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration,
-                              $plugin_id,
-                              $plugin_definition,
-                              ConfigFactoryInterface $config_factory,
-                              IslandoraUtils $utils,
-                              MediaSourceService $media_source) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    ConfigFactoryInterface $config_factory,
+    IslandoraUtils $utils,
+    MediaSourceService $media_source,
+  ) {
 
     parent::__construct(
       $configuration,
@@ -77,7 +79,7 @@ class JsonldSelfReferenceReaction extends NormalizerAlterReaction {
   /**
    * {@inheritdoc}
    */
-  public function execute(EntityInterface $entity = NULL, array &$normalized = NULL, array $context = NULL) {
+  public function execute(?EntityInterface $entity = NULL, ?array &$normalized = NULL, ?array $context = NULL) {
     $config = $this->getConfiguration();
     $self_ref_predicate = $config[self::SELF_REFERENCE_PREDICATE];
     if (!is_null($self_ref_predicate) && !empty($self_ref_predicate)) {
@@ -128,7 +130,7 @@ class JsonldSelfReferenceReaction extends NormalizerAlterReaction {
       '#type' => 'textfield',
       '#title' => $this->t('Self-reference predicate'),
       '#description' => $this->t("When creating the JSON-LD for this Drupal entity, add a relationship from the entity to itself using this predicate. It must use a defined RDF namespace prefix."),
-      '#default_value' => isset($config[self::SELF_REFERENCE_PREDICATE]) ? $config[self::SELF_REFERENCE_PREDICATE] : '',
+      '#default_value' => $config[self::SELF_REFERENCE_PREDICATE] ?? '',
       '#size' => 35,
     ];
     return $form;

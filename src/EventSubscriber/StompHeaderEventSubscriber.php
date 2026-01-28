@@ -28,7 +28,7 @@ class StompHeaderEventSubscriber implements EventSubscriberInterface {
    * Constructor.
    */
   public function __construct(
-    JwtAuth $auth
+    JwtAuth $auth,
   ) {
     $this->auth = $auth;
   }

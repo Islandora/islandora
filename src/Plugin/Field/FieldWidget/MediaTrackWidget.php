@@ -84,7 +84,7 @@ class MediaTrackWidget extends FileWidget {
     $element['label'] = [
       '#title' => t('Label'),
       '#type' => 'textfield',
-      '#default_value' => isset($item['label']) ? $item['label'] : '',
+      '#default_value' => $item['label'] ?? '',
       '#description' => t('Label for the track file.'),
       '#maxlength' => 128,
       '#access' => (bool) $item['fids'],
@@ -100,7 +100,7 @@ class MediaTrackWidget extends FileWidget {
         'chapters' => t('Chapters'),
         'metadata' => t('Metadata'),
       ],
-      '#default_value' => isset($item['kind']) ? $item['kind'] : '',
+      '#default_value' => $item['kind'] ?? '',
       '#access' => (bool) $item['fids'],
     ];
 
@@ -137,7 +137,7 @@ class MediaTrackWidget extends FileWidget {
       '#description' => t('Choose from one of the installed languages.'),
       '#type' => 'select',
       '#options' => $srclang_options,
-      '#default_value' => isset($item['srclang']) ? $item['srclang'] : '',
+      '#default_value' => $item['srclang'] ?? '',
       '#maxlength' => 20,
       '#access' => (bool) $item['fids'],
       '#element_validate' => [[get_called_class(), 'validateRequiredFields']],
@@ -146,7 +146,7 @@ class MediaTrackWidget extends FileWidget {
     $element['default'] = [
       '#type' => 'checkbox',
       '#title' => t('Default track'),
-      '#default_value' => isset($item['default']) ? $item['default'] : '',
+      '#default_value' => $item['default'] ?? '',
       '#description' => t('Use this as the default track of this kind.'),
       '#access' => (bool) $item['fids'],
     ];

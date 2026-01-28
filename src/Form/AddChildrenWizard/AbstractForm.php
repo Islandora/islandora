@@ -62,7 +62,7 @@ abstract class AbstractForm extends FormWizardBase {
     $tempstore_id,
     AccountProxyInterface $current_user,
     $machine_name = NULL,
-    $step = NULL
+    $step = NULL,
   ) {
     parent::__construct($tempstore, $builder, $class_resolver, $event_dispatcher, $route_match, $renderer, $tempstore_id,
       $machine_name, $step);

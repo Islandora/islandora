@@ -65,7 +65,7 @@ class LinkHeaderTest extends IslandoraFunctionalTestBase {
     ]);
     $this->referencer->save();
 
-    list($this->file, $this->media) = $this->makeMediaAndFile($account);
+    [$this->file, $this->media] = $this->makeMediaAndFile($account);
     $this->media->set('field_media_of', $this->referencer);
     $this->media->set('field_media_use', $this->preservationMasterTerm);
     $this->media->save();

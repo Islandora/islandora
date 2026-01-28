@@ -28,7 +28,7 @@ class JsonldTypeAlterReaction extends NormalizerAlterReaction {
   /**
    * {@inheritdoc}
    */
-  public function execute(EntityInterface $entity = NULL, array &$normalized = NULL, array $context = NULL) {
+  public function execute(?EntityInterface $entity = NULL, ?array &$normalized = NULL, ?array $context = NULL) {
     // Check that the source field exists and there's some RDF
     // to manipulate.
     $config = $this->getConfiguration();
@@ -96,7 +96,7 @@ class JsonldTypeAlterReaction extends NormalizerAlterReaction {
       be populated from the value of this field, rather than the default for the bundle
       as configured in the bundle's RDF mapping. If this field is an entity reference
       field, the value of the referenced entity's `field_external_uri` will be used."),
-      '#default_value' => isset($config['source_field']) ? $config['source_field'] : '',
+      '#default_value' => $config['source_field'] ?? '',
     ];
     return $form;
   }

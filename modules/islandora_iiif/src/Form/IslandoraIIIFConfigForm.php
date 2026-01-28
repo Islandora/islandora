@@ -37,7 +37,7 @@ class IslandoraIIIFConfigForm extends ConfigFormBase {
   public function __construct(
     ConfigFactoryInterface $config_factory,
     TypedConfigManagerInterface $typed_config_manager,
-    ClientInterface $http_client
+    ClientInterface $http_client,
   ) {
     parent::__construct($config_factory, $typed_config_manager);
     $this->httpClient = $http_client;

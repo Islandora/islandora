@@ -60,7 +60,7 @@ class FileUsesFilesystem extends ConditionPluginBase implements ContainerFactory
     $plugin_id,
     $plugin_definition,
     IslandoraUtils $utils,
-    FileSystemInterface $file_system
+    FileSystemInterface $file_system,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->utils = $utils;

@@ -108,7 +108,7 @@ abstract class LinkHeaderSubscriber implements EventSubscriberInterface {
     RouteMatchInterface $route_match,
     RequestStack $request_stack,
     IslandoraUtils $utils,
-    ConfigFactoryInterface $config_factory
+    ConfigFactoryInterface $config_factory,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;

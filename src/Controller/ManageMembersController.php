@@ -61,7 +61,7 @@ class ManageMembersController extends EntityController {
     EntityTypeManagerInterface $entity_type_manager,
     EntityFieldManagerInterface $entity_field_manager,
     RendererInterface $renderer,
-    IslandoraUtils $utils
+    IslandoraUtils $utils,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;

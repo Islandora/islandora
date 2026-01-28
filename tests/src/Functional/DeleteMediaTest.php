@@ -55,7 +55,7 @@ class DeleteMediaTest extends IslandoraFunctionalTestBase {
     // Create a test user.
     $this->account = $this->createUser($permissions);
 
-    list($this->file, $this->media) = $this->makeMediaAndFile($this->account);
+    [$this->file, $this->media] = $this->makeMediaAndFile($this->account);
   }
 
   /**

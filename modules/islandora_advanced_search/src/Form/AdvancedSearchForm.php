@@ -155,7 +155,7 @@ class AdvancedSearchForm extends FormBase {
    */
   protected function processInput(FormStateInterface $form_state, array $term_default_values) {
     $input = $form_state->getUserInput();
-    $recursive = isset($input['recursive']) ? $input['recursive'] : NULL;
+    $recursive = $input['recursive'] ?? NULL;
     $term_values = isset($input['terms']) && is_array($input['terms']) ? $input['terms'] : [];
     // Form was not submitted see if we can rebuild from query parameters.
     $advanced_search_query = new AdvancedSearchQuery();
@@ -221,7 +221,7 @@ class AdvancedSearchForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, View $view = NULL, array $display = [], array $fields = [], string $context_filter = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?View $view = NULL, array $display = [], array $fields = [], ?string $context_filter = NULL) {
     // Keep reference to view and display as the submit handler may use them
     // to redirect the user to the search page.
     $form_state->set('view', $view);
@@ -245,7 +245,7 @@ class AdvancedSearchForm extends FormBase {
 
     $options = $this->fieldOptions($fields);
     $term_default_values = $this->defaultTermValues($options);
-    list($recursive, $term_values) = $this->processInput($form_state, $term_default_values);
+    [$recursive, $term_values] = $this->processInput($form_state, $term_default_values);
     $i = 0;
     $term_elements = [];
     $total_terms = count($term_values);
@@ -254,7 +254,7 @@ class AdvancedSearchForm extends FormBase {
       // Either specified by the user in the request or use the default.
       $first = $i == 0;
       $term_value = !empty($term_values) ? array_shift($term_values) : $term_default_values;
-      $conjunction = isset($term_value[self::CONJUNCTION_FORM_FIELD]) ? $term_value[self::CONJUNCTION_FORM_FIELD] : $term_default_values[self::CONJUNCTION_FORM_FIELD];
+      $conjunction = $term_value[self::CONJUNCTION_FORM_FIELD] ?? $term_default_values[self::CONJUNCTION_FORM_FIELD];
       $term_elements[] = [
         // Only show on terms after the first.
         self::CONJUNCTION_FORM_FIELD => $first ? NULL : [
@@ -392,7 +392,7 @@ class AdvancedSearchForm extends FormBase {
       $terms[] = AdvancedSearchQueryTerm::fromUserInput($term);
     }
     $terms = array_filter($terms);
-    $recurse = filter_var(isset($values['recursive']) ? $values['recursive'] : FALSE, FILTER_VALIDATE_BOOLEAN);
+    $recurse = filter_var($values['recursive'] ?? FALSE, FILTER_VALIDATE_BOOLEAN);
     $route = $this->getRouteName($form_state);
     $advanced_search_query = new AdvancedSearchQuery();
     return $advanced_search_query->toUrl($this->request, $terms, $recurse, $route);

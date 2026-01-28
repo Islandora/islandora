@@ -186,7 +186,7 @@ class MediaAttributesFromIiif extends ConfigurableActionBase implements Containe
   /**
    * {@inheritdoc}
    */
-  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
 
     /**
 * @var \Drupal\Core\Entity\EntityInterface $object

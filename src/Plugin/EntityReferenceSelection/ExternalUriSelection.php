@@ -63,10 +63,10 @@ class ExternalUriSelection extends TermSelection {
     EntityTypeManagerInterface $entity_type_manager,
     ModuleHandlerInterface $module_handler,
     AccountInterface $current_user,
-    EntityFieldManagerInterface $entity_field_manager = NULL,
-    EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL,
-    EntityRepositoryInterface $entity_repository = NULL,
-    IslandoraUtils $utils
+    ?EntityFieldManagerInterface $entity_field_manager = NULL,
+    ?EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL,
+    ?EntityRepositoryInterface $entity_repository = NULL,
+    IslandoraUtils $utils,
   ) {
     parent::__construct(
       $configuration,

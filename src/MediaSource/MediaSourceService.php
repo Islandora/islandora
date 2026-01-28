@@ -89,7 +89,7 @@ class MediaSourceService {
     LanguageManagerInterface $language_manager,
     FileSystemInterface $file_system,
     IslandoraUtils $islandora_utils,
-    FileValidatorInterface $file_validator
+    FileValidatorInterface $file_validator,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->account = $account;
@@ -170,7 +170,7 @@ class MediaSourceService {
   public function updateSourceField(
     MediaInterface $media,
     $resource,
-    $mimetype
+    $mimetype,
   ) {
     $source_field = $this->getSourceFieldName($media->bundle());
     $file = $this->getSourceFile($media);
@@ -347,7 +347,7 @@ class MediaSourceService {
     TermInterface $taxonomy_term,
     $resource,
     $mimetype,
-    $content_location
+    $content_location,
   ) {
     $existing = $this->islandoraUtils->getMediaReferencingNodeAndTerm($node, $taxonomy_term);
 
@@ -432,7 +432,7 @@ class MediaSourceService {
     $destination_field,
     $resource,
     $mimetype,
-    $content_location
+    $content_location,
   ) {
     if ($media->hasField($destination_field)) {
 
