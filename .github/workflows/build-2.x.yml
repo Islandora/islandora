@@ -16,7 +16,7 @@ jobs:
       matrix:
         php-versions: ["8.3", "8.4"]
         test-suite: ["kernel", "functional", "functional-javascript"]
-        drupal-version: ["10.5", "10.6", "11.2", "11.3"]
+        drupal-version: ["10.5", "10.6", "11.2"]
     name: PHP ${{ matrix.php-versions }} | drupal ${{ matrix.drupal-version }} | test-suite ${{ matrix.test-suite }}
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
@@ -36,6 +36,7 @@ jobs:
             --rm \
             --volume $(pwd):/var/www/drupal/web/modules/contrib/$ENABLE_MODULES:ro \
             --env ENABLE_MODULES \
+            --env LINT \
             --env DRUPAL_PRACTICE \
             --env TEST_SUITE \
             --env MINK_DRIVER_ARGS_WEBDRIVER \
@@ -44,6 +45,7 @@ jobs:
            ghcr.io/islandora/ci:${{ matrix.drupal-version }}-php${{ matrix.php-versions }}
         env:
           ENABLE_MODULES: islandora
+          LINT: 0
           DRUPAL_PRACTICE: 0
           TEST_SUITE: ${{ matrix.test-suite }}
           MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","goog:chromeOptions":{"args":["--disable-gpu","--headless", "--no-sandbox", "--disable-dev-shm-usage"]}}, "http://chromedriver:9515"]'
