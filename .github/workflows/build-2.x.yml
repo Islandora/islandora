@@ -16,7 +16,7 @@ jobs:
       matrix:
         php-versions: ["8.3", "8.4"]
         test-suite: ["kernel", "functional", "functional-javascript"]
-        drupal-version: ["10.5", "10.6", "11.2"]
+        drupal-version: ["10.5", "10.6", "11.2", "11.3"]
     name: PHP ${{ matrix.php-versions }} | drupal ${{ matrix.drupal-version }} | test-suite ${{ matrix.test-suite }}
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
