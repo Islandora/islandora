@@ -92,6 +92,12 @@ docker run -d \
     chromedriver --log-path=/dev/null --verbose --allowed-ips= --allowed-origins=*
 ```
 
+If you're running functional tests, start an activemq docker container
+
+```bash
+docker run -d --name activemq --network default webcenter/activemq:5.14.3
+```
+
 Run the tests
 
 ```bash
