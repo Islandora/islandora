@@ -47,7 +47,6 @@ abstract class IslandoraKernelTestBase extends KernelTestBase {
     parent::setUp();
 
     // Bootstrap minimal Drupal environment to run the tests.
-    $this->installSchema('system', 'sequences');
     $this->installSchema('node', 'node_access');
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');

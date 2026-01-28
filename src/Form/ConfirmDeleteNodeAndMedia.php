@@ -134,7 +134,6 @@ class ConfirmDeleteNodeAndMedia extends DeleteMultipleForm {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $deleted_media = 0;
     $node_storage = $this->entityTypeManager->getStorage('node');
     $nodes = $node_storage->loadMultiple(array_keys($this->selection));
     $deleteable_nodes = [];

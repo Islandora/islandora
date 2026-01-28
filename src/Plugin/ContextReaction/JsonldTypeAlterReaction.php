@@ -77,7 +77,7 @@ class JsonldTypeAlterReaction extends NormalizerAlterReaction {
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $options = [];
     $fieldsArray = \Drupal::service('entity_field.manager')->getFieldMap();
-    foreach ($fieldsArray as $entity_type => $entity_fields) {
+    foreach ($fieldsArray as $entity_fields) {
       foreach ($entity_fields as $field => $field_properties) {
         $options[$field] = $this->t('@field (@bundles)', [
           '@field' => $field,

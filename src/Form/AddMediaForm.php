@@ -271,8 +271,8 @@ class AddMediaForm extends FormBase {
     $batch = [
       'title' => $this->t("Creating Media for @title", ['@title' => $parent->getTitle()]),
       'operations' => $operations,
-      'progress_message' => t('Processed @current out of @total. Estimated time: @estimate.'),
-      'error_message' => t('The process has encountered an error.'),
+      'progress_message' => $this->t('Processed @current out of @total. Estimated time: @estimate.'),
+      'error_message' => $this->t('The process has encountered an error.'),
       'finished' => [$this, 'buildMediaFinished'],
     ];
     batch_set($batch);
