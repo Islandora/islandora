@@ -102,11 +102,11 @@ Run the tests
 
 ```bash
 docker run \
-    --name drupal-ci-$DRUPAL_VERSION-$PHP_VERSION
+    --name drupal-ci-$DRUPAL_VERSION-$PHP_VERSION \
     --rm \
     --volume $(pwd):/var/www/drupal/web/modules/contrib/islandora:ro \
     --env ENABLE_MODULES=islandora \
-    --env TEST_SUITE="${TEST_SUITE:-} \
+    --env TEST_SUITE="${TEST_SUITE:-}" \
     --env MINK_DRIVER_ARGS_WEBDRIVER='["chrome", {"browserName":"chrome","goog:chromeOptions":{"args":["--disable-gpu","--headless", "--no-sandbox", "--disable-dev-shm-usage"]}}, "http://chromedriver:9515"]' \
     --network ci-default \
     ghcr.io/islandora/ci:$DRUPAL_VERSION-php$PHP_VERSION
