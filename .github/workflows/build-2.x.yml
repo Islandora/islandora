@@ -45,11 +45,14 @@ jobs:
            ghcr.io/islandora/ci:${{ matrix.drupal-version }}-php${{ matrix.php-versions }}
         env:
           ENABLE_MODULES: islandora
-          LINT: 0
-          DRUPAL_PRACTICE: 0
           TEST_SUITE: ${{ matrix.test-suite }}
+          # have drupal functional JS tests point to chromedriver docker container started in step above
           MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","goog:chromeOptions":{"args":["--disable-gpu","--headless", "--no-sandbox", "--disable-dev-shm-usage"]}}, "http://chromedriver:9515"]'
           SYMFONY_DEPRECATIONS_HELPER: weak
+          # once we get our codebase lint'd we should enable these
+          LINT: 0
+          DRUPAL_PRACTICE: 0
+
       - name: Print chromedriver logs
         if: matrix.test-suite == 'functional-javascript'
-        run: cat /tmp/chromedriver.log
+        run: docker logs chromedriver
