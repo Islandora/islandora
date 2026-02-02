@@ -2,12 +2,14 @@
 
 namespace Drupal\Tests\islandora\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the NodeHasTerm condition.
  *
  * @package Drupal\Tests\islandora\Functional
- * @group islandora
  */
+#[Group('islandora')]
 class NodeHasTermTest extends IslandoraFunctionalTestBase {
 
   /**
@@ -25,23 +27,22 @@ class NodeHasTermTest extends IslandoraFunctionalTestBase {
   }
 
   /**
-   * Data providing method.
-   *
-   * @return array
-   *   Arrays of test parameters.
+   * Tests the NodeHasTerm condition.
    */
-  public function dataProvider() {
-    return [
-      'naive references' => [TRUE],
-      'specific references' => [FALSE],
-    ];
+  public function testNodeHasTerm() {
+    // Test both naive and specific references.
+    foreach ([TRUE, FALSE] as $naive_references) {
+      $this->doTestNodeHasTerm($naive_references);
+    }
   }
 
   /**
-   * @covers \Drupal\islandora\Plugin\Condition\NodeHasTerm
-   * @dataProvider dataProvider
+   * Helper method to test NodeHasTerm condition.
+   *
+   * @param bool $naive_references
+   *   Whether to use naive references.
    */
-  public function testNodeHasTerm(bool $naive_references) {
+  protected function doTestNodeHasTerm(bool $naive_references) {
 
     // Create a new node with the tag.
     $node = $this->container->get('entity_type.manager')

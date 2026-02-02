@@ -3,10 +3,12 @@
 namespace Drupal\Tests\islandora\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Abstract base class for Islandora kernel tests.
  */
+#[RunTestsInSeparateProcesses]
 abstract class IslandoraKernelTestBase extends KernelTestBase {
 
   /**

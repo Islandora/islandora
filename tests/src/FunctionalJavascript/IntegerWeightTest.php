@@ -3,20 +3,20 @@
 namespace Drupal\Tests\islandora\FunctionalJavascript;
 
 use Behat\Mink\Exception\ExpectationException;
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\views\Tests\ViewTestData;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test integer weight selector.
  *
  * Taken from the weight module with some edits.
- *
- * @group islandora
  */
+#[Group('islandora')]
 class IntegerWeightTest extends WebDriverTestBase {
 
   use FieldUiTestTrait;

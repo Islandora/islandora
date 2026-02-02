@@ -2,17 +2,16 @@
 
 namespace Drupal\Tests\islandora\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the ManageMembersController.
- *
- * @group islandora
  */
+#[Group('islandora')]
 class AddMediaTest extends IslandoraFunctionalTestBase {
 
   /**
-   * @covers \Drupal\islandora\Controller\ManageMediaController::addToNodePage
-   * @covers \Drupal\islandora\Controller\ManageMediaController::access
-   * @covers \Drupal\islandora\IslandoraUtils::isIslandoraType
+   * Tests adding media to a node.
    */
   public function testAddMedia() {
     $account = $this->drupalCreateUser([

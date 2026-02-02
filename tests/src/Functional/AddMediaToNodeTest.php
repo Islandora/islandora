@@ -4,12 +4,12 @@ namespace Drupal\Tests\islandora\Functional;
 
 use Drupal\Core\Url;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the RelatedLinkHeader view alter.
- *
- * @group islandora
  */
+#[Group('islandora')]
 class AddMediaToNodeTest extends IslandoraFunctionalTestBase {
 
   use EntityReferenceFieldCreationTrait;
@@ -49,7 +49,7 @@ class AddMediaToNodeTest extends IslandoraFunctionalTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Controller\MediaSourceController::putToNode
+   * Tests adding media to a node via PUT request.
    */
   public function testAddMediaToNode() {
     // Hack out the guzzle client.

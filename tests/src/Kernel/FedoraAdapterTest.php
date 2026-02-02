@@ -2,23 +2,24 @@
 
 namespace Drupal\Tests\islandora\Kernel;
 
-use Prophecy\PhpUnit\ProphecyTrait;
-use GuzzleHttp\Psr7\Utils;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\islandora\Flysystem\Adapter\FedoraAdapter;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Utils;
 use Islandora\Chullo\IFedoraApi;
 use League\Flysystem\Config;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
-use Symfony\Component\Mime\MimeTypeGuesserInterface;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
  * Tests the Fedora adapter for Flysystem.
- *
- * @group islandora
- * @coversDefaultClass \Drupal\islandora\Flysystem\Adapter\FedoraAdapter
  */
+#[Group('islandora')]
+#[CoversClass(FedoraAdapter::class)]
 class FedoraAdapterTest extends IslandoraKernelTestBase {
 
   use ProphecyTrait;
@@ -308,7 +309,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::getMetadata
+   * Tests getMetadata() failure.
    */
   public function testGetMetadataFail() {
     $adapter = $this->createAdapterForFail();
@@ -317,7 +318,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::getMetadata
+   * Tests getMetadata() for file.
    */
   public function testGetMetadataForFile() {
     $adapter = $this->createAdapterForFile();
@@ -327,7 +328,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::getMetadata
+   * Tests getMetadata() for directory.
    */
   public function testGetMetadataForDirectory() {
     $adapter = $this->createAdapterForDirectory();
@@ -337,7 +338,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::readStream
+   * Tests readStream().
    */
   public function testReadStream() {
     $adapter = $this->createAdapterForFile();
@@ -348,7 +349,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::readStream
+   * Tests readStream() failure.
    */
   public function testReadStreamFail() {
     $adapter = $this->createAdapterForFail();
@@ -357,7 +358,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::read
+   * Tests read().
    */
   public function testRead() {
     $adapter = $this->createAdapterForFile();
@@ -368,7 +369,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::read
+   * Tests read() failure.
    */
   public function testReadFail() {
     $adapter = $this->createAdapterForFail();
@@ -377,7 +378,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::has
+   * Tests has() failure.
    */
   public function testHasFail() {
     $adapter = $this->createAdapterForFail();
@@ -386,7 +387,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::has
+   * Tests has() success.
    */
   public function testHasSuccess() {
     $adapter = $this->createAdapterForFile();
@@ -395,7 +396,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::getSize
+   * Tests getSize() failure.
    */
   public function testGetSizeFail() {
     $adapter = $this->createAdapterForFail();
@@ -404,7 +405,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::getSize
+   * Tests getSize() success.
    */
   public function testGetSizeSuccess() {
     $adapter = $this->createAdapterForFile();
@@ -414,7 +415,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::getMimetype
+   * Tests getMimetype() failure.
    */
   public function testGetMimetypeFail() {
     $adapter = $this->createAdapterForFail();
@@ -423,7 +424,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::getMimetype
+   * Tests getMimetype() success.
    */
   public function testGetMimetypeSuccess() {
     $adapter = $this->createAdapterForFile();
@@ -433,7 +434,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::getTimestamp
+   * Tests getTimestamp() failure.
    */
   public function testGetTimestampFail() {
     $adapter = $this->createAdapterForFail();
@@ -442,7 +443,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::getTimestamp
+   * Tests getTimestamp() success.
    */
   public function testGetTimestampSuccess() {
     $adapter = $this->createAdapterForFile();
@@ -452,7 +453,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::write
+   * Tests write() failure.
    */
   public function testWriteFail() {
     $adapter = $this->createAdapterForWriteFail();
@@ -462,7 +463,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::write
+   * Tests write().
    */
   public function testWrite() {
     $adapter = $this->createAdapterForWrite();
@@ -473,7 +474,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::writeStream
+   * Tests writeStream() failure.
    */
   public function testWriteStreamFail() {
     $adapter = $this->createAdapterForWriteFail();
@@ -483,7 +484,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::writeStream
+   * Tests writeStream().
    */
   public function testWriteStream() {
     $adapter = $this->createAdapterForWrite();
@@ -494,7 +495,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::update
+   * Tests update() failure.
    */
   public function testUpdateFail() {
     $adapter = $this->createAdapterForWriteFail();
@@ -504,7 +505,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::update
+   * Tests update().
    */
   public function testUpdate() {
     $adapter = $this->createAdapterForWrite();
@@ -515,7 +516,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::updateStream
+   * Tests updateStream() failure.
    */
   public function testUpdateStreamFail() {
     $adapter = $this->createAdapterForWriteFail();
@@ -525,7 +526,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::updateStream
+   * Tests updateStream().
    */
   public function testUpdateStream() {
     $adapter = $this->createAdapterForWrite();
@@ -536,7 +537,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::delete
+   * Tests delete() failure.
    */
   public function testDeleteFail() {
     $adapter = $this->createAdapterForDeleteFail();
@@ -545,7 +546,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::delete
+   * Tests delete().
    */
   public function testDelete() {
     $adapter = $this->createAdapterForDelete();
@@ -554,7 +555,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::deleteDir
+   * Tests deleteDir() failure.
    */
   public function testDeleteDirFail() {
     $adapter = $this->createAdapterForDeleteFail();
@@ -563,7 +564,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::deleteDir
+   * Tests deleteDir().
    */
   public function testDeleteDir() {
     $adapter = $this->createAdapterForDelete();
@@ -572,7 +573,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::delete
+   * Tests delete() with tombstone.
    */
   public function testDeleteWithTombstone() {
     $adapter = $this->createAdapterForDeleteWithTombstone();
@@ -581,7 +582,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::delete
+   * Tests delete() with tombstone failure.
    */
   public function testDeleteWithTombstoneFail() {
     $adapter = $this->createAdapterForDeleteWithTombstoneFail();
@@ -590,8 +591,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::rename
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::copy
+   * Tests rename() failure.
    */
   public function testRenameFail() {
     $adapter = $this->createAdapterForFail();
@@ -600,8 +600,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::rename
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::copy
+   * Tests rename().
    */
   public function testRename() {
     $prophecy = $this->createAdapterBase();
@@ -653,7 +652,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::createDir
+   * Tests createDir() failure.
    */
   public function testCreateDirFail() {
     $prophecy = $this->prophesize(Response::class);
@@ -671,7 +670,7 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Flysystem\Adapter\FedoraAdapter::createDir
+   * Tests createDir().
    */
   public function testCreateDir() {
     $adapter = $this->createAdapterForCreateDir();

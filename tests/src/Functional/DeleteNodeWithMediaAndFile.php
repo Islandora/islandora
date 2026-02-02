@@ -2,11 +2,12 @@
 
 namespace Drupal\Tests\islandora\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the Delete Node with Media.
- *
- * @group islandora
  */
+#[Group('islandora')]
 class DeleteNodeWithMediaAndFile extends IslandoraFunctionalTestBase {
 
   /**

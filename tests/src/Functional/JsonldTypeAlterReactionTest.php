@@ -2,18 +2,20 @@
 
 namespace Drupal\Tests\islandora\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 use function GuzzleHttp\json_decode;
 
 /**
  * Tests Jsonld Alter Reaction.
  *
  * @package Drupal\Tests\islandora\Functional
- * @group islandora
  */
+#[Group('islandora')]
 class JsonldTypeAlterReactionTest extends JsonldSelfReferenceReactionTest {
 
   /**
-   * @covers \Drupal\islandora\Plugin\ContextReaction\JsonldTypeAlterReaction
+   * Tests the JSON-LD type alter reaction.
    */
   public function testMappingReaction() {
     $account = $this->drupalCreateUser([

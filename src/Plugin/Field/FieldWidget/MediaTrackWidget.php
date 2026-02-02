@@ -2,22 +2,21 @@
 
 namespace Drupal\islandora\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\file\Plugin\Field\FieldWidget\FileWidget;
 
 /**
  * Plugin implementation of the 'media_track' widget.
- *
- * @FieldWidget(
- *   id = "media_track",
- *   label = @Translation("Media Track"),
- *   field_types = {
- *     "media_track"
- *   }
- * )
  */
+#[FieldWidget(
+  id: "media_track",
+  label: new TranslatableMarkup("Media Track"),
+  field_types: ["media_track"]
+)]
 class MediaTrackWidget extends FileWidget {
 
   /**

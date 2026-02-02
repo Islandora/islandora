@@ -6,13 +6,14 @@ use Drupal\islandora\EventGenerator\EventGenerator;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the EventGenerator default implementation.
- *
- * @group islandora
- * @coversDefaultClass \Drupal\islandora\EventGenerator\EventGenerator
  */
+#[Group('islandora')]
+#[CoversClass(EventGenerator::class)]
 class EventGeneratorTest extends IslandoraKernelTestBase {
 
   use UserCreationTrait;
@@ -72,8 +73,6 @@ class EventGeneratorTest extends IslandoraKernelTestBase {
 
   /**
    * Tests the generateCreateEvent() method.
-   *
-   * @covers \Drupal\islandora\EventGenerator\EventGenerator::generateEvent
    */
   public function testGenerateCreateEvent() {
     $json = $this->eventGenerator->generateEvent(
@@ -89,8 +88,6 @@ class EventGeneratorTest extends IslandoraKernelTestBase {
 
   /**
    * Tests the generateUpdateEvent() method.
-   *
-   * @covers \Drupal\islandora\EventGenerator\EventGenerator::generateEvent
    */
   public function testGenerateUpdateEvent() {
     $json = $this->eventGenerator->generateEvent(
@@ -106,8 +103,6 @@ class EventGeneratorTest extends IslandoraKernelTestBase {
 
   /**
    * Tests the generateDeleteEvent() method.
-   *
-   * @covers \Drupal\islandora\EventGenerator\EventGenerator::generateEvent
    */
   public function testGenerateDeleteEvent() {
     $json = $this->eventGenerator->generateEvent(

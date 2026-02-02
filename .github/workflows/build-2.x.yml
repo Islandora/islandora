@@ -40,19 +40,16 @@ jobs:
         run: |
           docker run \
             --rm \
+            --name drupal \
+            --hostname drupal \
             --volume $(pwd):/var/www/drupal/web/modules/contrib/$ENABLE_MODULES:ro \
             --env ENABLE_MODULES \
             --env TEST_SUITE \
-            --env MINK_DRIVER_ARGS_WEBDRIVER \
-            --env SYMFONY_DEPRECATIONS_HELPER \
             --network ci-default \
            ghcr.io/islandora/ci:${{ matrix.drupal-version }}-php${{ matrix.php-versions }}
         env:
           ENABLE_MODULES: islandora
           TEST_SUITE: ${{ matrix.test-suite }}
-          # have drupal functional JS tests point to chromedriver docker container started in step above
-          MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","goog:chromeOptions":{"args":["--disable-gpu","--headless", "--no-sandbox", "--disable-dev-shm-usage"]}}, "http://chromedriver:9515"]'
-          SYMFONY_DEPRECATIONS_HELPER: weak
 
       - name: Print chromedriver logs
         if: matrix.test-suite == 'functional-javascript'

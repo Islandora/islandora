@@ -2,14 +2,16 @@
 
 namespace Drupal\Tests\islandora\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 use function GuzzleHttp\json_decode;
 
 /**
  * Class MappingUriPredicateReactionTest.
  *
  * @package Drupal\Tests\islandora\Functional
- * @group islandora
  */
+#[Group('islandora')]
 class JsonldSelfReferenceReactionTest extends IslandoraFunctionalTestBase {
 
   /**
@@ -46,7 +48,7 @@ class JsonldSelfReferenceReactionTest extends IslandoraFunctionalTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Plugin\ContextReaction\JsonldSelfReferenceReaction
+   * Tests the mapping reaction.
    */
   public function testMappingReaction() {
     $account = $this->drupalCreateUser([
@@ -148,7 +150,7 @@ class JsonldSelfReferenceReactionTest extends IslandoraFunctionalTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Plugin\ContextReaction\JsonldSelfReferenceReaction
+   * Tests the mapping reaction for media.
    */
   public function testMappingReactionForMedia() {
     $account = $this->drupalCreateUser([
