@@ -51,7 +51,7 @@ services:
       - { name: 'context_provider' }
   islandora.media_source_service:
     class: Drupal\islandora\MediaSource\MediaSourceService
-    arguments: ['@entity_type.manager', '@current_user', '@language_manager', '@file_system', '@islandora.utils', '@file.validator']
+    arguments: ['@entity_type.manager', '@current_user', '@language_manager', '@file_system', '@islandora.utils', '@file.validator', '@stream_wrapper_manager', '@file.mime_type.guesser']
   islandora.utils:
     class: Drupal\islandora\IslandoraUtils
     arguments: ['@entity_type.manager', '@entity_field.manager', '@context.manager', '@flysystem_factory', '@language_manager', '@current_user', '@config.factory', '@database']

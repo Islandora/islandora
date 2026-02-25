@@ -7,6 +7,7 @@ use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\field\FieldConfigInterface;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
@@ -16,9 +17,11 @@ use Drupal\media\MediaInterface;
 use Drupal\media\MediaTypeInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
  * Utility functions for working with source files for Media.
@@ -68,6 +71,20 @@ class MediaSourceService {
   protected $fileValidator;
 
   /**
+   * Stream wrapper manager.
+   *
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
+   */
+  protected $streamWrapperManager;
+
+  /**
+   * Mime type guesser.
+   *
+   * @var \Symfony\Component\Mime\MimeTypeGuesserInterface
+   */
+  protected $mimeTypeGuesser;
+
+  /**
    * Constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -82,6 +99,10 @@ class MediaSourceService {
    *   Utility service.
    * @param \Drupal\file\Validation\FileValidatorInterface $file_validator
    *   File Validator service.
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
+   *   Stream wrapper manager.
+   * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mime_type_guesser
+   *   Mime type guesser.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -90,6 +111,8 @@ class MediaSourceService {
     FileSystemInterface $file_system,
     IslandoraUtils $islandora_utils,
     FileValidatorInterface $file_validator,
+    StreamWrapperManagerInterface $stream_wrapper_manager,
+    MimeTypeGuesserInterface $mime_type_guesser,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->account = $account;
@@ -97,6 +120,73 @@ class MediaSourceService {
     $this->fileSystem = $file_system;
     $this->islandoraUtils = $islandora_utils;
     $this->fileValidator = $file_validator;
+    $this->streamWrapperManager = $stream_wrapper_manager;
+    $this->mimeTypeGuesser = $mime_type_guesser;
+  }
+
+  /**
+   * Determines MIME-type to persist for a file.
+   *
+   * @param \Drupal\file\FileInterface $file
+   *   File whose contents were just written.
+   *
+   * @return string
+   *   MIME-type to persist.
+   */
+  private function determinePersistedMimeType(FileInterface $file) : string {
+    $uri = $file->getFileUri();
+    $path = $this->fileSystem->realpath($uri) ?: $uri;
+    return $this->mimeTypeGuesser->guessMimeType($path) ?: 'application/octet-stream';
+  }
+
+  /**
+   * Validates a content location URI and blocks traversal.
+   *
+   * @param string $content_location
+   *   The user supplied content location.
+   *
+   * @return string
+   *   The validated content location.
+   */
+  private function validateContentLocation(string $content_location) : string {
+    $content_location = trim($content_location);
+    if ($content_location === '') {
+      throw new BadRequestHttpException("Missing Content-Location header");
+    }
+
+    if (str_contains($content_location, "\0")) {
+      throw new BadRequestHttpException("Invalid Content-Location header");
+    }
+
+    if (!$this->streamWrapperManager->isValidUri($content_location)) {
+      throw new BadRequestHttpException("Content-Location must be a valid stream wrapper URI");
+    }
+
+    $target = $this->streamWrapperManager->getTarget($content_location);
+    if (!is_string($target) || $target === '') {
+      throw new BadRequestHttpException("Content-Location must include a filename");
+    }
+
+    $target = trim($target);
+    $trimmed_target = trim($target, '/');
+    if ($trimmed_target === '') {
+      throw new BadRequestHttpException("Content-Location must include a filename");
+    }
+
+    // Use Symfony path normalization to reject traversal and non-canonical
+    // targets before any writes occur.
+    $canonical_target = Path::canonicalize($target);
+    if (
+      str_contains($target, '\\') ||
+      $canonical_target === '.' ||
+      $canonical_target === '..' ||
+      str_starts_with($canonical_target, '../') ||
+      $canonical_target !== $trimmed_target
+    ) {
+      throw new BadRequestHttpException("Content-Location must not contain path traversal segments");
+    }
+
+    return $content_location;
   }
 
   /**
@@ -228,9 +318,7 @@ class MediaSourceService {
       throw new HttpException(400, "No bytes were copied to $uri");
     }
 
-    if (!empty($mimetype)) {
-      $file->setMimeType($mimetype);
-    }
+    $file->setMimeType($this->determinePersistedMimeType($file));
 
     // Flush the image cache for the image so thumbnails get regenerated.
     image_path_flush($uri);
@@ -349,6 +437,7 @@ class MediaSourceService {
     $mimetype,
     $content_location,
   ) {
+    $content_location = $this->validateContentLocation($content_location);
     $existing = $this->islandoraUtils->getMediaReferencingNodeAndTerm($node, $taxonomy_term);
 
     if (!empty($existing)) {
@@ -434,6 +523,7 @@ class MediaSourceService {
     $mimetype,
     $content_location,
   ) {
+    $content_location = $this->validateContentLocation($content_location);
     if ($media->hasField($destination_field)) {
 
       // Validate file extension.

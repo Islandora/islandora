@@ -198,6 +198,21 @@ class AddMediaToNodeTest extends IslandoraFunctionalTestBase {
     $response = $client->request('PUT', $bad_term_url, $options);
     $this->assertTrue($response->getStatusCode() == 404, "Expected 404, received {$response->getStatusCode()}");
 
+    // Invalid Content-Location without a stream wrapper should fail with 400.
+    $options['headers']['Content-Location'] = 'test_file.txt';
+    $response = $client->request('PUT', $add_to_node_url, $options);
+    $this->assertTrue($response->getStatusCode() == 400, "Expected 400, received {$response->getStatusCode()}");
+
+    // Traversal in Content-Location should fail with 400.
+    $options['headers']['Content-Location'] = 'public://../test_file.txt';
+    $response = $client->request('PUT', $add_to_node_url, $options);
+    $this->assertTrue($response->getStatusCode() == 400, "Expected 400, received {$response->getStatusCode()}");
+
+    // Non-canonical paths should fail with 400.
+    $options['headers']['Content-Location'] = 'public://subdir/../test_file.txt';
+    $response = $client->request('PUT', $add_to_node_url, $options);
+    $this->assertTrue($response->getStatusCode() == 400, "Expected 400, received {$response->getStatusCode()}");
+
     // Should be successful with proper url, options, and permissions.
     $options = [
       'auth' => [$account->getDisplayName(), $account->pass_raw],
@@ -211,6 +226,27 @@ class AddMediaToNodeTest extends IslandoraFunctionalTestBase {
     $response = $client->request('PUT', $add_to_node_url, $options);
     $this->assertTrue($response->getStatusCode() == 201, "Expected 201, received {$response->getStatusCode()}");
     $this->assertTrue(!empty($response->getHeader("Location")), "Response must include Location header");
+
+    // MIME-type should not trust spoofed request header values.
+    $options['headers']['Content-Type'] = 'application/x-httpd-php';
+    $options['body'] = 'This is plain text data.';
+    $response = $client->request('PUT', $add_to_node_url, $options);
+    $this->assertTrue($response->getStatusCode() == 204, "Expected 204, received {$response->getStatusCode()}");
+
+    $type_configuration = $this->testMediaType->get('source_configuration');
+    $source_field = $type_configuration['source_field'];
+    $media_ids = $this->container->get('entity_type.manager')->getStorage('media')
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('bundle', $this->testMediaType->id())
+      ->condition('field_media_of.target_id', $this->node->id())
+      ->condition('field_media_use.target_id', $this->preservationMasterTerm->id())
+      ->range(0, 1)
+      ->execute();
+    $this->assertNotEmpty($media_ids, "Expected one media entity for node and media use term.");
+    $media = $this->container->get('entity_type.manager')->getStorage('media')->load(reset($media_ids));
+    $source_file = $this->container->get('entity_type.manager')->getStorage('file')->load($media->get($source_field)->first()->target_id);
+    $this->assertNotEquals('application/x-httpd-php', $source_file->getMimeType(), "Spoofed Content-Type should not be persisted as filemime.");
   }
 
 }
