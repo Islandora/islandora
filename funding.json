@@ -1,0 +1,40 @@
+{
+  "version": "v1.0.0",
+  "entity": {
+    "type": "organisation",
+    "role": "steward",
+    "name": "Islandora Foundation",
+    "email": "community@islandora.ca",
+    "description": "The Islandora Foundation (IF) mission is to promote collaboration through transparency and consensus building among Islandora community members, and to steward their shared vision for digital curation features through a body of software and knowledge. The IF undertakes this mission through activities such as managing collaborative software development processes, centralizing the efforts of community members, and onboarding new members that are using Islandora for digital stewardship. The IF is a federally incorporated, community-driven soliciting non-profit in Canada supported through Membership funding.",
+    "webpageUrl": {
+      "url": "https://islandora.ca/"
+    }
+  },
+  "projects": [
+    {
+      "guid": "islandora",
+      "name": "Islandora",
+      "description": "Islandora is an extensible, modular, open source digital repository framework focused on collaborative authorship, management, display, and preservation of digital content at scale. It can be configured to respond to a variety of digital asset management use cases. Islandora adheres to widely adopted best practices and open standards and frameworks used in information practice.",
+      "webpageUrl": {
+        "url": "https://islandora.ca"
+      },
+      "repositoryUrl": {
+        "url": "https://github.com/Islandora/islandora",
+        "wellKnown": ""
+      },
+      "licenses": [
+        "spdx:GPL-2.0-or-later",
+        "spdx:MIT"
+      ],
+      "tags": [
+        "data”,
+        “education",
+        "information-management",
+        “knowledge”,
+        “machine-learning”,
+        "publishing",
+        "storage",
+        "web-development"
+      ]
+    }
+}
