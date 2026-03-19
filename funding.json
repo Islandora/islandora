@@ -5,7 +5,7 @@
     "role": "steward",
     "name": "Islandora Foundation",
     "email": "community@islandora.ca",
-    "description": "The Islandora Foundation (IF) mission is to promote collaboration through transparency and consensus building among Islandora community members, and to steward their shared vision for digital curation features through a body of software and knowledge. The IF undertakes this mission through activities such as managing collaborative software development processes, centralizing the efforts of community members, and onboarding new members that are using Islandora for digital stewardship. The IF is a federally incorporated, community-driven soliciting non-profit in Canada supported through Membership funding.",
+    "description": "The Islandora Foundation (IF) mission is to promote collaboration through transparency and consensus building among Islandora community members, and to steward their shared vision for digital curation features through a body of software and knowledge. The IF undertakes this mission through activities such as managing collaborative software development processes, centralizing the efforts of community members, and onboarding new members that are using Islandora for digital stewardship. The IF is a federally incorporated, community-driven soliciting non-profit in Canada supported primarily through Membership funding.",
     "webpageUrl": {
       "url": "https://islandora.ca/"
     }
@@ -16,25 +16,96 @@
       "name": "Islandora",
       "description": "Islandora is an extensible, modular, open source digital repository framework focused on collaborative authorship, management, display, and preservation of digital content at scale. It can be configured to respond to a variety of digital asset management use cases. Islandora adheres to widely adopted best practices and open standards and frameworks used in information practice.",
       "webpageUrl": {
-        "url": "https://islandora.ca"
+        "url": "https://islandora.ca",
+        "wellKnown": "https://islandora.ca"
       },
       "repositoryUrl": {
-        "url": "https://github.com/Islandora/islandora",
-        "wellKnown": ""
+        "url": "https://github.com/Islandora/islandora"
       },
       "licenses": [
         "spdx:GPL-2.0-or-later",
         "spdx:MIT"
       ],
       "tags": [
-        "data”,
-        “education",
+        "data",
+        "education",
         "information-management",
-        “knowledge”,
-        “machine-learning”,
+        "knowledge",
+        "machine-learning",
         "publishing",
         "storage",
         "web-development"
       ]
     }
+  ],
+  "funding": {
+    "channels": [
+      {
+        "guid": "islandora-foundation-cheque",
+        "type": "cheque",
+        "address": "Islandora Foundation, 465 University Avenue, PO Box 21104, Charlottetown Market, Charlottetown, PE C1A 1A0, Canada"
+      },
+      {
+        "guid": "islandora-foundation-etransfer",
+        "type": "bank",
+        "address": "community@islandora.ca",
+        "description": "Contact community@islandora.ca to discuss etransfer options."
+      }
+    ],
+    "plans": [
+      {
+        "guid": "islandora-adopter-plan",
+        "status": "active",
+        "name": "Islandora Adopter Level Membership",
+        "description": "see: https://www.islandora.ca/support-islandora for benefits at the Adopter level membership.",
+        "amount": 500,
+        "currency": "CAD",
+        "frequency": "yearly",
+        "channels": [
+          "islandora-foundation-cheque",
+          "islandora-foundation-etransfer"
+        ]
+      },
+      {
+        "guid": "islandora-supporter-plan",
+        "status": "active",
+        "name": "Islandora-Supporter-Level-Membership",
+        "description": "see: https://www.islandora.ca/support-islandora for benefits at the Supporter level membership.",
+        "amount": 2000,
+        "currency": "CAD",
+        "frequency": "yearly",
+        "channels": [
+          "islandora-foundation-cheque",
+          "islandora-foundation-etransfer"
+        ]
+      },
+      {
+        "guid": "islandora-collaborator-plan",
+        "status": "active",
+        "name": "Islandora-Collaborator-Level-Membership",
+        "description": "see: https://www.islandora.ca/support-islandora for benefits at the Collaborator level membership.",
+        "amount": 4000,
+        "currency": "CAD",
+        "frequency": "yearly",
+        "channels": [
+          "islandora-foundation-cheque",
+          "islandora-foundation-etransfer"
+        ]
+      },
+      {
+        "guid": "islandora-partner-plan",
+        "status": "active",
+        "name": "Islandora-Partner-Level-Membership",
+        "description": "see: https://www.islandora.ca/support-islandora for benefits at the Partner level membership.",
+        "amount": 10000,
+        "currency": "CAD",
+        "frequency": "yearly",
+        "channels": [
+          "islandora-foundation-cheque",
+          "islandora-foundation-etransfer"
+        ]
+      }
+    ],
+    "history": []
+  }
 }
