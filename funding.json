@@ -50,9 +50,29 @@
         "type": "bank",
         "address": "community@islandora.ca",
         "description": "Contact community@islandora.ca to discuss etransfer options."
-      }
+      },
+      {
+        "guid": "islandora-paypal",
+        "type": "payment-provider",
+        "address": "https://www.paypal.com/donate/?hosted_button_id=BN4LKQUT32A6J",
+        "description": "Donate using debit/credit card through Paypal."
+            }
     ],
     "plans": [
+      {
+        "guid": "islandora-donation",
+        "status": "active",
+        "name": "Donate to Support Islandora",
+        "description": "Pay anything you wish to show your goodwill for the Islandora project.",
+        "amount": 0,
+        "currency": "CAD",
+        "frequency": "one-time",
+        "channels": [
+          "islandora-paypal",          
+          "islandora-foundation-cheque",
+          "islandora-foundation-etransfer"
+        ]
+      },
       {
         "guid": "islandora-adopter-plan",
         "status": "active",
