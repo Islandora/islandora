@@ -103,6 +103,11 @@ abstract class GenerateDerivativeTestBase extends IslandoraFunctionalTestBase {
           $content['file_upload_uri'],
           "Expected file upload uri should contain the scheme and path of the derivative"
         );
+        $this->assertEquals(
+          $expected['source_mimetype'],
+          $content['source_mimetype'],
+          "Expected source mimetype '{$expected['source_mimetype']}', received {$content['source_mimetype']}"
+        );
 
         $this->assertEquals($expected['mimetype'], $content['mimetype'], "Expected mimetype '{$expected['mimetype']}', received {$content['mimetype']}");
 

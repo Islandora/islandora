@@ -151,6 +151,7 @@ class EventGenerator implements EventGeneratorInterface {
       "file_upload_uri",
       "fedora_uri",
       "source_uri",
+      "source_mimetype",
       "destination_uri",
       "args",
       "mimetype",
