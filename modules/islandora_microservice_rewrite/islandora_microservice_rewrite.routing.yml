@@ -1,0 +1,7 @@
+system.islandora_microservice_rewrite:
+  path: '/admin/config/islandora/microservice-rewrite'
+  defaults:
+    _form: '\Drupal\islandora_microservice_rewrite\Form\MicroserviceRewriteSettingsForm'
+    _title: 'Microservice Rewrite'
+  requirements:
+    _permission: 'administer site configuration'

@@ -1,0 +1,7 @@
+name: 'Islandora Microservice Rewrite'
+type: module
+description: 'Optional Islandora submodule for microservice URL rewrite settings and behavior.'
+core_version_requirement: ^10.3 || ^11
+package: Islandora
+dependencies:
+  - islandora:islandora

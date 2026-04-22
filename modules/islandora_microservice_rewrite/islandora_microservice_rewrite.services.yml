@@ -1,0 +1,6 @@
+services:
+  islandora_microservice_rewrite.subscriber:
+    class: Drupal\islandora_microservice_rewrite\EventSubscriber\MicroserviceRewriteSubscriber
+    arguments: ['@config.factory']
+    tags:
+      - { name: event_subscriber }

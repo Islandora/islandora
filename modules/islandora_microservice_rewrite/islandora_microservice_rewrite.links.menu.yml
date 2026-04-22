@@ -1,0 +1,5 @@
+system.islandora_microservice_rewrite:
+  title: 'Microservice Rewrite'
+  parent: system.admin_config_islandora
+  route_name: system.islandora_microservice_rewrite
+  description: 'Configure microservice URL rewrite rules.'

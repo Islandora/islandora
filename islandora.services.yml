@@ -3,7 +3,7 @@
 services:
   islandora.eventgenerator:
     class: Drupal\islandora\EventGenerator\EventGenerator
-    arguments: ['@islandora.utils', '@islandora.media_source_service', '@config.factory']
+    arguments: ['@islandora.utils', '@islandora.media_source_service', '@event_dispatcher']
   islandora.stomp:
     class: Stomp\StatefulStomp
     factory: ['Drupal\islandora\StompFactory', create]
