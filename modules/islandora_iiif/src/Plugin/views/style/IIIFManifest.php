@@ -332,6 +332,9 @@ class IIIFManifest extends StylePluginBase {
 
           $mime_type = $image->entity->getMimeType();
           $iiif_url = rtrim($iiif_address, '/') . '/' . urlencode($file_url);
+          $full_image_url = $this->buildFullImageUrl($iiif_url);
+          $thumbnail_url = $this->buildThumbnailUrl($iiif_url);
+          $iiif_service = $this->getImageServiceDescriptor($iiif_url);
 
           // Create the necessary ID's for the canvas and annotation.
           $canvas_id = $iiif_base_id . '/canvas/' . $entity->id();
@@ -357,19 +360,23 @@ class IIIFManifest extends StylePluginBase {
                 "@type" => "oa:Annotation",
                 'motivation' => 'sc:painting',
                 'resource' => [
-                  '@id' => $iiif_url . '/full/full/0/default.jpg',
+                  '@id' => $full_image_url,
                   "@type" => "dctypes:Image",
-                  'format' => $mime_type,
+                  // The painted resource is the JPEG derivative, not the
+                  // original source MIME type.
+                  'format' => 'image/jpeg',
                   'height' => $height,
                   'width' => $width,
-                  'service' => [
-                    '@id' => $iiif_url,
-                    '@context' => 'http://iiif.io/api/image/2/context.json',
-                    'profile' => 'http://iiif.io/api/image/2/profiles/level2.json',
-                  ],
+                  'service' => $iiif_service,
                 ],
                 'on' => $canvas_id,
               ],
+            ],
+            'thumbnail' => [
+              '@id' => $thumbnail_url,
+              '@type' => 'dctypes:Image',
+              'format' => 'image/jpeg',
+              'service' => $iiif_service,
             ],
           ];
 
@@ -498,6 +505,62 @@ class IIIFManifest extends StylePluginBase {
     }
 
     return [0, 0];
+  }
+
+  /**
+   * Build a IIIF Image API service descriptor from the service URL.
+   *
+   * @param string $iiif_url
+   *   The IIIF image service URL.
+   *
+   * @return array
+   *   A service block for the manifest image resource.
+   */
+  protected function getImageServiceDescriptor(string $iiif_url): array {
+    $service = [
+      '@id' => $iiif_url,
+      '@context' => 'http://iiif.io/api/image/2/context.json',
+      'profile' => 'http://iiif.io/api/image/2/profiles/level2.json',
+    ];
+
+    if (str_contains($iiif_url, '/iiif/3/')) {
+      $service['@context'] = 'http://iiif.io/api/image/3/context.json';
+      $service['profile'] = 'level2';
+    }
+    elseif (str_contains($iiif_url, '/iiif/2/')) {
+      $service['@context'] = 'http://iiif.io/api/image/2/context.json';
+      $service['profile'] = 'http://iiif.io/api/image/2/profiles/level2.json';
+    }
+
+    return $service;
+  }
+
+  /**
+   * Build the painted image URL from a IIIF image service URL.
+   *
+   * @param string $iiif_url
+   *   The IIIF image service URL.
+   *
+   * @return string
+   *   A full-size image request URL.
+   */
+  protected function buildFullImageUrl(string $iiif_url): string {
+    return str_contains($iiif_url, '/iiif/3/')
+      ? $iiif_url . '/full/max/0/default.jpg'
+      : $iiif_url . '/full/full/0/default.jpg';
+  }
+
+  /**
+   * Build the thumbnail URL from a IIIF image service URL.
+   *
+   * @param string $iiif_url
+   *   The IIIF image service URL.
+   *
+   * @return string
+   *   A thumbnail image request URL.
+   */
+  protected function buildThumbnailUrl(string $iiif_url): string {
+    return $iiif_url . '/full/200,/0/default.jpg';
   }
 
   /**

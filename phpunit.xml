@@ -51,6 +51,7 @@
   </php>
   <testsuites>
     <testsuite name="unit">
+      <directory>../modules/contrib/islandora/modules/*/tests/src/Unit</directory>
     </testsuite>
     <testsuite name="kernel">
       <directory>../modules/contrib/islandora/tests/src/Kernel</directory>

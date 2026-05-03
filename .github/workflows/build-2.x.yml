@@ -19,7 +19,7 @@ jobs:
       fail-fast: false
       matrix:
         php-versions: ["8.3", "8.4"]
-        test-suite: ["kernel", "functional", "functional-javascript"]
+        test-suite: ["kernel,unit", "functional", "functional-javascript"]
         drupal-version: ["10.5", "10.6", "11.2", "11.3"]
     name: PHP ${{ matrix.php-versions }} | drupal ${{ matrix.drupal-version }} | test-suite ${{ matrix.test-suite }}
     steps:
