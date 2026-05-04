@@ -527,10 +527,6 @@ class IIIFManifest extends StylePluginBase {
       $service['@context'] = 'http://iiif.io/api/image/3/context.json';
       $service['profile'] = 'level2';
     }
-    elseif (str_contains($iiif_url, '/iiif/2/')) {
-      $service['@context'] = 'http://iiif.io/api/image/2/context.json';
-      $service['profile'] = 'http://iiif.io/api/image/2/profiles/level2.json';
-    }
 
     return $service;
   }
