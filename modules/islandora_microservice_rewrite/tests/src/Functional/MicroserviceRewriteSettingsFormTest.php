@@ -26,6 +26,7 @@ class MicroserviceRewriteSettingsFormTest extends IslandoraFunctionalTestBase {
    */
   public function testSettingsPageLoads() {
     $account = $this->drupalCreateUser([
+      'access administration pages',
       'administer site configuration',
     ]);
     $this->drupalLogin($account);
