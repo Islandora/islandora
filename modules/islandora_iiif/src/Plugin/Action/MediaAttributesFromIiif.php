@@ -186,7 +186,7 @@ class MediaAttributesFromIiif extends ConfigurableActionBase implements Containe
   /**
    * {@inheritdoc}
    */
-  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
 
     /**
 * @var \Drupal\Core\Entity\EntityInterface $object
@@ -265,7 +265,7 @@ class MediaAttributesFromIiif extends ConfigurableActionBase implements Containe
     // Get media types.
     $media_types = $this->entityTypeManager->getStorage('media_type')->loadMultiple();
     $all_integer_fields = [];
-    foreach (array_keys($media_types) as $key => $value) {
+    foreach (array_keys($media_types) as $value) {
       $fields = $this->entityFieldManager->getFieldDefinitions("media", $value);
 
       $integer_fields = array_filter(
@@ -295,8 +295,7 @@ class MediaAttributesFromIiif extends ConfigurableActionBase implements Containe
    *   The short field name, e.g., 'field_height'.
    */
   protected function getShortFieldName(string $field_id): string {
-    [$entity_type, $bundle, $field_name] = explode('.', $field_id);
-    return $field_name;
+    return explode('.', $field_id)[2];
   }
 
 }

@@ -67,7 +67,7 @@ class SearchResultsPagerBlock extends BlockBase implements ContainerFactoryPlugi
    */
   public function build() {
     $id = $this->getDerivativeId();
-    list($view_id, $display_id) = $this->getViewAndDisplayIdentifiers();
+    [$view_id, $display_id] = $this->getViewAndDisplayIdentifiers();
     $view = View::Load($view_id);
     $view_executable = $view->getExecutable();
     $view_executable->setDisplay($display_id);
@@ -120,7 +120,7 @@ class SearchResultsPagerBlock extends BlockBase implements ContainerFactoryPlugi
   protected function buildResultsSummary(ViewExecutable $view_executable) {
     $current_page = (int) $view_executable->getCurrentPage() + 1;
     $per_page = (int) $view_executable->getItemsPerPage();
-    $total = isset($view_executable->total_rows) ? $view_executable->total_rows : count($view_executable->result);
+    $total = $view_executable->total_rows ?? count($view_executable->result);
     // If there is no result the "start" and "current_record_count" should be
     // equal to 0. To have the same calculation logic, we use a "start offset"
     // to handle all the cases.

@@ -3,10 +3,12 @@
 namespace Drupal\Tests\islandora\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Abstract base class for Islandora kernel tests.
  */
+#[RunTestsInSeparateProcesses]
 abstract class IslandoraKernelTestBase extends KernelTestBase {
 
   /**
@@ -47,7 +49,6 @@ abstract class IslandoraKernelTestBase extends KernelTestBase {
     parent::setUp();
 
     // Bootstrap minimal Drupal environment to run the tests.
-    $this->installSchema('system', 'sequences');
     $this->installSchema('node', 'node_access');
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');

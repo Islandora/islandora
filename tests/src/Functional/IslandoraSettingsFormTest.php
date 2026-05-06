@@ -2,13 +2,17 @@
 
 namespace Drupal\Tests\islandora\Functional;
 
+use Drupal\islandora\Form\IslandoraSettingsForm;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests Islandora Settings Form.
  *
  * @package Drupal\Tests\islandora\Functional
- * @group islandora
- * @coversDefaultClass \Drupal\islandora\Form\IslandoraSettingsForm
  */
+#[Group('islandora')]
+#[CoversClass(IslandoraSettingsForm::class)]
 class IslandoraSettingsFormTest extends IslandoraFunctionalTestBase {
 
   /**

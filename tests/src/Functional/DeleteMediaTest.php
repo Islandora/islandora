@@ -3,12 +3,12 @@
 namespace Drupal\Tests\islandora\Functional;
 
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the DeleteMedia and DeleteMediaAndFile actions.
- *
- * @group islandora
  */
+#[Group('islandora')]
 class DeleteMediaTest extends IslandoraFunctionalTestBase {
 
   /**
@@ -55,13 +55,11 @@ class DeleteMediaTest extends IslandoraFunctionalTestBase {
     // Create a test user.
     $this->account = $this->createUser($permissions);
 
-    list($this->file, $this->media) = $this->makeMediaAndFile($this->account);
+    [$this->file, $this->media] = $this->makeMediaAndFile($this->account);
   }
 
   /**
    * Tests the delete_media_and_file action.
-   *
-   * @covers \Drupal\islandora\Plugin\Action\DeleteMediaAndFile::execute
    */
   public function testDeleteMediaAndFile() {
     $this->drupalLogin($this->account);

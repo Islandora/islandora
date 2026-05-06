@@ -2,22 +2,23 @@
 
 namespace Drupal\Tests\islandora\Kernel;
 
-use Prophecy\PhpUnit\ProphecyTrait;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\islandora\EventSubscriber\JwtEventSubscriber;
 use Drupal\jwt\Authentication\Event\JwtAuthGenerateEvent;
 use Drupal\jwt\Authentication\Event\JwtAuthValidEvent;
 use Drupal\jwt\Authentication\Event\JwtAuthValidateEvent;
 use Drupal\jwt\JsonWebToken\JsonWebToken;
 use Drupal\jwt\JsonWebToken\JsonWebTokenInterface;
 use Drupal\Tests\user\Traits\UserCreationTrait;
-use Drupal\core\Entity\EntityStorageInterface;
-use Drupal\islandora\EventSubscriber\JwtEventSubscriber;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * JwtEventSubscriber tests.
- *
- * @group islandora
- * @coversDefaultClass \Drupal\islandora\EventSubscriber\JwtEventSubscriber
  */
+#[Group('islandora')]
+#[CoversClass(JwtEventSubscriber::class)]
 class JwtEventSubscriberTest extends IslandoraKernelTestBase {
 
   use ProphecyTrait;
@@ -40,9 +41,9 @@ class JwtEventSubscriberTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\EventSubscriber\JwtEventSubscriber::setIslandoraClaims
+   * Tests that generated tokens are valid.
    */
-  public function testGeneratesValidToken() {
+  public function testGeneratesValidToken(): void {
     $entity_storage = $this->container->get('entity_type.manager')->getStorage('user');
     $subscriber = new JwtEventSubscriber($entity_storage, $this->user);
 
@@ -59,9 +60,9 @@ class JwtEventSubscriberTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\EventSubscriber\JwtEventSubscriber::validate
+   * Tests that malformed tokens are invalidated.
    */
-  public function testInvalidatesMalformedToken() {
+  public function testInvalidatesMalformedToken(): void {
     $entity_storage = $this->container->get('entity_type.manager')->getStorage('user');
     $subscriber = new JwtEventSubscriber($entity_storage, $this->user);
 
@@ -76,9 +77,9 @@ class JwtEventSubscriberTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\EventSubscriber\JwtEventSubscriber::validate
+   * Tests that tokens with bad UIDs are invalidated.
    */
-  public function testInvalidatesBadUid() {
+  public function testInvalidatesBadUid(): void {
     // Mock user entity storage, returns null when loading user.
     $prophecy = $this->prophesize(EntityStorageInterface::class);
     $entity_storage = $prophecy->reveal();
@@ -98,9 +99,9 @@ class JwtEventSubscriberTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\EventSubscriber\JwtEventSubscriber::validate
+   * Tests that tokens with bad accounts are invalidated.
    */
-  public function testInvalidatesBadAccount() {
+  public function testInvalidatesBadAccount(): void {
     $anotherUser = $this->createUser();
 
     // Mock user entity storage, loads the wrong user.
@@ -123,9 +124,9 @@ class JwtEventSubscriberTest extends IslandoraKernelTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\EventSubscriber\JwtEventSubscriber::loadUser
+   * Tests that the correct user is loaded.
    */
-  public function testLoadsUser() {
+  public function testLoadsUser(): void {
     $entity_storage = $this->container->get('entity_type.manager')->getStorage('user');
     $subscriber = new JwtEventSubscriber($entity_storage, $this->user);
 

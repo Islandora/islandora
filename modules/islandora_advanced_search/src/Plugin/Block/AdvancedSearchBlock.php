@@ -91,7 +91,7 @@ class AdvancedSearchBlock extends BlockBase implements ContainerFactoryPluginInt
   public function __construct(array $configuration, $plugin_id, $plugin_definition, DisplayPluginManager $display_plugin_manager, FormBuilderInterface $form_builder, Request $request) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->displayPluginManager = $display_plugin_manager;
-    list($view_id, $display_id) = preg_split('/__/', $this->getDerivativeId(), 2);
+    [$view_id, $display_id] = preg_split('/__/', $this->getDerivativeId(), 2);
     $this->view = View::Load($view_id);
     $this->display = $this->view->getDisplay($display_id);
     $this->formBuilder = $form_builder;

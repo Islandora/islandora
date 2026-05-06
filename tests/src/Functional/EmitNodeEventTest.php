@@ -2,29 +2,16 @@
 
 namespace Drupal\Tests\islandora\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the EmitNodeEvent action.
- *
- * @group islandora
  */
+#[Group('islandora')]
 class EmitNodeEventTest extends IslandoraFunctionalTestBase {
 
   /**
-   * @covers \Drupal\islandora\ContextProvider\NodeContextProvider::__construct
-   * @covers \Drupal\islandora\ContextProvider\NodeContextProvider::getRuntimeContexts
-   * @covers \Drupal\islandora\EventGenerator\EmitEvent::buildConfigurationForm
-   * @covers \Drupal\islandora\EventGenerator\EmitEvent::submitConfigurationForm
-   * @covers \Drupal\islandora\EventGenerator\EmitEvent::execute
-   * @covers \Drupal\islandora\EventGenerator\EventGenerator::generateEvent
-   * @covers \Drupal\islandora\IslandoraContextManager::evaluateContexts
-   * @covers \Drupal\islandora\IslandoraContextManager::applyContexts
-   * @covers \Drupal\islandora\Plugin\Condition\ContentEntityType::buildConfigurationForm
-   * @covers \Drupal\islandora\Plugin\Condition\ContentEntityType::submitConfigurationForm
-   * @covers \Drupal\islandora\Plugin\Condition\ContentEntityType::evaluate
-   * @covers \Drupal\islandora\PresetReaction\PresetReaction::buildConfigurationForm
-   * @covers \Drupal\islandora\PresetReaction\PresetReaction::submitConfigurationForm
-   * @covers \Drupal\islandora\PresetReaction\PresetReaction::execute
-   * @covers \Drupal\islandora\IslandoraServiceProvider::alter
+   * Tests the emit event action.
    */
   public function testEmitEvent() {
     // Create a test user.

@@ -45,7 +45,7 @@ class JwtEventSubscriber implements EventSubscriberInterface {
    */
   public function __construct(
     EntityStorageInterface $userStorage,
-    AccountInterface $user
+    AccountInterface $user,
   ) {
     $this->userStorage = $userStorage;
     $this->currentUser = $user;
@@ -61,7 +61,7 @@ class JwtEventSubscriber implements EventSubscriberInterface {
    */
   public static function create(
     EntityTypeManagerInterface $entityManager,
-    AccountInterface $user
+    AccountInterface $user,
   ) {
     return new static(
       $entityManager->getStorage('user'),

@@ -2,11 +2,12 @@
 
 namespace Drupal\Tests\islandora\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests altering view modes with context ui.
- *
- * @group islandora
  */
+#[Group('islandora')]
 class ViewModeAlterReactionTest extends IslandoraFunctionalTestBase {
 
   /**
@@ -46,9 +47,7 @@ class ViewModeAlterReactionTest extends IslandoraFunctionalTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Plugin\ContextReaction\ViewModeAlterReaction::execute
-   * @covers \Drupal\islandora\Plugin\ContextReaction\ViewModeAlterReaction::buildConfigurationForm
-   * @covers \Drupal\islandora\Plugin\ContextReaction\ViewModeAlterReaction::submitConfigurationForm
+   * Tests the view mode alter reaction.
    */
   public function testViewModeAlter() {
 

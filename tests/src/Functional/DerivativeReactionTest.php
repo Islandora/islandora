@@ -2,11 +2,12 @@
 
 namespace Drupal\Tests\islandora\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests indexing and de-indexing in hooks with pre-configured actions.
- *
- * @group islandora
  */
+#[Group('islandora')]
 class DerivativeReactionTest extends IslandoraFunctionalTestBase {
 
   /**
@@ -30,7 +31,7 @@ class DerivativeReactionTest extends IslandoraFunctionalTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\IslandoraUtils::executeDerivativeReactions
+   * Tests executing derivative reactions.
    */
   public function testExecuteDerivativeReaction() {
     // Create a test user.

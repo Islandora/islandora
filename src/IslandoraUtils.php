@@ -907,7 +907,7 @@ class IslandoraUtils {
       ['@media' => implode(", ", array_keys($delete_media))],
     );
     if ($inaccessible_entities) {
-      $results['inaccessible'] = $this->formatPlural($inaccessible_entities, "@count item has not been deleted because you do not have the necessary permissions.", "@count items have not been deleted because you do not have the necessary permissions.");
+      $results['inaccessible'] = $this->formatPlural(count($inaccessible_entities), "@count item has not been deleted because you do not have the necessary permissions.", "@count items have not been deleted because you do not have the necessary permissions.");
     }
     return $results;
   }

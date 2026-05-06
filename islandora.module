@@ -10,8 +10,6 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
- * @author Diego Pino Navarro <dpino@metro.org> https://github.com/diegopino
  */
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
@@ -63,7 +61,7 @@ function islandora_node_update(NodeInterface $node) {
   $utils = \Drupal::service('islandora.utils');
   if (!$utils->haveFieldsChanged($node, $node->original)) {
     return;
-  };
+  }
 
   // Execute index reactions.
   $utils->executeNodeReactions('\Drupal\islandora\Plugin\ContextReaction\IndexReaction', $node);
@@ -111,7 +109,7 @@ function islandora_media_update(MediaInterface $media) {
   $utils = \Drupal::service('islandora.utils');
   if (!$utils->haveFieldsChanged($media, $media->original)) {
     return;
-  };
+  }
 
   // Execute index reactions.
   $utils->executeMediaReactions('\Drupal\islandora\Plugin\ContextReaction\IndexReaction', $media);
@@ -256,7 +254,7 @@ function islandora_jsonld_alter_normalized_array(EntityInterface $entity, array 
       try {
         if ($context_config->getReaction($reaction->getPluginId()) && isset($context[CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY])) {
           $context[CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY]->addCacheableDependency($context_config);
-        };
+        }
       }
       catch (PluginNotFoundException $e) {
         // Squash :(.

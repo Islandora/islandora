@@ -3,11 +3,13 @@
 namespace Drupal\islandora\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatter;
 use Drupal\islandora\IslandoraUtils;
 use Drupal\islandora\MediaSource\MediaSourceService;
@@ -15,18 +17,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'image' formatter for a media.
- *
- * @FieldFormatter(
- *   id = "islandora_image",
- *   label = @Translation("Islandora Image"),
- *   field_types = {
- *     "image"
- *   },
- *   quickedit = {
- *     "editor" = "image"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: "islandora_image",
+  label: new TranslatableMarkup("Islandora Image"),
+  field_types: ["image"]
+)]
 class IslandoraImageFormatter extends ImageFormatter {
 
   /**
@@ -83,7 +79,7 @@ class IslandoraImageFormatter extends ImageFormatter {
     EntityStorageInterface $image_style_storage,
     IslandoraUtils $utils,
     FileUrlGeneratorInterface $file_url_generator,
-    MediaSourceService $media_source_service
+    MediaSourceService $media_source_service,
   ) {
     parent::__construct(
       $plugin_id,

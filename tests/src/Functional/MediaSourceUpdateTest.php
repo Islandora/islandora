@@ -3,12 +3,12 @@
 namespace Drupal\Tests\islandora\Functional;
 
 use Drupal\Core\Url;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests updating Media source File with PUT.
- *
- * @group islandora
  */
+#[Group('islandora')]
 class MediaSourceUpdateTest extends IslandoraFunctionalTestBase {
 
   /**
@@ -70,7 +70,7 @@ class MediaSourceUpdateTest extends IslandoraFunctionalTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Controller\MediaSourceController::put
+   * Tests media source update via PUT request.
    */
   public function testMediaSourceUpdate() {
     // Hack out the guzzle client.

@@ -2,27 +2,28 @@
 
 namespace Drupal\islandora\Plugin\EntityReferenceSelection;
 
-use Drupal\taxonomy\Plugin\EntityReferenceSelection\TermSelection;
-use Drupal\islandora\IslandoraUtils;
+use Drupal\Core\Entity\Attribute\EntityReferenceSelection;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\islandora\IslandoraUtils;
+use Drupal\taxonomy\Plugin\EntityReferenceSelection\TermSelection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Filters by looking for entities with Authority Links or External Uris.
- *
- * @EntityReferenceSelection(
- *   id = "islandora:external_uri",
- *   label = @Translation("Taxonomy Term with external URI selection"),
- *   entity_types = {"taxonomy_term"},
- *   group = "islandora",
- *   weight = 1
- * )
  */
+#[EntityReferenceSelection(
+  id: "islandora:external_uri",
+  label: new TranslatableMarkup("Taxonomy Term with external URI selection"),
+  entity_types: ["taxonomy_term"],
+  group: "islandora",
+  weight: 1
+)]
 class ExternalUriSelection extends TermSelection {
 
   /**
@@ -47,14 +48,14 @@ class ExternalUriSelection extends TermSelection {
    *   The module handler service.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
+   * @param \Drupal\islandora\IslandoraUtils $utils
+   *   Islandora utils.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The entity type bundle info service.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
-   * @param \Drupal\islandora\IslandoraUtils $utils
-   *   Islandora utils.
    */
   public function __construct(
     array $configuration,
@@ -63,10 +64,10 @@ class ExternalUriSelection extends TermSelection {
     EntityTypeManagerInterface $entity_type_manager,
     ModuleHandlerInterface $module_handler,
     AccountInterface $current_user,
-    EntityFieldManagerInterface $entity_field_manager = NULL,
-    EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL,
-    EntityRepositoryInterface $entity_repository = NULL,
-    IslandoraUtils $utils
+    IslandoraUtils $utils,
+    ?EntityFieldManagerInterface $entity_field_manager = NULL,
+    ?EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL,
+    ?EntityRepositoryInterface $entity_repository = NULL,
   ) {
     parent::__construct(
       $configuration,
@@ -93,10 +94,10 @@ class ExternalUriSelection extends TermSelection {
       $container->get('entity_type.manager'),
       $container->get('module_handler'),
       $container->get('current_user'),
+      $container->get('islandora.utils'),
       $container->get('entity_field.manager'),
       $container->get('entity_type.bundle.info'),
-      $container->get('entity.repository'),
-      $container->get('islandora.utils')
+      $container->get('entity.repository')
     );
   }
 

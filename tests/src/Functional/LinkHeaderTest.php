@@ -3,12 +3,12 @@
 namespace Drupal\Tests\islandora\Functional;
 
 use Drupal\Core\Url;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests link headers get added to GET requests.
- *
- * @group islandora
  */
+#[Group('islandora')]
 class LinkHeaderTest extends IslandoraFunctionalTestBase {
 
   /**
@@ -65,14 +65,14 @@ class LinkHeaderTest extends IslandoraFunctionalTestBase {
     ]);
     $this->referencer->save();
 
-    list($this->file, $this->media) = $this->makeMediaAndFile($account);
+    [$this->file, $this->media] = $this->makeMediaAndFile($account);
     $this->media->set('field_media_of', $this->referencer);
     $this->media->set('field_media_use', $this->preservationMasterTerm);
     $this->media->save();
   }
 
   /**
-   * @covers \Drupal\islandora\EventSubscriber\NodeLinkHeaderSubscriber::onResponse
+   * Tests node link headers.
    */
   public function testNodeLinkHeaders() {
     // Visit the referenced node, there should not be a related header since
@@ -130,7 +130,7 @@ class LinkHeaderTest extends IslandoraFunctionalTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\EventSubscriber\MediaLinkHeaderSubscriber
+   * Tests media link headers.
    */
   public function testMediaLinkHeaders() {
 

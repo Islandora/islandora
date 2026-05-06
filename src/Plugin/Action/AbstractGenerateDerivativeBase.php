@@ -99,22 +99,22 @@ class AbstractGenerateDerivativeBase extends EmitEvent {
    *   The logger channel.
    */
   public function __construct(
-        array $configuration,
-        $plugin_id,
-        $plugin_definition,
-        AccountInterface $account,
-        EntityTypeManagerInterface $entity_type_manager,
-        EventGeneratorInterface $event_generator,
-        StatefulStomp $stomp,
-        IslandoraUtils $utils,
-        MediaSourceService $media_source,
-        TokenInterface $token,
-        MessengerInterface $messenger,
-        ConfigFactoryInterface $config,
-        EntityFieldManagerInterface $entity_field_manager,
-        EventDispatcherInterface $event_dispatcher,
-        LoggerChannelInterface $channel
-    ) {
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    AccountInterface $account,
+    EntityTypeManagerInterface $entity_type_manager,
+    EventGeneratorInterface $event_generator,
+    StatefulStomp $stomp,
+    IslandoraUtils $utils,
+    MediaSourceService $media_source,
+    TokenInterface $token,
+    MessengerInterface $messenger,
+    ConfigFactoryInterface $config,
+    EntityFieldManagerInterface $entity_field_manager,
+    EventDispatcherInterface $event_dispatcher,
+    LoggerChannelInterface $channel,
+  ) {
     $this->utils = $utils;
     $this->mediaSource = $media_source;
     $this->token = $token;

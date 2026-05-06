@@ -7,8 +7,6 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\islandora\IslandoraUtils;
-use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\taxonomy\Entity\Term;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -57,15 +55,12 @@ class RdfMappingsReportController extends ControllerBase {
    *   EntityTypeBundleInfo service.
    * @param \Drupal\islandora\IslandoraUtils $utils
    *   Islandora utils.
-   *
-   * @return \Drupal\islandora\Controller\RdfMappingsReportController
-   *   Controller instance.
    */
   public function __construct(
     RendererInterface $renderer,
     EntityFieldManagerInterface $entity_field_manager,
     EntityTypeBundleInfoInterface $entity_type_bundle_info,
-    IslandoraUtils $utils
+    IslandoraUtils $utils,
   ) {
     $this->renderer = $renderer;
     $this->entityFieldManager = $entity_field_manager;
@@ -106,7 +101,7 @@ class RdfMappingsReportController extends ControllerBase {
     foreach ($namespaces as $alias => $namespace_uri) {
       $namespaces_table_rows[] = [$alias, $namespace_uri];
     }
-    $namespaces_table_header = [t('Namespace alias'), t('Namespace URI')];
+    $namespaces_table_header = [$this->t('Namespace alias'), $this->t('Namespace URI')];
     $namespaces_table = [
       '#theme' => 'table',
       '#header' => $namespaces_table_header,
@@ -114,12 +109,12 @@ class RdfMappingsReportController extends ControllerBase {
     ];
     $namespaces_table_markup = $this->renderer->render($namespaces_table);
 
-    $markup .= '<details><summary>' . t('RDF namespaces used in field mappings') .
+    $markup .= '<details><summary>' . $this->t('RDF namespaces used in field mappings') .
       '</summary><div class="details-wrapper">' . $namespaces_table_markup . '</div></details>';
 
     // Node and media field to RDF property mappings.
     $entity_types = ['node', 'media'];
-    $markup .= '<h2>' . t('Field mappings') . '</h2>';
+    $markup .= '<h2>' . $this->t('Field mappings') . '</h2>';
     foreach ($entity_types as $entity_type) {
       $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type);
       foreach ($bundles as $name => $attr) {
@@ -127,7 +122,7 @@ class RdfMappingsReportController extends ControllerBase {
         $rdf_types = $rdf_mappings->getPreparedBundleMapping();
         if (array_key_exists('types', $rdf_types) && count($rdf_types['types']) > 0) {
           $rdf_types = implode(', ', $rdf_types['types']);
-          $markup .= '<h3>' . $attr['label'] . ' (' . $entity_type . ')' . ', mapped to RDF type ' . $rdf_types . '</h3>';
+          $markup .= "<h3>{$attr['label']} ($entity_type), mapped to RDF type $rdf_types</h3>";
         }
         else {
           $markup .= '<h3>' . $attr['label'] . ' (' . $entity_type . ') - no RDF type mapping</h3>';
@@ -146,11 +141,11 @@ class RdfMappingsReportController extends ControllerBase {
           }
         }
 
-        $mappings_header = [t('Drupal field'), t('RDF property')];
+        $mappings_header = [$this->t('Drupal field'), $this->t('RDF property')];
 
         if (count($mappings_table_rows) == 0) {
           $mappings_header = [];
-          $mappings_table_rows[] = [t('No RDF mappings configured for @bundle.', ['@bundle' => $attr['label']])];
+          $mappings_table_rows[] = [$this->t('No RDF mappings configured for @bundle.', ['@bundle' => $attr['label']])];
         }
 
         $mappings_table = [
@@ -164,10 +159,10 @@ class RdfMappingsReportController extends ControllerBase {
     }
 
     // Taxonomy terms with external URIs or authority links.
-    $markup .= '<h2>' . t('Taxonomy terms with external URIs or authority links') . '</h2>';
+    $markup .= '<h2>' . $this->t('Taxonomy terms with external URIs or authority links') . '</h2>';
     $uri_fields = $this->utils->getUriFieldNamesForTerms();
 
-    $vocabs = Vocabulary::loadMultiple();
+    $vocabs = $this->entityTypeManager()->getStorage('taxonomy_vocabulary')->loadMultiple();
     foreach ($vocabs as $vid => $vocab) {
       $rdf_mappings = rdf_get_mapping('taxonomy_term', $vid);
       $rdf_types = $rdf_mappings->getPreparedBundleMapping();
@@ -175,14 +170,14 @@ class RdfMappingsReportController extends ControllerBase {
       $vocab_table_rows = [];
       if (array_key_exists('types', $rdf_types) && count($rdf_types['types']) > 0) {
         $rdf_types = implode(', ', $rdf_types['types']);
-        $markup .= '<h3>' . $vocab->label() . ' (' . $vid . ')' . ', mapped to RDF type ' . $rdf_types . '</h3>';
+        $markup .= "<h3>{$vocab->label()} ($vid), mapped to RDF type $rdf_types</h3>";
       }
       else {
         $markup .= '<h3>' . $vocab->label() . ' (' . $vid . ') - no RDF type mapping</h3>';
       }
       $terms = $this->entityTypeManager()->getStorage('taxonomy_term')->loadTree($vid);
       if (count($terms) == 0) {
-        $vocab_table_rows[] = [t('No terms in this vocabulary.')];
+        $vocab_table_rows[] = [$this->t('No terms in this vocabulary.')];
         $vocab_table = [
           '#theme' => 'table',
           '#header' => $vocab_table_header,
@@ -193,14 +188,14 @@ class RdfMappingsReportController extends ControllerBase {
       }
       else {
         $vocab_table_header = [
-          t('Term'),
-          t('Term ID'),
-          t('External URI or Authority link'),
+          $this->t('Term'),
+          $this->t('Term ID'),
+          $this->t('External URI or Authority link'),
         ];
         $vocab_table_rows = [];
         foreach ($terms as $t) {
           $ld_uri = NULL;
-          $term = Term::load($t->tid);
+          $term = $this->entityTypeManager()->getStorage('taxonomy_term')->load($t->tid);
           foreach ($uri_fields as $uri_field) {
             if ($term->hasField($uri_field) && !$term->get($uri_field)->isEmpty()) {
               $ld_uri = $term->get($uri_field)->first()->getValue();
@@ -217,7 +212,7 @@ class RdfMappingsReportController extends ControllerBase {
           }
           else {
             $term_link = Link::fromTextAndUrl($term->getName(), Url::fromUri('internal:/taxonomy/term/' . $term->id()));
-            $vocab_table_rows[] = [$term_link, $term->id(), t('None')];
+            $vocab_table_rows[] = [$term_link, $term->id(), $this->t('None')];
           }
         }
         $vocab_table = [

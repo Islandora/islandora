@@ -2,17 +2,16 @@
 
 namespace Drupal\Tests\islandora\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests altering form displays with context ui.
- *
- * @group islandora
  */
+#[Group('islandora')]
 class FormDisplayAlterReactionTest extends IslandoraFunctionalTestBase {
 
   /**
-   * @covers \Drupal\islandora\Plugin\ContextReaction\FormDisplayAlterReaction::execute
-   * @covers \Drupal\islandora\Plugin\ContextReaction\FormDisplayAlterReaction::buildConfigurationForm
-   * @covers \Drupal\islandora\Plugin\ContextReaction\FormDisplayAlterReaction::submitConfigurationForm
+   * Tests the form display alter reaction.
    */
   public function testViewModeAlter() {
 

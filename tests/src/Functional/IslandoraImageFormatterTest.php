@@ -2,16 +2,19 @@
 
 namespace Drupal\Tests\islandora\Functional;
 
+use Drupal\islandora\Plugin\Field\FieldFormatter\IslandoraImageFormatter;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the links for image fields with the islandora_image field formatter.
- *
- * @group islandora
- * @coversDefaultClass \Drupal\islandora\Plugin\Field\FieldFormatter\IslandoraImageFormatter
  */
+#[Group('islandora')]
+#[CoversClass(IslandoraImageFormatter::class)]
 class IslandoraImageFormatterTest extends IslandoraFunctionalTestBase {
 
   /**
-   * @covers \Drupal\islandora\Plugin\Field\FieldFormatter\IslandoraImageFormatter::viewElements
+   * Tests the Islandora image formatter.
    */
   public function testIslandoraImageFormatter() {
 

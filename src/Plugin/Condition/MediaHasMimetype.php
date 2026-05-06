@@ -73,7 +73,7 @@ class MediaHasMimetype extends ConditionPluginBase implements ContainerFactoryPl
     $plugin_definition,
     IslandoraUtils $utils,
     EntityTypeManagerInterface $entity_type_manager,
-    MediaSourceService $media_source
+    MediaSourceService $media_source,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $utils);
     $this->utils = $utils;

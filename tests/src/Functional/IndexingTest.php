@@ -2,11 +2,12 @@
 
 namespace Drupal\Tests\islandora\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests indexing and de-indexing in hooks with pre-configured actions.
- *
- * @group islandora
  */
+#[Group('islandora')]
 class IndexingTest extends IslandoraFunctionalTestBase {
 
   /**
@@ -29,14 +30,7 @@ class IndexingTest extends IslandoraFunctionalTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\ContextProvider\NodeContextProvider::__construct
-   * @covers \Drupal\islandora\ContextProvider\NodeContextProvider::getRuntimeContexts
-   * @covers \Drupal\islandora\IslandoraContextManager::evaluateContexts
-   * @covers \Drupal\islandora\IslandoraContextManager::applyContexts
-   * @covers \Drupal\islandora\PresetReaction\PresetReaction::buildConfigurationForm
-   * @covers \Drupal\islandora\PresetReaction\PresetReaction::submitConfigurationForm
-   * @covers \Drupal\islandora\PresetReaction\PresetReaction::execute
-   * @covers \Drupal\islandora\IslandoraServiceProvider::alter
+   * Tests indexing with pre-configured actions.
    */
   public function testIndexing() {
     // Create a test user.

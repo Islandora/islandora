@@ -2,17 +2,16 @@
 
 namespace Drupal\Tests\islandora\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the EntityBundle condition.
- *
- * @group islandora
  */
+#[Group('islandora')]
 class EntityBundleTest extends IslandoraFunctionalTestBase {
 
   /**
-   * @covers \Drupal\islandora\Plugin\Condition\EntityBundle::buildConfigurationForm
-   * @covers \Drupal\islandora\Plugin\Condition\EntityBundle::submitConfigurationForm
-   * @covers \Drupal\islandora\Plugin\Condition\EntityBundle::evaluate
+   * Tests the EntityBundle condition type.
    */
   public function testEntityBundleType() {
     // Create a test user.

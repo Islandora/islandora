@@ -92,7 +92,7 @@ class NodeHasTerm extends ConditionPluginBase implements ContainerFactoryPluginI
     $plugin_id,
     $plugin_definition,
     IslandoraUtils $utils,
-    EntityTypeManagerInterface $entity_type_manager
+    EntityTypeManagerInterface $entity_type_manager,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->utils = $utils;
@@ -102,7 +102,8 @@ class NodeHasTerm extends ConditionPluginBase implements ContainerFactoryPluginI
   /**
    * Helper; unpack configuration to our member variables.
    */
-  private function unpackConfig() : static {
+  // phpcs:ignore DrupalPractice.Objects.UnusedPrivateMethod.UnusedMethod
+  private function unpackConfig(): static {
     $this->uris = explode(',', $this->configuration['uri']);
     $this->operand = $this->configuration['logic'];
     $this->naiveReferences = $this->configuration['naive_references'];

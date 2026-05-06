@@ -6,19 +6,20 @@ use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\islandora\Flysystem\Fedora;
 use Islandora\Chullo\IFedoraApi;
 use League\Flysystem\AdapterInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
-use Symfony\Component\Mime\MimeTypeGuesserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
+use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
  * Tests the Fedora plugin for Flysystem.
- *
- * @group islandora
- * @coversDefaultClass \Drupal\islandora\Flysystem\Fedora
  */
+#[Group('islandora')]
+#[CoversClass(Fedora::class)]
 class FedoraPluginTest extends IslandoraKernelTestBase {
 
   use ProphecyTrait;
@@ -55,8 +56,6 @@ class FedoraPluginTest extends IslandoraKernelTestBase {
 
   /**
    * Tests the getAdapter() method.
-   *
-   * @covers \Drupal\islandora\Flysystem\Fedora::getAdapter
    */
   public function testGetAdapter() {
     $plugin = $this->createPlugin(200);
@@ -67,8 +66,6 @@ class FedoraPluginTest extends IslandoraKernelTestBase {
 
   /**
    * Tests the ensure() method.
-   *
-   * @covers \Drupal\islandora\Flysystem\Fedora::ensure
    */
   public function testEnsure() {
     $plugin = $this->createPlugin(200);

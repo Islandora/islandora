@@ -2,11 +2,12 @@
 
 namespace Drupal\Tests\islandora\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+
 /**
  * Tests the ManageMembersController.
- *
- * @group islandora
  */
+#[Group('islandora')]
 class AddChildTest extends IslandoraFunctionalTestBase {
 
   /**
@@ -31,9 +32,7 @@ class AddChildTest extends IslandoraFunctionalTestBase {
   }
 
   /**
-   * @covers \Drupal\islandora\Controller\ManageMembersController::addToNodePage
-   * @covers \Drupal\islandora\Controller\ManageMediaController::access
-   * @covers \Drupal\islandora\IslandoraUtils::isIslandoraType
+   * Tests adding a child node.
    */
   public function testAddChild() {
     $account = $this->drupalCreateUser([

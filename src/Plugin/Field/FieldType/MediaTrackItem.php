@@ -2,52 +2,52 @@
 
 namespace Drupal\islandora\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
 
 /**
  * Plugin implementation of the 'media_track' field type.
- *
- * @FieldType(
- *   id = "media_track",
- *   label = @Translation("Media track"),
- *   description = @Translation("This field stores the ID of a media track file as an integer value."),
- *   category = "reference",
- *   default_widget = "media_track",
- *   default_formatter = "file_default",
- *   column_groups = {
- *     "file" = {
- *       "label" = @Translation("File"),
- *       "columns" = {
- *         "target_id"
- *       },
- *       "require_all_groups_for_translation" = TRUE
- *     },
- *     "label" = {
- *       "label" = @Translation("Track label"),
- *       "translatable" = FALSE,
- *     },
- *     "kind" = {
- *       "label" = @Translation("Kind"),
- *       "translatable" = FALSE
- *     },
- *     "srclang" = {
- *       "label" = @Translation("SRC Language"),
- *       "translatable" = FALSE
- *     },
- *     "default" = {
- *       "label" = @Translation("Default"),
- *       "translatable" = FALSE
- *     },
- *   },
- *   list_class = "\Drupal\file\Plugin\Field\FieldType\FileFieldItemList",
- *   constraints = {"ReferenceAccess" = {}, "FileValidation" = {}}
- * )
  */
+#[FieldType(
+  id: "media_track",
+  label: new TranslatableMarkup("Media track"),
+  description: new TranslatableMarkup("This field stores the ID of a media track file as an integer value."),
+  category: "reference",
+  default_widget: "media_track",
+  default_formatter: "file_default",
+  column_groups: [
+    "file" => [
+      "label" => new TranslatableMarkup("File"),
+      "columns" => ["target_id"],
+      "require_all_groups_for_translation" => TRUE,
+    ],
+    "label" => [
+      "label" => new TranslatableMarkup("Track label"),
+      "translatable" => FALSE,
+    ],
+    "kind" => [
+      "label" => new TranslatableMarkup("Kind"),
+      "translatable" => FALSE,
+    ],
+    "srclang" => [
+      "label" => new TranslatableMarkup("SRC Language"),
+      "translatable" => FALSE,
+    ],
+    "default" => [
+      "label" => new TranslatableMarkup("Default"),
+      "translatable" => FALSE,
+    ],
+  ],
+  list_class: FileFieldItemList::class,
+  constraints: ["ReferenceAccess" => [], "FileValidation" => []]
+)]
 class MediaTrackItem extends FileItem {
 
   /**
@@ -146,10 +146,10 @@ class MediaTrackItem extends FileItem {
     $scheme_options = \Drupal::service('stream_wrapper_manager')->getNames(StreamWrapperInterface::WRITE_VISIBLE);
     $element['uri_scheme'] = [
       '#type' => 'radios',
-      '#title' => t('Upload destination'),
+      '#title' => $this->t('Upload destination'),
       '#options' => $scheme_options,
       '#default_value' => $this->getSetting('uri_scheme'),
-      '#description' => t('Select where the final files should be stored. Private file storage has significantly more overhead than public files, but allows restricted access to files within this field.'),
+      '#description' => $this->t('Select where the final files should be stored. Private file storage has significantly more overhead than public files, but allows restricted access to files within this field.'),
     ];
 
     return $element;

@@ -58,8 +58,8 @@ class GenerateImageDerivativeFile extends AbstractGenerateDerivativeMediaFile {
     ];
 
     $form['mimetype']['#value'] = 'image/jpeg';
-    $form['mimetype']['#description'] = 'Mimetype to convert to. Must be
-    compatible with the destination image field.';
+    $form['mimetype']['#description'] = $this->t('Mimetype to convert to. Must be
+    compatible with the destination image field.');
     return $form;
   }
 

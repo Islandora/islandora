@@ -98,7 +98,7 @@ class NodeIsIslandora extends FilterPluginBase implements ContainerFactoryPlugin
     $form['info'] = [
       '#type' => 'item',
       '#title' => 'Information',
-      '#description' => t("Configured Islandora bundles: @types", ['@types' => $types_list]),
+      '#description' => $this->t("Configured Islandora bundles: @types", ['@types' => $types_list]),
     ];
     $form['negated'] = [
       '#type' => 'checkbox',

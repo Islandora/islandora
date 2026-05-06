@@ -50,7 +50,7 @@ class AddChildrenForm extends AddMediaForm {
     $options = [];
     foreach ($this->entityTypeBundleInfo->getBundleInfo('node') as $bundle_id => $bundle) {
       $options[$bundle_id] = $bundle['label'];
-    };
+    }
     $form['bundle'] = [
       '#type' => 'select',
       '#title' => $this->t('Content type'),
@@ -73,7 +73,7 @@ class AddChildrenForm extends AddMediaForm {
     $options = [];
     foreach ($this->entityTypeManager->getStorage('taxonomy_term')->loadTree('islandora_models', 0, NULL, TRUE) as $term) {
       $options[$term->id()] = $term->getName();
-    };
+    }
     $form['model'] = [
       '#type' => 'select',
       '#title' => $this->t('Model'),
@@ -129,8 +129,8 @@ class AddChildrenForm extends AddMediaForm {
     $batch = [
       'title' => $this->t("Uploading Children for @title", ['@title' => $parent->getTitle()]),
       'operations' => $operations,
-      'progress_message' => t('Processed @current out of @total. Estimated time: @estimate.'),
-      'error_message' => t('The process has encountered an error.'),
+      'progress_message' => $this->t('Processed @current out of @total. Estimated time: @estimate.'),
+      'error_message' => $this->t('The process has encountered an error.'),
       'finished' => [$this, 'buildNodeFinished'],
     ];
     batch_set($batch);

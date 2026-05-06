@@ -69,7 +69,7 @@ abstract class AbstractBatchProcessor {
     Connection $database,
     AccountProxyInterface $current_user,
     MessengerInterface $messenger,
-    DateFormatterInterface $date_formatter
+    DateFormatterInterface $date_formatter,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->database = $database;

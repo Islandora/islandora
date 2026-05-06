@@ -28,7 +28,7 @@ abstract class IslandoraFileMediaFormatterBase extends FileMediaFormatterBase {
           '#theme' => $this->getPluginId(),
           '#attributes' => $attributes,
           '#files' => $files,
-          '#tracks' => isset($track_files[$delta]) ? $track_files[$delta] : [],
+          '#tracks' => $track_files[$delta] ?? [],
           '#cache' => ['tags' => []],
         ];
 
@@ -61,7 +61,7 @@ abstract class IslandoraFileMediaFormatterBase extends FileMediaFormatterBase {
     $track_files = [];
     $media_entity = $items->getParent()->getEntity();
     $fields = $media_entity->getFields();
-    foreach ($fields as $key => $field) {
+    foreach ($fields as $field) {
       $definition = $field->getFieldDefinition();
       if (method_exists($definition, 'get')) {
         if ($definition->get('field_type') == 'media_track') {
