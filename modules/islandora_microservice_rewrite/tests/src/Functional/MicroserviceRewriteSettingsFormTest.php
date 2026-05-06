@@ -17,6 +17,7 @@ class MicroserviceRewriteSettingsFormTest extends IslandoraFunctionalTestBase {
    * @var array
    */
   protected static $modules = [
+    'islandora',
     'islandora_microservice_rewrite',
   ];
 
