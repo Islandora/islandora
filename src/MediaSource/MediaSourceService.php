@@ -441,61 +441,67 @@ class MediaSourceService {
     $existing = $this->islandoraUtils->getMediaReferencingNodeAndTerm($node, $taxonomy_term);
 
     if (!empty($existing)) {
-      // Just update already existing media.
-      $media = $this->entityTypeManager->getStorage('media')->load(reset($existing));
-      $this->updateSourceField(
+      foreach ($existing as $candidate) {
+        /** @var \Drupal\media\MediaInterface $media */
+        $media = $this->entityTypeManager->getStorage('media')->load($candidate);
+        if ($media->bundle() !== $media_type->id()) {
+          // Media unrelated to the target derivative; skip it.
+          continue;
+        }
+        // Just update already existing media.
+        $this->updateSourceField(
           $media,
           $resource,
           $mimetype
-      );
-      return FALSE;
-    }
-    else {
-      // Otherwise, the media doesn't exist yet.
-      // So make everything by hand.
-      // Get the source field for the media type.
-      $bundle = $media_type->id();
-      $source_field = $this->getSourceFieldName($bundle);
-      if (empty($source_field)) {
-        throw new NotFoundHttpException("Source field not set for $bundle media");
+        );
+        return FALSE;
       }
-
-      // Validate file extension.
-      $source_field_config = $this->entityTypeManager->getStorage('field_config')->load("media.$bundle.$source_field");
-      $this->validateFileExtension($content_location, $mimetype, $source_field_config);
-
-      // Construct the File.
-      $file = $this->initializeFile($content_location);
-      // Copy over the file content.
-      $this->updateFile($file, $resource, $mimetype);
-      $file->save();
-
-      // Construct the Media.
-      $media_struct = [
-        'bundle' => $bundle,
-        'uid' => $this->account->id(),
-        'name' => $file->getFilename(),
-        'langcode' => $this->languageManager->getDefaultLanguage()->getId(),
-        "$source_field" => [
-          'target_id' => $file->id(),
-        ],
-        IslandoraUtils::MEDIA_OF_FIELD => [
-          'target_id' => $node->id(),
-        ],
-        IslandoraUtils::MEDIA_USAGE_FIELD => [
-          'target_id' => $taxonomy_term->id(),
-        ],
-      ];
-
-      // Set alt text.
-      if ($source_field_config->getSetting('alt_field') && $source_field_config->getSetting('alt_field_required')) {
-        $media_struct[$source_field]['alt'] = $file->getFilename();
-      }
-
-      $media = $this->entityTypeManager->getStorage('media')->create($media_struct);
-      $media->save();
-      return $media;
     }
+
+    // Otherwise, the media doesn't exist yet.
+    // So make everything by hand.
+    // Get the source field for the media type.
+    $bundle = $media_type->id();
+    $source_field = $this->getSourceFieldName($bundle);
+    if (empty($source_field)) {
+      throw new NotFoundHttpException("Source field not set for $bundle media");
+    }
+
+    // Validate file extension.
+    $source_field_config = $this->entityTypeManager->getStorage('field_config')->load("media.$bundle.$source_field");
+    $this->validateFileExtension($content_location, $mimetype, $source_field_config);
+
+    // Construct the File.
+    $file = $this->initializeFile($content_location);
+    // Copy over the file content.
+    $this->updateFile($file, $resource, $mimetype);
+    $file->save();
+
+    // Construct the Media.
+    $media_struct = [
+      'bundle' => $bundle,
+      'uid' => $this->account->id(),
+      'name' => $file->getFilename(),
+      'langcode' => $this->languageManager->getDefaultLanguage()->getId(),
+      "$source_field" => [
+        'target_id' => $file->id(),
+      ],
+      IslandoraUtils::MEDIA_OF_FIELD => [
+        'target_id' => $node->id(),
+      ],
+      IslandoraUtils::MEDIA_USAGE_FIELD => [
+        'target_id' => $taxonomy_term->id(),
+      ],
+    ];
+
+    // Set alt text.
+    if ($source_field_config->getSetting('alt_field') && $source_field_config->getSetting('alt_field_required')) {
+      $media_struct[$source_field]['alt'] = $file->getFilename();
+    }
+
+    $media = $this->entityTypeManager->getStorage('media')->create($media_struct);
+    $media->save();
+    return $media;
 
   }
 
