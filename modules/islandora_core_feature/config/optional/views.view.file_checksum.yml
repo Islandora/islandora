@@ -277,6 +277,7 @@ display:
         type: data_field
         options:
           field_options: {  }
+      display_extenders: {  }
       path: checksum/%file
       auth:
         - basic_auth
