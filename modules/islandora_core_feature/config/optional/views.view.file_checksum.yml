@@ -277,18 +277,6 @@ display:
         type: data_field
         options:
           field_options: {  }
-      display_extenders:
-        matomo:
-          enabled: false
-          keyword_gets: ''
-          keyword_behavior: first
-          keyword_concat_separator: ' '
-          category_behavior: none
-          category_gets: ''
-          category_concat_separator: ' '
-          category_fallback: ''
-          category_facets: {  }
-          category_facets_concat_separator: ', '
       path: checksum/%file
       auth:
         - basic_auth
