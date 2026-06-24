@@ -137,6 +137,7 @@ class ConfirmDeleteNodeAndMedia extends DeleteMultipleForm {
     $node_storage = $this->entityTypeManager->getStorage('node');
     $nodes = $node_storage->loadMultiple(array_keys($this->selection));
     $deleteable_nodes = [];
+    $nondeleteable_nodes = FALSE;
     foreach ($nodes as $node) {
       if ($node->access('delete', $this->currentUser)) {
         $deleteable_nodes[] = $node;
