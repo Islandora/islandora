@@ -137,13 +137,13 @@ class ConfirmDeleteNodeAndMedia extends DeleteMultipleForm {
     $node_storage = $this->entityTypeManager->getStorage('node');
     $nodes = $node_storage->loadMultiple(array_keys($this->selection));
     $deleteable_nodes = [];
-    $nondeleteable_nodes = FALSE;
+    $failures = 0;
     foreach ($nodes as $node) {
       if ($node->access('delete', $this->currentUser)) {
         $deleteable_nodes[] = $node;
       }
       else {
-        $nondeleteable_nodes = $node;
+        $failures += 1;
       }
     }
     foreach ($deleteable_nodes as $candidate) {
@@ -152,8 +152,7 @@ class ConfirmDeleteNodeAndMedia extends DeleteMultipleForm {
       $candidate->delete();
     }
     $this->messenger->addStatus($this->getDeletedMessage(count($deleteable_nodes)));
-    if ($nondeleteable_nodes) {
-      $failures = count($nondeleteable_nodes);
+    if ($failures > 0) {
       $this->messenger->addStatus($this->formatPlural($failures, 'Unable to delete 1 node', 'Unable to delete @count nodes'));
     }
     $this->tempStore->delete($this->currentUser->id());
