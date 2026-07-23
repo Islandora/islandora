@@ -37,11 +37,6 @@ class IslandoraImageFormatter extends ImageFormatter {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    // Let the parent formatter build the instance so this class stays
-    // compatible across core versions regardless of changes to
-    // ImageFormatter::__construct() (e.g. the ImageDerivativeUtilities
-    // argument added in Drupal 11.4). Islandora's own dependencies are
-    // then set on the instance.
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
     $instance->utils = $container->get('islandora.utils');
     $instance->mediaSourceService = $container->get('islandora.media_source_service');
