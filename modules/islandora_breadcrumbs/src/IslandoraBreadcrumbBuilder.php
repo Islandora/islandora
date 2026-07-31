@@ -25,11 +25,11 @@ class IslandoraBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $config;
 
   /**
-   * Storage to load nodes.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $nodeStorage;
+  protected $entityTypeManager;
 
   /**
    * Islandora utils.
@@ -41,15 +41,15 @@ class IslandoraBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   /**
    * Constructs a breadcrumb builder.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_manager
-   *   Storage to load nodes.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
    * @param \Drupal\islandora\IslandoraUtils $utils
    *   Islandora utils service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_manager, ConfigFactoryInterface $config_factory, IslandoraUtils $utils) {
-    $this->nodeStorage = $entity_manager->getStorage('node');
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, IslandoraUtils $utils) {
+    $this->entityTypeManager = $entity_type_manager;
     $this->config = $config_factory->get('islandora_breadcrumbs.breadcrumbs');
     $this->utils = $utils;
   }
@@ -63,7 +63,7 @@ class IslandoraBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     // a node ID string and sometimes returns a node object.
     $nid = $attributes->getRawParameters()->get('node');
     if (!empty($nid)) {
-      $node = $this->nodeStorage->load($nid);
+      $node = $this->entityTypeManager->getStorage('node')->load($nid);
       if (empty($node)) {
         return FALSE;
       }
@@ -73,6 +73,7 @@ class IslandoraBreadcrumbBuilder implements BreadcrumbBuilderInterface {
         }
       }
     }
+    return FALSE;
   }
 
   /**
@@ -81,7 +82,8 @@ class IslandoraBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   public function build(RouteMatchInterface $route_match) {
 
     $nid = $route_match->getRawParameters()->get('node');
-    $node = $this->nodeStorage->load($nid);
+    $node_storage = $this->entityTypeManager->getStorage('node');
+    $node = $node_storage->load($nid);
     $breadcrumb = new Breadcrumb();
     $breadcrumb->addCacheableDependency($this->config);
     $breadcrumb->addLink(Link::createFromRoute($this->t('Home'), '<front>'));
@@ -100,7 +102,7 @@ class IslandoraBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
     // Add membership chain to the breadcrumb.
     foreach ($chain as $chainlink) {
-      $node = $this->nodeStorage->load($chainlink);
+      $node = $node_storage->load($chainlink);
       $breadcrumb->addCacheableDependency($node);
       $breadcrumb->addLink($node->toLink());
     }

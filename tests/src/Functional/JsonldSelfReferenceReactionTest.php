@@ -4,8 +4,6 @@ namespace Drupal\Tests\islandora\Functional;
 
 use PHPUnit\Framework\Attributes\Group;
 
-use function GuzzleHttp\json_decode;
-
 /**
  * Class MappingUriPredicateReactionTest.
  *

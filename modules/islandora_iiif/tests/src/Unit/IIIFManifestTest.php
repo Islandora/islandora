@@ -2,7 +2,9 @@
 
 namespace Drupal\Tests\islandora_iiif\Unit;
 
+use Drupal\Core\Field\FieldItemInterface;
 use Drupal\islandora_iiif\Plugin\views\style\IIIFManifest;
+use Drupal\media\MediaInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -87,6 +89,30 @@ class IIIFManifestTest extends TestCase {
     );
   }
 
+  /**
+   * Tests image dimensions are read from raw field item values.
+   */
+  public function testCanvasDimensionsFromFieldItemValues(): void {
+    $plugin = $this->createManifestPlugin();
+    $media = $this->createMock(MediaInterface::class);
+    $image = $this->createMock(FieldItemInterface::class);
+    $image->method('__isset')->willReturn(FALSE);
+    $image->method('getValue')->willReturn([
+      'width' => '640',
+      'height' => '480',
+    ]);
+
+    $this->assertSame(
+      [640, 480],
+      $plugin->publicGetCanvasDimensions(
+        'https://example.test/iiif/3/example-id',
+        $media,
+        $image,
+        'image/jpeg'
+      )
+    );
+  }
+
 }
 
 /**
@@ -113,6 +139,13 @@ class TestableIIIFManifest extends IIIFManifest {
    */
   public function publicBuildThumbnailUrl(string $iiif_url): string {
     return $this->buildThumbnailUrl($iiif_url);
+  }
+
+  /**
+   * Exposes the protected canvas dimensions helper for unit testing.
+   */
+  public function publicGetCanvasDimensions(string $iiif_url, MediaInterface $media, FieldItemInterface $image, string $mime_type): array {
+    return $this->getCanvasDimensions($iiif_url, $media, $image, $mime_type);
   }
 
 }

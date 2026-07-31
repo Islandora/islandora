@@ -2,6 +2,7 @@
 
 namespace Drupal\islandora_advanced_search\Form;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -13,7 +14,6 @@ use Drupal\islandora_advanced_search\GetConfigTrait;
 use Drupal\views\DisplayPluginCollection;
 use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\display\PathPluginBase;
-use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -59,11 +59,30 @@ class AdvancedSearchForm extends FormBase {
   protected $currentRouteMatch;
 
   /**
-   * Class constructor.
+   * The Views display plugin manager.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
-  public function __construct(Request $request, RouteMatchInterface $current_route_match) {
+  protected $displayPluginManager;
+
+  /**
+   * Class constructor.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $current_route_match
+   *   The current route match.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $display_plugin_manager
+   *   The Views display plugin manager.
+   */
+  public function __construct(
+    Request $request,
+    RouteMatchInterface $current_route_match,
+    PluginManagerInterface $display_plugin_manager,
+  ) {
     $this->request = $request;
     $this->currentRouteMatch = $current_route_match;
+    $this->displayPluginManager = $display_plugin_manager;
   }
 
   /**
@@ -72,7 +91,8 @@ class AdvancedSearchForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('request_stack')->getMainRequest(),
-      $container->get('current_route_match')
+      $container->get('current_route_match'),
+      $container->get('plugin.manager.views.display')
     );
   }
 
@@ -210,7 +230,7 @@ class AdvancedSearchForm extends FormBase {
   protected function getRouteName(FormStateInterface $form_state) {
     $view = $form_state->get('view');
     $display = $form_state->get('display');
-    $display_handlers = new DisplayPluginCollection($view->getExecutable(), Views::pluginManager('display'));
+    $display_handlers = new DisplayPluginCollection($view->getExecutable(), $this->displayPluginManager);
     $display_handler = $display_handlers->get($display['id']);
     if ($display_handler instanceof PathPluginBase) {
       return $display_handler->getRouteName();

@@ -321,7 +321,15 @@ class MediaSourceService {
     $file->setMimeType($this->determinePersistedMimeType($file));
 
     // Flush the image cache for the image so thumbnails get regenerated.
-    image_path_flush($uri);
+    // ImageDerivativeUtilities is only available in Drupal 11.4 and later;
+    // use its equivalent entity API to retain Drupal 10.3 compatibility.
+    /** @var \Drupal\image\ImageStyleInterface[] $image_styles */
+    $image_styles = $this->entityTypeManager
+      ->getStorage('image_style')
+      ->loadMultiple();
+    foreach ($image_styles as $image_style) {
+      $image_style->flush($uri);
+    }
   }
 
   /**
@@ -364,7 +372,7 @@ class MediaSourceService {
     return $this->entityTypeManager->getStorage('file')->create([
       'uid' => $this->account->id(),
       'uri' => $content_location,
-      'filename' => $this->fileSystem->basename($content_location),
+      'filename' => basename($content_location),
       'filemime' => 'application/octet-stream',
       'status' => 0,
     ]);
@@ -394,7 +402,7 @@ class MediaSourceService {
     $values = [
       'uid' => $this->account->id(),
       'uri' => $content_location,
-      'filename' => $this->fileSystem->basename($content_location),
+      'filename' => basename($content_location),
       'filemime' => $filemime,
       'status' => 0,
     ];

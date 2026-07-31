@@ -7,7 +7,6 @@ use Drupal\jwt\Authentication\Event\JwtAuthValidateEvent;
 use Drupal\jwt\Authentication\Event\JwtAuthValidEvent;
 use Drupal\jwt\Authentication\Event\JwtAuthGenerateEvent;
 use Drupal\jwt\Authentication\Event\JwtAuthEvents;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -22,11 +21,11 @@ class JwtEventSubscriber implements EventSubscriberInterface {
   const AUDIENCE = 'islandora';
 
   /**
-   * User storage to load users.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $userStorage;
+  protected $entityTypeManager;
 
   /**
    * The current user.
@@ -38,33 +37,33 @@ class JwtEventSubscriber implements EventSubscriberInterface {
   /**
    * Constructor.
    *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $userStorage
-   *   User storage to load users.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user.
    */
   public function __construct(
-    EntityStorageInterface $userStorage,
+    EntityTypeManagerInterface $entity_type_manager,
     AccountInterface $user,
   ) {
-    $this->userStorage = $userStorage;
+    $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $user;
   }
 
   /**
    * Factory.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityManager
-   *   Entity manager to get user storage.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user.
    */
   public static function create(
-    EntityTypeManagerInterface $entityManager,
+    EntityTypeManagerInterface $entity_type_manager,
     AccountInterface $user,
   ) {
     return new static(
-      $entityManager->getStorage('user'),
+      $entity_type_manager,
       $user
     );
   }
@@ -135,7 +134,7 @@ class JwtEventSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    $user = $this->userStorage->load($uid);
+    $user = $this->entityTypeManager->getStorage('user')->load($uid);
     if ($user === NULL) {
       $event->invalidate("Specified UID does not exist.");
     }
@@ -153,7 +152,7 @@ class JwtEventSubscriber implements EventSubscriberInterface {
   public function loadUser(JwtAuthValidEvent $event) {
     $token = $event->getToken();
     $uid = $token->getClaim('webid');
-    $user = $this->userStorage->load($uid);
+    $user = $this->entityTypeManager->getStorage('user')->load($uid);
     $event->setAccount($user);
   }
 

@@ -21,7 +21,8 @@ class DerivativeFileReaction extends PresetReaction {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $actions = $this->actionStorage->loadByProperties(['type' => 'media']);
+    $actions = $this->entityTypeManager->getStorage('action')
+      ->loadByProperties(['type' => 'media']);
 
     foreach ($actions as $action) {
       $plugin = $action->getPlugin();
@@ -49,8 +50,9 @@ class DerivativeFileReaction extends PresetReaction {
   public function execute(?EntityInterface $entity = NULL) {
     $config = $this->getConfiguration();
     $action_ids = $config['actions'];
+    $action_storage = $this->entityTypeManager->getStorage('action');
     foreach ($action_ids as $action_id) {
-      $action = $this->actionStorage->load($action_id);
+      $action = $action_storage->load($action_id);
       $action->execute([$entity]);
     }
   }

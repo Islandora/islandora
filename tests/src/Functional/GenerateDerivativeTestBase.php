@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\islandora\Functional;
 
+use Stomp\Exception\StompException;
+
 /**
  * Tests the GenerateDerivative action.
  */

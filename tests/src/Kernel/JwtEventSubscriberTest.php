@@ -3,6 +3,7 @@
 namespace Drupal\Tests\islandora\Kernel;
 
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\islandora\EventSubscriber\JwtEventSubscriber;
 use Drupal\jwt\Authentication\Event\JwtAuthGenerateEvent;
 use Drupal\jwt\Authentication\Event\JwtAuthValidEvent;
@@ -44,8 +45,8 @@ class JwtEventSubscriberTest extends IslandoraKernelTestBase {
    * Tests that generated tokens are valid.
    */
   public function testGeneratesValidToken(): void {
-    $entity_storage = $this->container->get('entity_type.manager')->getStorage('user');
-    $subscriber = new JwtEventSubscriber($entity_storage, $this->user);
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    $subscriber = new JwtEventSubscriber($entity_type_manager, $this->user);
 
     // Generate a new token.
     $jwt = new JsonWebToken();
@@ -63,8 +64,8 @@ class JwtEventSubscriberTest extends IslandoraKernelTestBase {
    * Tests that malformed tokens are invalidated.
    */
   public function testInvalidatesMalformedToken(): void {
-    $entity_storage = $this->container->get('entity_type.manager')->getStorage('user');
-    $subscriber = new JwtEventSubscriber($entity_storage, $this->user);
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    $subscriber = new JwtEventSubscriber($entity_type_manager, $this->user);
 
     // Create a new event with mock jwt that returns null for all functions.
     $prophecy = $this->prophesize(JsonWebTokenInterface::class);
@@ -84,7 +85,11 @@ class JwtEventSubscriberTest extends IslandoraKernelTestBase {
     $prophecy = $this->prophesize(EntityStorageInterface::class);
     $entity_storage = $prophecy->reveal();
 
-    $subscriber = new JwtEventSubscriber($entity_storage, $this->user);
+    $prophecy = $this->prophesize(EntityTypeManagerInterface::class);
+    $prophecy->getStorage('user')->willReturn($entity_storage);
+    $entity_type_manager = $prophecy->reveal();
+
+    $subscriber = new JwtEventSubscriber($entity_type_manager, $this->user);
 
     // Generate a new token.
     $jwt = new JsonWebToken();
@@ -109,7 +114,11 @@ class JwtEventSubscriberTest extends IslandoraKernelTestBase {
     $prophecy->load($this->user->id())->willReturn($anotherUser);
     $entity_storage = $prophecy->reveal();
 
-    $subscriber = new JwtEventSubscriber($entity_storage, $this->user);
+    $prophecy = $this->prophesize(EntityTypeManagerInterface::class);
+    $prophecy->getStorage('user')->willReturn($entity_storage);
+    $entity_type_manager = $prophecy->reveal();
+
+    $subscriber = new JwtEventSubscriber($entity_type_manager, $this->user);
 
     // Generate a new token.
     $jwt = new JsonWebToken();
@@ -127,8 +136,8 @@ class JwtEventSubscriberTest extends IslandoraKernelTestBase {
    * Tests that the correct user is loaded.
    */
   public function testLoadsUser(): void {
-    $entity_storage = $this->container->get('entity_type.manager')->getStorage('user');
-    $subscriber = new JwtEventSubscriber($entity_storage, $this->user);
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    $subscriber = new JwtEventSubscriber($entity_type_manager, $this->user);
 
     // Generate a new token.
     $jwt = new JsonWebToken();

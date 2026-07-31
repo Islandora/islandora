@@ -42,6 +42,7 @@ class MediaIsIslandoraMedia extends ConditionPluginBase implements ContainerFact
     if ($media->hasField('field_media_use') && $media->hasField('field_media_of')) {
       return TRUE;
     }
+    return FALSE;
   }
 
   /**

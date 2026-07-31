@@ -21,13 +21,6 @@ use Symfony\Component\Routing\RouterInterface;
 class AjaxBlocksController extends ControllerBase {
 
   /**
-   * The entity storage for block.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $storage;
-
-  /**
    * The renderer.
    *
    * @var \Drupal\Core\Render\RendererInterface
@@ -86,7 +79,6 @@ class AjaxBlocksController extends ControllerBase {
    *   The drupal container.
    */
   public function __construct(RendererInterface $renderer, CurrentPathStack $currentPath, RouterInterface $router, PathProcessorManager $pathProcessor, CurrentRouteMatch $currentRouteMatch, ContainerInterface $container) {
-    $this->storage = $this->entityTypeManager()->getStorage('block');
     $this->renderer = $renderer;
     $this->currentPath = $currentPath;
     $this->router = $router;
@@ -147,7 +139,9 @@ class AjaxBlocksController extends ControllerBase {
 
     // Build the facets blocks found for the current request and update.
     foreach ($blocks as $block_id => $block_selector) {
-      $block_entity = $this->storage->load($block_id);
+      $block_entity = $this->entityTypeManager()
+        ->getStorage('block')
+        ->load($block_id);
 
       if ($block_entity) {
         // Render a block, then add it to the response as a replace command.
@@ -155,7 +149,7 @@ class AjaxBlocksController extends ControllerBase {
           ->getViewBuilder('block')
           ->view($block_entity);
 
-        $block_view = (string) $this->renderer->renderPlain($block_view);
+        $block_view = (string) $this->renderer->renderInIsolation($block_view);
         $response->addCommand(new ReplaceCommand($block_selector, $block_view));
       }
     }

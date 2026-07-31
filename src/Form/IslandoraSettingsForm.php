@@ -52,21 +52,21 @@ class IslandoraSettingsForm extends ConfigFormBase {
    *
    * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
    */
-  private $entityTypeBundleInfo;
+  protected $entityTypeBundleInfo;
 
   /**
    * The saved password (if set).
    *
    * @var string
    */
-  private $brokerPassword;
+  protected $brokerPassword;
 
   /**
    * The entity type manager service.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  private $entityTypeManager;
+  protected $entityTypeManager;
 
   /**
    * Constructs a \Drupal\system\ConfigFormBase object.
