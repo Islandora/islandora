@@ -51,25 +51,25 @@ class MicroserviceRewriteSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    $message = $event->getMessage();
-    if (empty($message['attachment']['content']) || !is_array($message['attachment']['content'])) {
-      return;
-    }
-
     [$find, $replace] = $this->parseRewriteRules($rules);
     if (empty($find)) {
       return;
     }
 
-    foreach (['file_upload_uri', 'source_uri', 'destination_uri'] as $field) {
-      if (isset($message['attachment']['content'][$field])) {
-        $message['attachment']['content'][$field] = str_replace(
-          $find,
-          $replace,
-          $message['attachment']['content'][$field]
-        );
+    $message = $event->getMessage();
+    if (!empty($message['attachment']['content']) && is_array($message['attachment']['content'])) {
+      foreach (['file_upload_uri', 'source_uri', 'destination_uri'] as $field) {
+        if (isset($message['attachment']['content'][$field])) {
+          $message['attachment']['content'][$field] = str_replace(
+            $find,
+            $replace,
+            $message['attachment']['content'][$field]
+          );
+        }
       }
     }
+
+    $this->rewriteLinkUrls($message, $find, $replace);
 
     $event->setMessage($message);
   }
@@ -103,6 +103,31 @@ class MicroserviceRewriteSubscriber implements EventSubscriberInterface {
     }
 
     return [$find, $replace];
+  }
+
+  /**
+   * Rewrites ActivityStreams link URLs in a generated event message.
+   *
+   * @param array $message
+   *   The generated event message.
+   * @param array $find
+   *   The configured URL fragments to replace.
+   * @param array $replace
+   *   The replacement URL fragments.
+   */
+  protected function rewriteLinkUrls(array &$message, array $find, array $replace) {
+    foreach (['actor', 'object'] as $section) {
+      if (empty($message[$section]['url']) || !is_array($message[$section]['url'])) {
+        continue;
+      }
+
+      foreach ($message[$section]['url'] as &$link) {
+        if (is_array($link) && isset($link['href'])) {
+          $link['href'] = str_replace($find, $replace, $link['href']);
+        }
+      }
+      unset($link);
+    }
   }
 
 }
