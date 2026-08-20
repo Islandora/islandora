@@ -126,7 +126,6 @@ class MicroserviceRewriteSubscriber implements EventSubscriberInterface {
           $link['href'] = str_replace($find, $replace, $link['href']);
         }
       }
-      unset($link);
     }
   }
 
