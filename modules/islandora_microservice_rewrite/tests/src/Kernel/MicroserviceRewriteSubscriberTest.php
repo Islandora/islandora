@@ -113,14 +113,14 @@ class MicroserviceRewriteSubscriberTest extends IslandoraKernelTestBase {
    * Tests that generated event canonical URLs are rewritten.
    */
   public function testCanonicalUrlIsRewritten() {
-    $this->setRewriteRules('http://localhost|https://preserve.lehigh.edu');
+    $this->setRewriteRules('http://localhost|https://example.edu');
 
     $message = $this->generateDerivativeMessage([
       'source_uri' => 'http://localhost/file.pdf',
     ]);
 
     $this->assertEquals(
-      'https://preserve.lehigh.edu/node/' . $this->entity->id(),
+      'https://example.edu/node/' . $this->entity->id(),
       $message['object']['url'][0]['href']
     );
   }
