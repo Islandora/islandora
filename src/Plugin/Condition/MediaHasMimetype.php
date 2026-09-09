@@ -46,7 +46,7 @@ class MediaHasMimetype extends ConditionPluginBase implements ContainerFactoryPl
    *
    * @var \Drupal\islandora\MediaSource\MediaSourceService
    */
-  private $mediaSource;
+  protected $mediaSource;
 
   /**
    * Constructor.
@@ -155,9 +155,7 @@ class MediaHasMimetype extends ConditionPluginBase implements ContainerFactoryPl
         }
       }
     }
-    else {
-      return FALSE;
-    }
+    return FALSE;
   }
 
   /**

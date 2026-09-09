@@ -134,6 +134,7 @@ class NodeReferencedByNode extends ConditionPluginBase implements ContainerFacto
         ->execute();
       return ($id_count > 0);
     }
+    return FALSE;
   }
 
   /**

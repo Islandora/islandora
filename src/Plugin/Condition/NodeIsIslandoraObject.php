@@ -4,8 +4,8 @@ namespace Drupal\islandora\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\islandora\IslandoraUtils;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Islandora\IslandoraUtils;
 
 /**
  * Checks whether node has fields that qualify it as an "Islandora" node.
@@ -94,6 +94,7 @@ class NodeIsIslandoraObject extends ConditionPluginBase implements ContainerFact
     if ($this->utils->isIslandoraType('node', $node->bundle())) {
       return TRUE;
     }
+    return FALSE;
   }
 
   /**

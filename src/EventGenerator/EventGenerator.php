@@ -209,6 +209,7 @@ class EventGenerator implements EventGeneratorInterface {
       $entity_storage = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId());
       return count($this->getRevisionIds($entity, $entity_storage)) > 1;
     }
+    return FALSE;
   }
 
   /**

@@ -3,6 +3,7 @@
 namespace Drupal\Tests\islandora\Functional;
 
 use PHPUnit\Framework\Attributes\Group;
+use Stomp\Exception\StompException;
 
 /**
  * Tests the EmitNodeEvent action.

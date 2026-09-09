@@ -447,11 +447,12 @@ class IIIFManifest extends StylePluginBase {
       ];
     }
 
-    if ($properties = $image->getProperties()
-      && isset($properties['width']) && is_numeric($properties['width'])
-      && isset($properties['height']) && is_numeric($properties['width'])) {
-      return [intval($properties['width']),
-        intval($properties['height']),
+    $values = $image->getValue();
+    if (is_array($values)
+      && isset($values['width']) && is_numeric($values['width'])
+      && isset($values['height']) && is_numeric($values['height'])) {
+      return [intval($values['width']),
+        intval($values['height']),
       ];
     }
 

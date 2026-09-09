@@ -301,14 +301,23 @@ function islandora_entity_view_mode_alter(&$view_mode, EntityInterface $entity) 
  * Implements hook_preprocess_node().
  */
 function islandora_preprocess_node(&$variables) {
-  // Using alternate view modes causes on a node's canoncial page
-  // causes the title to get printed out twice.  Once from the
-  // fields themselves and again as a block above the main content.
-  // Setting 'page' to TRUE gets rid of the title in the fields and
-  // leaves the block.  This makes it look uniform with the 'default'
-  // view mode.
-  if (node_is_page($variables['elements']['#node'])) {
-    $variables['page'] = TRUE;
+  // Context reactions can select an alternate view mode on a node's canonical
+  // page. Avoid rendering the node's linked title as well as the page title.
+  // Drupal 11.3 deprecated the route-based "page" template variable in favor
+  // of checking the view mode, so suppress the redundant label directly.
+  $node = $variables['elements']['#node'];
+  $route_match = \Drupal::routeMatch();
+  $page_node = NULL;
+  if ($route_match->getRouteName() === 'entity.node.canonical') {
+    $page_node = $route_match->getParameter('node');
+  }
+  if (
+    ($variables['view_mode'] ?? NULL) !== 'full' &&
+    $node instanceof NodeInterface &&
+    $page_node instanceof NodeInterface &&
+    $page_node->id() === $node->id()
+  ) {
+    unset($variables['label']);
   }
 }
 
@@ -428,7 +437,7 @@ function islandora_object_delete_form_submit($form, FormStateInterface $form_sta
       ],
     ];
 
-    $message = \Drupal::service('renderer')->renderPlain($build);
+    $message = \Drupal::service('renderer')->renderInIsolation($build);
     $messenger->deleteByType('status');
     $messenger->addStatus($message);
   }

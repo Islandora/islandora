@@ -4,7 +4,7 @@ namespace Drupal\islandora\PresetReaction;
 
 use Drupal\context\ContextReactionPluginBase;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Psr\Log\LoggerInterface;
@@ -16,11 +16,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class PresetReaction extends ContextReactionPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * Action storage.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $actionStorage;
+  protected $entityTypeManager;
 
   /**
    * The logger.
@@ -32,9 +32,9 @@ class PresetReaction extends ContextReactionPluginBase implements ContainerFacto
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $action_storage, LoggerInterface $logger) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, LoggerInterface $logger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->actionStorage = $action_storage;
+    $this->entityTypeManager = $entity_type_manager;
     $this->logger = $logger;
   }
 
@@ -46,7 +46,7 @@ class PresetReaction extends ContextReactionPluginBase implements ContainerFacto
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_type.manager')->getStorage('action'),
+      $container->get('entity_type.manager'),
       $container->get('logger.factory')->get('islandora')
     );
   }
@@ -64,8 +64,9 @@ class PresetReaction extends ContextReactionPluginBase implements ContainerFacto
   public function execute(?EntityInterface $entity = NULL) {
     $config = $this->getConfiguration();
     $action_ids = $config['actions'];
+    $action_storage = $this->entityTypeManager->getStorage('action');
     foreach ($action_ids as $action_id) {
-      $action = $this->actionStorage->load($action_id);
+      $action = $action_storage->load($action_id);
       if (empty($action)) {
         $this->logger->warning('Action "@action" not found.', ['@action' => $action_id]);
         continue;
@@ -87,7 +88,7 @@ class PresetReaction extends ContextReactionPluginBase implements ContainerFacto
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $actions = $this->actionStorage->loadMultiple();
+    $actions = $this->entityTypeManager->getStorage('action')->loadMultiple();
     foreach ($actions as $action) {
       $options[ucfirst($action->getType())][$action->id()] = $action->label();
     }
