@@ -190,7 +190,7 @@ class IslandoraUtils {
   }
 
   /**
-   * Gets media that belong to a node with the specified term.
+   * Gets the first media that belongs to a node with the specified term.
    *
    * @param \Drupal\node\NodeInterface $node
    *   The parent node.
