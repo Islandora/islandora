@@ -53,6 +53,7 @@ class AbstractGenerateDerivative extends AbstractGenerateDerivativeBase {
     }
 
     $data['source_uri'] = $this->utils->getDownloadUrl($source_file);
+    $data['source_mimetype'] = $source_file->getMimeType();
 
     // Find the term for the derivative and use it to set the destination url
     // in the data array.
