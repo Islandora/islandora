@@ -208,7 +208,8 @@ class MediaSourceController extends ControllerBase {
     // We'd have 404'd already if node didn't exist, so no need to check.
     // Just hack it out of the route match.
     $node = $route_match->getParameter('node');
-    return AccessResult::allowedIf($node->access('update', $account) && $account->hasPermission('create media'));
+    return $node->access('update', $account, TRUE)
+      ->andIf(AccessResult::allowedIfHasPermission($account, 'create media'));
   }
 
   /**
@@ -254,7 +255,6 @@ class MediaSourceController extends ControllerBase {
         $content_type,
         $content_location
       );
-      // Should only see this with a GET request for testing.
       return new Response("<h1>Complete</h1>");
     }
     catch (HttpException $e) {
@@ -280,7 +280,7 @@ class MediaSourceController extends ControllerBase {
    */
   public function attachToMediaAccess(AccountInterface $account, RouteMatch $route_match) {
     $media = $route_match->getParameter('media');
-    return AccessResult::allowedIf($media->access('update', $account));
+    return $media->access('update', $account, TRUE);
   }
 
 }

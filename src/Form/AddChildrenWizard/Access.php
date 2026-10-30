@@ -50,7 +50,7 @@ class Access implements ContainerInjectionInterface {
    *   Whether we can or cannot show the "thing".
    */
   public function childAccess(RouteMatch $route_match) : AccessResultInterface {
-    return AccessResult::allowedIf($this->utils->canCreateIslandoraEntity('node', 'node_type'))
+    return AccessResult::allowedIf($this->utils->canCreateIslandoraEntity('node', 'node_type'))->cachePerUser()
       ->andIf($this->mediaAccess($route_match));
 
   }
@@ -65,7 +65,7 @@ class Access implements ContainerInjectionInterface {
    *   Whether we can or cannot show the "thing".
    */
   public function mediaAccess(RouteMatch $route_match) : AccessResultInterface {
-    return AccessResult::allowedIf($this->utils->canCreateIslandoraEntity('media', 'media_type'));
+    return AccessResult::allowedIf($this->utils->canCreateIslandoraEntity('media', 'media_type'))->cachePerUser();
   }
 
 }

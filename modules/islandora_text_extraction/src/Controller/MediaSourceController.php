@@ -3,15 +3,13 @@
 namespace Drupal\islandora_text_extraction\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\File\FileExists;
-use Drupal\Core\File\FileSystem;
-use Drupal\Core\File\FileSystemInterface;
-use Drupal\file\FileRepository;
 use Drupal\media\Entity\Media;
+use Drupal\islandora\MediaSource\MediaSourceService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Controller for Media Source.
@@ -19,49 +17,20 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class MediaSourceController extends ControllerBase {
 
   /**
-   * Adds file to existing media.
+   * Media source service.
    *
-   * @param Drupal\media\Entity\Media $media
-   *   The media to which file is added.
-   * @param string $destination_field
-   *   The name of the media field to add file reference.
-   * @param string $destination_text_field
-   *   The name of the media field to add file reference.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   *
-   * @return \Symfony\Component\HttpFoundation\Response
-   *   201 on success with a Location link header.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
+   * @var \Drupal\islandora\MediaSource\MediaSourceService
    */
+  protected $mediaSourceService;
 
   /**
-   * File system service.
+   * Constructs the OCR attachment controller.
    *
-   * @var \Drupal\Core\File\FileSystem
+   * @param \Drupal\islandora\MediaSource\MediaSourceService $media_source_service
+   *   Media source service.
    */
-  protected $fileSystem;
-
-  /**
-   * File repository service.
-   *
-   * @var \Drupal\file\FileRepository
-   */
-  protected $fileRepository;
-
-  /**
-   * MediaSourceController constructor.
-   *
-   * @param \Drupal\Core\File\FileSystem $fileSystem
-   *   Filesystem service.
-   * @param \Drupal\file\FileRepository $fileRepository
-   *   File Repository service.
-   */
-  public function __construct(FileSystem $fileSystem, FileRepository $fileRepository) {
-    $this->fileSystem = $fileSystem;
-    $this->fileRepository = $fileRepository;
+  public function __construct(MediaSourceService $media_source_service) {
+    $this->mediaSourceService = $media_source_service;
   }
 
   /**
@@ -75,8 +44,7 @@ class MediaSourceController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('file_system'),
-      $container->get('file.repository'),
+      $container->get('islandora.media_source_service'),
     );
   }
 
@@ -107,33 +75,30 @@ class MediaSourceController extends ControllerBase {
     $content_location = $request->headers->get('Content-Location', "");
     $contents = $request->getContent();
 
-    if ($contents) {
-      $directory = $this->fileSystem->dirname($content_location);
-      if (!$this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
-        throw new HttpException(500, "The destination directory does not exist, could not be created, or is not writable");
-      }
-      $file = $this->fileRepository->writeData($contents, $content_location, FileExists::Replace);
-      if ($media->hasField($destination_field)) {
-        $media->{$destination_field}->setValue([
-          'target_id' => $file->id(),
-        ]);
-      }
-      else {
-        $this->getLogger('islandora')->warning("Field $destination_field is not defined in  Media Type {$media->bundle()}");
-      }
-      if ($media->hasField($destination_text_field)) {
-        // @todo The request actually has a malformed parameter string, ?text_format=plain_text?connection_close=true.
-        if (substr($request->query->get('text_format'), 0, 10) == 'plain_text') {
-          $contents = nl2br($contents);
-        }
-        $media->{$destination_text_field}->setValue($contents);
-      }
-      else {
-        $this->getLogger('islandora')->warning("Field $destination_text_field is not defined in Media Type {$media->bundle()}");
-      }
-      $media->save();
+    if ($contents === '') {
+      return new Response("<h1>Complete</h1>");
     }
-    // We'd only ever get here if testing the function with GET.
+
+    if (!$media->hasField($destination_text_field)) {
+      throw new BadRequestHttpException("Media does not have destination text field $destination_text_field");
+    }
+    if (!$media->get($destination_text_field)->access('edit')) {
+      throw new AccessDeniedHttpException("You do not have permission to edit the destination text field");
+    }
+    $this->mediaSourceService->putToMedia(
+      $media,
+      $destination_field,
+      $request->getContent(TRUE),
+      $request->headers->get('Content-Type', 'text/plain'),
+      $content_location
+    );
+    // @todo The request actually has a malformed parameter string, ?text_format=plain_text?connection_close=true.
+    if (substr($request->query->get('text_format', ''), 0, 10) == 'plain_text') {
+      $contents = nl2br($contents);
+    }
+    $media->get($destination_text_field)->setValue($contents);
+    $media->save();
+
     return new Response("<h1>Complete</h1>");
   }
 

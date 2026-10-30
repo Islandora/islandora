@@ -18,6 +18,7 @@ use Drupal\media\MediaTypeInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -186,7 +187,31 @@ class MediaSourceService {
       throw new BadRequestHttpException("Content-Location must not contain path traversal segments");
     }
 
+    $this->validateFileWriteAccess($content_location);
+
     return $content_location;
+  }
+
+  /**
+   * Requires update access before overwriting an existing file.
+   *
+   * @param string $uri
+   *   The destination file URI.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+   *   When an existing file cannot be updated by the current account.
+   */
+  private function validateFileWriteAccess(string $uri) : void {
+    $files = $this->entityTypeManager->getStorage('file')->loadByProperties(['uri' => $uri]);
+    // Unmanaged files have no entity access policy authorizing replacement.
+    if (!$files && file_exists($uri)) {
+      throw new AccessDeniedHttpException("Cannot overwrite an unmanaged file");
+    }
+    foreach ($files as $file) {
+      if (!$file->access('update', $this->account)) {
+        throw new AccessDeniedHttpException("You do not have permission to update the destination file");
+      }
+    }
   }
 
   /**
@@ -262,7 +287,13 @@ class MediaSourceService {
     $resource,
     $mimetype,
   ) {
+    if (!$media->access('update', $this->account)) {
+      throw new AccessDeniedHttpException("You do not have permission to update the media");
+    }
     $source_field = $this->getSourceFieldName($media->bundle());
+    if (!$media->get($source_field)->access('edit', $this->account)) {
+      throw new AccessDeniedHttpException("You do not have permission to edit the source field");
+    }
     $file = $this->getSourceFile($media);
 
     // Update it.
@@ -298,6 +329,7 @@ class MediaSourceService {
    */
   protected function updateFile(FileInterface $file, $resource, $mimetype = NULL) {
     $uri = $file->getFileUri();
+    $this->validateFileWriteAccess($uri);
 
     $destination = fopen($uri, 'wb');
     if (!$destination) {
@@ -368,7 +400,11 @@ class MediaSourceService {
   private function initializeFile(string $content_location) : FileInterface {
     $this->initializeDestination($content_location);
 
-    touch($content_location);
+    $files = $this->entityTypeManager->getStorage('file')->loadByProperties(['uri' => $content_location]);
+    if ($files) {
+      return reset($files);
+    }
+
     return $this->entityTypeManager->getStorage('file')->create([
       'uid' => $this->account->id(),
       'uri' => $content_location,
@@ -466,6 +502,10 @@ class MediaSourceService {
       }
     }
 
+    if (!$this->entityTypeManager->getAccessControlHandler('media')->createAccess($media_type->id(), $this->account)) {
+      throw new AccessDeniedHttpException("You do not have permission to create this media type");
+    }
+
     // Otherwise, the media doesn't exist yet.
     // So make everything by hand.
     // Get the source field for the media type.
@@ -538,7 +578,13 @@ class MediaSourceService {
     $content_location,
   ) {
     $content_location = $this->validateContentLocation($content_location);
+    if (!$media->access('update', $this->account)) {
+      throw new AccessDeniedHttpException("You do not have permission to update the media");
+    }
     if ($media->hasField($destination_field)) {
+      if (!$media->get($destination_field)->access('edit', $this->account)) {
+        throw new AccessDeniedHttpException("You do not have permission to edit the destination field");
+      }
 
       // Validate file extension.
       $bundle = $media->bundle();
