@@ -63,6 +63,7 @@ class MediaSourceUpdateTest extends IslandoraFunctionalTestBase {
     // Make the media.
     $this->media = $this->container->get('entity_type.manager')->getStorage('media')->create([
       'bundle' => $this->testMediaType->id(),
+      'uid' => $this->account->id(),
       'name' => 'Media',
       "$source_field" => [$this->file->id()],
     ]);

@@ -169,11 +169,20 @@ class LinkHeaderTest extends IslandoraFunctionalTestBase {
       "Media must not have link header pointing to disabled xml REST endpoint."
     );
 
-    // Create a test user with edit media permissions.
+    // Update permission alone does not allow editing another user's media.
     $account = $this->drupalCreateUser(['update media']);
     $this->drupalLogin($account);
+    $this->drupalGet($media_url, [], ['Cache-Control' => 'no-cache']);
+    $this->assertTrue(
+      $this->validateLinkHeaderWithUrl('edit-media', $rest_url, '', '') == 0,
+      "A user cannot edit another user's media with update media permission alone."
+    );
 
-    // Perform a GET request with update media permissions.
+    // An account with permission to edit any media can access the endpoint.
+    $account = $this->drupalCreateUser(['update any media']);
+    $this->drupalLogin($account);
+
+    // Perform a GET request with update any media permission.
     $this->drupalGet($media_url, [], ['Cache-Control' => 'no-cache']);
 
     // Check link headers again, the edit-media link header should be present.
