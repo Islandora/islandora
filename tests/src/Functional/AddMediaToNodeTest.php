@@ -116,6 +116,7 @@ class AddMediaToNodeTest extends IslandoraFunctionalTestBase {
     $account = $this->drupalCreateUser([
       'bypass node access',
       'create media',
+      'update media',
     ]);
     $this->drupalLogin($account);
 
