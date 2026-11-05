@@ -47,6 +47,10 @@ function islandora_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_node_insert().
  */
 function islandora_node_insert(NodeInterface $node) {
+  if (islandora_uses_external_event_orchestrator()) {
+    return;
+  }
+
   $utils = \Drupal::service('islandora.utils');
 
   // Execute index reactions.
@@ -57,8 +61,13 @@ function islandora_node_insert(NodeInterface $node) {
  * Implements hook_node_update().
  */
 function islandora_node_update(NodeInterface $node) {
+  if (islandora_uses_external_event_orchestrator()) {
+    return;
+  }
 
   $utils = \Drupal::service('islandora.utils');
+  // Keep the legacy property access while Islandora still supports Drupal
+  // 10.3. This can move to getOriginal() when 10.x support is dropped.
   if (!$utils->haveFieldsChanged($node, $node->original)) {
     return;
   }
@@ -71,6 +80,10 @@ function islandora_node_update(NodeInterface $node) {
  * Implements hook_node_delete().
  */
 function islandora_node_delete(NodeInterface $node) {
+  if (islandora_uses_external_event_orchestrator()) {
+    return;
+  }
+
   $utils = \Drupal::service('islandora.utils');
 
   // Execute delete reactions.
@@ -81,6 +94,10 @@ function islandora_node_delete(NodeInterface $node) {
  * Implements hook_media_insert().
  */
 function islandora_media_insert(MediaInterface $media) {
+  if (islandora_uses_external_event_orchestrator()) {
+    return;
+  }
+
   $utils = \Drupal::service('islandora.utils');
   // Execute index reactions.
   $utils->executeMediaReactions('\Drupal\islandora\Plugin\ContextReaction\IndexReaction', $media);
@@ -103,10 +120,16 @@ function islandora_media_insert(MediaInterface $media) {
  * Implements hook_media_update().
  */
 function islandora_media_update(MediaInterface $media) {
+  if (islandora_uses_external_event_orchestrator()) {
+    return;
+  }
+
   $media_source_service = \Drupal::service('islandora.media_source_service');
 
   // Exit early if nothing's changed.
   $utils = \Drupal::service('islandora.utils');
+  // Keep the legacy property access while Islandora still supports Drupal
+  // 10.3. This can move to getOriginal() when 10.x support is dropped.
   if (!$utils->haveFieldsChanged($media, $media->original)) {
     return;
   }
@@ -140,6 +163,10 @@ function islandora_media_update(MediaInterface $media) {
  * Implements hook_media_delete().
  */
 function islandora_media_delete(MediaInterface $media) {
+  if (islandora_uses_external_event_orchestrator()) {
+    return;
+  }
+
   $utils = \Drupal::service('islandora.utils');
 
   // Execute delete reactions.
@@ -160,15 +187,30 @@ function islandora_media_delete(MediaInterface $media) {
  * @see https://www.drupal.org/project/drupal/issues/2551893
  */
 function _islandora_fire_media_file_derivative_reaction(MediaInterface $media) {
+  if (islandora_uses_external_event_orchestrator()) {
+    return;
+  }
+
   $utils = \Drupal::service('islandora.utils');
   // Execute derivative file reactions.
   $utils->executeMediaReactions('\Drupal\islandora\Plugin\ContextReaction\DerivativeFileReaction', $media);
 }
 
 /**
+ * Indicates whether Islandora should defer event orchestration externally.
+ */
+function islandora_uses_external_event_orchestrator(): bool {
+  return \Drupal::moduleHandler()->moduleExists('islandora_events');
+}
+
+/**
  * Implements hook_file_insert().
  */
 function islandora_file_insert(FileInterface $file) {
+  if (islandora_uses_external_event_orchestrator()) {
+    return;
+  }
+
   $utils = \Drupal::service('islandora.utils');
 
   // Execute index reactions.
@@ -179,6 +221,10 @@ function islandora_file_insert(FileInterface $file) {
  * Implements hook_file_update().
  */
 function islandora_file_update(FileInterface $file) {
+  if (islandora_uses_external_event_orchestrator()) {
+    return;
+  }
+
   // Exit early if unchanged.
   if ($file->hasField('sha1') && $file->original->hasField('sha1')
     && $file->sha1->getString() == $file->original->sha1->getString()) {
@@ -207,6 +253,10 @@ function islandora_file_update(FileInterface $file) {
  * Implements hook_file_delete().
  */
 function islandora_file_delete(FileInterface $file) {
+  if (islandora_uses_external_event_orchestrator()) {
+    return;
+  }
+
   $utils = \Drupal::service('islandora.utils');
 
   // Execute delete reactions.
@@ -217,6 +267,10 @@ function islandora_file_delete(FileInterface $file) {
  * Implements hook_taxonomy_term_insert().
  */
 function islandora_taxonomy_term_insert(TermInterface $term) {
+  if (islandora_uses_external_event_orchestrator()) {
+    return;
+  }
+
   $utils = \Drupal::service('islandora.utils');
 
   // Execute index reactions.
@@ -227,6 +281,10 @@ function islandora_taxonomy_term_insert(TermInterface $term) {
  * Implements hook_taxonomy_term_update().
  */
 function islandora_taxonomy_term_update(TermInterface $term) {
+  if (islandora_uses_external_event_orchestrator()) {
+    return;
+  }
+
   $utils = \Drupal::service('islandora.utils');
 
   // Execute index reactions.
@@ -237,6 +295,10 @@ function islandora_taxonomy_term_update(TermInterface $term) {
  * Implements hook_taxonomy_term_delete().
  */
 function islandora_taxonomy_term_delete(TermInterface $term) {
+  if (islandora_uses_external_event_orchestrator()) {
+    return;
+  }
+
   $utils = \Drupal::service('islandora.utils');
 
   // Execute delete reactions.

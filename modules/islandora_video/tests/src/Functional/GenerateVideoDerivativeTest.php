@@ -70,6 +70,7 @@ class GenerateVideoDerivativeTest extends GenerateDerivativeTestBase {
 
     $expected = [
       'source_uri' => 'test_file.txt',
+      'source_mimetype' => 'text/plain',
       'destination_uri' => "node/1/media/{$this->testMediaType->id()}/3",
       'file_upload_uri' => 'public://derp.mov',
       'mimetype' => 'video/mp4',

@@ -50,6 +50,7 @@ class AbstractGenerateDerivativeMediaFile extends AbstractGenerateDerivativeBase
       throw new \RuntimeException("Could not locate source file for media {$entity->id()}", 500);
     }
     $data['source_uri'] = $this->utils->getDownloadUrl($source_file);
+    $data['source_mimetype'] = $source_file->getMimeType();
 
     $route_params = [
       'media' => $entity->id(),
@@ -74,6 +75,7 @@ class AbstractGenerateDerivativeMediaFile extends AbstractGenerateDerivativeBase
       'event',
       'args',
       'source_uri',
+      'source_mimetype',
       'destination_uri',
       'file_upload_uri',
       'mimetype',
