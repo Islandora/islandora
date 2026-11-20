@@ -13,6 +13,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\file\FileInterface;
+use Drupal\file\FileUsage\FileUsageInterface;
 use Drupal\file\Validation\FileValidatorInterface;
 use Drupal\islandora\IslandoraUtils;
 use Drupal\islandora\MediaSource\MediaSourceService;
@@ -51,6 +52,18 @@ class MediaSourceWriteAccessTest extends TestCase {
    */
   protected $account;
   /**
+   * The media storage mock.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $mediaStorage;
+  /**
+   * The file usage mock.
+   *
+   * @var \Drupal\file\FileUsage\FileUsageInterface
+   */
+  protected $fileUsage;
+  /**
    * The temporary private file directory.
    *
    * @var string
@@ -76,10 +89,13 @@ class MediaSourceWriteAccessTest extends TestCase {
     $this->files = $this->createMock(EntityStorageInterface::class);
     $images = $this->createMock(EntityStorageInterface::class);
     $images->method('loadMultiple')->willReturn([]);
+    $this->mediaStorage = $this->createMock(EntityStorageInterface::class);
+    $this->fileUsage = $this->createMock(FileUsageInterface::class);
     $manager = $this->createMock(EntityTypeManagerInterface::class);
     $manager->method('getStorage')->willReturnMap([
       ['file', $this->files],
       ['image_style', $images],
+      ['media', $this->mediaStorage],
     ]);
     $this->account = $this->createMock(AccountInterface::class);
     $wrappers = $this->getMockBuilder(StreamWrapperManager::class)
@@ -95,7 +111,8 @@ class MediaSourceWriteAccessTest extends TestCase {
       $this->createMock(IslandoraUtils::class),
       $this->createMock(FileValidatorInterface::class),
       $wrappers,
-      $mime
+      $mime,
+      $this->fileUsage
     );
   }
 
@@ -124,6 +141,7 @@ class MediaSourceWriteAccessTest extends TestCase {
     $file->method('getFileUri')->willReturn($uri);
     $file->expects($this->atLeastOnce())->method('access')
       ->with('update', $this->account)->willReturn($allowed);
+    $this->fileUsage->method('listUsage')->willReturn([]);
     $this->files->method('loadByProperties')->with(['uri' => $uri])->willReturn([$file]);
     try {
       if ($at_sink) {
@@ -153,6 +171,58 @@ class MediaSourceWriteAccessTest extends TestCase {
    */
   public static function writeAccessCases(): array {
     return [[FALSE, FALSE], [TRUE, FALSE], [FALSE, TRUE], [TRUE, TRUE]];
+  }
+
+  /**
+   * Non-owners may overwrite files used only by media they can update.
+   *
+   * @dataProvider mediaUsageCases
+   */
+  public function testOverwriteViaMediaUpdateAccess(array $usage, array $media_access, bool $allowed): void {
+    $uri = 'private://derivative.txt';
+    file_put_contents($uri, 'ORIGINAL');
+    $file = $this->createMock(FileInterface::class);
+    $file->method('getFileUri')->willReturn($uri);
+    $file->method('access')->with('update', $this->account)->willReturn(FALSE);
+    $this->files->method('loadByProperties')->with(['uri' => $uri])->willReturn([$file]);
+    $this->fileUsage->method('listUsage')->with($file)->willReturn($usage);
+    $this->mediaStorage->method('load')->willReturnCallback(function ($id) use ($media_access) {
+      if (!array_key_exists($id, $media_access)) {
+        return NULL;
+      }
+      $media = $this->createMock(MediaInterface::class);
+      $media->method('access')->with('update', $this->account)->willReturn($media_access[$id]);
+      return $media;
+    });
+    $resource = fopen('php://memory', 'w+');
+    fwrite($resource, 'REPLACEMENT');
+    rewind($resource);
+    try {
+      (new \ReflectionMethod($this->service, 'updateFile'))->invoke($this->service, $file, $resource);
+      $this->assertTrue($allowed, 'Unauthorized overwrite was allowed.');
+    }
+    catch (AccessDeniedHttpException $e) {
+      $this->assertFalse($allowed);
+    }
+    finally {
+      fclose($resource);
+    }
+    $this->assertSame($allowed ? 'REPLACEMENT' : 'ORIGINAL', file_get_contents($uri));
+  }
+
+  /**
+   * Provides file usage, per-media update access and the expected outcome.
+   */
+  public static function mediaUsageCases(): array {
+    return [
+      'single media, can update' => [['file' => ['media' => [1 => 1]]], [1 => TRUE], TRUE],
+      'single media, cannot update' => [['file' => ['media' => [1 => 1]]], [1 => FALSE], FALSE],
+      'two media, both updatable' => [['file' => ['media' => [1 => 1, 2 => 1]]], [1 => TRUE, 2 => TRUE], TRUE],
+      'two media, one denied' => [['file' => ['media' => [1 => 1, 2 => 1]]], [1 => TRUE, 2 => FALSE], FALSE],
+      'media usage missing entity' => [['file' => ['media' => [3 => 1]]], [], FALSE],
+      'non-media usage' => [['file' => ['media' => [1 => 1], 'node' => [5 => 1]]], [1 => TRUE], FALSE],
+      'no usage' => [[], [], FALSE],
+    ];
   }
 
   /**
