@@ -7,7 +7,7 @@ use Drupal\media\MediaInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Creates a GeminiClient as a Drupal service.
+ * Reindexes extracted text in Search API.
  *
  * @package Drupal\islandora
  */

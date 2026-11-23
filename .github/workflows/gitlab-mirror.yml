@@ -2,7 +2,7 @@ name: Mirror and run GitLab CI
 
 on:
   push:
-    branches: [2.x]
+    branches: [3.x]
     tags: '*'
 
 jobs:

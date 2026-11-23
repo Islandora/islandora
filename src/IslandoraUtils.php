@@ -16,7 +16,8 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\file\FileInterface;
-use Drupal\flysystem\FlysystemFactory;
+use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\islandora\ContextProvider\FileContextProvider;
 use Drupal\islandora\ContextProvider\MediaContextProvider;
 use Drupal\islandora\ContextProvider\NodeContextProvider;
@@ -64,11 +65,11 @@ class IslandoraUtils {
   protected $contextManager;
 
   /**
-   * Flysystem factory.
+   * Stream wrapper manager.
    *
-   * @var \Drupal\flysystem\FlysystemFactory
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
    */
-  protected $flysystemFactory;
+  protected $streamWrapperManager;
 
   /**
    * Language manager.
@@ -100,8 +101,8 @@ class IslandoraUtils {
    *   The entity field manager.
    * @param \Drupal\context\ContextManager $context_manager
    *   Context manager.
-   * @param \Drupal\flysystem\FlysystemFactory $flysystem_factory
-   *   Flysystem factory.
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
+   *   Stream wrapper manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   Language manager.
    * @param \Drupal\Core\Session\AccountInterface $current_user
@@ -115,7 +116,7 @@ class IslandoraUtils {
     EntityTypeManagerInterface $entity_type_manager,
     EntityFieldManagerInterface $entity_field_manager,
     ContextManager $context_manager,
-    FlysystemFactory $flysystem_factory,
+    StreamWrapperManagerInterface $stream_wrapper_manager,
     LanguageManagerInterface $language_manager,
     AccountInterface $current_user,
     ConfigFactoryInterface $config,
@@ -124,7 +125,7 @@ class IslandoraUtils {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
     $this->contextManager = $context_manager;
-    $this->flysystemFactory = $flysystem_factory;
+    $this->streamWrapperManager = $stream_wrapper_manager;
     $this->languageManager = $language_manager;
     $this->currentUser = $current_user;
     $this->islandoraSettings = $config->get(IslandoraSettingsForm::CONFIG_NAME);
@@ -559,7 +560,10 @@ class IslandoraUtils {
     if (!empty(Settings::get('file_private_path'))) {
       $schemes[] = 'private';
     }
-    return array_merge($schemes, $this->flysystemFactory->getSchemes());
+    // Discover optional storage providers through Drupal, not Flysystem.
+    $wrappers = $this->streamWrapperManager->getWrappers(StreamWrapperInterface::WRITE_VISIBLE);
+    unset($wrappers['public'], $wrappers['private']);
+    return array_merge($schemes, array_keys($wrappers));
   }
 
   /**

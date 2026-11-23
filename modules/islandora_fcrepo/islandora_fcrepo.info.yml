@@ -1,0 +1,8 @@
+name: Islandora Fedora Repository
+type: module
+description: 'Fedora storage through Flysystem 3.'
+package: Islandora
+core_version_requirement: ^11
+dependencies:
+  - islandora:islandora
+  - flysystem:flysystem (^3.0)

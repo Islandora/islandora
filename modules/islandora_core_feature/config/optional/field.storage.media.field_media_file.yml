@@ -15,7 +15,7 @@ type: file
 settings:
   display_field: false
   display_default: false
-  uri_scheme: fedora
+  uri_scheme: public
   target_type: file
 module: file
 locked: false

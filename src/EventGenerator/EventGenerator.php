@@ -5,7 +5,6 @@ namespace Drupal\islandora\EventGenerator;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Site\Settings;
 use Drupal\islandora\IslandoraUtils;
 use Drupal\islandora\Event\GeneratedEventMessageEvent;
 use Drupal\islandora\Event\GeneratedEventMessageEventInterface;
@@ -104,12 +103,6 @@ class EventGenerator implements EventGeneratorInterface {
       ],
     ];
 
-    $flysystem_config = Settings::get('flysystem');
-    if ($flysystem_config != NULL && array_key_exists('fedora', $flysystem_config)) {
-      $fedora_url = $flysystem_config['fedora']['config']['root'];
-      $event["target"] = $fedora_url;
-    }
-
     $entity_type = $entity->getEntityTypeId();
     if ($data["event"] == "Generate Derivative") {
       $event["type"] = "Activity";
@@ -162,7 +155,6 @@ class EventGenerator implements EventGeneratorInterface {
 
     $allowed_keys = [
       "file_upload_uri",
-      "fedora_uri",
       "source_uri",
       "destination_uri",
       "args",

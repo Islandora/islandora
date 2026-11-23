@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * @file
+ * Installation of optional Fedora integration.
+ */
+
+use Composer\InstalledVersions;
+use Composer\Semver\VersionParser;
+
+/**
+ * Implements hook_requirements().
+ */
+function islandora_fcrepo_requirements($phase) {
+  $missing = [];
+  $parser = new VersionParser();
+  foreach ([
+    'league/flysystem' => '^3.35.3',
+    'islandora/chullo' => '^2.0',
+    'islandora/fedora-entity-mapper' => '^1.0',
+  ] as $package => $constraint) {
+    if (!InstalledVersions::isInstalled($package) || !InstalledVersions::satisfies($parser, $package, $constraint)) {
+      $missing[] = $package . ':' . $constraint;
+    }
+  }
+  if (!$missing) {
+    return [];
+  }
+  return [
+    'islandora_fcrepo_dependencies' => [
+      'title' => t('Islandora Fedora Composer dependencies'),
+      'value' => implode(', ', $missing),
+      'description' => t('Install the dependencies in modules/islandora_fcrepo/composer.json in the site root before enabling this module.'),
+      'severity' => REQUIREMENT_ERROR,
+    ],
+  ];
+}
+
+/**
+ * Implements hook_install().
+ */
+function islandora_fcrepo_install() {
+  // Keep existing display selections when upgrading from Islandora 2.x.
+  $legacy = \Drupal::configFactory()->getEditable('islandora.settings');
+  $bundles = $legacy->get('gemini_pseudo_bundles');
+  if ($bundles !== NULL) {
+    \Drupal::configFactory()->getEditable('islandora_fcrepo.settings')
+      ->set('gemini_pseudo_bundles', $bundles)->save();
+    $legacy->clear('gemini_pseudo_bundles')->clear('fedora_rest_endpoint')->save();
+  }
+  $config = \Drupal::configFactory()->getEditable('jsonld.settings');
+  $namespaces = $config->get('rdf_namespaces') ?? [];
+  if (!in_array('fedora', array_column($namespaces, 'prefix'), TRUE)) {
+    $namespaces[] = ['prefix' => 'fedora', 'namespace' => 'http://fedora.info/definitions/v4/repository#'];
+    $config->set('rdf_namespaces', $namespaces)->save();
+  }
+  // Transfer ownership of existing optional actions without replacing settings.
+  $directory = \Drupal::service('extension.list.module')->getPath('islandora_fcrepo') . '/config/optional';
+  foreach (glob($directory . '/*.yml') as $path) {
+    $name = basename($path, '.yml');
+    $existing = \Drupal::configFactory()->getEditable($name);
+    if ($existing->isNew()) {
+      continue;
+    }
+    $modules = $existing->get('dependencies.enforced.module') ?? [];
+    $modules = array_diff($modules, ['islandora_core_feature']);
+    $modules[] = 'islandora_fcrepo';
+    $existing->set('dependencies.enforced.module', array_values(array_unique($modules)))->save();
+  }
+
+}

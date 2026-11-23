@@ -3,7 +3,7 @@ status: true
 dependencies:
   enforced:
     module:
-      - islandora_core_feature
+      - islandora_fcrepo
   module:
     - islandora
 id: index_media_in_fedora

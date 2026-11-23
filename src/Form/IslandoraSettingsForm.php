@@ -2,13 +2,9 @@
 
 namespace Drupal\islandora\Form;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Stomp\Client;
 use Stomp\Exception\StompException;
@@ -28,8 +24,6 @@ class IslandoraSettingsForm extends ConfigFormBase {
   const UPLOAD_FORM = 'upload_form';
   const UPLOAD_FORM_LOCATION = 'upload_form_location';
   const UPLOAD_FORM_ALLOWED_MIMETYPES = 'upload_form_allowed_mimetypes';
-  const GEMINI_PSEUDO = 'gemini_pseudo_bundles';
-  const FEDORA_URL = 'fedora_url';
   const TIME_INTERVALS = [
     'sec',
     'second',
@@ -41,18 +35,10 @@ class IslandoraSettingsForm extends ConfigFormBase {
     'month',
     'year',
   ];
-  const GEMINI_PSEUDO_FIELD = 'field_gemini_uri';
   const NODE_DELETE_MEDIA_AND_FILES = 'delete_media_and_files';
   const REDIRECT_AFTER_MEDIA_SAVE = 'redirect_after_media_save';
   const ALLOW_HEADER_LINKS = 'allow_header_links';
   const FAST_TERM_QUERIES = 'fast_term_queries';
-
-  /**
-   * To list the available bundle types.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $entityTypeBundleInfo;
 
   /**
    * The saved password (if set).
@@ -62,31 +48,16 @@ class IslandoraSettingsForm extends ConfigFormBase {
   protected $brokerPassword;
 
   /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Constructs a \Drupal\system\ConfigFormBase object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
-   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
-   *   The EntityTypeBundleInfo service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The EntityTypeManager service.
    */
   public function __construct(
     ConfigFactoryInterface $config_factory,
-    EntityTypeBundleInfoInterface $entity_type_bundle_info,
-    EntityTypeManagerInterface $entity_type_manager,
   ) {
     $this->setConfigFactory($config_factory);
-    $this->entityTypeBundleInfo = $entity_type_bundle_info;
     $this->brokerPassword = $this->config(self::CONFIG_NAME)->get(self::BROKER_PASSWORD);
-    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -95,8 +66,6 @@ class IslandoraSettingsForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
           $container->get('config.factory'),
-          $container->get('entity_type.bundle.info'),
-          $container->get('entity_type.manager')
       );
   }
 
@@ -189,7 +158,7 @@ class IslandoraSettingsForm extends ConfigFormBase {
     $form[self::UPLOAD_FORM][self::UPLOAD_FORM_LOCATION] = [
       '#type' => 'textfield',
       '#title' => $this->t('Upload location'),
-      '#description' => $this->t('Tokenized URI pattern where the uploaded file should go.  You may use tokens to provide a pattern (e.g. "fedora://[current-date:custom:Y]-[current-date:custom:m]")'),
+      '#description' => $this->t('Tokenized URI pattern where the uploaded file should go.  You may use tokens to provide a pattern (e.g. "public://[current-date:custom:Y]-[current-date:custom:m]")'),
       '#default_value' => $config->get(self::UPLOAD_FORM_LOCATION),
       '#element_validate' => ['token_element_validate'],
       '#token_types' => ['system'],
@@ -206,14 +175,6 @@ class IslandoraSettingsForm extends ConfigFormBase {
       '#description' => $this->t('Add mimetypes as a space delimited list with no periods before the extension.'),
       '#default_value' => $config->get(self::UPLOAD_FORM_ALLOWED_MIMETYPES),
     ];
-
-    $flysystem_config = Settings::get('flysystem');
-    if ($flysystem_config != NULL) {
-      $fedora_url = $flysystem_config['fedora']['config']['root'];
-    }
-    else {
-      $fedora_url = NULL;
-    }
 
     $form[self::NODE_DELETE_MEDIA_AND_FILES] = [
       '#type' => 'checkbox',
@@ -235,43 +196,6 @@ class IslandoraSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Use multiple queries for term URI lookups.'),
       '#description' => $this->t('Using multiple queries to look up taxonomy terms by URI is faster in most setups. You may want to disable this if you have a term access protection module enabled.'),
       '#default_value' => (bool) $config->get(self::FAST_TERM_QUERIES),
-    ];
-
-    $form[self::FEDORA_URL] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Fedora URL'),
-      '#description' => $this->t('Read-only. This value is set in settings.php as the URL for the Fedora flysystem.'),
-      '#attributes' => [
-        'readonly' => 'readonly',
-        'disabled' => 'disabled',
-      ],
-      '#default_value' => $fedora_url,
-    ];
-
-    $selected_bundles = $config->get(self::GEMINI_PSEUDO);
-
-    $options = [];
-    foreach (['node', 'media', 'taxonomy_term'] as $content_entity) {
-      $bundles = $this->entityTypeBundleInfo->getBundleInfo($content_entity);
-      foreach ($bundles as $bundle => $bundle_properties) {
-        $options["{$bundle}:{$content_entity}"] =
-                $this->t('@label (@type)', [
-                  '@label' => $bundle_properties['label'],
-                  '@type' => $content_entity,
-                ]);
-      }
-    }
-
-    $form['bundle_container'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Fedora URL Display'),
-      '#description' => $this->t('Selected bundles can display the Fedora URL of repository content.'),
-      '#open' => TRUE,
-      self::GEMINI_PSEUDO => [
-        '#type' => 'checkboxes',
-        '#options' => $options,
-        '#default_value' => $selected_bundles,
-      ],
     ];
 
     $form['rdf_namespaces'] = [
@@ -370,8 +294,6 @@ class IslandoraSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->configFactory->getEditable(self::CONFIG_NAME);
 
-    $new_pseudo_types = array_filter($form_state->getValue(self::GEMINI_PSEUDO));
-
     $broker_password = $form_state->getValue(self::BROKER_PASSWORD);
 
     // If there's no user set delete what may have been here before as password
@@ -388,16 +310,11 @@ class IslandoraSettingsForm extends ConfigFormBase {
       }
     }
 
-    // Check for types being unset and remove the field from them first.
-    $current_pseudo_types = $config->get(self::GEMINI_PSEUDO);
-    $this->updateEntityViewConfiguration($current_pseudo_types, $new_pseudo_types);
-
     $config
       ->set(self::BROKER_URL, $form_state->getValue(self::BROKER_URL))
       ->set(self::JWT_EXPIRY, $form_state->getValue(self::JWT_EXPIRY))
       ->set(self::UPLOAD_FORM_LOCATION, $form_state->getValue(self::UPLOAD_FORM_LOCATION))
       ->set(self::UPLOAD_FORM_ALLOWED_MIMETYPES, $form_state->getValue(self::UPLOAD_FORM_ALLOWED_MIMETYPES))
-      ->set(self::GEMINI_PSEUDO, $new_pseudo_types)
       ->set(self::NODE_DELETE_MEDIA_AND_FILES, $form_state->getValue(self::NODE_DELETE_MEDIA_AND_FILES))
       ->set(self::FAST_TERM_QUERIES, $form_state->getValue(self::FAST_TERM_QUERIES))
       ->set(self::REDIRECT_AFTER_MEDIA_SAVE, $form_state->getValue(self::REDIRECT_AFTER_MEDIA_SAVE))
@@ -405,44 +322,6 @@ class IslandoraSettingsForm extends ConfigFormBase {
       ->save();
 
     parent::submitForm($form, $form_state);
-  }
-
-  /**
-   * Removes the Fedora URI field from entity bundles that have be unselected.
-   *
-   * @param array $current_config
-   *   The current set of entity types & bundles to have the pseudo field,
-   *   format {bundle}:{entity_type}.
-   * @param array $new_config
-   *   The new set of entity types & bundles to have the pseudo field, format
-   *   {bundle}:{entity_type}.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   */
-  private function updateEntityViewConfiguration(array $current_config, array $new_config) {
-    $removed = array_diff($current_config, $new_config);
-    $added = array_diff($new_config, $current_config);
-    $entity_view_display = $this->entityTypeManager->getStorage('entity_view_display');
-    foreach ($removed as $bundle_type) {
-      [$bundle, $type_id] = explode(":", $bundle_type);
-      $results = $entity_view_display->getQuery()
-        ->condition('bundle', $bundle)
-        ->condition('targetEntityType', $type_id)
-        ->exists('content.' . self::GEMINI_PSEUDO_FIELD . '.region')
-        ->execute();
-      $entities = $entity_view_display->loadMultiple($results);
-      foreach ($entities as $entity) {
-        $entity->removeComponent(self::GEMINI_PSEUDO_FIELD);
-        $entity->save();
-      }
-    }
-    if (count($removed) > 0 || count($added) > 0) {
-      // If we added or cleared a type then clear the extra_fields cache.
-      // @see Drupal/Core/Entity/EntityFieldManager::getExtraFields
-      Cache::invalidateTags(["entity_field_info"]);
-    }
   }
 
 }

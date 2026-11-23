@@ -13,15 +13,12 @@
  */
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\file\FileInterface;
-use Drupal\islandora\Form\IslandoraSettingsForm;
 use Drupal\media\MediaInterface;
 use Drupal\node\NodeInterface;
 use Drupal\serialization\Normalizer\CacheableNormalizerInterface;
@@ -36,7 +33,7 @@ function islandora_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.islandora':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('Islandora integrates Drupal with a Fedora repository.') . '</p>';
+      $output .= '<p>' . t('Islandora provides digital repository workflows for Drupal.') . '</p>';
       return $output;
 
     default:
@@ -518,99 +515,6 @@ function islandora_form_block_form_alter(&$form, FormStateInterface $form_state,
   unset($form['visibility']['node_has_parent']);
   unset($form['visibility']['node_referenced_by_node']);
   unset($form['visibility']['parent_node_has_term']);
-}
-
-/**
- * Implements hook_entity_extra_field_info().
- */
-function islandora_entity_extra_field_info() {
-  $config_factory = \Drupal::service('config.factory')->get(IslandoraSettingsForm::CONFIG_NAME);
-  $extra_field = [];
-
-  $pseudo_bundles = $config_factory->get(IslandoraSettingsForm::GEMINI_PSEUDO);
-
-  if (!empty($pseudo_bundles)) {
-    foreach ($pseudo_bundles as $key) {
-      [$bundle, $content_entity] = explode(":", $key);
-      $extra_field[$content_entity][$bundle]['display'][IslandoraSettingsForm::GEMINI_PSEUDO_FIELD] = [
-        'label' => t('Fedora URI'),
-        'description' => t('The URI to the persistent'),
-        'weight' => 100,
-        'visible' => TRUE,
-      ];
-    }
-  }
-  return $extra_field;
-}
-
-/**
- * Implements hook_entity_view().
- */
-function islandora_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
-  $route_match_item = \Drupal::routeMatch()->getParameters()->get($entity->getEntityTypeId());
-  // Ensure the entity matches the route.
-  if ($entity === $route_match_item) {
-    $flysystem_config = Settings::get('flysystem');
-    $fedora_root = $flysystem_config['fedora']['config']['root'] ?? NULL;
-    if ($display->getComponent('field_gemini_uri') && $fedora_root) {
-      $fedora_root = rtrim($fedora_root, '/');
-      $mapper = \Drupal::service('islandora.entity_mapper');
-      if ($entity->getEntityTypeId() == 'media') {
-        // Check if the source file is in Fedora or not.
-        $media_source_service = \Drupal::service('islandora.media_source_service');
-        $source_file = $media_source_service->getSourceFile($entity);
-        if (!$source_file) {
-          \Drupal::logger('islandora')->error(
-            \Drupal::service('string_translation')->translate(
-              "Can't get source file for @label (@id)", [
-                '@label' => $entity->label(),
-                "@id" => $entity->id(),
-              ]
-            )
-          );
-          return;
-        }
-        $uri = $source_file->getFileUri();
-        $scheme = \Drupal::service('stream_wrapper_manager')->getScheme($uri);
-        $flysystem_config = Settings::get('flysystem');
-
-        // Use the file's path if it's in fedora.
-        // Otherwise do the UUID -> pair tree thang.
-        if (isset($flysystem_config[$scheme]) && $flysystem_config[$scheme]['driver'] == 'fedora') {
-          $parts = parse_url($uri);
-          $path = $parts['host'] . $parts['path'];
-        }
-        else {
-          $path = $mapper->getFedoraPath($source_file->uuid());
-        }
-        $path = trim($path, '/');
-        $fedora_uri = "$fedora_root/$path/fcr:metadata";
-      }
-      else {
-        // All non-media entities do the UUID -> pair tree thang.
-        $path = $mapper->getFedoraPath($entity->uuid());
-        $path = trim($path, '/');
-        $fedora_uri = "$fedora_root/$path";
-      }
-
-      // Stuff the fedora url into the pseudo field.
-      $build['field_gemini_uri'] = [
-        '#type' => 'container',
-        '#attributes' => [
-          'id' => 'field-gemini-uri',
-        ],
-        'internal_label' => [
-          '#type' => 'item',
-          '#title' => t('Fedora URI'),
-          'internal_uri' => [
-            '#type' => 'link',
-            '#title' => t("@url", ['@url' => $fedora_uri]),
-            '#url' => Url::fromUri($fedora_uri),
-          ],
-        ],
-      ];
-    }
-  }
 }
 
 /**

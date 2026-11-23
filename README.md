@@ -1,19 +1,20 @@
 # Islandora
 
-[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.4-8892BF.svg?style=flat-square)](https://php.net/)
-[![Build Status](https://github.com/islandora/islandora/actions/workflows/build-2.x.yml/badge.svg)](https://github.com/Islandora/islandora/actions)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.3-8892BF.svg?style=flat-square)](https://php.net/)
+[![Build Status](https://github.com/islandora/islandora/actions/workflows/build-3.x.yml/badge.svg)](https://github.com/Islandora/islandora/actions)
 [![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./CONTRIBUTING.md)
 [![LICENSE](https://img.shields.io/badge/license-GPLv2-blue.svg?style=flat-square)](./LICENSE)
-[![codecov](https://codecov.io/gh/Islandora/islandora/branch/2.x/graph/badge.svg)](https://codecov.io/gh/Islandora/islandora)
+[![codecov](https://codecov.io/gh/Islandora/islandora/branch/3.x/graph/badge.svg)](https://codecov.io/gh/Islandora/islandora)
 
 ## Introduction
 
 This is the core module of Islandora's digital repository ecosystem. The `islandora` module provides:
-- Fedora 5 integration via the [flysystem](https://drupal.org/project/flysystem) module
 - Integration with the [context](https://drupal.org/project/context) module to control your digital repository's behaviour
 - Publishing messages to a queue so they can be processed in the background
 
 `islandora` contains several submodules and features:
+- `islandora_fcrepo` (optional)
+  - Fedora storage, indexing messages, and URI display using Flysystem 3. See the [Fedora module guide](modules/islandora_fcrepo/README.md).
 - `islandora_core_feature` (**required**)
   - Configuration required by the `islandora` module
 - `islandora_image`
@@ -28,6 +29,8 @@ This is the core module of Islandora's digital repository ecosystem. The `island
   - Provides IIIF manifests for repository content 
 
 ## Requirements
+
+Islandora 3.x requires Drupal 11 and PHP 8.3 or newer. Fedora and Flysystem are optional. See [UPGRADE-3.md](UPGRADE-3.md) before upgrading from 2.x.
 
 Installing via composer will download all required libraries and modules.  However, for reference, `islandora` requires the following drupal modules:
 
@@ -47,7 +50,6 @@ Installing via composer will download all required libraries and modules.  Howev
 - [features](http://drupal.org/project/features)
 - [migrate_plus](http://drupal.org/project/migrate_plus)
 - [migrate_source_csv](http://drupal.org/project/migrate_source_csv)
-- [flysystem](http://drupal.org/project/flysystem)
 
 It also requires the following PHP libraries:
 
@@ -63,24 +65,18 @@ For a full digital repository solution, see our [installation documentation](htt
 To download/enable just this module, use the following from the command line:
 
 ```bash
-$ composer require islandora/islandora
+$ composer require drupal/islandora
 $ drush en islandora_core_feature
 $ drush mim islandora_tags
 ```
 
 ## Configuration
 
-![image](https://user-images.githubusercontent.com/20773151/67234502-ac171900-f41b-11e9-964e-c7d4cfadbd67.png)
-
 You can set the following configuration at `admin/config/islandora/core`:
 - Broker URL
   - The URL to your message broker (i.e. Activemq)
 - JWT Expiry
   - Set to increase the amount of time that authorization tokens remain valid.  If you have a long running derivative processes or a migration, you may need to set this to be a very long time, e.g. `500d`.  Otherwise, it's best to leave it alone.
-- Gemini URL
-  - The URL to your Gemini server, which keeps track of where Islandora content is in Fedora.
-- Fedora URL Display
-  - Selected bundles can display the Fedora URL for repository content.
 
 ## Documentation
 
@@ -120,6 +116,15 @@ If you would like to contribute, please get involved by attending our weekly [Te
 If you would like to contribute code to the project, you need to be covered by an Islandora Foundation [Contributor License Agreement](https://github.com/Islandora/islandora-community/wiki/Onboarding-Checklist#contributor-license-agreements) or [Corporate Contributor License Agreement](https://github.com/Islandora/islandora-community/wiki/Onboarding-Checklist#contributor-license-agreements). Please see the [Contributor License Agreements](https://github.com/Islandora/islandora-community/wiki/Contributor-License-Agreements) page on the islandora-community wiki for more information.
 
 We recommend using the [islandora-playbook](https://github.com/Islandora-Devops/islandora-playbook) to get started.
+
+## Testing
+
+The [3.x CI workflow](.github/workflows/build-3.x.yml) tests Drupal 11.3/11.4
+with PHP 8.3/8.4 using the existing `ghcr.io/islandora/ci` images. It runs each
+suite with core Islandora alone and with `islandora_fcrepo` dependencies installed.
+Fedora-specific tests skip when those optional dependencies are absent; the
+second matrix configuration runs them. No advisory exceptions or CI image
+patches are required.
 
 ## License
 

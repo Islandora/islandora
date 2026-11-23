@@ -39,7 +39,6 @@ abstract class IslandoraKernelTestBase extends KernelTestBase {
     'image',
     'media',
     'islandora',
-    'flysystem',
   ];
 
   /**

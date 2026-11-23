@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ 2.x ]
+    branches: [ 3.x ]
   pull_request:
-    branches: [ 2.x ]
+    branches: [ 2.x, 3.x ]
   workflow_dispatch:
 
 concurrency:
@@ -18,10 +18,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        modules: ["islandora", "islandora_fcrepo islandora"]
         php-versions: ["8.3", "8.4"]
         test-suite: ["kernel", "unit", "functional", "functional-javascript"]
-        drupal-version: ["10.6", "11.3", "11.4"]
-    name: PHP ${{ matrix.php-versions }} | drupal ${{ matrix.drupal-version }} | test-suite ${{ matrix.test-suite }}
+        drupal-version: ["11.3", "11.4"]
+    name: ${{ matrix.modules }} | PHP ${{ matrix.php-versions }} | drupal ${{ matrix.drupal-version }} | test-suite ${{ matrix.test-suite }}
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
@@ -46,13 +47,14 @@ jobs:
             --rm \
             --name drupal \
             --hostname drupal \
-            --volume $(pwd):/var/www/drupal/web/modules/contrib/$ENABLE_MODULES:ro \
+            --volume $(pwd):/var/www/drupal/web/modules/contrib/islandora:ro \
             --env ENABLE_MODULES \
+            --env LEGACY_FLYSYSTEM_PATCH=0 \
             --env TEST_SUITE \
             --network ci-default \
            ghcr.io/islandora/ci:${{ matrix.drupal-version }}-php${{ matrix.php-versions }}
         env:
-          ENABLE_MODULES: islandora
+          ENABLE_MODULES: ${{ matrix.modules }}
           TEST_SUITE: ${{ matrix.test-suite }}
 
       - name: Print chromedriver logs

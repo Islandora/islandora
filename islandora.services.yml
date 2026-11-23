@@ -31,9 +31,6 @@ services:
   logger.channel.islandora:
       parent: logger.channel_base
       arguments: ['islandora']
-  logger.channel.fedora_flysystem:
-      parent: logger.channel_base
-      arguments: ['fedora_flysystem']
   islandora.media_route_context_provider:
     class: Drupal\islandora\ContextProvider\MediaRouteContextProvider
     arguments: ['@current_route_match']
@@ -54,9 +51,7 @@ services:
     arguments: ['@entity_type.manager', '@current_user', '@language_manager', '@file_system', '@islandora.utils', '@file.validator', '@stream_wrapper_manager', '@file.mime_type.guesser']
   islandora.utils:
     class: Drupal\islandora\IslandoraUtils
-    arguments: ['@entity_type.manager', '@entity_field.manager', '@context.manager', '@flysystem_factory', '@language_manager', '@current_user', '@config.factory', '@database']
-  islandora.entity_mapper:
-    class: Islandora\EntityMapper\EntityMapper
+    arguments: ['@entity_type.manager', '@entity_field.manager', '@context.manager', '@stream_wrapper_manager', '@language_manager', '@current_user', '@config.factory', '@database']
   islandora.stomp.auth_header_listener:
     class: Drupal\islandora\EventSubscriber\StompHeaderEventSubscriber
     arguments: ['@jwt.authentication.jwt']
