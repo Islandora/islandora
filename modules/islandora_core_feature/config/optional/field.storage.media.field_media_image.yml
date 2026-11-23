@@ -14,7 +14,7 @@ field_name: field_media_image
 entity_type: media
 type: image
 settings:
-  uri_scheme: fedora
+  uri_scheme: public
   default_image:
     uuid: ''
     alt: ''

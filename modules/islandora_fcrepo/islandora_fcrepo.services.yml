@@ -1,0 +1,14 @@
+services:
+  logger.channel.fedora_flysystem:
+    parent: logger.channel_base
+    arguments: ['fedora_flysystem']
+  islandora_fcrepo.entity_mapper:
+    class: Islandora\EntityMapper\EntityMapper
+  islandora_fcrepo.event_subscriber:
+    class: Drupal\islandora_fcrepo\EventSubscriber\FedoraEventSubscriber
+    tags:
+      - { name: event_subscriber }
+  islandora_fcrepo.path_processor:
+    class: Drupal\islandora_fcrepo\PathProcessor\FedoraPathProcessor
+    tags:
+      - { name: path_processor_inbound, priority: 300 }

@@ -33,7 +33,7 @@ class EventGeneratorTest extends IslandoraKernelTestBase {
   protected $user;
 
   /**
-   * Fedora resource entity.
+   * Repository resource entity.
    *
    * @var \Drupal\node\Entity\NodeInterface
    */
@@ -79,7 +79,7 @@ class EventGeneratorTest extends IslandoraKernelTestBase {
     $json = $this->eventGenerator->generateEvent(
       $this->entity,
       $this->user,
-      ['event' => 'create', 'queue' => 'islandora-indexing-fcrepo-content']
+      ['event' => 'create', 'queue' => 'islandora-indexing-content']
     );
     $msg = json_decode($json, TRUE);
 
@@ -94,7 +94,7 @@ class EventGeneratorTest extends IslandoraKernelTestBase {
     $json = $this->eventGenerator->generateEvent(
       $this->entity,
       $this->user,
-      ['event' => 'update', 'queue' => 'islandora-indexing-fcrepo-content']
+      ['event' => 'update', 'queue' => 'islandora-indexing-content']
     );
     $msg = json_decode($json, TRUE);
 
@@ -109,7 +109,7 @@ class EventGeneratorTest extends IslandoraKernelTestBase {
     $json = $this->eventGenerator->generateEvent(
       $this->entity,
       $this->user,
-      ['event' => 'delete', 'queue' => 'islandora-indexing-fcrepo-delete']
+      ['event' => 'delete', 'queue' => 'islandora-indexing-delete']
     );
     $msg = json_decode($json, TRUE);
 

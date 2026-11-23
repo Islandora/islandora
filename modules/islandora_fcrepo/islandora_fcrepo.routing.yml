@@ -1,0 +1,38 @@
+islandora_fcrepo.settings:
+  path: '/admin/config/islandora/fcrepo'
+  defaults:
+    _form: '\Drupal\islandora_fcrepo\Form\FedoraSettingsForm'
+    _title: 'Fedora repository'
+  requirements:
+    _permission: 'administer site configuration'
+islandora_fcrepo.files:
+  path: '/_flysystem/{scheme}'
+  defaults:
+    _controller: '\Drupal\system\FileDownloadController::download'
+    _disable_route_normalizer: true
+  requirements:
+    _access: 'TRUE'
+    scheme: '^[a-zA-Z0-9+.-]+$'
+  options:
+    _maintenance_access: true
+islandora_fcrepo.serve:
+  path: '/_flysystem/{scheme}/{filepath}'
+  defaults:
+    _controller: '\Drupal\system\FileDownloadController::download'
+    _disable_route_normalizer: true
+  requirements:
+    _access: 'TRUE'
+    scheme: '^[a-zA-Z0-9+.-]+$'
+    filepath: .+
+  options:
+    _maintenance_access: true
+islandora_fcrepo.image_style:
+  path: '/_flysystem/styles/{image_style}/{scheme}'
+  defaults:
+    _controller: '\Drupal\islandora_fcrepo\Controller\ImageStyleDownloadController::deliver'
+    _disable_route_normalizer: true
+  requirements:
+    _access: 'TRUE'
+    scheme: '^[a-zA-Z0-9+.-]+$'
+  options:
+    _maintenance_access: true

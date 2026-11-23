@@ -1,0 +1,5 @@
+islandora_fcrepo.settings:
+  title: 'Fedora repository'
+  description: 'Configure Fedora URI display.'
+  route_name: islandora_fcrepo.settings
+  parent: system.admin_config_islandora

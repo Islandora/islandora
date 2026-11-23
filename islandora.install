@@ -131,9 +131,6 @@ function update_jsonld_included_namespaces() {
       'prefix' => 'ebucore',
       'namespace' => 'http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#',
     ], [
-      'prefix' => 'fedora',
-      'namespace' => 'http://fedora.info/definitions/v4/repository#',
-    ], [
       'prefix' => 'owl',
       'namespace' => 'http://www.w3.org/2002/07/owl#',
     ], [

@@ -28,7 +28,7 @@ class GenerateOCRDerivative extends AbstractGenerateDerivative {
     $config['mimetype'] = 'text/plain';
     $config['queue'] = 'islandora-connector-ocr';
     $config['destination_media_type'] = 'extracted_text';
-    $config['scheme'] = 'fedora';
+    $config['scheme'] = 'public';
     return $config;
   }
 

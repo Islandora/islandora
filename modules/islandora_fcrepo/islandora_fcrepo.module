@@ -1,0 +1,165 @@
+<?php
+
+/**
+ * @file
+ * Fedora storage, download URLs, and entity display integration.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\file\FileInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Site\Settings;
+use Drupal\Core\Url;
+use Drupal\islandora_fcrepo\Form\FedoraSettingsForm;
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function islandora_fcrepo_entity_extra_field_info() {
+  $config_factory = \Drupal::service('config.factory')->get(FedoraSettingsForm::CONFIG_NAME);
+  $extra_field = [];
+
+  $pseudo_bundles = $config_factory->get(FedoraSettingsForm::GEMINI_PSEUDO);
+
+  if (!empty($pseudo_bundles)) {
+    foreach ($pseudo_bundles as $key) {
+      [$bundle, $content_entity] = explode(":", $key);
+      $extra_field[$content_entity][$bundle]['display'][FedoraSettingsForm::GEMINI_PSEUDO_FIELD] = [
+        'label' => t('Fedora URI'),
+        'description' => t('The URI to the persistent'),
+        'weight' => 100,
+        'visible' => TRUE,
+      ];
+    }
+  }
+  return $extra_field;
+}
+
+/**
+ * Implements hook_entity_view().
+ */
+function islandora_fcrepo_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  $route_match_item = \Drupal::routeMatch()->getParameters()->get($entity->getEntityTypeId());
+  // Ensure the entity matches the route.
+  if ($entity === $route_match_item) {
+    $flysystem_config = Settings::get('flysystem');
+    // Preserve the historical default while supporting fcrepo and aliases.
+    $fedora_root = NULL;
+    foreach ($flysystem_config ?? [] as $entry) {
+      if (($entry['driver'] ?? NULL) === 'fedora') {
+        $fedora_root = $entry['config']['root'] ?? NULL;
+        break;
+      }
+    }
+    if ($display->getComponent('field_gemini_uri') && $fedora_root) {
+      $fedora_root = rtrim($fedora_root, '/');
+      $mapper = \Drupal::service('islandora_fcrepo.entity_mapper');
+      if ($entity->getEntityTypeId() == 'media') {
+        // Check if the source file is in Fedora or not.
+        $media_source_service = \Drupal::service('islandora.media_source_service');
+        $source_file = $media_source_service->getSourceFile($entity);
+        if (!$source_file) {
+          \Drupal::logger('islandora')->error(
+            \Drupal::service('string_translation')->translate(
+              "Can't get source file for @label (@id)", [
+                '@label' => $entity->label(),
+                "@id" => $entity->id(),
+              ]
+            )
+          );
+          return;
+        }
+        $uri = $source_file->getFileUri();
+        $scheme = \Drupal::service('stream_wrapper_manager')->getScheme($uri);
+        $flysystem_config = Settings::get('flysystem');
+
+        // Use the file's path if it's in fedora.
+        // Otherwise do the UUID -> pair tree thang.
+        if (isset($flysystem_config[$scheme]) && $flysystem_config[$scheme]['driver'] == 'fedora') {
+          $fedora_root = rtrim($flysystem_config[$scheme]['config']['root'], '/');
+          $path = StreamWrapperManager::getTarget($uri);
+        }
+        else {
+          $path = $mapper->getFedoraPath($source_file->uuid());
+        }
+        $path = trim($path, '/');
+        $fedora_uri = "$fedora_root/$path/fcr:metadata";
+      }
+      else {
+        // All non-media entities do the UUID -> pair tree thang.
+        $path = $mapper->getFedoraPath($entity->uuid());
+        $path = trim($path, '/');
+        $fedora_uri = "$fedora_root/$path";
+      }
+
+      // Stuff the fedora url into the pseudo field.
+      $build['field_gemini_uri'] = [
+        '#type' => 'container',
+        '#attributes' => [
+          'id' => 'field-gemini-uri',
+        ],
+        'internal_label' => [
+          '#type' => 'item',
+          '#title' => t('Fedora URI'),
+          'internal_uri' => [
+            '#type' => 'link',
+            '#title' => t("@url", ['@url' => $fedora_uri]),
+            '#url' => Url::fromUri($fedora_uri),
+          ],
+        ],
+      ];
+    }
+  }
+}
+
+/**
+ * Implements hook_file_url_alter().
+ */
+function islandora_fcrepo_file_url_alter(&$uri) {
+  $scheme = StreamWrapperManager::getScheme($uri);
+  $settings = Settings::get('flysystem', []);
+  if (($settings[$scheme]['driver'] ?? NULL) !== 'fedora') {
+    return;
+  }
+  $uri = Url::fromRoute('islandora_fcrepo.serve', [
+    'scheme' => $scheme,
+    'filepath' => str_replace('\\', '/', ltrim(StreamWrapperManager::getTarget($uri), '/')),
+  ], ['absolute' => TRUE, 'language' => \Drupal::languageManager()->getLanguage('und')])->toString();
+}
+
+/**
+ * Implements hook_file_download().
+ */
+function islandora_fcrepo_file_download($uri) {
+  $scheme = StreamWrapperManager::getScheme($uri);
+  $settings = Settings::get('flysystem', []);
+  if (($settings[$scheme]['driver'] ?? NULL) !== 'fedora' || !file_exists($uri)) {
+    return;
+  }
+  // Drupal combines these headers with all file_download access decisions.
+  // A denial from any module still prevents the download.
+  return [
+    'Content-Type' => \Drupal::service('file.mime_type.guesser.extension')->guessMimeType($uri),
+    'Content-Length' => filesize($uri),
+  ];
+}
+
+/**
+ * Implements hook_entity_access().
+ */
+function islandora_fcrepo_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  if (!$entity instanceof FileInterface || !in_array($operation, ['download', 'view'], TRUE)) {
+    return AccessResult::neutral();
+  }
+  $scheme = StreamWrapperManager::getScheme($entity->getFileUri());
+  $settings = Settings::get('flysystem', []);
+  if (($settings[$scheme]['driver'] ?? NULL) !== 'fedora' || empty($settings[$scheme]['config']['public'])) {
+    return AccessResult::neutral();
+  }
+  return $operation === 'download'
+    ? AccessResult::allowed()
+    : AccessResult::allowedIfHasPermission($account, 'access content');
+}

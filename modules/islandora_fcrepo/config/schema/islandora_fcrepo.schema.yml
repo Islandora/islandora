@@ -1,0 +1,20 @@
+islandora_fcrepo.settings:
+  type: config_object
+  label: 'Islandora Fedora settings'
+  mapping:
+    gemini_pseudo_bundles:
+      type: sequence
+      label: 'Bundles displaying the Fedora URI'
+      sequence:
+        type: string
+
+flysystem.adapter_config.fedora:
+  type: mapping
+  label: 'Fedora adapter configuration'
+  mapping:
+    root:
+      type: string
+      label: 'Fedora root URL'
+    public:
+      type: boolean
+      label: 'Allow public file downloads through Drupal'

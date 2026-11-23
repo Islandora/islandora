@@ -1,0 +1,12 @@
+{
+  "name": "drupal/islandora_fcrepo",
+  "description": "Optional Fedora storage for Islandora using Flysystem 3",
+  "type": "drupal-module",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "drupal/flysystem": "^3.0@beta",
+    "league/flysystem": "^3.35.3",
+    "islandora/chullo": "^2.0",
+    "islandora/fedora-entity-mapper": "^1.0"
+  }
+}
