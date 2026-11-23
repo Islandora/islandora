@@ -11,6 +11,7 @@ use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\field\FieldConfigInterface;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
+use Drupal\file\FileUsage\FileUsageInterface;
 use Drupal\file\Validation\FileValidatorInterface;
 use Drupal\islandora\IslandoraUtils;
 use Drupal\media\MediaInterface;
@@ -86,6 +87,13 @@ class MediaSourceService {
   protected $mimeTypeGuesser;
 
   /**
+   * File usage service.
+   *
+   * @var \Drupal\file\FileUsage\FileUsageInterface
+   */
+  protected $fileUsage;
+
+  /**
    * Constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -104,6 +112,8 @@ class MediaSourceService {
    *   Stream wrapper manager.
    * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mime_type_guesser
    *   Mime type guesser.
+   * @param \Drupal\file\FileUsage\FileUsageInterface|null $file_usage
+   *   File usage service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -114,6 +124,7 @@ class MediaSourceService {
     FileValidatorInterface $file_validator,
     StreamWrapperManagerInterface $stream_wrapper_manager,
     MimeTypeGuesserInterface $mime_type_guesser,
+    ?FileUsageInterface $file_usage = NULL,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->account = $account;
@@ -123,6 +134,7 @@ class MediaSourceService {
     $this->fileValidator = $file_validator;
     $this->streamWrapperManager = $stream_wrapper_manager;
     $this->mimeTypeGuesser = $mime_type_guesser;
+    $this->fileUsage = $file_usage ?? \Drupal::service('file.usage');
   }
 
   /**
@@ -208,10 +220,80 @@ class MediaSourceService {
       throw new AccessDeniedHttpException("Cannot overwrite an unmanaged file");
     }
     foreach ($files as $file) {
-      if (!$file->access('update', $this->account)) {
+      if (!$file->access('update', $this->account) && !$this->canUpdateViaMedia($file)) {
         throw new AccessDeniedHttpException("You do not have permission to update the destination file");
       }
     }
+  }
+
+  /**
+   * Checks whether the account may overwrite a file through its media.
+   *
+   * Core only grants file 'update' access to the file owner, which blocks
+   * administrators and other editors from regenerating derivatives they did
+   * not originally create. Allow the overwrite when every entity using the
+   * file is a media the account can update. Files with no usage, or with any
+   * non-media usage, keep the strict owner-only behaviour.
+   *
+   * @param \Drupal\file\FileInterface $file
+   *   The existing file at the destination URI.
+   *
+   * @return bool
+   *   TRUE if the file is only used by media the account can update.
+   */
+  protected function canUpdateViaMedia(FileInterface $file) : bool {
+    $media_storage = $this->entityTypeManager->getStorage('media');
+    $checked = FALSE;
+    foreach ($this->fileUsage->listUsage($file) as $types) {
+      foreach ($types as $type => $ids) {
+        if ($type !== 'media') {
+          return FALSE;
+        }
+        foreach (array_keys($ids) as $id) {
+          $media = $media_storage->load($id);
+          if (!$media || !$media->access('update', $this->account)) {
+            return FALSE;
+          }
+          if (!$this->canEditFileFields($media, $file)) {
+            return FALSE;
+          }
+          $checked = TRUE;
+        }
+      }
+    }
+    return $checked;
+  }
+
+  /**
+   * Checks the account can edit every media field referencing the file.
+   *
+   * Mirrors updateSourceField() and putToMedia(), which require field 'edit'
+   * access in addition to media 'update' access.
+   *
+   * @param \Drupal\media\MediaInterface $media
+   *   A media entity that uses the file.
+   * @param \Drupal\file\FileInterface $file
+   *   The existing file at the destination URI.
+   *
+   * @return bool
+   *   TRUE if at least one field references the file and the account can
+   *   edit all such fields.
+   */
+  protected function canEditFileFields(MediaInterface $media, FileInterface $file) : bool {
+    $found = FALSE;
+    foreach ($media->getFields() as $items) {
+      if (!in_array($items->getFieldDefinition()->getType(), ['file', 'image'], TRUE)) {
+        continue;
+      }
+      if (!in_array($file->id(), array_column($items->getValue(), 'target_id'))) {
+        continue;
+      }
+      if (!$items->access('edit', $this->account)) {
+        return FALSE;
+      }
+      $found = TRUE;
+    }
+    return $found;
   }
 
   /**
