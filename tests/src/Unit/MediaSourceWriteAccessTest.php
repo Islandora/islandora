@@ -6,6 +6,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -176,22 +177,33 @@ class MediaSourceWriteAccessTest extends TestCase {
   /**
    * Non-owners may overwrite files used only by media they can update.
    *
+   * The account also needs edit access on the media field(s) referencing the
+   * file.
+   *
    * @dataProvider mediaUsageCases
    */
-  public function testOverwriteViaMediaUpdateAccess(array $usage, array $media_access, bool $allowed): void {
+  public function testOverwriteViaMediaUpdateAccess(array $usage, array $media_access, bool $allowed, array $field_access = [], array $references = []): void {
     $uri = 'private://derivative.txt';
     file_put_contents($uri, 'ORIGINAL');
     $file = $this->createMock(FileInterface::class);
+    $file->method('id')->willReturn(10);
     $file->method('getFileUri')->willReturn($uri);
     $file->method('access')->with('update', $this->account)->willReturn(FALSE);
     $this->files->method('loadByProperties')->with(['uri' => $uri])->willReturn([$file]);
     $this->fileUsage->method('listUsage')->with($file)->willReturn($usage);
-    $this->mediaStorage->method('load')->willReturnCallback(function ($id) use ($media_access) {
+    $this->mediaStorage->method('load')->willReturnCallback(function ($id) use ($media_access, $field_access, $references) {
       if (!array_key_exists($id, $media_access)) {
         return NULL;
       }
       $media = $this->createMock(MediaInterface::class);
       $media->method('access')->with('update', $this->account)->willReturn($media_access[$id]);
+      $definition = $this->createMock(FieldDefinitionInterface::class);
+      $definition->method('getType')->willReturn('file');
+      $items = $this->createMock(FieldItemListInterface::class);
+      $items->method('getFieldDefinition')->willReturn($definition);
+      $items->method('getValue')->willReturn([['target_id' => $references[$id] ?? 10]]);
+      $items->method('access')->with('edit', $this->account)->willReturn($field_access[$id] ?? TRUE);
+      $media->method('getFields')->willReturn(['field_media_file' => $items]);
       return $media;
     });
     $resource = fopen('php://memory', 'w+');
@@ -222,6 +234,13 @@ class MediaSourceWriteAccessTest extends TestCase {
       'media usage missing entity' => [['file' => ['media' => [3 => 1]]], [], FALSE],
       'non-media usage' => [['file' => ['media' => [1 => 1], 'node' => [5 => 1]]], [1 => TRUE], FALSE],
       'no usage' => [[], [], FALSE],
+      'can update media, cannot edit file field' => [
+        ['file' => ['media' => [1 => 1]]], [1 => TRUE], FALSE, [1 => FALSE],
+      ],
+      'two media, one field denied' => [
+        ['file' => ['media' => [1 => 1, 2 => 1]]], [1 => TRUE, 2 => TRUE], FALSE, [2 => FALSE],
+      ],
+      'media does not reference the file' => [['file' => ['media' => [1 => 1]]], [1 => TRUE], FALSE, [], [1 => 99]],
     ];
   }
 

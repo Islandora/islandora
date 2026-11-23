@@ -254,11 +254,46 @@ class MediaSourceService {
           if (!$media || !$media->access('update', $this->account)) {
             return FALSE;
           }
+          if (!$this->canEditFileFields($media, $file)) {
+            return FALSE;
+          }
           $checked = TRUE;
         }
       }
     }
     return $checked;
+  }
+
+  /**
+   * Checks the account can edit every media field referencing the file.
+   *
+   * Mirrors updateSourceField() and putToMedia(), which require field 'edit'
+   * access in addition to media 'update' access.
+   *
+   * @param \Drupal\media\MediaInterface $media
+   *   A media entity that uses the file.
+   * @param \Drupal\file\FileInterface $file
+   *   The existing file at the destination URI.
+   *
+   * @return bool
+   *   TRUE if at least one field references the file and the account can
+   *   edit all such fields.
+   */
+  protected function canEditFileFields(MediaInterface $media, FileInterface $file) : bool {
+    $found = FALSE;
+    foreach ($media->getFields() as $items) {
+      if (!in_array($items->getFieldDefinition()->getType(), ['file', 'image'], TRUE)) {
+        continue;
+      }
+      if (!in_array($file->id(), array_column($items->getValue(), 'target_id'))) {
+        continue;
+      }
+      if (!$items->access('edit', $this->account)) {
+        return FALSE;
+      }
+      $found = TRUE;
+    }
+    return $found;
   }
 
   /**
