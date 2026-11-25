@@ -168,6 +168,33 @@ abstract class EmitEvent extends ConfigurableActionBase implements ContainerFact
         $this->eventGenerator->generateEvent($entity, $user, $data),
         $event->getHeaders()->all()
       );
+
+      if (
+        \Drupal::moduleHandler()->moduleExists('islandora_events')
+        && \Drupal::hasService('islandora_events.legacy_derivative_queue')
+        && \Drupal::hasService('islandora_events.index_event')
+      ) {
+        $configured_event = (string) ($this->configuration['event'] ?? '');
+        if ($configured_event === 'Generate Derivative') {
+          \Drupal::service('islandora_events.legacy_derivative_queue')->enqueue(
+            $entity,
+            $message->getBody(),
+            $message->getHeaders(),
+            $this->getConfiguration(),
+            $this->getPluginId(),
+          );
+          return;
+        }
+
+        $operation = strtolower($configured_event);
+        if (
+          in_array($operation, ['insert', 'update', 'delete'], TRUE)
+          && in_array($entity->getEntityTypeId(), ['node', 'media'], TRUE)
+        ) {
+          \Drupal::service('islandora_events.index_event')->queueEntityEvent($entity, $operation);
+          return;
+        }
+      }
     }
     catch (IslandoraDerivativeException $e) {
       $this->logger->info($e->getMessage());
